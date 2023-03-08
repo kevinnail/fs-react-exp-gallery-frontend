@@ -12,11 +12,12 @@ function App() {
     <div className="App">
       <Header />
       <Switch>
-        <Route path="/auth/:type" component={Auth} />
-        <Route exact path="/admin" component={Admin} />
-        <Route exact path="*" />
-        {user && <Redirect to="/admin" />}
-        {!user && <Redirect to="/auth/sign-in" />}
+        <Route exact path="/auth/:type" component={Auth} />
+        <Route path="/admin" component={Admin} />
+        <Route exact path="*">
+          {user && <Redirect to="/admin" />}
+          {!user && <Redirect to="/auth/sign-in" />}
+        </Route>
       </Switch>
     </div>
   );
