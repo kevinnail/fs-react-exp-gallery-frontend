@@ -1,5 +1,5 @@
-const BASE_URL = 'https://react-fs-ex-to-do-list.herokuapp.com';
-// const BASE_URL = 'http://localhost:7890';
+// const BASE_URL = 'https://react-fs-ex-to-do-list.herokuapp.com';
+const BASE_URL = 'http://localhost:7890';
 
 /* Auth related functions */
 
