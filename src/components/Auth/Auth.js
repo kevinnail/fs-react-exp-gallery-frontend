@@ -12,7 +12,7 @@ export default function Auth() {
   const { type } = useParams();
 
   if (user) {
-    return <Redirect to="/gallery" />;
+    return <Redirect to="/admin" />;
   } else if (error) {
     console.error(error);
   }

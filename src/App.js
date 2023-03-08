@@ -7,7 +7,7 @@ function App() {
   const { user, error } = useUser();
 
   if (user) {
-    return <Redirect to="/gallery" />;
+    return <Redirect to="/admin" />;
   } else if (error) {
     console.error(error);
   }
@@ -16,7 +16,7 @@ function App() {
       <Switch>
         <Route path="/auth/:type" component={Auth} />
         <Route exact path="*" />
-        {user && <Redirect to="/gallery" />}
+        {user && <Redirect to="/admin" />}
         {!user && <Redirect to="/auth/sign-in" />}
       </Switch>
     </div>
