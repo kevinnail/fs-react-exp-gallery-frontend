@@ -26,7 +26,7 @@ export default function Header() {
           <p>
             Logged in as: <span> {user.email}</span> <br />
           </p>
-          <Link className="link" to="/admin/new/new">
+          <Link className="link" to="/admin/new">
             New Post
           </Link>
           <button onClick={handleClick}>Sign Out</button>
