@@ -97,14 +97,14 @@ export async function fetchPosts() {
   }
 }
 
-export async function postPost(title, description, image_url, category, price, user_Id) {
+export async function postPost({ title, description, image_url, category, price, author_id }) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title, description, image_url, category, price, user_Id }),
+    body: JSON.stringify({ title, description, image_url, category, price, author_id }),
     credentials: 'include',
   });
   const msg = await resp.json();
@@ -140,31 +140,31 @@ export async function postPost(title, description, image_url, category, price, u
 //   return msg;
 // }
 
-// export async function updatePost(id, task) {
-//   const resp = await fetch(`${BASE_URL}/api/v1/todos/edit/${id}`, {
-//     method: 'PUT',
-//     headers: {
-//       Accept: 'application/json',
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ id, task }),
-//     credentials: 'include',
-//   });
-//   const msg = await resp.json();
+export async function updatePost(id, post) {
+  const resp = await fetch(`${BASE_URL}/api/v1/admin/${id}`, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ id, post }),
+    credentials: 'include',
+  });
+  const msg = await resp.json();
 
-//   return msg;
-// }
+  return msg;
+}
 
-// export async function getPostDetail(id) {
-//   const resp = await fetch(`${BASE_URL}/api/v1/todos/${id}`, {
-//     method: 'GET',
-//     headers: {
-//       Accept: 'application/json',
-//       'Content-Type': 'application/json',
-//     },
-//     credentials: 'include',
-//   });
+export async function getPostDetail(id) {
+  const resp = await fetch(`${BASE_URL}/api/v1/admin/${id}`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
 
-//   const msg = await resp.json();
-//   return msg;
-// }
+  const msg = await resp.json();
+  return msg;
+}
