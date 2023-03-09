@@ -8,13 +8,13 @@ import { useUser } from '../../hooks/useUser.js';
 // export default function PostCard({ task, id, completed, setPosts, posts }) {
 export default function PostCard({
   id,
-  posts,
+  // posts,
   title,
   description,
   image_url,
   category,
   price,
-  author_id,
+  // author_id,
 }) {
   const { user } = useUser();
   // const { setLoading, setError } = usePost(id);
@@ -44,9 +44,9 @@ export default function PostCard({
   // };
 
   // make the post card clickable and toggle the completed status
-  const handleEdit = async () => {
-    console.log('handleEdit');
-  };
+  // const handleEdit = async () => {
+  //   console.log('handleEdit');
+  // };
 
   return (
     <div className="post overlay" key={id}>
