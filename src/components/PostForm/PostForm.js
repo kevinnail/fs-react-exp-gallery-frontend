@@ -25,7 +25,7 @@ export default function PostForm({
       image_url: imageUrlInput,
       price: priceInput,
       category: categoryInput,
-      user_id: user.id,
+      author_id: user.id,
     });
   };
 
