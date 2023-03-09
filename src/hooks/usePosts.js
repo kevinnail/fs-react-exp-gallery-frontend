@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { fetchTodos } from '../services/fetch-utils.js';
+import { fetchPosts } from '../services/fetch-utils.js';
 
 export function usePosts() {
   const [posts, setPosts] = useState([]);
@@ -10,7 +10,7 @@ export function usePosts() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchTodos();
+        const data = await fetchPosts();
         setPosts(data);
         setLoading(false);
       } catch (e) {

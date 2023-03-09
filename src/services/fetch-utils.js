@@ -56,7 +56,7 @@ export async function signInUser(email, password) {
   const data = await resp.json();
 
   if (resp.ok) {
-    location.replace('/todos ');
+    location.replace('/admin ');
 
     return resp;
   } else {
@@ -78,8 +78,8 @@ export async function signOutUser() {
 
 /* Data functions */
 
-export async function fetchTodos() {
-  const resp = await fetch(`${BASE_URL}/api/v1/todos`, {
+export async function fetchPosts() {
+  const resp = await fetch(`${BASE_URL}/api/v1/posts`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -97,74 +97,74 @@ export async function fetchTodos() {
   }
 }
 
-export async function postToDo(task, user_Id) {
-  const resp = await fetch(`${BASE_URL}/api/v1/todos`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ task, user_Id }),
-    credentials: 'include',
-  });
-  const msg = await resp.json();
-  return msg;
-}
+// export async function postPost(task, user_Id) {
+//   const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
+//     method: 'POST',
+//     headers: {
+//       Accept: 'application/json',
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ task, user_Id }),
+//     credentials: 'include',
+//   });
+//   const msg = await resp.json();
+//   return msg;
+// }
 
-export async function toggleComplete(mark, todo_id) {
-  const resp = await fetch(`${BASE_URL}/api/v1/todos/${todo_id}`, {
-    method: 'PUT',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ mark, todo_id }),
-    credentials: 'include',
-  });
+// export async function toggleComplete(mark, todo_id) {
+//   const resp = await fetch(`${BASE_URL}/api/v1/todos/${todo_id}`, {
+//     method: 'PUT',
+//     headers: {
+//       Accept: 'application/json',
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ mark, todo_id }),
+//     credentials: 'include',
+//   });
 
-  const msg = await resp.json();
-  return msg;
-}
-export async function deleteById(todo_id) {
-  const resp = await fetch(`${BASE_URL}/api/v1/todos/${todo_id}`, {
-    method: 'DELETE',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    // body: JSON.stringify({ todo_id }),
-    credentials: 'include',
-  });
-  const msg = await resp.json();
+//   const msg = await resp.json();
+//   return msg;
+// }
+// export async function deleteById(todo_id) {
+//   const resp = await fetch(`${BASE_URL}/api/v1/todos/${todo_id}`, {
+//     method: 'DELETE',
+//     headers: {
+//       Accept: 'application/json',
+//       'Content-Type': 'application/json',
+//     },
+//     // body: JSON.stringify({ todo_id }),
+//     credentials: 'include',
+//   });
+//   const msg = await resp.json();
 
-  return msg;
-}
+//   return msg;
+// }
 
-export async function updatePost(id, task) {
-  const resp = await fetch(`${BASE_URL}/api/v1/todos/edit/${id}`, {
-    method: 'PUT',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ id, task }),
-    credentials: 'include',
-  });
-  const msg = await resp.json();
+// export async function updatePost(id, task) {
+//   const resp = await fetch(`${BASE_URL}/api/v1/todos/edit/${id}`, {
+//     method: 'PUT',
+//     headers: {
+//       Accept: 'application/json',
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ id, task }),
+//     credentials: 'include',
+//   });
+//   const msg = await resp.json();
 
-  return msg;
-}
+//   return msg;
+// }
 
-export async function getPostDetail(id) {
-  const resp = await fetch(`${BASE_URL}/api/v1/todos/${id}`, {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  });
+// export async function getPostDetail(id) {
+//   const resp = await fetch(`${BASE_URL}/api/v1/todos/${id}`, {
+//     method: 'GET',
+//     headers: {
+//       Accept: 'application/json',
+//       'Content-Type': 'application/json',
+//     },
+//     credentials: 'include',
+//   });
 
-  const msg = await resp.json();
-  return msg;
-}
+//   const msg = await resp.json();
+//   return msg;
+// }

@@ -22,7 +22,7 @@ export default function Admin() {
   return (
     <div className="list-container">
       {posts.map((post) => (
-        <PostCard key={post.id} {...post} task={post.task} setPosts={setPosts} posts={posts} />
+        <PostCard key={post.id} {...post} setPosts={setPosts} posts={posts} />
       ))}
     </div>
   );
