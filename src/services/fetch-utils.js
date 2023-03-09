@@ -79,7 +79,7 @@ export async function signOutUser() {
 /* Data functions */
 
 export async function fetchPosts() {
-  const resp = await fetch(`${BASE_URL}/api/v1/posts`, {
+  const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -97,19 +97,19 @@ export async function fetchPosts() {
   }
 }
 
-// export async function postPost(task, user_Id) {
-//   const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
-//     method: 'POST',
-//     headers: {
-//       Accept: 'application/json',
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ task, user_Id }),
-//     credentials: 'include',
-//   });
-//   const msg = await resp.json();
-//   return msg;
-// }
+export async function postPost(title, description, image_url, category, price, user_Id) {
+  const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, description, image_url, category, price, user_Id }),
+    credentials: 'include',
+  });
+  const msg = await resp.json();
+  return msg;
+}
 
 // export async function toggleComplete(mark, todo_id) {
 //   const resp = await fetch(`${BASE_URL}/api/v1/todos/${todo_id}`, {
