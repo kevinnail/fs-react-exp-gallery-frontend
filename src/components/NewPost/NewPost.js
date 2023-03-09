@@ -10,9 +10,9 @@ export default function NewPost() {
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
   }
-  const handleSubmit = async (task) => {
+  const handleSubmit = async (title, description, image_url, price, category) => {
     try {
-      await postPost(task);
+      await postPost(title, description, image_url, price, category, user.id);
       history.push('/admin');
     } catch (e) {
       console.error(e.message);
