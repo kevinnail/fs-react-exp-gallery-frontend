@@ -17,6 +17,10 @@ export default function Header() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleHomeClick = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <>
       <header>
@@ -24,7 +28,7 @@ export default function Header() {
         <img className="icon" src="../bulletin-board-icon.png" />
       </a> */}
 
-        <Link className="link" to="/admin">
+        <Link className="link" to="/admin" onClick={handleHomeClick}>
           <img className="logo" src="../logo-sq.png" />
         </Link>
         <h1 className="title">Stress Less Glass Admin</h1>
@@ -37,8 +41,8 @@ export default function Header() {
           </div>
         )}
       </header>
-      <div className={`menu-div ${isMenuOpen ? 'open' : ''}`}>
-        <Link className="new-link" to="/admin/new">
+      <div className={`menu-div ${isMenuOpen ? 'open' : ''}`} onClick={handleMenuClick}>
+        <Link className="new-link" to="/admin/new" onClick={handleMenuClick}>
           New Post
         </Link>
         <button className="signout-button" onClick={handleClick}>
