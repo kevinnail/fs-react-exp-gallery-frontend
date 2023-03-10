@@ -23,11 +23,11 @@ export default function EditPost() {
     );
   if (error) return <h1>{error}</h1>;
 
-  const handleSubmit = async (task) => {
+  const handleSubmit = async (post) => {
     setLoading(true);
 
     try {
-      await updatePost(postDetail.id, task);
+      await updatePost(postDetail.id, post);
       history.push('/admin');
     } catch (e) {
       setError(e.message);
