@@ -50,7 +50,7 @@ export default function PostCard({
 
   return (
     <div className="post overlay" key={id}>
-      <Link className="buttons btn-align" to={`/admin/edit/${id}`}>
+      <Link className="buttons btn-align" to={`/admin/${id}`}>
         <img src="/edit.png" className="edit-button" alt="edit" />{' '}
       </Link>
       {/* <Link className="buttons red-border" to={`/admin/${id}`} onClick={handleDelete}>
