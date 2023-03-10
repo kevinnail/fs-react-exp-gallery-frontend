@@ -11,7 +11,10 @@ export function usePost(id) {
     setLoading(true);
     const fetchData = async () => {
       try {
+        console.log('id', id); // working
         const data = await getPostDetail(id);
+        console.log('data', data); // 403 error
+
         setPostDetail(data);
         setLoading(false);
       } catch (e) {
