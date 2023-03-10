@@ -108,7 +108,7 @@ export default function PostForm({
           <option value="Dry Pieces">Dry Pieces</option>
           <option value="Pendants">Pendants</option>
           <option value="Recyclers">Recyclers</option>
-          <option value="Recyclers">Rigs</option>
+          <option value="Rigs">Rigs</option>
           <option value="Slides">Slides</option>
           <option value="Spinner Caps">Spinner Caps</option>
           <option value="Terp Pearls">Terp Pearls</option>
