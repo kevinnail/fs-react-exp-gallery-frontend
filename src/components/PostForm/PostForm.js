@@ -15,7 +15,7 @@ export default function PostForm({
   const [imageUrlInput, setImageUrlInput] = useState(image_url);
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
-  const user = useUser();
+  const { user } = useUser();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
