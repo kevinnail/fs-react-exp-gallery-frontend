@@ -30,7 +30,6 @@ export async function signUpUser(email, password) {
     credentials: 'include',
   });
   const data = await resp.json();
-  // console.log('data', data);
 
   if (resp.ok) {
     // location.replace('/auth');
@@ -61,7 +60,7 @@ export async function signInUser(email, password) {
     return resp;
   } else {
     // eslint-disable-next-line no-console
-    console.error(data.message);
+    console.error('hi this is a thing I put here', data.message);
   }
 }
 
