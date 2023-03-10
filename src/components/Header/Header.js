@@ -20,7 +20,7 @@ export default function Header() {
       <Link className="link" to="/admin">
         <img className="logo" src="../logo-sq.png" />
       </Link>
-      <h1 className="title">Gallery Admin</h1>
+      <h1 className="title">Stress Less Glass Admin</h1>
       {user && (
         <div className="header-section">
           <p>
