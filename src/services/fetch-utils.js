@@ -125,7 +125,7 @@ export async function postPost({ title, description, image_url, category, price,
 //   return msg;
 // }
 export async function deleteById(todo_id) {
-  const resp = await fetch(`${BASE_URL}/api/v1/todos/${todo_id}`, {
+  const resp = await fetch(`${BASE_URL}/api/v1/admin/${todo_id}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
