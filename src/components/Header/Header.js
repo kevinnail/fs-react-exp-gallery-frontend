@@ -5,7 +5,7 @@ import { signOut } from '../../services/auth.js';
 import './Header.css';
 
 export default function Header() {
-  const { user, setUser, loading } = useUser();
+  const { user, setUser } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleClick = async () => {
