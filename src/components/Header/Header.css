@@ -1,16 +1,13 @@
 header {
   background-color: #000000;
   height: 90px;
-  /* padding: 20px; */
+  width: 100%;
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* display: grid;
-  grid-template-columns: 1fr 1fr 1fr; */
-  /* grid-template-rows: 1fr; */
-  /* grid-template-areas: 'logo nav nav'; */
   box-sizing: border-box;
+  position: sticky;
 }
 .logo {
   height: 80px;
@@ -86,28 +83,30 @@ header {
   padding: 0 0px;
   background-color: #838383;
   background-image: linear-gradient(315deg, #838383 0%, #2f00ffa1 74%);
-  border-bottom: 2px solid #2f00ff;
-}
-.menu-icon {
-  background-color: rgb(165, 165, 165);
-  padding: 0px;
-  border-radius: 5px;
-  margin-right: 20px;
-  height: 40px;
-}
-.menu-icon:active {
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
-}
+  /* border-bottom: 2px solid #2f00ff; */
 
-.menu-div {
   height: 0px;
   overflow: hidden;
   transition: 500ms ease-in-out;
   position: absolute;
+  top: 90px;
+  z-index: 10;
 }
 
 .menu-div.open {
   height: 100px;
   position: absolute;
   transform: translateY(-100%);
+  border-bottom: 2px solid #2f00ff;
+}
+
+.menu-icon {
+  background-color: rgb(165, 165, 165);
+  padding: 0px;
+  border-radius: 5px;
+  margin: 0 20px 0 40px;
+  height: 40px;
+}
+.menu-icon:active {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
 }
