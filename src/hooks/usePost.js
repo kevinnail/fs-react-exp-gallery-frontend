@@ -12,6 +12,7 @@ export function usePost(id) {
     const fetchData = async () => {
       try {
         const data = await getPostDetail(id);
+
         setPostDetail(data);
         setLoading(false);
       } catch (e) {

@@ -15,7 +15,7 @@ export default function PostForm({
   const [imageUrlInput, setImageUrlInput] = useState(image_url);
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
-  const user = useUser();
+  const { user } = useUser();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -27,6 +27,10 @@ export default function PostForm({
       category: categoryInput,
       author_id: user.id,
     });
+  };
+
+  const handleCategoryChange = (event) => {
+    setCategoryInput(event.target.value);
   };
 
   return (
@@ -82,32 +86,35 @@ export default function PostForm({
           onChange={(e) => setPriceInput(e.target.value)}
         />
       </div>
+
       <div>
-        <label className="form-title">Category</label>
-        <br />
-        <input
-          required
-          placeholder="Enter category"
-          className="input"
-          type="text"
-          name="category"
+        <label htmlFor="category">Category:</label>
+        <select
+          id="category"
           value={categoryInput}
-          onChange={(e) => setCategoryInput(e.target.value)}
-        />
-      </div>
-      {/* <div>
-        <label className="form-title">User ID</label>
-        <br />
-        <input
-          required
-          placeholder="Enter user ID"
+          onChange={handleCategoryChange}
           className="input"
-          type="text"
-          name="user_id"
-          value={userIdInput}
-          onChange={(e) => setUserIdInput(e.target.value)}
-        />
-      </div> */}
+          required
+        >
+          <option value="">choose category</option>
+          <option value="Beads">Beads</option>
+          <option value="Blunt Tips">Blunt Tips</option>
+          <option value="Bubblers">Bubblers</option>
+          <option value="Collabs ">Collabs</option>
+          <option value="Cups ">Cups</option>
+          <option value="Goblets">Goblets</option>
+          <option value="Iso Stations">Iso Stations</option>
+          <option value="Marbles">Marbles</option>
+          <option value="Dry Pieces">Dry Pieces</option>
+          <option value="Pendants">Pendants</option>
+          <option value="Recyclers">Recyclers</option>
+          <option value="Rigs">Rigs</option>
+          <option value="Slides">Slides</option>
+          <option value="Spinner Caps">Spinner Caps</option>
+          <option value="Terp Pearls">Terp Pearls</option>
+          <option value="Misc">Misc</option>
+        </select>
+      </div>
       <div>
         <button type="submit">Submit</button>
       </div>

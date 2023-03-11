@@ -30,7 +30,6 @@ export async function signUpUser(email, password) {
     credentials: 'include',
   });
   const data = await resp.json();
-  // console.log('data', data);
 
   if (resp.ok) {
     // location.replace('/auth');
@@ -125,20 +124,20 @@ export async function postPost({ title, description, image_url, category, price,
 //   const msg = await resp.json();
 //   return msg;
 // }
-// export async function deleteById(todo_id) {
-//   const resp = await fetch(`${BASE_URL}/api/v1/todos/${todo_id}`, {
-//     method: 'DELETE',
-//     headers: {
-//       Accept: 'application/json',
-//       'Content-Type': 'application/json',
-//     },
-//     // body: JSON.stringify({ todo_id }),
-//     credentials: 'include',
-//   });
-//   const msg = await resp.json();
+export async function deleteById(todo_id) {
+  const resp = await fetch(`${BASE_URL}/api/v1/admin/${todo_id}`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    // body: JSON.stringify({ todo_id }),
+    credentials: 'include',
+  });
+  const msg = await resp.json();
 
-//   return msg;
-// }
+  return msg;
+}
 
 export async function updatePost(id, post) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin/${id}`, {

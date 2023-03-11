@@ -1,19 +1,112 @@
 header {
   background-color: #000000;
   height: 90px;
-  /* padding: 20px; */
+  width: 100%;
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* display: grid;
-  grid-template-columns: 1fr 1fr 1fr; */
-  /* grid-template-rows: 1fr; */
-  /* grid-template-areas: 'logo nav nav'; */
   box-sizing: border-box;
+  position: sticky;
 }
 .logo {
   height: 80px;
   margin-top: 5px;
   /* grid-area: logo; */
+}
+
+.title {
+  font-size: 1.5em;
+  grid-area: title;
+}
+.header-section p {
+  margin: 0;
+  padding: 0;
+  font-size: 0.7rem;
+}
+
+/* style for Link component */
+.new-link {
+  color: rgb(38, 0, 255);
+  text-decoration: none;
+  font-size: 1.5rem;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  padding: 0 4px 2px 4px;
+  background-color: rgb(123, 123, 255);
+}
+.new-link:hover,
+.new-link:active {
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: 250ms ease-in-out;
+  transform: scale(1.1);
+}
+/* style for button */
+.signout-button {
+  color: rgb(38, 0, 255);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  padding: 4px 4px 2px 4px;
+  background-color: rgb(123, 123, 255);
+}
+
+/* style for button when hovered or focused */
+.signout-button:hover,
+.signout-button:focus {
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: 250ms ease-in-out;
+  transform: scale(1.1);
+}
+.user-email {
+  font-size: 0.8rem;
+  color: rgb(0, 255, 64);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.menu-div {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 0px;
+  background-color: #838383;
+  background-image: linear-gradient(315deg, #838383 0%, #2f00ffa1 74%);
+  /* border-bottom: 2px solid #2f00ff; */
+
+  height: 0px;
+  overflow: hidden;
+  transition: 500ms ease-in-out;
+  position: absolute;
+  top: 90px;
+  z-index: 10;
+}
+
+.menu-div.open {
+  height: 100px;
+  position: absolute;
+  transform: translateY(-100%);
+  border-bottom: 2px solid #2f00ff;
+}
+
+.menu-icon {
+  background-color: rgb(165, 165, 165);
+  padding: 0px;
+  border-radius: 5px;
+  margin: 0 20px 0 40px;
+  height: 40px;
+}
+.menu-icon:active {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
 }

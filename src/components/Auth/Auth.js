@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, Redirect, useParams } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
-
 import './Auth.css';
 
 export default function Auth() {
