@@ -60,7 +60,7 @@ export async function signInUser(email, password) {
     return resp;
   } else {
     // eslint-disable-next-line no-console
-    console.error('hi this is a thing I put here', data.message);
+    console.error(data.message);
   }
 }
 
