@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useUser } from '../../hooks/useUser.js';
+import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
 
 export default function PostForm({
@@ -23,39 +24,55 @@ export default function PostForm({
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    // Create a new FormData object and append the image files to it
-    const formData = new FormData();
-    imageFilesInput.forEach((file) => formData.append('imageFiles', file));
-
     try {
-      // Make a fetch request to the backend endpoint that handles the file uploads
-      const response = await fetch('http://localhost:7890/api/v1/admin/upload', {
-        method: 'POST',
-        body: formData,
-        credentials: 'include',
-      });
-
-      // Parse the response as JSON
-      const result = await response.json();
-      const image_urls = result.map((image) => image.secure_url);
-      console.log('image_urls', image_urls);
-
-      // Create a new post object with the form input data and the Cloudinary image URLs
-      const newPost = {
+      const postDetails = {
         title: titleInput,
         description: descriptionInput,
-        // image_url: result.map((image) => image.secure_url),
-        image_url: image_urls[0],
         price: priceInput,
         category: categoryInput,
         author_id: user.id,
       };
 
-      // Call the submit handler with the new post object
+      const newPost = await uploadImagesAndCreatePost(imageFilesInput, postDetails);
+      console.log('newPost: ', newPost);
+
       submitHandler(newPost);
     } catch (error) {
       console.error(error);
     }
+
+    // Create a new FormData object and append the image files to it
+    // const formData = new FormData();
+    // imageFilesInput.forEach((file) => formData.append('imageFiles', file));
+
+    // try {
+    // Make a fetch request to the backend endpoint that handles the file uploads
+    // const response = await fetch('http://localhost:7890/api/v1/admin/upload', {
+    //   method: 'POST',
+    //   body: formData,
+    //   credentials: 'include',
+    // });
+
+    // Parse the response as JSON
+    // const result = await response.json();
+    // const image_urls = result.map((image) => image.secure_url);
+
+    // Create a new post object with the form input data and the Cloudinary image URLs
+    // const newPost = {
+    //   title: titleInput,
+    //   description: descriptionInput,
+    //   // image_url: result.map((image) => image.secure_url),
+    //   image_url: image_urls[0],
+    //   price: priceInput,
+    //   category: categoryInput,
+    //   author_id: user.id,
+    // };
+
+    // Call the submit handler with the new post object
+    //   submitHandler(newPost);
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
 
   const handleCategoryChange = (event) => {

@@ -109,7 +109,35 @@ export async function postPost({ title, description, image_url, category, price,
   const msg = await resp.json();
   return msg;
 }
+//
+// exp start
+export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
+  const formData = new FormData();
+  imageFiles.forEach((file) => formData.append('imageFiles', file));
+  try {
+    const response = await fetch('http://localhost:7890/api/v1/admin/upload', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    });
+    const result = await response.json();
+    const image_urls = result.map((image) => image.secure_url);
+    const newPost = {
+      ...postDetails,
+      image_url: image_urls[0],
+    };
 
+    return newPost;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// exp end
+
+//
+//
 // export async function toggleComplete(mark, todo_id) {
 //   const resp = await fetch(`${BASE_URL}/api/v1/todos/${todo_id}`, {
 //     method: 'PUT',
