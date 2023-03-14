@@ -110,7 +110,7 @@ export async function postPost({ title, description, image_url, category, price,
   return msg;
 }
 //
-// exp start
+
 export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
   const formData = new FormData();
   imageFiles.forEach((file) => formData.append('imageFiles', file));
@@ -134,37 +134,12 @@ export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
     };
 
     return newPost;
-
-    // const image_public_ids = result.map((image) => image.public_id);
-    // const newPost = {
-    //   ...postDetails,
-    //   image_url: image_urls[0],
-    // };
-    // return newPost;
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
 
-// exp end
-
-//
-//
-// export async function toggleComplete(mark, todo_id) {
-//   const resp = await fetch(`${BASE_URL}/api/v1/todos/${todo_id}`, {
-//     method: 'PUT',
-//     headers: {
-//       Accept: 'application/json',
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ mark, todo_id }),
-//     credentials: 'include',
-//   });
-
-//   const msg = await resp.json();
-//   return msg;
-// }
 export async function deleteById(todo_id) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin/${todo_id}`, {
     method: 'DELETE',
