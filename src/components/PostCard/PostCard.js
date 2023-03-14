@@ -11,7 +11,7 @@ export default function PostCard({
   posts,
   title,
   // description, //commented just for now
-  // image_url, //commented just for now
+  image_url, //commented just for now
   // category,  //commented just for now
   price,
   // author_id,
@@ -51,7 +51,7 @@ export default function PostCard({
 
   return (
     <div className="post overlay" key={id}>
-      <img className="admin-prod-img" src={`/${id}.jpg`} alt="edit" />
+      <img className="admin-prod-img" src={image_url} alt="edit" />
       <p className="grid-s2 grid-e4 ">{title.length > 9 ? title.slice(0, 9) + '...' : title}</p>
       <p className="grid-5">${price}</p>
       <div className="admin-prod-btn-cont grid-7">

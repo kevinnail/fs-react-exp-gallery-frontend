@@ -37,12 +37,15 @@ export default function PostForm({
 
       // Parse the response as JSON
       const result = await response.json();
+      const image_urls = result.map((image) => image.secure_url);
+      console.log('image_urls', image_urls);
 
       // Create a new post object with the form input data and the Cloudinary image URLs
       const newPost = {
         title: titleInput,
         description: descriptionInput,
-        image_url: result.map((image) => image.secure_url),
+        // image_url: result.map((image) => image.secure_url),
+        image_url: image_urls[0],
         price: priceInput,
         category: categoryInput,
         author_id: user.id,
