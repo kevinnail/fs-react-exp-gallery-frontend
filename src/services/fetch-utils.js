@@ -96,7 +96,7 @@ export async function fetchPosts() {
   }
 }
 
-export async function postPost({ title, description, image_url, category, price, author_id }) {
+export async function postPost(title, description, image_url, category, price, author_id) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
     method: 'POST',
     headers: {
@@ -109,36 +109,6 @@ export async function postPost({ title, description, image_url, category, price,
   const msg = await resp.json();
   return msg;
 }
-//
-
-export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
-  const formData = new FormData();
-  imageFiles.forEach((file) => formData.append('imageFiles', file));
-  try {
-    const response = await fetch('http://localhost:7890/api/v1/admin/upload', {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    });
-    const result = await response.json();
-    const image_urls = result.map((image) => image.secure_url);
-    const additionalImages = result.slice(1).map((image) => ({
-      public_id: image.public_id,
-      secure_url: image.secure_url,
-    }));
-
-    const newPost = {
-      ...postDetails,
-      image_url: image_urls[0],
-      additionalImages,
-    };
-
-    return newPost;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
 
 export async function deleteById(todo_id) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin/${todo_id}`, {
@@ -183,3 +153,49 @@ export async function getPostDetail(id) {
   const msg = await resp.json();
   return msg;
 }
+
+// image file upload functions
+export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
+  const formData = new FormData();
+  imageFiles.forEach((file) => formData.append('imageFiles', file));
+  try {
+    const response = await fetch('http://localhost:7890/api/v1/admin/upload', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    });
+    const result = await response.json();
+    const image_urls = result.map((image) => image.secure_url);
+    const additionalImages = result.slice(1).map((image) => ({
+      public_id: image.public_id,
+      secure_url: image.secure_url,
+    }));
+
+    const newPost = {
+      ...postDetails,
+      image_url: image_urls[0],
+      additionalImages,
+    };
+
+    return newPost;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const uploadRemainingImages = async (imageFiles, postDetails) => {
+  const formData = new FormData();
+  imageFiles.forEach((file) => formData.append('imageFiles', file));
+  try {
+    const response = await fetch('http://localhost:7890/api/v1/admin/upload', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    });
+    const result = await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

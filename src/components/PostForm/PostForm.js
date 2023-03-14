@@ -34,8 +34,9 @@ export default function PostForm({
       };
 
       const newPost = await uploadImagesAndCreatePost(imageFilesInput, postDetails);
+      console.log('newPost', newPost);
 
-      submitHandler(newPost);
+      submitHandler(newPost, newPost.additionalImages);
     } catch (error) {
       console.error(error);
     }
