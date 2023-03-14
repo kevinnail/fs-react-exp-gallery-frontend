@@ -5,28 +5,54 @@ import './PostForm.css';
 export default function PostForm({
   title = '',
   description = '',
-  image_url = '',
   price = '',
   category = '',
   submitHandler,
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
-  const [imageUrlInput, setImageUrlInput] = useState(image_url);
+  const [imageFilesInput, setImageFilesInput] = useState([]);
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
   const { user } = useUser();
 
-  const handleFormSubmit = (e) => {
+  const handleFileInputChange = (event) => {
+    setImageFilesInput([...event.target.files]);
+  };
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    submitHandler({
-      title: titleInput,
-      description: descriptionInput,
-      image_url: imageUrlInput,
-      price: priceInput,
-      category: categoryInput,
-      author_id: user.id,
-    });
+
+    // Create a new FormData object and append the image files to it
+    const formData = new FormData();
+    imageFilesInput.forEach((file) => formData.append('imageFiles', file));
+
+    try {
+      // Make a fetch request to the backend endpoint that handles the file uploads
+      const response = await fetch('http://localhost:7890/api/v1/admin/upload', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      });
+
+      // Parse the response as JSON
+      const result = await response.json();
+
+      // Create a new post object with the form input data and the Cloudinary image URLs
+      const newPost = {
+        title: titleInput,
+        description: descriptionInput,
+        image_url: result.map((image) => image.secure_url),
+        price: priceInput,
+        category: categoryInput,
+        author_id: user.id,
+      };
+
+      // Call the submit handler with the new post object
+      submitHandler(newPost);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleCategoryChange = (event) => {
@@ -34,7 +60,7 @@ export default function PostForm({
   };
 
   return (
-    <form className="new-post-form" onSubmit={handleFormSubmit}>
+    <form className="new-post-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
       <div>
         <label className="form-title">Title</label>
         <br />
@@ -60,18 +86,12 @@ export default function PostForm({
           onChange={(e) => setDescriptionInput(e.target.value)}
         />
       </div>
+
       <div>
-        <label className="form-title">Image URL</label>
-        <br />
-        <input
-          placeholder="Enter image URL"
-          className="input"
-          type="text"
-          name="image_url"
-          value={imageUrlInput}
-          onChange={(e) => setImageUrlInput(e.target.value)}
-        />
+        <label htmlFor="image">Images:</label>
+        <input type="file" id="image" name="image" onChange={handleFileInputChange} multiple />
       </div>
+
       <div>
         <label className="form-title">Price</label>
         <br />
