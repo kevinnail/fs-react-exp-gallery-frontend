@@ -122,12 +122,25 @@ export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
     });
     const result = await response.json();
     const image_urls = result.map((image) => image.secure_url);
+    const additionalImages = result.slice(1).map((image) => ({
+      public_id: image.public_id,
+      secure_url: image.secure_url,
+    }));
+
     const newPost = {
       ...postDetails,
       image_url: image_urls[0],
+      additionalImages,
     };
 
     return newPost;
+
+    // const image_public_ids = result.map((image) => image.public_id);
+    // const newPost = {
+    //   ...postDetails,
+    //   image_url: image_urls[0],
+    // };
+    // return newPost;
   } catch (error) {
     console.error(error);
     throw error;
