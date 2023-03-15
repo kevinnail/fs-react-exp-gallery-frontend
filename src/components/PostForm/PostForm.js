@@ -34,7 +34,6 @@ export default function PostForm({
       };
 
       const newPost = await uploadImagesAndCreatePost(imageFilesInput, postDetails);
-      console.log('newPost', newPost);
 
       submitHandler(newPost, newPost.additionalImages);
     } catch (error) {
@@ -107,8 +106,8 @@ export default function PostForm({
           <option value="Beads">Beads</option>
           <option value="Blunt Tips">Blunt Tips</option>
           <option value="Bubblers">Bubblers</option>
-          <option value="Collabs ">Collabs</option>
-          <option value="Cups ">Cups</option>
+          <option value="Collabs">Collabs</option>
+          <option value="Cups">Cups</option>
           <option value="Goblets">Goblets</option>
           <option value="Iso Stations">Iso Stations</option>
           <option value="Marbles">Marbles</option>
