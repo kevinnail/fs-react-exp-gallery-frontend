@@ -191,6 +191,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
       body: formData,
       credentials: 'include',
     });
+
     const result = await response.json();
     const image_urls = result.map((image) => image.secure_url);
     const additionalImages = result.slice(1).map((image) => ({
@@ -211,7 +212,8 @@ export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
   }
 };
 
-export const uploadRemainingImages = async (imageFiles, postDetails) => {
+// export const uploadRemainingImages = async (imageFiles, postDetails) => {
+export const uploadRemainingImages = async (imageFiles) => {
   const formData = new FormData();
   imageFiles.forEach((file) => formData.append('imageFiles', file));
   try {
@@ -221,6 +223,24 @@ export const uploadRemainingImages = async (imageFiles, postDetails) => {
       credentials: 'include',
     });
     const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// delete image from cloudinary
+export const deleteImage = async (public_id) => {
+  try {
+    const response = await fetch(`http://localhost:7890/api/v1/admin/delete/${public_id}`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+    const result = await response.json();
+    console.log('result', result);
+
+    return result;
   } catch (error) {
     console.error(error);
     throw error;

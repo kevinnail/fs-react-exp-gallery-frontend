@@ -2,7 +2,7 @@
 import { Link, Redirect } from 'react-router-dom';
 import { usePost } from '../../hooks/usePost.js';
 import { useUser } from '../../hooks/useUser.js';
-import { deleteById } from '../../services/fetch-utils.js';
+import { deleteById, deleteImage } from '../../services/fetch-utils.js';
 import './PostCard.css';
 
 // export default function PostCard({ task, id, completed, setPosts, posts }) {
@@ -35,7 +35,14 @@ export default function PostCard({
   // delete the post
   const handleDelete = async () => {
     try {
+      // delete post function
       await deleteById(id);
+      // delete image function
+      const public_id = image_url.split('/').slice(-1)[0].split('.')[0];
+      console.log('public_id', public_id);
+      console.log('image_url', image_url);
+
+      await deleteImage(public_id);
       const updatedPosts = posts.filter((post) => post.id !== id);
       setPosts(updatedPosts);
       setLoading(true);
