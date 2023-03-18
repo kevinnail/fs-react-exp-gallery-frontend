@@ -47,7 +47,7 @@ export default function Header() {
           New Post
         </Link>
         <button className="signout-button" onClick={handleClick}>
-          Sign Out
+          Sign Out {<img src="../signout.png" />}
         </button>
       </div>
     </>

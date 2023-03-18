@@ -101,12 +101,15 @@ header {
 }
 
 .menu-icon {
-  background-color: rgb(165, 165, 165);
+  /* background-color: rgb(165, 165, 165); */
   padding: 0px;
-  border-radius: 5px;
+  border-radius: 50%;
   margin: 0 20px 0 40px;
   height: 40px;
+  box-shadow: 0 0 8px 0 white;
 }
 .menu-icon:active {
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+  background-color: rgb(86, 86, 86);
+
+  box-shadow: 0 0 0 0.2rem rgba(50, 50, 50, 0.5);
 }
