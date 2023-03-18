@@ -16,6 +16,7 @@ export default function PostForm({
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
   const { user } = useUser();
+  const newOrEdit = title ? 'Edit Post' : 'New Gallery Post';
 
   const handleFileInputChange = (event) => {
     setImageFilesInput([...event.target.files]);
@@ -47,62 +48,22 @@ export default function PostForm({
 
   return (
     <form className="new-post-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
+      <h1 id="form-title-header">{newOrEdit}</h1>
       <div>
-        <label className="form-title">Title</label>
+        <label className="form-title" htmlFor="category">
+          Category
+        </label>
         <br />
-        <input
-          required
-          placeholder="Enter title"
-          className="input"
-          type="text"
-          name="title"
-          value={titleInput}
-          onChange={(e) => setTitleInput(e.target.value)}
-        />
-      </div>
-      <div>
-        <label className="form-title">Description</label>
-        <br />
-        <textarea
-          required
-          placeholder="Enter description"
-          className="input"
-          name="description"
-          value={descriptionInput}
-          onChange={(e) => setDescriptionInput(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label htmlFor="image">Images:</label>
-        <input type="file" id="image" name="image" onChange={handleFileInputChange} multiple />
-      </div>
-
-      <div>
-        <label className="form-title">Price</label>
-        <br />
-        <input
-          required
-          placeholder="Enter price"
-          className="input"
-          type="number"
-          step="1"
-          name="price"
-          value={priceInput}
-          onChange={(e) => setPriceInput(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label htmlFor="category">Category:</label>
         <select
           id="category"
           value={categoryInput}
           onChange={handleCategoryChange}
-          className="input"
+          className="image-input shadow-border"
           required
         >
-          <option value="">choose category</option>
+          <option value="" disabled selected>
+            Choose category
+          </option>
           <option value="Beads">Beads</option>
           <option value="Blunt Tips">Blunt Tips</option>
           <option value="Bubblers">Bubblers</option>
@@ -122,7 +83,67 @@ export default function PostForm({
         </select>
       </div>
       <div>
-        <button type="submit">Submit</button>
+        <label className="form-title">Title</label>
+        <br />
+        <input
+          required
+          maxLength={50}
+          placeholder="Enter title"
+          className="image-input"
+          type="text"
+          name="title"
+          value={titleInput}
+          onChange={(e) => setTitleInput(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="form-title">Description</label>
+        <br />
+        <textarea
+          required
+          maxLength={350}
+          placeholder="Enter description"
+          className="image-input description shadow-border"
+          name="description"
+          value={descriptionInput}
+          onChange={(e) => setDescriptionInput(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className="form-title">Price</label>
+        <br />
+        <input
+          required
+          placeholder="Enter price"
+          className="image-input"
+          type="number"
+          step="1"
+          name="price"
+          value={priceInput}
+          onChange={(e) => setPriceInput(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className="form-title " htmlFor="image">
+          Images
+        </label>
+        <br />
+        <input
+          type="file"
+          id="image"
+          className="file-upload-btn shadow-border"
+          name="image"
+          onChange={handleFileInputChange}
+          multiple
+        />
+      </div>
+
+      <div className="btn-container">
+        <button className="submit-btn" type="submit">
+          Submit
+        </button>
       </div>
     </form>
   );
