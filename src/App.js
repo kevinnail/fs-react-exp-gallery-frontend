@@ -1,11 +1,12 @@
 import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
+import { useUser } from './hooks/useUser.js';
 import Auth from './components/Auth/Auth.js';
 import Admin from './components/Admin/Admin.js';
 import Header from './components/Header/Header.js';
-import { useUser } from './hooks/useUser.js';
 import NewPost from './components/NewPost/NewPost.js';
 import EditPost from './components/EditPost/EditPost.js';
+import Gallery from './components/Gallery/Gallery.js';
 
 function App() {
   const { user } = useUser();
@@ -15,6 +16,7 @@ function App() {
       <Header />
       <Switch>
         <Route exact path="/auth/:type" component={Auth} />
+        <Route path="/gallery" component={Gallery} />
         <Route path="/admin/new" component={NewPost} />
         <Route exact path="/admin/:id" component={EditPost} />
         <Route path="/admin" component={Admin} />
