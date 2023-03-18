@@ -1,6 +1,7 @@
 .new-post-form {
-  background-color: rgb(93, 93, 239);
-  width: 100%;
+  /* background-color: rgb(93, 93, 239, 0.1); */
+  background-image: linear-gradient(315deg, #7777f3c4, #5b36ff83);
+  width: 80%;
   /* height: 400px; */
   min-width: 350px;
   display: flex;
@@ -12,7 +13,7 @@
   /* padding: 20px; */
   box-sizing: border-box;
   display: grid;
-  grid-template-rows: 50px 60px 60px 110px 60px 80px 80px;
+  grid-template-rows: 50px 65px 65px 110px 60px 85px 80px 80px;
   justify-items: start;
 }
 
@@ -20,6 +21,8 @@
   font-size: 1.2rem;
   font-weight: bold;
   color: white;
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
 }
 
 .image-input {
@@ -28,6 +31,9 @@
   background-color: rgb(176, 176, 253);
   font-size: large;
   border-radius: 5px;
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 .shadow-border {
@@ -38,12 +44,14 @@
 }
 
 #form-title-header {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
   color: white;
   margin: 0;
   padding: 0;
   justify-self: center;
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
 }
 
 .file-upload-btn {
@@ -54,6 +62,8 @@
   margin: auto;
   font-size: 1rem;
   border-radius: 5px;
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
 }
 .form-comp:hover {
   background-color: rgb(127, 127, 127);
@@ -74,19 +84,38 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 20px;
 }
 
 .submit-btn {
-  background-color: rgb(176, 176, 253);
+  background-color: rgb(176, 176, 253, 0.5);
+  /* background: none; */
   box-sizing: border-box;
-  padding: 10px;
+  border: 1px solid black;
+  /* padding: 10px; */
   /* font-size: large; */
   /* width: 300px; */
-  font-size: 1rem;
+  /* font-size: 1.3rem; */
   border-radius: 50%;
-  box-shadow: 4px 4px 5px 0 black;
+  padding: 5px 5px 3px 5px;
+  box-shadow: 4px 4px 8px 0 black;
+  /* font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px; */
 }
 .submit-btn:active {
-  background-color: rgb(127, 127, 127);
+  background-color: rgba(137, 137, 195, 0.5);
+
   box-shadow: 0px 0px 5px 0 black;
+}
+
+.upload-icon {
+  /* font-size: 1.5rem; */
+  /* margin-right: 10px; */
+  /* background-color: rgb(176, 176, 253); */
+}
+
+option {
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
