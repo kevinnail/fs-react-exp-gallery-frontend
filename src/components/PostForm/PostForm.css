@@ -105,15 +105,21 @@
 .submit-btn:active {
   background-color: rgba(137, 137, 195, 0.5);
 
-  box-shadow: 0px 0px 5px 0 black;
+  /* box-shadow: 0px 0px 5px 0 black;*/
+  box-shadow: inset 2px 2px 5px #d3c9ff;
 }
 
 .upload-icon {
-  /* font-size: 1.5rem; */
-  /* margin-right: 10px; */
-  /* background-color: rgb(176, 176, 253); */
+  /* display: block; */
+  /* width: 40px;
+  height: 40px; */
 }
-
+.new-post-icon {
+  width: 35px;
+  height: 35px;
+  /* margin-right: 10px */
+  margin-left: 10px;
+}
 option {
   font-family: 'Shadows Into Light', cursive;
   letter-spacing: 2px;
