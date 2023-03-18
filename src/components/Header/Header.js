@@ -43,6 +43,10 @@ export default function Header() {
       </header>
 
       <div className={`menu-div ${isMenuOpen ? 'open' : ''}`} onClick={handleMenuClick}>
+        <Link className="new-link" to="/gallery" onClick={handleMenuClick}>
+          <span className="new-post-span">Gallery</span>{' '}
+          {<img className="new-post-icon" src="../gallery.png" />}
+        </Link>
         <Link className="new-link" to="/admin/new" onClick={handleMenuClick}>
           <span className="new-post-span">New Post</span>{' '}
           {<img className="new-post-icon" src="../upload-1.png" />}
