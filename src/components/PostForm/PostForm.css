@@ -98,13 +98,14 @@
   /* font-size: 1.3rem; */
   border-radius: 50%;
   padding: 5px 5px 3px 5px;
-  box-shadow: 4px 4px 8px 0 black;
+  box-shadow: 4px 4px 4px 0 black;
   /* font-family: 'Shadows Into Light', cursive;
   letter-spacing: 2px; */
 }
 .submit-btn:active {
-  background-color: rgba(137, 137, 195, 0.5);
-
+  background-color: rgba(163, 163, 231, 0.5);
+  /* border-top: 2px solid black;
+  border-left: 2px solid black; */
   /* box-shadow: 0px 0px 5px 0 black;*/
   box-shadow: inset 2px 2px 5px #d3c9ff;
 }
