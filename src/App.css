@@ -9,5 +9,8 @@
   /* color: white; */
 }
 body {
-  background-color: #282c34;
+  /* background-color: #282c34; */
+}
+html {
+  background-image: url(/public/ocean.jpg);
 }
