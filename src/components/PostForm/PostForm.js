@@ -63,7 +63,7 @@ export default function PostForm({
             className="image-input shadow-border"
             required
           >
-            <option value="" disabled selected>
+            <option value="" disabled>
               Choose category
             </option>
             <option value="Beads">Beads</option>
