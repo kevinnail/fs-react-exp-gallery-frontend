@@ -270,3 +270,18 @@ export const deleteImage = async (public_id) => {
     throw error;
   }
 };
+
+export const getAdditionalImageUrls = async (id) => {
+  try {
+    const response = await fetch(`http://localhost:7890/api/v1/admin/urls/${id}`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+    const result = await response.json();
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
