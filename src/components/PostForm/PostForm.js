@@ -32,6 +32,7 @@ export default function PostForm({
         price: priceInput,
         category: categoryInput,
         author_id: user.id,
+        add_imgs: imageFilesInput.length > 1,
       };
 
       const newPost = await uploadImagesAndCreatePost(imageFilesInput, postDetails);
@@ -71,10 +72,10 @@ export default function PostForm({
             <option value="Bubblers">Bubblers</option>
             <option value="Collabs">Collabs</option>
             <option value="Cups">Cups</option>
+            <option value="Dry Pieces">Dry Pieces</option>
             <option value="Goblets">Goblets</option>
             <option value="Iso Stations">Iso Stations</option>
             <option value="Marbles">Marbles</option>
-            <option value="Dry Pieces">Dry Pieces</option>
             <option value="Pendants">Pendants</option>
             <option value="Recyclers">Recyclers</option>
             <option value="Rigs">Rigs</option>

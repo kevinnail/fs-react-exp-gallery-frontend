@@ -103,7 +103,8 @@ export async function postPost(
   category,
   price,
   author_id,
-  public_id
+  public_id,
+  add_imgs
 ) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
     method: 'POST',
@@ -111,7 +112,16 @@ export async function postPost(
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title, description, image_url, category, price, author_id, public_id }),
+    body: JSON.stringify({
+      title,
+      description,
+      image_url,
+      category,
+      price,
+      author_id,
+      public_id,
+      add_imgs,
+    }),
     credentials: 'include',
   });
 
