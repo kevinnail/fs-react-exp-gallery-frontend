@@ -7,6 +7,7 @@ import Header from './components/Header/Header.js';
 import NewPost from './components/NewPost/NewPost.js';
 import EditPost from './components/EditPost/EditPost.js';
 import Gallery from './components/Gallery/Gallery.js';
+import PostDetail from './components/PostDetail/PostDetail.js';
 
 function App() {
   const { user } = useUser();
@@ -16,7 +17,7 @@ function App() {
       <Header />
       <Switch>
         <Route exact path="/auth/:type" component={Auth} />
-        <Route path="/gallery/:id" component={Gallery} />
+        <Route path="/gallery/:id" component={PostDetail} />
         <Route path="/gallery" component={Gallery} />
         <Route path="/admin/new" component={NewPost} />
         <Route exact path="/admin/:id" component={EditPost} />
