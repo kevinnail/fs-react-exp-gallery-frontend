@@ -1,13 +1,17 @@
 .post-detail-div {
-  margin: 0 auto;
+  background-image: linear-gradient(145deg, #7777f3bd, #5b36ff83);
+
+  margin: 10px auto;
   width: 80%;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 0 10px #ccc;
   margin-bottom: 20px;
-  background-color: rgb(170, 148, 255);
+  /* background-color: rgb(170, 148, 255); */
 }
 .gallery-image {
   width: 100%;
+  border-radius: 5px;
+  box-shadow: 0 0 2px 0 #ff000096;
 }

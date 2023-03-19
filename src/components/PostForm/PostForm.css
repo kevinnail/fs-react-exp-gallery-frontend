@@ -126,3 +126,28 @@ option {
   letter-spacing: 2px;
   font-weight: bold;
 }
+
+.loading {
+  animation: scaleAnimation 6s infinite; /* 1s duration and loop infinitely */
+  width: 30%;
+  margin: auto;
+  border-radius: 20px;
+  /* padding: 100px; */
+}
+
+@keyframes scaleAnimation {
+  0%,
+  100% {
+    transform: scale(0.5);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.loading-div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
