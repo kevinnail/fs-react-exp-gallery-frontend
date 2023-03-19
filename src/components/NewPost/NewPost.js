@@ -15,9 +15,18 @@ export default function NewPost() {
   const handleSubmit = async (newPost, additionalImages) => {
     try {
       // additionImages is an array of images that need to have their data sent to the server
-      const { title, description, image_url, category, price, author_id } = newPost;
+      const { title, description, image_url, category, price, author_id, public_id } = newPost;
 
-      const post = await postPost(title, description, image_url, category, price, author_id);
+      // create new post with fetch call to db
+      const post = await postPost(
+        title,
+        description,
+        image_url,
+        category,
+        price,
+        author_id,
+        public_id
+      );
 
       await postAddImages(additionalImages, post.id);
       history.push('/admin');

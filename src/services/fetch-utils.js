@@ -96,16 +96,25 @@ export async function fetchPosts() {
   }
 }
 
-export async function postPost(title, description, image_url, category, price, author_id) {
+export async function postPost(
+  title,
+  description,
+  image_url,
+  category,
+  price,
+  author_id,
+  public_id
+) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title, description, image_url, category, price, author_id }),
+    body: JSON.stringify({ title, description, image_url, category, price, author_id, public_id }),
     credentials: 'include',
   });
+
   const msg = await resp.json();
   return msg;
 }
@@ -194,6 +203,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
 
     const result = await response.json();
     const image_urls = result.map((image) => image.secure_url);
+    const public_ids = result.map((image) => image.public_id);
     const additionalImages = result.slice(1).map((image) => ({
       public_id: image.public_id,
       secure_url: image.secure_url,
@@ -202,6 +212,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
     const newPost = {
       ...postDetails,
       image_url: image_urls[0],
+      public_id: public_ids[0],
       additionalImages,
     };
 
@@ -233,12 +244,15 @@ export const uploadRemainingImages = async (imageFiles) => {
 // delete image from cloudinary
 export const deleteImage = async (public_id) => {
   try {
-    const response = await fetch(`http://localhost:7890/api/v1/admin/delete/${public_id}`, {
+    const response = await fetch(`http://localhost:7890/api/v1/admin/delete`, {
       method: 'POST',
       credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ public_id: public_id }),
     });
     const result = await response.json();
-    console.log('result', result);
 
     return result;
   } catch (error) {

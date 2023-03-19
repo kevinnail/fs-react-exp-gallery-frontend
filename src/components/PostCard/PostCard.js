@@ -14,6 +14,7 @@ export default function PostCard({
   image_url, //commented just for now
   // category,  //commented just for now
   price,
+  public_id,
   // author_id,
   setPosts,
 }) {
@@ -38,9 +39,12 @@ export default function PostCard({
       // delete post function
       await deleteById(id);
       // delete image function
-      const public_id = image_url.split('/').slice(-1)[0].split('.')[0];
-      console.log('public_id', public_id);
-      console.log('image_url', image_url);
+      // const public_id = image_url.split('/').slice(-1)[0].split('.')[0];
+      // console.log('image_url', image_url);
+      // console.log('public_id', public_id);
+
+      // console.log('public_id', public_id);
+      // console.log('image_url', image_url);
 
       await deleteImage(public_id);
       const updatedPosts = posts.filter((post) => post.id !== id);
