@@ -10,6 +10,8 @@ export default function PostForm({
   price = '',
   category = '',
   submitHandler,
+  imageUrls,
+  // setImageUrls,
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
@@ -19,7 +21,9 @@ export default function PostForm({
   const { user } = useUser();
   const newOrEdit = title ? 'Edit Post' : 'New Gallery Post';
   const [loading, setLoading] = useState(false);
-  const [imageURLs, setImageURLs] = useState([]);
+  const [newImageURLs, setNewImageURLs] = useState([]); // <--- these are for new posts
+  // const combinedImageURLs = [...imageURLs, ...imageUrls];
+  const combinedImageURLs = [...(newImageURLs || []), ...(imageUrls || [])];
 
   const handleFileInputChange = (event) => {
     setImageFilesInput([...event.target.files]);
@@ -29,6 +33,7 @@ export default function PostForm({
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const postDetails = {
         title: titleInput,
@@ -61,7 +66,7 @@ export default function PostForm({
 
       reader.onload = (event) => {
         urls.push(event.target.result);
-        setImageURLs(urls);
+        setNewImageURLs(urls);
       };
 
       reader.readAsDataURL(file);
@@ -163,6 +168,7 @@ export default function PostForm({
         <div>
           <br />
           <input
+            required
             type="file"
             id="image"
             className="file-upload-btn shadow-border"
@@ -171,9 +177,9 @@ export default function PostForm({
             multiple
           />
         </div>
-        {imageURLs.length > 0 ? (
+        {combinedImageURLs.length > 0 ? (
           <div className="thumbnails-container">
-            {imageURLs.map((url, index) => (
+            {combinedImageURLs.map((url, index) => (
               <img
                 key={index}
                 className="thumbnail"
@@ -183,6 +189,7 @@ export default function PostForm({
             ))}
           </div>
         ) : null}
+
         <div className="btn-container">
           <button className="submit-btn" type="submit">
             {<img className="upload-icon " src="/upload.png" alt="upload" />}

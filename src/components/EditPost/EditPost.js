@@ -8,7 +8,7 @@ import React from 'react';
 export default function EditPost() {
   const { id } = useParams();
   const history = useHistory();
-  const { postDetail, loading, setLoading, error, setError } = usePost(id);
+  const { postDetail, loading, setLoading, error, setError, imageUrls, setImageUrls } = usePost(id);
   const { user } = useUser();
 
   if (!user) {
@@ -34,5 +34,12 @@ export default function EditPost() {
     }
   };
 
-  return <PostForm {...postDetail} submitHandler={handleSubmit} />;
+  return (
+    <PostForm
+      {...postDetail}
+      submitHandler={handleSubmit}
+      setImageUrls={setImageUrls}
+      imageUrls={imageUrls}
+    />
+  );
 }
