@@ -130,22 +130,12 @@ export async function postPost(
 }
 
 export async function postAddImages(imageFiles, id) {
-  // console.log('imageFiles', imageFiles);
-  // console.log('id', id);
-
   const formData = new FormData();
-  // imageFiles.forEach((image) => {
-  //   formData.append('image', image);
-  // });
   formData.append('image_urls', JSON.stringify(imageFiles.map((image) => image.secure_url)));
   formData.append('image_public_ids', JSON.stringify(imageFiles.map((image) => image.public_id)));
 
   // Append the id to the formData
   formData.append('id', id);
-  // for (const [key, value] of formData.entries()) {
-  //   console.log(key, value);
-  // }
-
   const resp = await fetch(`${BASE_URL}/api/v1/admin/images`, {
     method: 'POST',
     body: formData,
