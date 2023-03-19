@@ -13,10 +13,14 @@ export default function GalleryPostCard({
   // category, //commented just for now
 }) {
   return (
-    <div className="gallery-display" key={id}>
-      <p className="gallery-title">{title.length > 20 ? title.slice(0, 20) + '...' : title}</p>
-      <img className="gallery-img" src={image_url} alt="gallery image" />
-      <p className="gallery-price">${price}</p>
-    </div>
+    <>
+      <a href={`/gallery/${id}`}>
+        <div className="gallery-display" key={id}>
+          <p className="gallery-title">{title.length > 20 ? title.slice(0, 20) + '...' : title}</p>
+          <img className="gallery-img" src={image_url} alt="gallery image" />
+          <p className="gallery-price">${price}</p>
+        </div>
+      </a>
+    </>
   );
 }
