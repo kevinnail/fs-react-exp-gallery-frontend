@@ -8,7 +8,6 @@ export default function PostDetail() {
   // const post = usePost(id);
   const { postDetail, imageUrls, loading, error } = usePost(id);
   // const { postDetail } = post;
-  console.log('ImageUrls: ', imageUrls);
 
   return (
     <div className="post-detail-div">
