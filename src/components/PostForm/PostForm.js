@@ -32,7 +32,7 @@ export default function PostForm({
         price: priceInput,
         category: categoryInput,
         author_id: user.id,
-        add_imgs: imageFilesInput.length > 1,
+        num_imgs: imageFilesInput.length,
       };
 
       const newPost = await uploadImagesAndCreatePost(imageFilesInput, postDetails);

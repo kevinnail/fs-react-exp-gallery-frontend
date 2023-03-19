@@ -5,7 +5,6 @@ import { useUser } from '../../hooks/useUser.js';
 import { deleteById, deleteImage } from '../../services/fetch-utils.js';
 import './PostCard.css';
 
-// export default function PostCard({ task, id, completed, setPosts, posts }) {
 export default function PostCard({
   id,
   posts,
@@ -15,6 +14,7 @@ export default function PostCard({
   // category,  //commented just for now
   price,
   public_id,
+  num_imgs,
   // author_id,
   setPosts,
 }) {
@@ -26,26 +26,12 @@ export default function PostCard({
     return <Redirect to="/auth/sign-in" />;
   }
 
-  //   return (
-  //     <div className="post overlay" key={id}>
-  //       {title}
-  //     </div>
-  //   );
-  // }
-
   // delete the post
   const handleDelete = async () => {
     try {
-      // delete post function
       await deleteById(id);
-      // delete image function
-      // const public_id = image_url.split('/').slice(-1)[0].split('.')[0];
-      // console.log('image_url', image_url);
-      // console.log('public_id', public_id);
-
-      // console.log('public_id', public_id);
-      // console.log('image_url', image_url);
-
+      // num_imgs ? await deleteRemainingImages(id) : await deleteImage(public_id);
+      // await deleteRemainingImages(id);
       await deleteImage(public_id);
       const updatedPosts = posts.filter((post) => post.id !== id);
       setPosts(updatedPosts);
@@ -55,14 +41,11 @@ export default function PostCard({
     }
   };
 
-  // make the post card clickable and toggle the completed status
-  // const handleEdit = async () => {
-  //   console.log('handleEdit');
-  // };
-
   return (
     <div className="post overlay" key={id}>
-      <img className="admin-prod-img" src={image_url} alt="edit" />
+      <Link to={`/gallery/${id}`}>
+        <img className="admin-prod-img" src={image_url} alt="edit" />
+      </Link>
       <p className="grid-s2 grid-e4 ">{title.length > 9 ? title.slice(0, 9) + '...' : title}</p>
       <p className="grid-5">${price}</p>
       <div className="admin-prod-btn-cont grid-7">
@@ -79,12 +62,6 @@ export default function PostCard({
           />
         </Link>
       </div>
-      {/* <h1>title: {title}</h1>
-      <p>desc: {description}</p>
-      <p>img: {image_url}</p>
-      <p>cat: {category}</p>
-      <p>$ {price}</p>
-      <p>ID: {id}</p> */}
     </div>
   );
 }
