@@ -19,10 +19,11 @@ export default function PostForm({
   const { user } = useUser();
   const newOrEdit = title ? 'Edit Post' : 'New Gallery Post';
   const [loading, setLoading] = useState(false);
-  // const [loading, setLoading] = usePosts();
+  const [imageURLs, setImageURLs] = useState([]);
 
   const handleFileInputChange = (event) => {
     setImageFilesInput([...event.target.files]);
+    readAndPreview(event.target.files);
   };
 
   const handleFormSubmit = async (e) => {
@@ -52,6 +53,21 @@ export default function PostForm({
     setCategoryInput(event.target.value);
   };
 
+  const readAndPreview = (files) => {
+    const urls = [];
+
+    for (const file of files) {
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        urls.push(event.target.result);
+        setImageURLs(urls);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   if (loading) {
     return (
       <div className="loading-div">
@@ -61,11 +77,6 @@ export default function PostForm({
   }
   return (
     <>
-      {/* {loading ? ( */}
-      {/* <div>
-          <img className="loading" src="../logo-sq.png" />
-        </div> // You can use any loading indicator here */}
-      {/* ) : ( */}
       <form className="new-post-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
         <h1 id="form-title-header">{newOrEdit}</h1>
         <div>
@@ -124,18 +135,29 @@ export default function PostForm({
           />
         </div>
 
-        <div>
-          <br />
+        <div className="input-wrapper">
+          <br />{' '}
           <input
             required
             placeholder="Enter price"
-            className="image-input"
+            className="image-input input-with-dollar-sign"
             type="number"
             step="1"
             name="price"
             value={priceInput}
             onChange={(e) => setPriceInput(e.target.value)}
-          />
+          />{' '}
+          <span
+            style={{
+              position: 'relative',
+              left: '-300px',
+              top: '0',
+              transform: 'translateX(50%)',
+              display: 'inline',
+            }}
+          >
+            $
+          </span>
         </div>
 
         <div>
@@ -149,7 +171,18 @@ export default function PostForm({
             multiple
           />
         </div>
-
+        {imageURLs.length > 0 ? (
+          <div className="thumbnails-container">
+            {imageURLs.map((url, index) => (
+              <img
+                key={index}
+                className="thumbnail"
+                src={url}
+                alt={`Selected image ${index + 1}`}
+              />
+            ))}
+          </div>
+        ) : null}
         <div className="btn-container">
           <button className="submit-btn" type="submit">
             {<img className="upload-icon " src="/upload.png" alt="upload" />}
