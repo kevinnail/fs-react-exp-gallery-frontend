@@ -44,6 +44,7 @@ body {
   font-family: 'Shadows Into Light', cursive;
   letter-spacing: 2px;
   font-weight: bold;
+  padding: 5px;
 }
 
 .shadow-border {
@@ -81,12 +82,15 @@ body {
 
 .description {
   box-sizing: border-box;
-  width: 300px;
-  height: 75px;
+  max-width: 300px;
+  max-height: 75px;
+  min-width: 300px;
+  min-height: 75px;
   background-color: rgb(176, 176, 253);
   font-size: large;
   position: relative;
   border-radius: 5px;
+  padding: 5px;
 }
 
 .btn-container {
