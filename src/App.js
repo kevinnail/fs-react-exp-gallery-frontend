@@ -16,6 +16,7 @@ function App() {
       <Header />
       <Switch>
         <Route exact path="/auth/:type" component={Auth} />
+        <Route path="/gallery/:id" component={Gallery} />
         <Route path="/gallery" component={Gallery} />
         <Route path="/admin/new" component={NewPost} />
         <Route exact path="/admin/:id" component={EditPost} />
