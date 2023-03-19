@@ -13,8 +13,6 @@ export function usePost(id) {
     const fetchData = async () => {
       try {
         const data = await getPostDetail(id);
-        // let additionalImages = [];
-
         const additionalImages = await getAdditionalImageUrls(id);
         const additionalImageUrls = additionalImages.map((image) => image.image_url);
 
