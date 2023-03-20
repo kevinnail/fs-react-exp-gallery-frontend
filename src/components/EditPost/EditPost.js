@@ -8,7 +8,16 @@ import React from 'react';
 export default function EditPost() {
   const { id } = useParams();
   const history = useHistory();
-  const { postDetail, loading, setLoading, error, setError, imageUrls, setImageUrls } = usePost(id);
+  const {
+    postDetail,
+    loading,
+    setLoading,
+    error,
+    setError,
+    imageUrls,
+    setImageUrls,
+    additionalImageUrls,
+  } = usePost(id);
   const { user } = useUser();
 
   if (!user) {
@@ -23,8 +32,11 @@ export default function EditPost() {
     );
   if (error) return <h1>{error}</h1>;
 
-  const handleSubmit = async (post) => {
+  const handleSubmit = async (post, additionalImages, currentImages) => {
     setLoading(true);
+    post.image_url = currentImages[0];
+    post.additionalImages = currentImages;
+    // console.log('post AFTER: ', post);
 
     try {
       await updatePost(postDetail.id, post);
@@ -40,6 +52,7 @@ export default function EditPost() {
       submitHandler={handleSubmit}
       setImageUrls={setImageUrls}
       imageUrls={imageUrls}
+      additionalImageUrls={additionalImageUrls}
     />
   );
 }

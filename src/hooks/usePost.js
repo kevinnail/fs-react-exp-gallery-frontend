@@ -14,6 +14,7 @@ export function usePost(id) {
       try {
         const data = await getPostDetail(id);
         const additionalImages = await getAdditionalImageUrls(id);
+
         const additionalImageUrls = additionalImages.map((image) => image.image_url);
 
         setPostDetail(data);
@@ -38,5 +39,6 @@ export function usePost(id) {
     setError,
     isDeleted,
     setIsDeleted,
+    // additionalImageUrls: imageUrls, // .slice(1 /* skip the first image */),
   };
 }
