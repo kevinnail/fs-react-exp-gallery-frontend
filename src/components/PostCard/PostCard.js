@@ -2,7 +2,12 @@
 import { Link, Redirect } from 'react-router-dom';
 import { usePost } from '../../hooks/usePost.js';
 import { useUser } from '../../hooks/useUser.js';
-import { deleteById, deleteImage } from '../../services/fetch-utils.js';
+import {
+  deleteById,
+  deleteImage,
+  getAdditionalImageUrls,
+  getPostDetail,
+} from '../../services/fetch-utils.js';
 import './PostCard.css';
 
 export default function PostCard({
@@ -29,6 +34,15 @@ export default function PostCard({
   // delete the post
   const handleDelete = async () => {
     try {
+      // const postData = await getPostDetail(id);
+
+      // grab urls out of my database
+      const postUrls = await getAdditionalImageUrls(id);
+
+      // delete all images from cloudinary
+      for (let i = 0; i < postUrls.length; i++) {
+        await deleteImage(postUrls[i].public_id);
+      }
       await deleteById(id);
       // num_imgs ? await deleteRemainingImages(id) : await deleteImage(public_id);
       // await deleteRemainingImages(id);
