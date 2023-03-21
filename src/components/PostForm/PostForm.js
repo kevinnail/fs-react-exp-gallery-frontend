@@ -11,9 +11,6 @@ export default function PostForm({
   category = '',
   submitHandler,
   imageUrls,
-  additionalImageUrls,
-
-  // setImageUrls,
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
@@ -23,15 +20,9 @@ export default function PostForm({
   const { user } = useUser();
   const newOrEdit = title ? 'Edit Post' : 'New Gallery Post';
   const [loading, setLoading] = useState(false);
-  //
-  const [currentImages, setCurrentImages] = useState(imageUrls); // Added state for current images
-  // const [newImages, setNewImages] = useState([]); // Added state for new images
-  // const [removedImages, setRemovedImages] = useState([]); // Added state for removed images
-  console.log('currentImages', currentImages);
-
-  //
+  const [currentImages, setCurrentImages] = useState(imageUrls); // Added state for images currently in the post
   const [newImageURLs, setNewImageURLs] = useState([]); // <--- these are for new posts
-  // const combinedImageURLs = [...imageURLs, ...imageUrls];
+
   const combinedImageURLs = [...(newImageURLs || []), ...(imageUrls || [])];
 
   // handle and parse images for display in the form onChange
@@ -61,12 +52,14 @@ export default function PostForm({
 
       // Upload new images to Cloudinary and get their URLs + post details
       const newPost = await uploadImagesAndCreatePost(imageFilesInput, postDetails);
-
+      //
       // Delete removed images from Cloudinary using their URLs
-
+      //
       // Update the post's image URLs in your database by combining the currentImages and the new image URLs, and removing the removedImages URLs
-
+      //
       // Call submitHandler with the updated data
+      //
+
       console.log('newPost.additionalImages', newPost.additionalImages);
       submitHandler(newPost, newPost.additionalImages, currentImages);
     } catch (error) {

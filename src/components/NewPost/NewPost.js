@@ -11,10 +11,8 @@ export default function NewPost() {
     return <Redirect to="/auth/sign-in" />;
   }
 
-  // const handleSubmit = async (title, description, image_url, price, category, additionalImages) => {
   const handleSubmit = async (newPost, additionalImages) => {
     try {
-      // additionImages is an array of images that need to have their data sent to the server
       const { title, description, image_url, category, price, author_id, public_id, num_imgs } =
         newPost;
 
@@ -29,7 +27,7 @@ export default function NewPost() {
         public_id,
         num_imgs
       );
-
+      // send image urls and public ids to db
       await postAddImages(additionalImages, post.id);
       history.push('/admin');
     } catch (e) {

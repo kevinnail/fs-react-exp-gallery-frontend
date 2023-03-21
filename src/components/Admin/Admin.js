@@ -31,7 +31,6 @@ export default function Admin() {
 
   return (
     <>
-      {/* <div className="admin">ADMIN</div> */}
       <div className="prod-header">
         <span className="grid-2">Title</span>
         <span className="grid-5">Price</span>

@@ -77,6 +77,7 @@ export async function signOutUser() {
 
 /* Data functions */
 
+// get all posts from database and display on admin page
 export async function fetchPosts() {
   const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
     method: 'GET',
@@ -96,6 +97,7 @@ export async function fetchPosts() {
   }
 }
 
+// create new post in database
 export async function postPost(
   title,
   description,
@@ -129,6 +131,7 @@ export async function postPost(
   return msg;
 }
 
+// upload images to cloudinary and send urls and public ids to db
 export async function postAddImages(imageFiles, id) {
   const formData = new FormData();
   formData.append('image_urls', JSON.stringify(imageFiles.map((image) => image.secure_url)));
@@ -146,14 +149,14 @@ export async function postAddImages(imageFiles, id) {
   return msg;
 }
 
-export async function deleteById(todo_id) {
-  const resp = await fetch(`${BASE_URL}/api/v1/admin/${todo_id}`, {
+// delete single post from database
+export async function deleteById(post_id) {
+  const resp = await fetch(`${BASE_URL}/api/v1/admin/${post_id}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    // body: JSON.stringify({ todo_id }),
     credentials: 'include',
   });
   const msg = await resp.json();
@@ -161,6 +164,7 @@ export async function deleteById(todo_id) {
   return msg;
 }
 
+// edit post
 export async function updatePost(id, post) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin/${id}`, {
     method: 'PUT',
@@ -176,6 +180,7 @@ export async function updatePost(id, post) {
   return msg;
 }
 
+// return post detail (no image urls aside from the first one)
 export async function getPostDetail(id) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin/${id}`, {
     method: 'GET',
@@ -261,6 +266,7 @@ export const deleteImage = async (public_id) => {
   }
 };
 
+// get additional image urls from in db
 export const getAdditionalImageUrls = async (id) => {
   try {
     const response = await fetch(`http://localhost:7890/api/v1/admin/urls/${id}`, {
