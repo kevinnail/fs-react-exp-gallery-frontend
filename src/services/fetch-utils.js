@@ -164,7 +164,7 @@ export async function deleteById(post_id) {
   return msg;
 }
 
-// edit post
+// edit post called from EditPost
 export async function updatePost(id, post) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin/${id}`, {
     method: 'PUT',

@@ -1,5 +1,5 @@
 import { Redirect, useHistory, useParams } from 'react-router-dom';
-import { updatePost } from '../../services/fetch-utils.js';
+import { getPostDetail, updatePost } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
 import { useUser } from '../../hooks/useUser.js';
 import { usePost } from '../../hooks/usePost.js';
@@ -36,7 +36,9 @@ export default function EditPost() {
     setLoading(true);
     post.image_url = currentImages[0];
     post.additionalImages = currentImages;
-    // console.log('post AFTER: ', post);
+    const { num_imgs, public_id } = await getPostDetail(id);
+    post.num_imgs = num_imgs;
+    post.public_id = public_id;
 
     try {
       await updatePost(postDetail.id, post);

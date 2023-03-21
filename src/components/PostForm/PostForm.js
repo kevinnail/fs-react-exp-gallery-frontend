@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useUser } from '../../hooks/useUser.js';
-import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
+import { getPostDetail, uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 // import { usePosts } from '../../hooks/usePosts.js';
 import './PostForm.css';
 
@@ -60,7 +60,7 @@ export default function PostForm({
       // Call submitHandler with the updated data
       //
 
-      console.log('newPost.additionalImages', newPost.additionalImages);
+      // console.log('newPost.additionalImages', newPost.additionalImages);
       submitHandler(newPost, newPost.additionalImages, currentImages);
     } catch (error) {
       console.error(error);
