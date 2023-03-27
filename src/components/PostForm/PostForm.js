@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useUser } from '../../hooks/useUser.js';
-import { getPostDetail, uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
+// import { getPostDetail, uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
+import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 // import { usePosts } from '../../hooks/usePosts.js';
 import './PostForm.css';
 
