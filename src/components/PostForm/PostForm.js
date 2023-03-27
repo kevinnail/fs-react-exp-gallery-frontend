@@ -60,7 +60,7 @@ export default function PostForm({
       // Call submitHandler with the updated data
       //
 
-      submitHandler(newPost, newPost.additionalImages, currentImages);
+      submitHandler(newPost, newPost.additionalImages, currentImages, setCurrentImages);
     } catch (error) {
       console.error(error);
     } finally {

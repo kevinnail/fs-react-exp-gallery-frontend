@@ -6,7 +6,7 @@ import {
   deleteById,
   deleteImage,
   getAdditionalImageUrls,
-  getPostDetail,
+  // getPostDetail,
 } from '../../services/fetch-utils.js';
 import './PostCard.css';
 
@@ -19,7 +19,7 @@ export default function PostCard({
   // category,  //commented just for now
   price,
   public_id,
-  num_imgs,
+  // num_imgs,
   // author_id,
   setPosts,
 }) {
