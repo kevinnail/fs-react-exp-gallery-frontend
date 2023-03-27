@@ -1,0 +1,9 @@
+.gallery-list-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex-wrap: wrap;
+  justify-items: center;
+  align-items: center;
+  margin: 5px auto;
+  gap: 10px;
+}

@@ -20,9 +20,17 @@ export default function Admin() {
       </div>
     );
   }
+
+  if (posts.length === 0) {
+    return (
+      <div className="loading">
+        <h1>No posts yet!</h1>
+      </div>
+    );
+  }
+
   return (
     <>
-      <div className="admin">ADMIN</div>
       <div className="prod-header">
         <span className="grid-2">Title</span>
         <span className="grid-5">Price</span>

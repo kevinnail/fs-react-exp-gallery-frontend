@@ -2,18 +2,24 @@
 import { Link, Redirect } from 'react-router-dom';
 import { usePost } from '../../hooks/usePost.js';
 import { useUser } from '../../hooks/useUser.js';
-import { deleteById } from '../../services/fetch-utils.js';
+import {
+  deleteById,
+  deleteImage,
+  getAdditionalImageUrls,
+  // getPostDetail,
+} from '../../services/fetch-utils.js';
 import './PostCard.css';
 
-// export default function PostCard({ task, id, completed, setPosts, posts }) {
 export default function PostCard({
   id,
   posts,
   title,
   // description, //commented just for now
-  // image_url, //commented just for now
+  image_url, //commented just for now
   // category,  //commented just for now
   price,
+  public_id,
+  // num_imgs,
   // author_id,
   setPosts,
 }) {
@@ -25,17 +31,22 @@ export default function PostCard({
     return <Redirect to="/auth/sign-in" />;
   }
 
-  //   return (
-  //     <div className="post overlay" key={id}>
-  //       {title}
-  //     </div>
-  //   );
-  // }
-
   // delete the post
   const handleDelete = async () => {
     try {
+      // const postData = await getPostDetail(id);
+
+      // grab urls out of my database
+      const postUrls = await getAdditionalImageUrls(id);
+
+      // delete all images from cloudinary
+      for (let i = 0; i < postUrls.length; i++) {
+        await deleteImage(postUrls[i].public_id);
+      }
       await deleteById(id);
+      // num_imgs ? await deleteRemainingImages(id) : await deleteImage(public_id);
+      // await deleteRemainingImages(id);
+      await deleteImage(public_id);
       const updatedPosts = posts.filter((post) => post.id !== id);
       setPosts(updatedPosts);
       setLoading(true);
@@ -44,14 +55,11 @@ export default function PostCard({
     }
   };
 
-  // make the post card clickable and toggle the completed status
-  // const handleEdit = async () => {
-  //   console.log('handleEdit');
-  // };
-
   return (
     <div className="post overlay" key={id}>
-      <img className="admin-prod-img" src={`/${id}.jpg`} alt="edit" />
+      <Link to={`/gallery/${id}`}>
+        <img className="admin-prod-img" src={image_url} alt="edit" />
+      </Link>
       <p className="grid-s2 grid-e4 ">{title.length > 9 ? title.slice(0, 9) + '...' : title}</p>
       <p className="grid-5">${price}</p>
       <div className="admin-prod-btn-cont grid-7">
@@ -68,12 +76,6 @@ export default function PostCard({
           />
         </Link>
       </div>
-      {/* <h1>title: {title}</h1>
-      <p>desc: {description}</p>
-      <p>img: {image_url}</p>
-      <p>cat: {category}</p>
-      <p>$ {price}</p>
-      <p>ID: {id}</p> */}
     </div>
   );
 }

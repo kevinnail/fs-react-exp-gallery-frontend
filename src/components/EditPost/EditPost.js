@@ -1,5 +1,5 @@
 import { Redirect, useHistory, useParams } from 'react-router-dom';
-import { updatePost } from '../../services/fetch-utils.js';
+import { getPostDetail, updatePost } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
 import { useUser } from '../../hooks/useUser.js';
 import { usePost } from '../../hooks/usePost.js';
@@ -8,7 +8,16 @@ import React from 'react';
 export default function EditPost() {
   const { id } = useParams();
   const history = useHistory();
-  const { postDetail, loading, setLoading, error, setError } = usePost(id);
+  const {
+    postDetail,
+    loading,
+    setLoading,
+    error,
+    setError,
+    imageUrls,
+    setImageUrls,
+    additionalImageUrls,
+  } = usePost(id);
   const { user } = useUser();
 
   if (!user) {
@@ -23,8 +32,13 @@ export default function EditPost() {
     );
   if (error) return <h1>{error}</h1>;
 
-  const handleSubmit = async (post) => {
+  const handleSubmit = async (post, additionalImages, currentImages) => {
     setLoading(true);
+    post.image_url = currentImages[0];
+    post.additionalImages = currentImages;
+    const { num_imgs, public_id } = await getPostDetail(id);
+    post.num_imgs = num_imgs;
+    post.public_id = public_id;
 
     try {
       await updatePost(postDetail.id, post);
@@ -34,5 +48,13 @@ export default function EditPost() {
     }
   };
 
-  return <PostForm {...postDetail} submitHandler={handleSubmit} />;
+  return (
+    <PostForm
+      {...postDetail}
+      submitHandler={handleSubmit}
+      setImageUrls={setImageUrls}
+      imageUrls={imageUrls}
+      additionalImageUrls={additionalImageUrls}
+    />
+  );
 }
