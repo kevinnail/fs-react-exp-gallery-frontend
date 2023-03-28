@@ -11,10 +11,11 @@ export default function NewPost() {
     return <Redirect to="/auth/sign-in" />;
   }
 
-  const handleSubmit = async (newPost, additionalImages) => {
+  const handleSubmit = async (newPost) => {
     try {
       const { title, description, image_url, category, price, author_id, public_id, num_imgs } =
         newPost;
+      console.log('newPost', newPost);
 
       // create new post with fetch call to db
       const post = await postPost(
@@ -28,7 +29,7 @@ export default function NewPost() {
         num_imgs
       );
       // send image urls and public ids to db
-      await postAddImages(additionalImages, post.id);
+      await postAddImages(newPost.additionalImages, post.id);
       history.push('/admin');
     } catch (e) {
       console.error(e.message);

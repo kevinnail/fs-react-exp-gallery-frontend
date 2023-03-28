@@ -196,7 +196,8 @@ export async function getPostDetail(id) {
 }
 
 // image file upload functions
-export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
+// export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
+export const uploadImagesAndCreatePost = async (imageFiles) => {
   const formData = new FormData();
   imageFiles.forEach((file) => formData.append('imageFiles', file));
   try {
@@ -215,7 +216,6 @@ export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
     }));
 
     const newPost = {
-      ...postDetails,
       image_url: image_urls[0],
       public_id: public_ids[0],
       additionalImages,

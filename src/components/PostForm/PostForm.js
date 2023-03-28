@@ -21,9 +21,10 @@ export default function PostForm({
   const { user } = useUser();
   const newOrEdit = title ? 'Edit Post' : 'New Gallery Post';
   const [loading, setLoading] = useState(false);
-  const [currentImages, setCurrentImages] = useState(imageUrls); // Added state for images currently in the post
-  const [newImageURLs, setNewImageURLs] = useState([]); // <--- these are for new posts
-
+  const [currentImages, setCurrentImages] = useState(imageUrls); // Added state for images currently in the post for display in the form
+  const [newImageURLs, setNewImageURLs] = useState([]); // <--- these are for new posts for display in the form
+  const [newImages, setNewImages] = useState([]); // <--- these are for new posts for gallery display and storage in the db
+  // combine current images and new images into one array for display in the form
   const combinedImageURLs = [...(newImageURLs || []), ...(imageUrls || [])];
 
   // handle and parse images for display in the form onChange
@@ -52,7 +53,11 @@ export default function PostForm({
       };
 
       // Upload new images to Cloudinary and get their URLs + post details
-      const newPost = await uploadImagesAndCreatePost(imageFilesInput, postDetails);
+      const newPost = {
+        ...(await uploadImagesAndCreatePost(imageFilesInput)),
+        ...postDetails,
+      };
+
       //
       // Delete removed images from Cloudinary using their URLs
       //
@@ -69,21 +74,20 @@ export default function PostForm({
     }
   };
 
+  // handle category change and update state
   const handleCategoryChange = (event) => {
     setCategoryInput(event.target.value);
   };
 
+  // handle form input changes and update state for display on form
   const readAndPreview = (files) => {
     const urls = [];
-
     for (const file of files) {
       const reader = new FileReader();
-
       reader.onload = (event) => {
         urls.push(event.target.result);
         setNewImageURLs(urls);
       };
-
       reader.readAsDataURL(file);
     }
   };

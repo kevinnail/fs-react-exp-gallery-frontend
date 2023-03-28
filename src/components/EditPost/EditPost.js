@@ -18,6 +18,7 @@ export default function EditPost() {
     setImageUrls,
     additionalImageUrls,
   } = usePost(id);
+
   const { user } = useUser();
 
   if (!user) {
@@ -34,6 +35,9 @@ export default function EditPost() {
 
   const handleSubmit = async (post, additionalImages, currentImages) => {
     setLoading(true);
+    console.log('post', post);
+    console.log('additionalImages', additionalImages);
+
     post.image_url = currentImages[0];
     post.additionalImages = currentImages;
     const { num_imgs, public_id } = await getPostDetail(id);

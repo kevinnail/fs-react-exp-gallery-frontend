@@ -43,6 +43,8 @@ export default function PostCard({
       for (let i = 0; i < postUrls.length; i++) {
         await deleteImage(postUrls[i].public_id);
       }
+
+      // delete the post from my database
       await deleteById(id);
       // num_imgs ? await deleteRemainingImages(id) : await deleteImage(public_id);
       // await deleteRemainingImages(id);
