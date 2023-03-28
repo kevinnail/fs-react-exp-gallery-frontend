@@ -214,36 +214,34 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
     let additionalImages = [];
     let newPost;
     let newImages = [];
+    let editedPost;
 
     if (formFunctionMode === 'new') {
       additionalImages = result.slice(1).map((image) => ({
         public_id: image.public_id,
         secure_url: image.secure_url,
       }));
-
+      // create new post object with default image url and public id,
+      //  and any additional images
       newPost = {
         image_url: image_urls[0],
         public_id: public_ids[0],
         additionalImages,
       };
+      return newPost;
     } else {
-      // additionalImages = result.map((image) => ({
-      //   public_id: image.public_id,
-      //   secure_url: image.secure_url,
-      // }));
-
       newImages = result.map((image) => ({
         secure_url: image.secure_url,
         public_id: image.public_id,
       }));
-
-      newPost = {
+      // create edited post object with new images
+      editedPost = {
         newImages,
       };
-      // newPost.originalImages = additionalImages;
+      return editedPost;
     }
 
-    return newPost;
+    // return newPost;
   } catch (error) {
     console.error(error);
     throw error;

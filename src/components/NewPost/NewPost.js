@@ -13,8 +13,6 @@ export default function NewPost() {
 
   const handleSubmit = async (newPost) => {
     try {
-      console.log('hello from handleSubmit in NewPost.js');
-
       const { title, description, image_url, category, price, author_id, public_id, num_imgs } =
         newPost;
       // console.log('newPost', newPost);
@@ -31,7 +29,6 @@ export default function NewPost() {
         num_imgs
       );
       // send image urls and public ids to db
-      console.log('newPost.additionalImages', newPost.additionalImages);
 
       await postAddImages(newPost.additionalImages, post.id);
       history.push('/admin');

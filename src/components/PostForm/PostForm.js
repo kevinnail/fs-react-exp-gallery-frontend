@@ -70,7 +70,6 @@ export default function PostForm({
         ...postDetails,
       };
 
-      console.log('newPost in PostForm just before submitHandler', newPost);
       // console.log('postDetails in PostForm just before submitHandler', postDetails);
 
       // setNewImages(newPost.additionalImages) or something... and then use that in the submitHandler
@@ -86,8 +85,10 @@ export default function PostForm({
       //
       //
       // console.log('newImages before submitHandler', newImages);
+      // console.log('newImages before submitHandler', newImages);
+      console.log('setCurrentImages before submitHandler', setCurrentImages);
 
-      submitHandler(newPost, newImages, currentImages, setCurrentImages);
+      submitHandler(newPost, currentImages);
     } catch (error) {
       console.error(error);
     } finally {
@@ -109,8 +110,6 @@ export default function PostForm({
         urls.push(event.target.result);
         setNewImageDataURLs(urls);
       };
-      console.log('urls in readAndPreview', urls);
-      console.log('newImageDataURLs in readAndPreview', newImageDataURLs);
 
       reader.readAsDataURL(file);
     }

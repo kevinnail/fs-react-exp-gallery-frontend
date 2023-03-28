@@ -14,7 +14,6 @@ export function usePost(id) {
       try {
         const data = await getPostDetail(id);
         const additionalImages = await getAdditionalImageUrls(id);
-
         const additionalImageUrls = additionalImages.map((image) => image.image_url);
 
         setPostDetail(data);
