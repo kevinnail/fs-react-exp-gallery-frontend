@@ -220,6 +220,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
         public_id: image.public_id,
         secure_url: image.secure_url,
       }));
+
       newPost = {
         image_url: image_urls[0],
         public_id: public_ids[0],
@@ -230,8 +231,9 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
       //   public_id: image.public_id,
       //   secure_url: image.secure_url,
       // }));
+
       newImages = result.map((image) => ({
-        image_url: image.secure_url,
+        secure_url: image.secure_url,
         public_id: image.public_id,
       }));
 

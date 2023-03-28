@@ -1,5 +1,5 @@
 import { Redirect, useHistory, useParams } from 'react-router-dom';
-import { getPostDetail, updatePost } from '../../services/fetch-utils.js';
+import { getPostDetail, postAddImages, updatePost } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
 import { useUser } from '../../hooks/useUser.js';
 import { usePost } from '../../hooks/usePost.js';
@@ -37,7 +37,6 @@ export default function EditPost() {
     setLoading(true);
     // console.log('post', post);
     // console.log('additionalImages', additionalImages);
-    console.log('hello from handleSubmit in EditPost.js');
 
     post.image_url = currentImages[0];
     // post.additionalImages = currentImages;
@@ -47,7 +46,18 @@ export default function EditPost() {
     post.public_id = public_id;
 
     try {
+      console.log('post in the try block immediately before updatePost', post);
+
       await updatePost(postDetail.id, post);
+      // do I need to update the additional images here?
+      //
+      console.log('post.newImages IN EDIT', post.newImages);
+
+      await postAddImages(post.newImages, postDetail.id);
+
+      //
+      //
+      //
       history.push('/admin');
     } catch (e) {
       setError(e.message);

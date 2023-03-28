@@ -21,7 +21,7 @@ export default function PostForm({
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [currentImages, setCurrentImages] = useState(imageUrls); // Added state for images currently in the post for display in the form
-  const [newImageURLs, setNewImageURLs] = useState([]); // <--- these are for new posts for display in the form
+  const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
   const [newImages, setNewImages] = useState([]); // <--- these are for new posts for gallery display and storage in the db
 
   // set up state for proper submit
@@ -37,7 +37,7 @@ export default function PostForm({
   }
 
   // combine current images and new images into one array for display in the form
-  const combinedImageURLs = [...(newImageURLs || []), ...(imageUrls || [])];
+  const combinedImageURLs = [...(newImageDataURLs || []), ...(imageUrls || [])];
 
   // handle and parse images for display in the form onChange
   const handleFileInputChange = (event) => {
@@ -107,8 +107,11 @@ export default function PostForm({
       const reader = new FileReader();
       reader.onload = (event) => {
         urls.push(event.target.result);
-        setNewImageURLs(urls);
+        setNewImageDataURLs(urls);
       };
+      console.log('urls in readAndPreview', urls);
+      console.log('newImageDataURLs in readAndPreview', newImageDataURLs);
+
       reader.readAsDataURL(file);
     }
   };
