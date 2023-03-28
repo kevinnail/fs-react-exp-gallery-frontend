@@ -19,11 +19,23 @@ export default function PostForm({
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
   const { user } = useUser();
-  const newOrEdit = title ? 'Edit Post' : 'New Gallery Post';
   const [loading, setLoading] = useState(false);
   const [currentImages, setCurrentImages] = useState(imageUrls); // Added state for images currently in the post for display in the form
   const [newImageURLs, setNewImageURLs] = useState([]); // <--- these are for new posts for display in the form
   const [newImages, setNewImages] = useState([]); // <--- these are for new posts for gallery display and storage in the db
+
+  // set up state for proper submit
+  // const newOrEdit = title ? 'Edit Post' : 'New Gallery Post'; // if there is a title, it's an edit, otherwise it's a new post
+  let newOrEdit = '';
+  let formFunctionMode = '';
+  if (title) {
+    newOrEdit = 'Edit Post';
+    formFunctionMode = 'edit';
+  } else {
+    newOrEdit = 'New Gallery Post';
+    formFunctionMode = 'new';
+  }
+
   // combine current images and new images into one array for display in the form
   const combinedImageURLs = [...(newImageURLs || []), ...(imageUrls || [])];
 
@@ -54,19 +66,28 @@ export default function PostForm({
 
       // Upload new images to Cloudinary and get their URLs + post details
       const newPost = {
-        ...(await uploadImagesAndCreatePost(imageFilesInput)),
+        ...(await uploadImagesAndCreatePost(imageFilesInput, formFunctionMode)),
         ...postDetails,
       };
 
-      //
-      // Delete removed images from Cloudinary using their URLs
-      //
+      console.log('newPost in PostForm just before submitHandler', newPost);
+      // console.log('postDetails in PostForm just before submitHandler', postDetails);
+
+      // setNewImages(newPost.additionalImages) or something... and then use that in the submitHandler
       // Update the post's image URLs in your database by combining the currentImages and the new image URLs, and removing the removedImages URLs
       //
-      // Call submitHandler with the updated data
       //
 
-      submitHandler(newPost, newPost.additionalImages, currentImages, setCurrentImages);
+      // Delete removed images from Cloudinary using their URLs
+      //
+      //
+
+      // Call submitHandler with the updated data
+      //
+      //
+      // console.log('newImages before submitHandler', newImages);
+
+      submitHandler(newPost, newImages, currentImages, setCurrentImages);
     } catch (error) {
       console.error(error);
     } finally {

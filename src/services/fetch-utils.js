@@ -197,7 +197,7 @@ export async function getPostDetail(id) {
 
 // image file upload functions
 // export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
-export const uploadImagesAndCreatePost = async (imageFiles) => {
+export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) => {
   const formData = new FormData();
   imageFiles.forEach((file) => formData.append('imageFiles', file));
   try {
@@ -210,16 +210,36 @@ export const uploadImagesAndCreatePost = async (imageFiles) => {
     const result = await response.json();
     const image_urls = result.map((image) => image.secure_url);
     const public_ids = result.map((image) => image.public_id);
-    const additionalImages = result.slice(1).map((image) => ({
-      public_id: image.public_id,
-      secure_url: image.secure_url,
-    }));
 
-    const newPost = {
-      image_url: image_urls[0],
-      public_id: public_ids[0],
-      additionalImages,
-    };
+    let additionalImages = [];
+    let newPost;
+    let newImages = [];
+
+    if (formFunctionMode === 'new') {
+      additionalImages = result.slice(1).map((image) => ({
+        public_id: image.public_id,
+        secure_url: image.secure_url,
+      }));
+      newPost = {
+        image_url: image_urls[0],
+        public_id: public_ids[0],
+        additionalImages,
+      };
+    } else {
+      // additionalImages = result.map((image) => ({
+      //   public_id: image.public_id,
+      //   secure_url: image.secure_url,
+      // }));
+      newImages = result.map((image) => ({
+        image_url: image.secure_url,
+        public_id: image.public_id,
+      }));
+
+      newPost = {
+        newImages,
+      };
+      // newPost.originalImages = additionalImages;
+    }
 
     return newPost;
   } catch (error) {

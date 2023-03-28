@@ -35,11 +35,13 @@ export default function EditPost() {
 
   const handleSubmit = async (post, additionalImages, currentImages) => {
     setLoading(true);
-    console.log('post', post);
-    console.log('additionalImages', additionalImages);
+    // console.log('post', post);
+    // console.log('additionalImages', additionalImages);
+    console.log('hello from handleSubmit in EditPost.js');
 
     post.image_url = currentImages[0];
-    post.additionalImages = currentImages;
+    // post.additionalImages = currentImages;
+    // post.originalImages = currentImages;
     const { num_imgs, public_id } = await getPostDetail(id);
     post.num_imgs = num_imgs;
     post.public_id = public_id;

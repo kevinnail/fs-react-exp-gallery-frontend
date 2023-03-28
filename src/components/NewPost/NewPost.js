@@ -15,7 +15,7 @@ export default function NewPost() {
     try {
       const { title, description, image_url, category, price, author_id, public_id, num_imgs } =
         newPost;
-      console.log('newPost', newPost);
+      // console.log('newPost', newPost);
 
       // create new post with fetch call to db
       const post = await postPost(
