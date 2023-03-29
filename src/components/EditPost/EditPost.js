@@ -17,6 +17,8 @@ export default function EditPost() {
     imageUrls,
     setImageUrls,
     additionalImageUrls,
+    additionalImages,
+    setAdditionalImages,
   } = usePost(id);
 
   const { user } = useUser();
@@ -33,31 +35,23 @@ export default function EditPost() {
     );
   if (error) return <h1>{error}</h1>;
 
-  const handleSubmit = async (post, additionalImages, currentImages) => {
+  const handleSubmit = async (post, currentImages) => {
     setLoading(true);
     // console.log('post', post);
     // console.log('additionalImages', additionalImages);
+    console.log('currentImages in submitHandler', currentImages);
 
+    // sets default image (for gallery_posts table)
     post.image_url = currentImages[0];
-    // post.additionalImages = currentImages;
-    // post.originalImages = currentImages;
     const { num_imgs, public_id } = await getPostDetail(id);
     post.num_imgs = num_imgs;
     post.public_id = public_id;
 
     try {
-      console.log('post in the try block immediately before updatePost', post);
-
+      // update database w/ post details
       await updatePost(postDetail.id, post);
-      // do I need to update the additional images here?
-      //
-      console.log('post.newImages IN EDIT', post.newImages);
-
+      // ...and new images/ urls/ public ids to gallery_imgs table
       await postAddImages(post.newImages, postDetail.id);
-
-      //
-      //
-      //
       history.push('/admin');
     } catch (e) {
       setError(e.message);

@@ -7,15 +7,18 @@ export function usePost(id) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [additionalImages, setAdditionalImages] = useState([]);
 
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
       try {
         const data = await getPostDetail(id);
+        // const additionalImages = await getAdditionalImageUrls(id);
         const additionalImages = await getAdditionalImageUrls(id);
         const additionalImageUrls = additionalImages.map((image) => image.image_url);
 
+        setAdditionalImages(additionalImages);
         setPostDetail(data);
         setImageUrls([data.image_url, ...additionalImageUrls]);
         setLoading(false);
@@ -38,6 +41,8 @@ export function usePost(id) {
     setError,
     isDeleted,
     setIsDeleted,
+    additionalImages,
+    setAdditionalImages,
     // additionalImageUrls: imageUrls, // .slice(1 /* skip the first image */),
   };
 }
