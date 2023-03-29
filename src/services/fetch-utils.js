@@ -237,6 +237,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
       // create edited post object with new images
       editedPost = {
         newImages,
+        additionalImages,
       };
       return editedPost;
     }

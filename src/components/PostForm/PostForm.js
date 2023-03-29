@@ -21,7 +21,7 @@ export default function PostForm({
   const [categoryInput, setCategoryInput] = useState(category);
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
-  const [currentImages, setCurrentImages] = useState(imageUrls); // Added state for images currently in the post for display in the form
+  const [currentImages, setCurrentImages] = useState(imageUrls || []); // Added state for images currently in the post for display in the form
   const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
   // const [newImages, setNewImages] = useState([]); // <--- these are for new posts for gallery display and storage in the db
   // new vvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -88,6 +88,7 @@ export default function PostForm({
         ...(await uploadImagesAndCreatePost(imageFilesInput, formFunctionMode)),
         ...postDetails,
       };
+      console.log('post', newPost);
 
       // console.log('postDetails in PostForm just before submitHandler', postDetails);
 
@@ -251,8 +252,8 @@ export default function PostForm({
                 alt={`Selected image ${index + 1}`}
                 onClick={() => {
                   handleImageDelete(index);
-                  console.log('newImageDataURLs.length: ', newImageDataURLs.length);
-                  console.log('getDisplayImages().length: ', getDisplayImages().length);
+                  // console.log('newImageDataURLs.length: ', newImageDataURLs.length);
+                  // console.log('getDisplayImages().length: ', getDisplayImages().length);
                   // if (index < newImageDataURLs.length) { //  onto something
                   // console.log('if fired, index: ', index);
                   // setNewImageDataURLs((prevDataURLs) => //  onto something
