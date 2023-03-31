@@ -13,6 +13,9 @@ export default function PostForm({
   category = '',
   submitHandler,
   imageUrls,
+  additionalImages = [],
+  deletedImagePublicIds,
+  setDeletedImagePublicIds,
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
@@ -25,6 +28,8 @@ export default function PostForm({
   const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
   // const [newImages, setNewImages] = useState([]); // <--- these are for new posts for gallery display and storage in the db
   // new vvvvvvvvvvvvvvvvvvvvvvvvvv
+  const [deletedImages, setDeletedImages] = useState([]);
+
   const getDisplayImages = () => {
     return [...newImageDataURLs, ...currentImages];
   };
@@ -55,13 +60,17 @@ export default function PostForm({
   const handleImageDelete = (index) => {
     if (index < newImageDataURLs.length) {
       setNewImageDataURLs((prevDataURLs) => prevDataURLs.filter((_, i) => i !== index));
+      setImageFilesInput((prevFiles) => prevFiles.filter((_, i) => i !== index));
     } else {
       setCurrentImages((prevImages) => {
         const newCurrentImages = prevImages.filter((_, i) => i !== index - newImageDataURLs.length);
+        const removedImageUrl = prevImages[index - newImageDataURLs.length];
+        setDeletedImages((prevDeletedImages) => [...prevDeletedImages, removedImageUrl]);
         return newCurrentImages;
       });
     }
   };
+
   // new ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   const handleFormSubmit = async (e) => {
@@ -108,7 +117,7 @@ export default function PostForm({
       // console.log('newImages before submitHandler', newImages);
       // console.log('setCurrentImages before submitHandler', setCurrentImages);
 
-      submitHandler(newPost, currentImages);
+      submitHandler(newPost, currentImages, deletedImages, setDeletedImages);
     } catch (error) {
       console.error(error);
     } finally {
@@ -285,7 +294,6 @@ export default function PostForm({
             ))}
           </div>
         ) : null}
-
         <div className="btn-container">
           <button className="submit-btn" type="submit">
             {<img className="upload-icon " src="/upload.png" alt="upload" />}

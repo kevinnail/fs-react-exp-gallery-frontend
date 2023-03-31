@@ -21,6 +21,7 @@ export function usePost(id) {
         setAdditionalImages(additionalImages);
         setPostDetail(data);
         setImageUrls([data.image_url, ...additionalImageUrls]);
+        // setImageUrls([additionalImageUrls]);
         setLoading(false);
       } catch (e) {
         setError(e.message);

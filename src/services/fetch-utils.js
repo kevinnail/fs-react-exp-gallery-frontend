@@ -216,11 +216,19 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
     let newImages = [];
     let editedPost;
 
+    // create additionalImages WITHOUT the default image
     if (formFunctionMode === 'new') {
       additionalImages = result.slice(1).map((image) => ({
         public_id: image.public_id,
         secure_url: image.secure_url,
       }));
+      // create additionalImages WITH the default image
+      // if (formFunctionMode === 'new') {
+      //   additionalImages = result.map((image) => ({
+      //     public_id: image.public_id,
+      //     secure_url: image.secure_url,
+      //   }));
+
       // create new post object with default image url and public id,
       //  and any additional images
       newPost = {
@@ -237,7 +245,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
       // create edited post object with new images
       editedPost = {
         newImages,
-        additionalImages,
+        additionalImages, // threw these in here, not being used yet-> change to allImages...
       };
       return editedPost;
     }
