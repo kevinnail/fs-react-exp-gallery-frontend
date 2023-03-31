@@ -19,9 +19,11 @@ export function usePost(id) {
         const additionalImageUrls = additionalImages.map((image) => image.image_url);
 
         setAdditionalImages(additionalImages);
+        console.log('additionalImages: ', additionalImages);
+
         setPostDetail(data);
-        setImageUrls([data.image_url, ...additionalImageUrls]);
-        // setImageUrls([additionalImageUrls]);
+        // setImageUrls([data.image_url, ...additionalImageUrls]);
+        setImageUrls([...additionalImageUrls]);
         setLoading(false);
       } catch (e) {
         setError(e.message);
