@@ -1,9 +1,6 @@
-import { useEffect } from 'react';
 import { useState } from 'react';
 import { useUser } from '../../hooks/useUser.js';
-// import { getPostDetail, uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
-// import { usePosts } from '../../hooks/usePosts.js';
 import './PostForm.css';
 
 export default function PostForm({
@@ -13,9 +10,6 @@ export default function PostForm({
   category = '',
   submitHandler,
   imageUrls,
-  additionalImages = [],
-  deletedImagePublicIds,
-  setDeletedImagePublicIds,
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
@@ -26,16 +20,12 @@ export default function PostForm({
   const [loading, setLoading] = useState(false);
   const [currentImages, setCurrentImages] = useState(imageUrls || []); // Added state for images currently in the post for display in the form
   const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
-  // const [newImages, setNewImages] = useState([]); // <--- these are for new posts for gallery display and storage in the db
-  // new vvvvvvvvvvvvvvvvvvvvvvvvvv
   const [deletedImages, setDeletedImages] = useState([]);
 
   const getDisplayImages = () => {
     return [...newImageDataURLs, ...currentImages];
   };
-  // new ^^^^^^^^^^^^^^^^^^
-  // set up state for proper submit
-  // const newOrEdit = title ? 'Edit Post' : 'New Gallery Post'; // if there is a title, it's an edit, otherwise it's a new post
+
   let newOrEdit = '';
   let formFunctionMode = '';
   if (title) {
@@ -46,16 +36,11 @@ export default function PostForm({
     formFunctionMode = 'new';
   }
 
-  // combine current images and new images into one array for display in the form
-  // const combinedImageURLs = [...(newImageDataURLs || []), ...(imageUrls || [])];  // onto something
-
   // handle and parse images for display in the form onChange
   const handleFileInputChange = (event) => {
     setImageFilesInput([...event.target.files]);
     readAndPreview(event.target.files);
   };
-
-  // new vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
   const handleImageDelete = (index) => {
     if (index < newImageDataURLs.length) {
@@ -70,8 +55,6 @@ export default function PostForm({
       });
     }
   };
-
-  // new ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -97,26 +80,8 @@ export default function PostForm({
         ...(await uploadImagesAndCreatePost(imageFilesInput, formFunctionMode)),
         ...postDetails,
       };
-      console.log('post', newPost);
 
-      // console.log('postDetails in PostForm just before submitHandler', postDetails);
-
-      // setNewImages(newPost.additionalImages) or something... and then use that in the submitHandler
-      // Update the post's image URLs in your database by combining the currentImages and the new image URLs, and removing the removedImages URLs
-      //
-      //
-
-      // Delete removed images from Cloudinary using their URLs
-      //
-      //
-
-      // Call submitHandler with the updated data
-      //
-      //
-      // console.log('newImages before submitHandler', newImages);
-      // console.log('newImages before submitHandler', newImages);
-      // console.log('setCurrentImages before submitHandler', setCurrentImages);
-
+      // pass new post and images to parent component
       submitHandler(newPost, currentImages, deletedImages, setDeletedImages);
     } catch (error) {
       console.error(error);
@@ -261,34 +226,6 @@ export default function PostForm({
                 alt={`Selected image ${index + 1}`}
                 onClick={() => {
                   handleImageDelete(index);
-                  // console.log('newImageDataURLs.length: ', newImageDataURLs.length);
-                  // console.log('getDisplayImages().length: ', getDisplayImages().length);
-                  // if (index < newImageDataURLs.length) { //  onto something
-                  // console.log('if fired, index: ', index);
-                  // setNewImageDataURLs((prevDataURLs) => //  onto something
-                  //   prevDataURLs.filter((_, i) => i !== index) //  onto something
-                  // ); //  onto something
-                  // } else {  //  onto something
-                  // console.log('else fired, index: ', index);
-                  // setCurrentImages((currentImages) => { //  onto something
-                  // console.log('currentImages BEFORE: ', currentImages);
-                  // const newCurrentImages = [...currentImages];
-                  // newCurrentImages.splice(index - newImageDataURLs.length, 1);
-                  // console.log('currentImages after setCurrentImages: ', currentImages);
-                  // currentImages.splice(index - newImageDataURLs.length, 1);   //  onto something
-                  //
-                  //
-                  // STOPPING POINT currently working to delete image JUST from display in form,
-                  // after that needs to be deleted from database and cloudinary
-                  //
-                  //
-                  // newCurrentImages.filter((_, i) => i !== index);
-                  // console.log('newCurrentImages: ', newCurrentImages);
-                  // setCurrentImages(newCurrentImages);
-                  console.log('currentImages: ', currentImages);
-                  // return newCurrentImages;
-                  // }); //  onto something
-                  // } //  onto something
                 }}
               />
             ))}

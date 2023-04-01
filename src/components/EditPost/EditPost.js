@@ -56,9 +56,6 @@ export default function EditPost() {
       await postAddImages(post.newImages, postDetail.id);
 
       // Delete removed images from the database and Cloudinary
-      // for (const removedImage of deletedImages) {
-      //   await deleteImage(removedImage.public_id, postDetail.id);
-      // }
       for (const removedImageUrl of deletedImages) {
         const removedImage = additionalImages.find((image) => image.image_url === removedImageUrl);
 

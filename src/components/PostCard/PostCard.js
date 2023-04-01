@@ -22,10 +22,8 @@ export default function PostCard({
   // num_imgs,
   // author_id,
   setPosts,
-  additionalImages,
 }) {
   const post = usePost(id);
-  console.log('post', post);
 
   const { user } = useUser();
   const { setLoading, setError } = usePost(id);

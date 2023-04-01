@@ -14,15 +14,12 @@ export function usePost(id) {
     const fetchData = async () => {
       try {
         const data = await getPostDetail(id);
-        // const additionalImages = await getAdditionalImageUrls(id);
         const additionalImages = await getAdditionalImageUrls(id);
         const additionalImageUrls = additionalImages.map((image) => image.image_url);
 
         setAdditionalImages(additionalImages);
-        // console.log('additionalImages: ', additionalImages);
 
         setPostDetail(data);
-        // setImageUrls([data.image_url, ...additionalImageUrls]);
         setImageUrls([...additionalImageUrls]);
         setLoading(false);
       } catch (e) {
@@ -46,6 +43,5 @@ export function usePost(id) {
     setIsDeleted,
     additionalImages,
     setAdditionalImages,
-    // additionalImageUrls: imageUrls, // .slice(1 /* skip the first image */),
   };
 }

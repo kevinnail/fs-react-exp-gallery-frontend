@@ -5,9 +5,7 @@ import './PostDetail.css';
 
 export default function PostDetail() {
   const { id } = useParams();
-  // const post = usePost(id);
   const { postDetail, imageUrls, loading, error } = usePost(id);
-  // const { postDetail } = post;
   if (error) return <h1>{error}</h1>;
   if (loading) return <h1>Loading...</h1>;
 

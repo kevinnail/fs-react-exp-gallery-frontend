@@ -195,7 +195,6 @@ export async function getPostDetail(id) {
 }
 
 // image file upload functions
-// export const uploadImagesAndCreatePost = async (imageFiles, postDetails) => {
 export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) => {
   const formData = new FormData();
   imageFiles.forEach((file) => formData.append('imageFiles', file));
@@ -215,12 +214,6 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
     let newImages = [];
     let editedPost;
 
-    // create additionalImages WITHOUT the default image
-    // if (formFunctionMode === 'new') {
-    //   additionalImages = result.slice(1).map((image) => ({
-    //     public_id: image.public_id,
-    //     secure_url: image.secure_url,
-    //   }));
     // create additionalImages WITH the default image
     if (formFunctionMode === 'new') {
       additionalImages = result.map((image) => ({
@@ -244,7 +237,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
       // create edited post object with new images
       editedPost = {
         newImages,
-        additionalImages, // threw these in here, not being used yet-> change to allImages...
+        additionalImages,
       };
       return editedPost;
     }
