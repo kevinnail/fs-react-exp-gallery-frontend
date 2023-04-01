@@ -38,6 +38,7 @@ export default function PostDetail() {
     <div className="post-detail-div">
       <section>
         <h1 className="detail-title">{postDetail.title}</h1>
+        <span className="category-label">Category:</span>
         <span>{postDetail.category}</span>
       </section>
       <section className="desc-price-container">
