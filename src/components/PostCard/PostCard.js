@@ -22,7 +22,11 @@ export default function PostCard({
   // num_imgs,
   // author_id,
   setPosts,
+  additionalImages,
 }) {
+  const post = usePost(id);
+  console.log('post', post);
+
   const { user } = useUser();
   const { setLoading, setError } = usePost(id);
   // const [isCompleted, setIsCompleted] = useState(completed);   // use later and change this to isSold/ isAvailable or something like that
@@ -60,8 +64,17 @@ export default function PostCard({
   return (
     <div className="post overlay" key={id}>
       <Link to={`/gallery/${id}`}>
-        <img className="admin-prod-img" src={image_url} alt="edit" />
+        {image_url ? (
+          <img className="admin-prod-img" src={image_url} alt="edit" />
+        ) : (
+          <>
+            {post.additionalImages[0] && (
+              <img className="admin-prod-img" src={post.additionalImages[0].image_url} alt="edit" />
+            )}
+          </>
+        )}
       </Link>
+
       <p className="grid-s2 grid-e4 ">{title.length > 9 ? title.slice(0, 9) + '...' : title}</p>
       <p className="grid-5">${price}</p>
       <div className="admin-prod-btn-cont grid-7">
