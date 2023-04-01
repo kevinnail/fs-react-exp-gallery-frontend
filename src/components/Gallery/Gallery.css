@@ -1,9 +1,23 @@
 .gallery-list-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  flex-wrap: wrap;
-  justify-items: center;
-  align-items: center;
-  margin: 5px auto;
+  /* grid-auto-rows: auto; */
+  /* flex-wrap: wrap; */
+  /* justify-items: center; */
+  /* align-items: center; */
+  /* margin: 5px auto; */
   gap: 10px;
+  padding: 5px;
 }
+
+/* @media (min-width: 480px) {
+  .gallery-list-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery-list-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+} */

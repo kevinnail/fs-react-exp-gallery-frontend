@@ -1,35 +1,78 @@
+.gallery-display-container {
+  width: 100%;
+  margin: 0 0;
+  padding: 0 0;
+  /* display: flex; */
+}
+
 .gallery-display {
-  background-color: rgb(64, 0, 255);
-  width: 150px;
-  /* justify-content: center;
-  justify-items: center;
-  align-items: center; */
-  /* grid-template-columns: 1fr; */
-  display: grid;
-  grid-template-areas:
-    'title'
-    'image'
-    'image'
-    'info ';
+  background-image: linear-gradient(145deg, #7777f3bd, #5b36ff83);
 
-  /* grid-template-rows: 1fr 1fr 1fr; */
-
-  /* grid-template-areas: 'gallery-img'; */
+  /* width: 100%; */
+  /* max-width: 100px; */
+  height: 225px;
+  /* width: 100%; */
   border: 1px solid black;
   border-radius: 5px;
-  box-shadow: 0 2px 3px #ccc;
+  /* box-shadow: 0 2px 3px #ccc; */
   transition: all 0.3s ease-in-out;
   cursor: pointer;
-  /* height: 160px; */
+  margin: 0 0;
+  padding: 10px 10px;
+  /* display: flex;
+  flex-direction: row;
+  justify-content: space-between; */
 }
+
+/* @media (min-width: 768px) {
+  .gallery-display {
+    width: 100px;
+  }
+} */
+
+.gallery-display:hover {
+  /* transform: scale(1.05); */
+  /* box-shadow: 0 5px 10px #ccc; */
+  /* background-color: rgb(83, 25, 255); */
+}
+
+.gallery-display p,
+a {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  /* padding: 0px 5px; */
+  /* font-size: 1rem; */
+  display: block;
+  position: relative;
+  top: 0px;
+  font-family: 'Shadows Into Light', cursive;
+}
+
 .gallery-img {
-  width: 150px;
-  /* height: 150px; */
-  grid-template-areas: 'image';
+  /* width: 100%; */
+  /* display: inline; */
+  height: 160px;
+  /* object-fit: cover; */
+  /* margin: 0 auto; */
+  border-radius: 5px;
+  box-shadow: 0 0 2px 0 #ff000096;
+  margin-top: 5px;
 }
+
 .gallery-title {
-  grid-template-areas: 'title';
+  display: inline;
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: bold;
 }
+
 .gallery-price {
-  grid-template-areas: 'info';
+  font-size: 1rem;
+  font-weight: 600;
+}
+.gallery-detail-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
 }
