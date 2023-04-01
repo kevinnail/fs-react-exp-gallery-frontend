@@ -16,6 +16,10 @@ export default function PostDetail() {
     }
   };
 
+  const handleThumbnailClick = (index) => {
+    setCurrentIndex(index);
+  };
+
   if (error) return <h1>{error}</h1>;
   // show loading spinner while waiting for posts to load
   if (loading) {
@@ -44,6 +48,17 @@ export default function PostDetail() {
         <button className="swipe-button" onClick={() => handleSwipe('left')}>
           &gt;
         </button>
+      </div>
+      <div className="thumbnail-container">
+        {imageUrls.map((imageUrl, index) => (
+          <img
+            key={index}
+            className={`thumbnail-gallery ${index === currentIndex ? 'active' : ''}`}
+            src={imageUrl}
+            alt={`thumbnail-gallery-${index}`}
+            onClick={() => handleThumbnailClick(index)}
+          />
+        ))}
       </div>
     </div>
   );
