@@ -19,6 +19,10 @@ header {
 .title {
   font-size: 1.5em;
   grid-area: title;
+  margin: 0;
+  position: relative;
+  top: -15px;
+  left: -15px;
 }
 .header-section p {
   margin: 0;

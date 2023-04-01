@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 import { signOut } from '../../services/auth.js';
 import './Header.css';
+import '../CoolSearchBox/CoolSearchBox.css';
 
 export default function Header() {
   const { user, setUser } = useUser();
@@ -31,11 +32,14 @@ export default function Header() {
           <img className="logo" src="../logo-sq.png" />
         </Link>
         <h1 className="title">Stress Less Glass</h1>
+        {/* <span>gallery</span> */}
         {user && (
           <div className="header-section">
             {/* <p>
               Logged in as: <span className="user-email"> {user.email}</span> <br />
             </p> */}
+
+            {/* <i className="fa fa-search cool-search-icon2"></i> */}
             <img className="menu-icon" src="../menu.png" onClick={handleMenuClick} />
           </div>
         )}
