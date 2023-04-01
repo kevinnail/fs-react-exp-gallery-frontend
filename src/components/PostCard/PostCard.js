@@ -5,7 +5,7 @@ import { useUser } from '../../hooks/useUser.js';
 import {
   deleteById,
   deleteImage,
-  getAdditionalImageUrls,
+  getAdditionalImageUrlsPublicIds,
   // getPostDetail,
 } from '../../services/fetch-utils.js';
 import './PostCard.css';
@@ -18,7 +18,7 @@ export default function PostCard({
   image_url, //commented just for now
   // category,  //commented just for now
   price,
-  public_id,
+  // public_id,
   // num_imgs,
   // author_id,
   setPosts,
@@ -39,7 +39,7 @@ export default function PostCard({
       // const postData = await getPostDetail(id);
 
       // grab urls out of my database
-      const postUrls = await getAdditionalImageUrls(id);
+      const postUrls = await getAdditionalImageUrlsPublicIds(id);
 
       // delete all images from cloudinary
       for (let i = 0; i < postUrls.length; i++) {
@@ -48,9 +48,8 @@ export default function PostCard({
 
       // delete the post from my database
       await deleteById(id);
-      // num_imgs ? await deleteRemainingImages(id) : await deleteImage(public_id);
-      // await deleteRemainingImages(id);
-      await deleteImage(public_id);
+
+      // delete the post from state, so it doesn't show up on the page
       const updatedPosts = posts.filter((post) => post.id !== id);
       setPosts(updatedPosts);
       setLoading(true);

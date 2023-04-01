@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getPostDetail, getAdditionalImageUrls } from '../services/fetch-utils.js';
+import { getPostDetail, getAdditionalImageUrlsPublicIds } from '../services/fetch-utils.js';
 
 export function usePost(id) {
   const [postDetail, setPostDetail] = useState({});
@@ -14,13 +14,13 @@ export function usePost(id) {
     const fetchData = async () => {
       try {
         const data = await getPostDetail(id);
-        const additionalImages = await getAdditionalImageUrls(id);
-        const additionalImageUrls = additionalImages.map((image) => image.image_url);
+        const additionalImages = await getAdditionalImageUrlsPublicIds(id);
+        const additionalImageUrlsPublicIds = additionalImages.map((image) => image.image_url);
 
         setAdditionalImages(additionalImages);
 
         setPostDetail(data);
-        setImageUrls([...additionalImageUrls]);
+        setImageUrls([...additionalImageUrlsPublicIds]);
         setLoading(false);
       } catch (e) {
         setError(e.message);

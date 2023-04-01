@@ -308,7 +308,7 @@ export const deleteImageData = async (id, public_id) => {
 };
 
 // get additional image urls from in db
-export const getAdditionalImageUrls = async (id) => {
+export const getAdditionalImageUrlsPublicIds = async (id) => {
   try {
     const response = await fetch(`http://localhost:7890/api/v1/admin/urls/${id}`, {
       method: 'GET',

@@ -2,7 +2,7 @@ import { Redirect, useHistory, useParams } from 'react-router-dom';
 import {
   deleteImage,
   deleteImageData,
-  getAdditionalImageUrls,
+  // getAdditionalImageUrlsPublicIds,
   getPostDetail,
   postAddImages,
   updatePost,
@@ -23,9 +23,8 @@ export default function EditPost() {
     setError,
     imageUrls,
     setImageUrls,
-    additionalImageUrls,
+    additionalImageUrlsPublicIds,
     additionalImages,
-    setAdditionalImages,
   } = usePost(id);
 
   const { user } = useUser();
@@ -76,7 +75,7 @@ export default function EditPost() {
       submitHandler={handleSubmit}
       setImageUrls={setImageUrls}
       imageUrls={imageUrls}
-      additionalImageUrls={additionalImageUrls}
+      additionalImageUrlsPublicIds={additionalImageUrlsPublicIds}
       additionalImages={additionalImages}
       deletedImagePublicIds={deletedImagePublicIds}
       setDeletedImagePublicIds={setDeletedImagePublicIds}
