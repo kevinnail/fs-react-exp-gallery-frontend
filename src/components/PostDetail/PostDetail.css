@@ -1,6 +1,5 @@
 .post-detail-div {
   background-image: linear-gradient(145deg, #7777f3bd, #5b36ff83);
-
   margin: 10px auto;
   width: 80%;
   padding: 20px;
@@ -9,9 +8,47 @@
   box-shadow: 0 0 10px #ccc;
   margin-bottom: 20px;
   /* background-color: rgb(170, 148, 255); */
+  font-family: 'Shadows Into Light', cursive;
+  font-weight: bold;
+}
+.post-detail-div {
+  font-size: 1.2rem;
+  color: white;
+  letter-spacing: 2px;
+  padding: 0 20px 20px 20px;
 }
 .gallery-image {
   width: 100%;
   border-radius: 5px;
   box-shadow: 0 0 2px 0 #ff000096;
+}
+.desc-price-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0px 10px 10px;
+}
+.detail-title {
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  text-align: center;
+  margin: 0;
+}
+.price-details {
+  font-size: 1.3rem;
+  color: black;
+  letter-spacing: 2px;
+  font-weight: bolder;
+  display: inline-block;
+  padding: 0px 10px;
+  border-radius: 5px;
+  background-color: rgb(255, 255, 255, 0.5);
+  height: 1.8rem;
+  line-height: 1.8rem;
+  border: 1px solid black;
+}
+.desc-details {
+  font-size: 1rem;
+  color: black;
+  letter-spacing: 2px;
+  font-weight: bolder;
 }

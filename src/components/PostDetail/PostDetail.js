@@ -18,10 +18,14 @@ export default function PostDetail() {
 
   return (
     <div className="post-detail-div">
-      <h1>{postDetail.title}</h1>
-      <p>{postDetail.category}</p>
-      <p>{postDetail.description}</p>
-      <p>${postDetail.price}</p>
+      <section>
+        <h1 className="detail-title">{postDetail.title}</h1>
+        <span>{postDetail.category}</span>
+      </section>
+      <section className="desc-price-container">
+        <span className="desc-details">{postDetail.description}</span>
+        <span className="price-details">${postDetail.price}</span>
+      </section>
       {imageUrls.map((imageUrl, index) => (
         <img className="gallery-image" key={index} src={imageUrl} alt={`post-${index}`} />
       ))}

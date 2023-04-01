@@ -18,12 +18,6 @@ export default function GalleryPostCard({
     <>
       <div className="gallery-display-container" key={id}>
         <Link className="gallery-display" to={`/gallery/${id}`}>
-          <div className="gallery-detail-container">
-            <span className="gallery-title">
-              {title.length > 17 ? title.slice(0, 17) + '...' : title}
-            </span>
-            <span className="gallery-price">${price}</span>
-          </div>
           {image_url ? (
             <img className="gallery-img" src={image_url} alt="edit" />
           ) : (
@@ -33,6 +27,12 @@ export default function GalleryPostCard({
               )}
             </>
           )}
+          <div className="gallery-detail-container">
+            <span className="gallery-title">
+              {title.length > 20 ? title.slice(0, 20) + '...' : title}
+            </span>
+            <span className="gallery-price">${price}</span>
+          </div>
         </Link>
       </div>
     </>
