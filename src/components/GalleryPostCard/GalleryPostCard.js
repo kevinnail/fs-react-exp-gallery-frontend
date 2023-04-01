@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { usePost } from '../../hooks/usePost.js';
 import './GalleryPostCard.css';
 
@@ -16,7 +17,7 @@ export default function GalleryPostCard({
   return (
     <>
       <div className="gallery-display-container" key={id}>
-        <a className="gallery-display" href={`/gallery/${id}`}>
+        <Link className="gallery-display" to={`/gallery/${id}`}>
           <div className="gallery-detail-container">
             <span className="gallery-title">
               {title.length > 17 ? title.slice(0, 17) + '...' : title}
@@ -32,7 +33,7 @@ export default function GalleryPostCard({
               )}
             </>
           )}
-        </a>
+        </Link>
       </div>
     </>
   );
