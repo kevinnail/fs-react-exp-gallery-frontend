@@ -2,7 +2,6 @@
 const BASE_URL = 'http://localhost:7890';
 
 /* Auth related functions */
-
 export async function getUser() {
   const resp = await fetch(`${BASE_URL}/api/v1/users/me`, {
     method: 'GET',
@@ -280,6 +279,26 @@ export const deleteImage = async (public_id) => {
   try {
     const response = await fetch(`http://localhost:7890/api/v1/admin/delete`, {
       method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ public_id: public_id }),
+    });
+    const result = await response.json();
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// delete single image data from db
+export const deleteImageData = async (id, public_id) => {
+  try {
+    const response = await fetch(`http://localhost:7890/api/v1/admin/image/${id}`, {
+      method: 'DELETE',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',

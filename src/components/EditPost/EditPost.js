@@ -1,6 +1,7 @@
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import {
   deleteImage,
+  deleteImageData,
   getAdditionalImageUrls,
   getPostDetail,
   postAddImages,
@@ -44,8 +45,6 @@ export default function EditPost() {
   if (error) return <h1>{error}</h1>;
 
   const handleSubmit = async (post, currentImages, deletedImages) => {
-    console.log('deletedImages: ', deletedImages);
-
     setLoading(true);
     post.image_url = currentImages[0];
     const { num_imgs, public_id } = await getPostDetail(id);
@@ -65,6 +64,7 @@ export default function EditPost() {
 
         if (removedImage) {
           await deleteImage(removedImage.public_id);
+          await deleteImageData(id, removedImage.public_id);
         }
       }
       history.push('/admin');
