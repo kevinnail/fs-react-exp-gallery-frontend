@@ -109,6 +109,7 @@ export default function PostForm({
     }
   };
 
+  // show loading spinner while waiting for posts to load
   if (loading) {
     return (
       <div className="loading-div">
@@ -116,6 +117,7 @@ export default function PostForm({
       </div>
     );
   }
+
   return (
     <>
       <form className="new-post-form" onSubmit={handleFormSubmit} encType="multipart/form-data">

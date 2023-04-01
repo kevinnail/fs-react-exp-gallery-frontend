@@ -13,10 +13,11 @@ export default function Admin() {
     return <Redirect to="/auth/sign-in" />;
   }
 
+  // show loading spinner while waiting for posts to load1
   if (loading) {
     return (
-      <div className="loading">
-        <h1>Loading! One moment please!</h1>
+      <div className="loading-div">
+        <img className="loading" src="../logo-sq.png" />
       </div>
     );
   }

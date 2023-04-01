@@ -7,7 +7,14 @@ export default function PostDetail() {
   const { id } = useParams();
   const { postDetail, imageUrls, loading, error } = usePost(id);
   if (error) return <h1>{error}</h1>;
-  if (loading) return <h1>Loading...</h1>;
+  // show loading spinner while waiting for posts to load1
+  if (loading) {
+    return (
+      <div className="loading-div">
+        <img className="loading" src="../logo-sq.png" />
+      </div>
+    );
+  }
 
   return (
     <div className="post-detail-div">
