@@ -219,18 +219,24 @@ export default function PostForm({
         {getDisplayImages().length > 0 ? (
           <div className="thumbnails-container">
             {getDisplayImages().map((url, index) => (
-              <img
-                key={index}
-                className="thumbnail"
-                src={url}
-                alt={`Selected image ${index + 1}`}
-                onClick={() => {
-                  handleImageDelete(index);
-                }}
-              />
+              <div key={index} className="thumbnail-wrapper">
+                <img className="thumbnail" src={url} alt={`Selected image ${index + 1}`} />
+                <button
+                  type="button" // Add this to prevent the button from submitting the form
+                  className="delete-button-form"
+                  onClick={(e) => {
+                    e.preventDefault(); // Add this to prevent the form from submitting
+                    // e.stopPropagation();
+                    handleImageDelete(index);
+                  }}
+                >
+                  x
+                </button>
+              </div>
             ))}
           </div>
         ) : null}
+
         <div className="btn-container">
           <button className="submit-btn" type="submit">
             {<img className="upload-icon " src="/upload.png" alt="upload" />}
