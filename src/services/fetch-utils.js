@@ -2,7 +2,6 @@
 const BASE_URL = 'http://localhost:7890';
 
 /* Auth related functions */
-
 export async function getUser() {
   const resp = await fetch(`${BASE_URL}/api/v1/users/me`, {
     method: 'GET',
@@ -77,6 +76,7 @@ export async function signOutUser() {
 
 /* Data functions */
 
+// get all posts from database and display on admin page
 export async function fetchPosts() {
   const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
     method: 'GET',
@@ -96,42 +96,66 @@ export async function fetchPosts() {
   }
 }
 
-export async function postPost({ title, description, image_url, category, price, author_id }) {
+// create new post in database
+export async function postPost(
+  title,
+  description,
+  image_url,
+  category,
+  price,
+  author_id,
+  public_id,
+  num_imgs
+) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title, description, image_url, category, price, author_id }),
+    body: JSON.stringify({
+      title,
+      description,
+      image_url,
+      category,
+      price,
+      author_id,
+      public_id,
+      num_imgs,
+    }),
     credentials: 'include',
   });
+
   const msg = await resp.json();
   return msg;
 }
 
-// export async function toggleComplete(mark, todo_id) {
-//   const resp = await fetch(`${BASE_URL}/api/v1/todos/${todo_id}`, {
-//     method: 'PUT',
-//     headers: {
-//       Accept: 'application/json',
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ mark, todo_id }),
-//     credentials: 'include',
-//   });
+// upload images to cloudinary and send urls and public ids to db
+export async function postAddImages(imageFiles, id) {
+  const formData = new FormData();
+  formData.append('image_urls', JSON.stringify(imageFiles.map((image) => image.secure_url)));
+  formData.append('image_public_ids', JSON.stringify(imageFiles.map((image) => image.public_id)));
 
-//   const msg = await resp.json();
-//   return msg;
-// }
-export async function deleteById(todo_id) {
-  const resp = await fetch(`${BASE_URL}/api/v1/admin/${todo_id}`, {
+  // Append the id to the formData
+  formData.append('id', id);
+  const resp = await fetch(`${BASE_URL}/api/v1/admin/images`, {
+    method: 'POST',
+    body: formData,
+    credentials: 'include',
+  });
+
+  const msg = await resp.json();
+  return msg;
+}
+
+// delete single post from database
+export async function deleteById(post_id) {
+  const resp = await fetch(`${BASE_URL}/api/v1/admin/${post_id}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    // body: JSON.stringify({ todo_id }),
     credentials: 'include',
   });
   const msg = await resp.json();
@@ -139,6 +163,7 @@ export async function deleteById(todo_id) {
   return msg;
 }
 
+// edit post called from EditPost
 export async function updatePost(id, post) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin/${id}`, {
     method: 'PUT',
@@ -154,6 +179,7 @@ export async function updatePost(id, post) {
   return msg;
 }
 
+// return post detail (no image urls aside from the first one)
 export async function getPostDetail(id) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin/${id}`, {
     method: 'GET',
@@ -167,3 +193,132 @@ export async function getPostDetail(id) {
   const msg = await resp.json();
   return msg;
 }
+
+// image file upload functions
+export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) => {
+  const formData = new FormData();
+  imageFiles.forEach((file) => formData.append('imageFiles', file));
+  try {
+    const response = await fetch('http://localhost:7890/api/v1/admin/upload', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    });
+
+    const result = await response.json();
+    const image_urls = result.map((image) => image.secure_url);
+    const public_ids = result.map((image) => image.public_id);
+
+    let additionalImages = [];
+    let newPost;
+    let newImages = [];
+    let editedPost;
+
+    // create additionalImages WITH the default image
+    if (formFunctionMode === 'new') {
+      additionalImages = result.map((image) => ({
+        public_id: image.public_id,
+        secure_url: image.secure_url,
+      }));
+
+      // create new post object with default image url and public id,
+      //  and any additional images
+      newPost = {
+        image_url: image_urls[0],
+        public_id: public_ids[0],
+        additionalImages,
+      };
+      return newPost;
+    } else {
+      newImages = result.map((image) => ({
+        secure_url: image.secure_url,
+        public_id: image.public_id,
+      }));
+      // create edited post object with new images
+      editedPost = {
+        newImages,
+        additionalImages,
+      };
+      return editedPost;
+    }
+
+    // return newPost;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// export const uploadRemainingImages = async (imageFiles, postDetails) => {
+export const uploadRemainingImages = async (imageFiles) => {
+  const formData = new FormData();
+  imageFiles.forEach((file) => formData.append('imageFiles', file));
+  try {
+    const response = await fetch('http://localhost:7890/api/v1/admin/upload', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// delete image from cloudinary
+export const deleteImage = async (public_id) => {
+  try {
+    const response = await fetch(`http://localhost:7890/api/v1/admin/delete`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ public_id: public_id }),
+    });
+    const result = await response.json();
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// delete single image data from db
+export const deleteImageData = async (id, public_id) => {
+  try {
+    const response = await fetch(`http://localhost:7890/api/v1/admin/image/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ public_id: public_id }),
+    });
+    const result = await response.json();
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// get additional image urls from in db
+export const getAdditionalImageUrlsPublicIds = async (id) => {
+  try {
+    const response = await fetch(`http://localhost:7890/api/v1/admin/urls/${id}`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+    const result = await response.json();
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

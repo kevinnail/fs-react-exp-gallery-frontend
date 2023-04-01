@@ -1,123 +1,249 @@
 import { useState } from 'react';
 import { useUser } from '../../hooks/useUser.js';
+import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
 
 export default function PostForm({
   title = '',
   description = '',
-  image_url = '',
   price = '',
   category = '',
   submitHandler,
+  imageUrls,
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
-  const [imageUrlInput, setImageUrlInput] = useState(image_url);
+  const [imageFilesInput, setImageFilesInput] = useState([]);
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
   const { user } = useUser();
+  const [loading, setLoading] = useState(false);
+  const [currentImages, setCurrentImages] = useState(imageUrls || []); // Added state for images currently in the post for display in the form
+  const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
+  const [deletedImages, setDeletedImages] = useState([]);
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    submitHandler({
-      title: titleInput,
-      description: descriptionInput,
-      image_url: imageUrlInput,
-      price: priceInput,
-      category: categoryInput,
-      author_id: user.id,
-    });
+  const getDisplayImages = () => {
+    return [...newImageDataURLs, ...currentImages];
   };
 
+  let newOrEdit = '';
+  let formFunctionMode = '';
+  if (title) {
+    newOrEdit = 'Edit Post';
+    formFunctionMode = 'edit';
+  } else {
+    newOrEdit = 'New Gallery Post';
+    formFunctionMode = 'new';
+  }
+
+  // handle and parse images for display in the form onChange
+  const handleFileInputChange = (event) => {
+    setImageFilesInput([...event.target.files]);
+    readAndPreview(event.target.files);
+  };
+
+  const handleImageDelete = (index) => {
+    if (index < newImageDataURLs.length) {
+      setNewImageDataURLs((prevDataURLs) => prevDataURLs.filter((_, i) => i !== index));
+      setImageFilesInput((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    } else {
+      setCurrentImages((prevImages) => {
+        const newCurrentImages = prevImages.filter((_, i) => i !== index - newImageDataURLs.length);
+        const removedImageUrl = prevImages[index - newImageDataURLs.length];
+        setDeletedImages((prevDeletedImages) => [...prevDeletedImages, removedImageUrl]);
+        return newCurrentImages;
+      });
+    }
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    // if (newImages.length === 0 && currentImages.length === 0) {
+    //   // Show an error message if no images are selected or displayed
+    //   alert('Please select at least one image.');
+    //   return;
+    // }
+    setLoading(true);
+
+    try {
+      const postDetails = {
+        title: titleInput,
+        description: descriptionInput,
+        price: priceInput,
+        category: categoryInput,
+        author_id: user.id,
+        num_imgs: imageFilesInput.length,
+      };
+
+      // Upload new images to Cloudinary and get their URLs + post details
+      const newPost = {
+        ...(await uploadImagesAndCreatePost(imageFilesInput, formFunctionMode)),
+        ...postDetails,
+      };
+
+      // pass new post and images to parent component
+      submitHandler(newPost, currentImages, deletedImages);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  // handle category change and update state
   const handleCategoryChange = (event) => {
     setCategoryInput(event.target.value);
   };
 
-  return (
-    <form className="new-post-form" onSubmit={handleFormSubmit}>
-      <div>
-        <label className="form-title">Title</label>
-        <br />
-        <input
-          required
-          placeholder="Enter title"
-          className="input"
-          type="text"
-          name="title"
-          value={titleInput}
-          onChange={(e) => setTitleInput(e.target.value)}
-        />
-      </div>
-      <div>
-        <label className="form-title">Description</label>
-        <br />
-        <textarea
-          required
-          placeholder="Enter description"
-          className="input"
-          name="description"
-          value={descriptionInput}
-          onChange={(e) => setDescriptionInput(e.target.value)}
-        />
-      </div>
-      <div>
-        <label className="form-title">Image URL</label>
-        <br />
-        <input
-          placeholder="Enter image URL"
-          className="input"
-          type="text"
-          name="image_url"
-          value={imageUrlInput}
-          onChange={(e) => setImageUrlInput(e.target.value)}
-        />
-      </div>
-      <div>
-        <label className="form-title">Price</label>
-        <br />
-        <input
-          required
-          placeholder="Enter price"
-          className="input"
-          type="number"
-          step="1"
-          name="price"
-          value={priceInput}
-          onChange={(e) => setPriceInput(e.target.value)}
-        />
-      </div>
+  // handle form input changes and update state for display on form
+  const readAndPreview = (files) => {
+    const urls = [];
+    for (const file of files) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        urls.push(event.target.result);
+        setNewImageDataURLs(urls);
+      };
 
-      <div>
-        <label htmlFor="category">Category:</label>
-        <select
-          id="category"
-          value={categoryInput}
-          onChange={handleCategoryChange}
-          className="input"
-          required
-        >
-          <option value="">choose category</option>
-          <option value="Beads">Beads</option>
-          <option value="Blunt Tips">Blunt Tips</option>
-          <option value="Bubblers">Bubblers</option>
-          <option value="Collabs ">Collabs</option>
-          <option value="Cups ">Cups</option>
-          <option value="Goblets">Goblets</option>
-          <option value="Iso Stations">Iso Stations</option>
-          <option value="Marbles">Marbles</option>
-          <option value="Dry Pieces">Dry Pieces</option>
-          <option value="Pendants">Pendants</option>
-          <option value="Recyclers">Recyclers</option>
-          <option value="Rigs">Rigs</option>
-          <option value="Slides">Slides</option>
-          <option value="Spinner Caps">Spinner Caps</option>
-          <option value="Terp Pearls">Terp Pearls</option>
-          <option value="Misc">Misc</option>
-        </select>
+      reader.readAsDataURL(file);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-div">
+        <img className="loading" src="../logo-sq.png" />
       </div>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-    </form>
+    );
+  }
+  return (
+    <>
+      <form className="new-post-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
+        <h1 id="form-title-header">{newOrEdit}</h1>
+        <div>
+          <br />
+          <select
+            id="category"
+            value={categoryInput}
+            onChange={handleCategoryChange}
+            className="image-input shadow-border"
+            required
+          >
+            <option value="" disabled>
+              Choose category
+            </option>
+            <option value="Beads">Beads</option>
+            <option value="Blunt Tips">Blunt Tips</option>
+            <option value="Bubblers">Bubblers</option>
+            <option value="Collabs">Collabs</option>
+            <option value="Cups">Cups</option>
+            <option value="Dry Pieces">Dry Pieces</option>
+            <option value="Goblets">Goblets</option>
+            <option value="Iso Stations">Iso Stations</option>
+            <option value="Marbles">Marbles</option>
+            <option value="Pendants">Pendants</option>
+            <option value="Recyclers">Recyclers</option>
+            <option value="Rigs">Rigs</option>
+            <option value="Slides">Slides</option>
+            <option value="Spinner Caps">Spinner Caps</option>
+            <option value="Terp Pearls">Terp Pearls</option>
+            <option value="Misc">Misc</option>
+          </select>
+        </div>
+        <div>
+          <br />
+          <input
+            required
+            maxLength={50}
+            placeholder="Enter title"
+            className="image-input"
+            type="text"
+            name="title"
+            value={titleInput}
+            onChange={(e) => setTitleInput(e.target.value)}
+          />
+        </div>
+        <div>
+          <br />
+          <textarea
+            required
+            maxLength={350}
+            placeholder="Enter description"
+            className="image-input description shadow-border"
+            name="description"
+            value={descriptionInput}
+            onChange={(e) => setDescriptionInput(e.target.value)}
+          />
+        </div>
+
+        <div className="input-wrapper">
+          <br />{' '}
+          <input
+            required
+            placeholder="Enter price"
+            className="image-input input-with-dollar-sign"
+            type="number"
+            step="1"
+            name="price"
+            value={priceInput}
+            onChange={(e) => setPriceInput(e.target.value)}
+          />{' '}
+          <span
+            style={{
+              position: 'relative',
+              left: '-300px',
+              top: '0',
+              transform: 'translateX(50%)',
+              display: 'inline',
+            }}
+          >
+            $
+          </span>
+        </div>
+
+        <div>
+          <br />
+          <input
+            // required
+            type="file"
+            id="image"
+            className="file-upload-btn shadow-border"
+            name="image"
+            onChange={handleFileInputChange}
+            multiple
+          />
+        </div>
+        {
+          //display images selected for upload
+        }
+        {getDisplayImages().length > 0 ? (
+          <div className="thumbnails-container">
+            {getDisplayImages().map((url, index) => (
+              <div key={index} className="thumbnail-wrapper">
+                <img className="thumbnail" src={url} alt={`Selected image ${index + 1}`} />
+                <button
+                  type="button" // Add this to prevent the button from submitting the form
+                  className="delete-button-form"
+                  onClick={(e) => {
+                    e.preventDefault(); // Add this to prevent the form from submitting
+                    // e.stopPropagation();
+                    handleImageDelete(index);
+                  }}
+                >
+                  x
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="btn-container">
+          <button className="submit-btn" type="submit">
+            {<img className="upload-icon " src="/upload.png" alt="upload" />}
+          </button>
+        </div>
+      </form>
+      {/* )} */}
+    </>
   );
 }

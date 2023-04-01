@@ -1,6 +1,6 @@
 import { Redirect, useHistory } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
-import { postPost } from '../../services/fetch-utils.js';
+import { postAddImages, postPost } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
 
 export default function NewPost() {
@@ -10,9 +10,26 @@ export default function NewPost() {
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
   }
-  const handleSubmit = async (title, description, image_url, price, category) => {
+
+  const handleSubmit = async (newPost) => {
     try {
-      await postPost(title, description, image_url, price, category, user.id);
+      const { title, description, image_url, category, price, author_id, public_id, num_imgs } =
+        newPost;
+
+      // create new post with fetch call to db
+      const post = await postPost(
+        title,
+        description,
+        image_url,
+        category,
+        price,
+        author_id,
+        public_id,
+        num_imgs
+      );
+
+      // send image urls and public ids to db
+      await postAddImages(newPost.additionalImages, post.id);
       history.push('/admin');
     } catch (e) {
       console.error(e.message);

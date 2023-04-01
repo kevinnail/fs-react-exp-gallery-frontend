@@ -1,0 +1,232 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.new-post-form {
+  /* background-color: rgb(93, 93, 239, 0.1); */
+  background-image: linear-gradient(315deg, #7777f3c4, #5b36ff83);
+  width: 80%;
+  /* height: 400px; */
+  min-width: 350px;
+  min-height: 90vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border: 1px solid black;
+  /* padding: 20px; */
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: 50px 65px 65px 110px 60px 85px auto auto auto 70px;
+  justify-items: start;
+}
+
+.form-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
+}
+
+.image-input {
+  box-sizing: border-box;
+  width: 300px;
+  background-color: rgb(176, 176, 253);
+  font-size: large;
+  border-radius: 5px;
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
+  font-weight: bold;
+  padding: 5px;
+}
+
+.shadow-border {
+  border-top: 2px solid black;
+  border-left: 2px solid black;
+  border-right: 2px solid rgb(127, 127, 127);
+  border-bottom: 2px solid rgb(127, 127, 127);
+}
+
+#form-title-header {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+  padding: 0;
+  justify-self: center;
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
+}
+
+.file-upload-btn {
+  background-color: rgb(176, 176, 253);
+  box-sizing: border-box;
+  padding: 10px;
+  width: 300px;
+  margin: auto;
+  font-size: 1rem;
+  border-radius: 5px;
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
+}
+.form-comp:hover {
+  background-color: rgb(127, 127, 127);
+}
+
+.description {
+  box-sizing: border-box;
+  max-width: 300px;
+  max-height: 75px;
+  min-width: 300px;
+  min-height: 75px;
+  background-color: rgb(176, 176, 253);
+  font-size: large;
+  position: relative;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.submit-btn {
+  background-color: rgb(176, 176, 253, 0.5);
+  /* background: none; */
+  box-sizing: border-box;
+  border: 1px solid black;
+  /* padding: 10px; */
+  /* font-size: large; */
+  /* width: 300px; */
+  /* font-size: 1.3rem; */
+  border-radius: 50%;
+  padding: 5px 5px 3px 5px;
+  box-shadow: 2px 2px 4px 0 black;
+  /* font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px; */
+}
+.submit-btn:active {
+  background-color: rgba(163, 163, 231, 0.5);
+  /* border-top: 2px solid black;
+  border-left: 2px solid black; */
+  /* box-shadow: 0px 0px 5px 0 black;*/
+  box-shadow: inset 2px 2px 5px #d3c9ff;
+  position: relative;
+  left: 1px;
+  top: 1px;
+}
+
+.upload-icon {
+  /* display: block; */
+  /* width: 40px;
+  height: 40px; */
+}
+.new-post-icon {
+  width: 35px;
+  height: 35px;
+  /* margin-right: 10px */
+  margin-left: 10px;
+}
+option {
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.loading {
+  animation: scaleAnimation 6s infinite; /* 1s duration and loop infinitely */
+  width: 30%;
+  min-width: 200px;
+  margin: auto;
+  border-radius: 20px;
+  color: #5b36ff;
+  /* padding: 100px; */
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
+  font-weight: bold;
+  text-shadow: 0px 0px 10px rgba(0, 255, 26, 0.495);
+}
+
+@keyframes scaleAnimation {
+  0%,
+  100% {
+    transform: scale(0.5);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.loading-div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.thumbnail {
+  width: 60px;
+  margin: 5px;
+  border-radius: 5px;
+}
+.thumbnails-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 280px;
+  padding: 10px;
+  border-radius: 0.5rem;
+  background-color: rgba(245, 245, 220, 0.557);
+  border: 1px solid #5b36ff59;
+}
+
+.input-with-dollar-sign {
+  padding-left: 25px;
+  left: -25px;
+}
+
+.thumbnails-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* Add space between thumbnail wrappers */
+}
+
+.thumbnail-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.thumbnail {
+  width: 100px; /* Change this to the desired thumbnail size */
+  height: 100px; /* Change this to the desired thumbnail size  */
+  object-fit: cover;
+}
+
+.delete-button-form {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: red;
+  color: white;
+  font-weight: bold;
+  width: 20px;
+  height: 20px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
