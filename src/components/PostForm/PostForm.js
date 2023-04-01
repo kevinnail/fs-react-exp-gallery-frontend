@@ -232,7 +232,7 @@ export default function PostForm({
                     handleImageDelete(index);
                   }}
                 >
-                  x
+                  X
                 </button>
               </div>
             ))}
