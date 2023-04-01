@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { usePost } from '../../hooks/usePost.js';
 import { useUser } from '../../hooks/useUser.js';
@@ -6,7 +5,6 @@ import {
   deleteById,
   deleteImage,
   getAdditionalImageUrlsPublicIds,
-  // getPostDetail,
 } from '../../services/fetch-utils.js';
 import './PostCard.css';
 
@@ -18,9 +16,6 @@ export default function PostCard({
   image_url, //commented just for now
   // category,  //commented just for now
   price,
-  // public_id,
-  // num_imgs,
-  // author_id,
   setPosts,
 }) {
   const post = usePost(id);
@@ -36,8 +31,6 @@ export default function PostCard({
   // delete the post
   const handleDelete = async () => {
     try {
-      // const postData = await getPostDetail(id);
-
       // grab urls out of my database
       const postUrls = await getAdditionalImageUrlsPublicIds(id);
 

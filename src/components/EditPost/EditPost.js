@@ -2,7 +2,6 @@ import { Redirect, useHistory, useParams } from 'react-router-dom';
 import {
   deleteImage,
   deleteImageData,
-  // getAdditionalImageUrlsPublicIds,
   getPostDetail,
   postAddImages,
   updatePost,
@@ -28,7 +27,6 @@ export default function EditPost() {
   } = usePost(id);
 
   const { user } = useUser();
-
   const [deletedImagePublicIds, setDeletedImagePublicIds] = useState([]);
 
   if (!user) {
@@ -43,6 +41,7 @@ export default function EditPost() {
     );
   if (error) return <h1>{error}</h1>;
 
+  //  handleSubmit is called when the user clicks the submit button on the EditPost form
   const handleSubmit = async (post, currentImages, deletedImages) => {
     setLoading(true);
     post.image_url = currentImages[0];

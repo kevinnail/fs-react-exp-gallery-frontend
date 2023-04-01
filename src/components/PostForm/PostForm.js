@@ -82,7 +82,7 @@ export default function PostForm({
       };
 
       // pass new post and images to parent component
-      submitHandler(newPost, currentImages, deletedImages, setDeletedImages);
+      submitHandler(newPost, currentImages, deletedImages);
     } catch (error) {
       console.error(error);
     } finally {
