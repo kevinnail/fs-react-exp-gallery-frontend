@@ -33,12 +33,15 @@ export default function EditPost() {
     return <Redirect to="/auth/sign-in" />;
   }
 
-  if (loading)
+  // show loading spinner while waiting for posts to load1
+  if (loading) {
     return (
-      <div className="loading">
-        <h1>Loading! One moment please!</h1>
+      <div className="loading-div">
+        <img className="loading" src="../logo-sq.png" />
       </div>
     );
+  }
+
   if (error) return <h1>{error}</h1>;
 
   //  handleSubmit is called when the user clicks the submit button on the EditPost form
