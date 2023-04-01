@@ -1,7 +1,5 @@
 import React from 'react';
 import './GalleryPostCard.css';
-// import { usePost } from '../../hooks/usePost.js';
-// import { useUser } from '../../hooks/useUser.js';
 
 export default function GalleryPostCard({
   id,
