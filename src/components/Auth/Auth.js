@@ -29,7 +29,6 @@ export default function Auth() {
     return (
       <div className="loading-div">
         <img className="loading" src="../logo-sq.png" />
-        {/* <img className="rotating-marble" src="../marble-css.png" /> */}
       </div>
     );
   }
