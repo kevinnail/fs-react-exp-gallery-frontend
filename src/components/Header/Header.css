@@ -23,6 +23,7 @@ header {
   position: relative;
   top: -15px;
   left: -15px;
+  font-family: 'Gruppo', cursive;
 }
 .header-section p {
   margin: 0;
