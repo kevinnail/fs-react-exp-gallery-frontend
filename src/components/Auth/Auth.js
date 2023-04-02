@@ -9,7 +9,7 @@ export default function Auth() {
   const [isSignIn, setIsSignIn] = useState(true);
   const { user, logInUser, error } = useUser();
   const { type } = useParams();
-
+  const [loading, setLoading] = useState(false);
   if (user) {
     return <Redirect to="/admin" />;
   } else if (error) {
@@ -18,26 +18,52 @@ export default function Auth() {
 
   const submitAuth = async () => {
     try {
+      setLoading(true);
       await logInUser(email, password, type);
     } catch (e) {
       console.error(e);
     }
   };
+  // show loading spinner while waiting for posts to load1
+  if (loading) {
+    return (
+      <div className="loading-div">
+        <img className="loading" src="../logo-sq.png" />
+      </div>
+    );
+  }
 
   return (
     <div className="auth-container">
+      {}
+      {}
+      {}
+      {}
+      {}
+      {}
+      <div className="marble-container">
+        <img className="rotating-marble" src="../marble-css.png" />
+      </div>
+
+      {}
+      {}
+      {}
+      {}
+      {}
+      {}
+      {}
       <div className="sign-in-sign-out">
-        <NavLink className="link" to="/auth/sign-in" onClick={() => setIsSignIn(true)}>
+        <NavLink className="auth-link" to="/auth/sign-in" onClick={() => setIsSignIn(true)}>
           Sign-in
         </NavLink>
-        <NavLink className="link" to="/auth/sign-up" onClick={() => setIsSignIn(false)}>
+        <NavLink className="auth-link" to="/auth/sign-up" onClick={() => setIsSignIn(false)}>
           Sign-up
         </NavLink>
       </div>
 
       <div className="email-container">
         <input
-          className="input"
+          className="input-auth"
           type="email"
           placeholder="email@email.com"
           value={email}
@@ -45,7 +71,7 @@ export default function Auth() {
         />
 
         <input
-          className="input"
+          className="input-auth"
           type="password"
           placeholder="password"
           value={password}
@@ -53,7 +79,9 @@ export default function Auth() {
         />
       </div>
       <div>
-        <button onClick={submitAuth}>{isSignIn ? 'Sign In' : 'Sign Up'}</button>
+        <button className="button-auth" onClick={submitAuth}>
+          {isSignIn ? 'Sign In' : 'Sign Up'}
+        </button>
       </div>
     </div>
   );
