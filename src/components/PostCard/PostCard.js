@@ -52,7 +52,7 @@ export default function PostCard({
   };
 
   return (
-    <div className="post overlay" key={id}>
+    <div className="post" key={id}>
       <Link to={`/gallery/${id}`}>
         {image_url ? (
           <img className="admin-prod-img" src={image_url} alt="edit" />
@@ -65,8 +65,10 @@ export default function PostCard({
         )}
       </Link>
 
-      <p className="grid-s2 grid-e4 ">{title.length > 9 ? title.slice(0, 9) + '...' : title}</p>
-      <p className="grid-5">${price}</p>
+      <span className="grid-s2 grid-e3">
+        {title.length > 14 ? title.slice(0, 14) + '...' : title}
+      </span>
+      <p className="grid-3">${price}</p>
       <div className="admin-prod-btn-cont grid-7">
         <Link className="buttons btn-align" to={`/admin/${id}`}>
           <img src="/edit.png" className="edit-button" alt="edit" />

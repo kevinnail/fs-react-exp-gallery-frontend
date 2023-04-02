@@ -45,9 +45,10 @@
   flex-direction: row;
   justify-content: space-between; */
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  /* grid-template-columns: repeat(7, 1fr); */
+  grid-template-columns: 60px 150px 1fr 1fr 1fr;
   align-items: center;
-  justify-items: right;
+  justify-items: self-start;
   padding: 0 10px 0px 0px;
   box-sizing: border-box;
   border: 1px solid black;
