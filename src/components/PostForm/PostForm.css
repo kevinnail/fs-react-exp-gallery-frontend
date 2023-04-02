@@ -234,4 +234,9 @@ option {
   font-size: 14px;
   display: block;
   padding-bottom: 1px;
+  padding-bottom: 1px;
+  box-shadow: inset 0px 0px 0px 2px white;
+  /* box-shadow: inset 0px 0px 5px 0px #5b36ff83; */
+  /* box-shadow: inset 0px 0px 5px 0px #7777f3c4; */
+  /* #7777f3c4, #5b36ff83 */
 }
