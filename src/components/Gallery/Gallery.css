@@ -22,6 +22,26 @@
   margin: 0 auto;
 }
 
+.rotating-marble {
+  /* transform: rotateX('360deg'); */
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  animation: rotate1 10s linear infinite;
+  box-shadow: 0px 0px 15px #5b36ff83;
+  border-radius: 50%;
+  position: relative;
+  top: 200px;
+}
+@keyframes rotate1 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* @media (min-width: 480px) {
   .gallery-list-container {
     grid-template-columns: repeat(2, 1fr);

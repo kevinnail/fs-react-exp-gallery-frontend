@@ -65,9 +65,7 @@ export default function PostCard({
         )}
       </Link>
 
-      <span className="grid-s2 grid-e3">
-        {title.length > 14 ? title.slice(0, 14) + '...' : title}
-      </span>
+      <p className="grid-s2 grid-e3">{title.length > 14 ? title.slice(0, 14) + '...' : title}</p>
       <p className="grid-3">${price}</p>
       <div className="admin-prod-btn-cont grid-7">
         <Link className="buttons btn-align" to={`/admin/${id}`}>

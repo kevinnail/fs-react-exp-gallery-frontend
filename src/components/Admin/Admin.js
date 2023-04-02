@@ -13,23 +13,6 @@ export default function Admin() {
     return <Redirect to="/auth/sign-in" />;
   }
 
-  // show loading spinner while waiting for posts to load1
-  if (loading) {
-    return (
-      <div className="loading-div">
-        <img className="loading" src="../logo-sq.png" />
-      </div>
-    );
-  }
-
-  if (posts.length === 0) {
-    return (
-      <div className="loading">
-        <h1>No posts yet!</h1>
-      </div>
-    );
-  }
-
   return (
     <>
       <div className="prod-header">
@@ -38,9 +21,19 @@ export default function Admin() {
       </div>
 
       <div className="list-container">
-        {posts.map((post) => (
-          <PostCard key={post.id} {...post} setPosts={setPosts} posts={posts} />
-        ))}
+        {loading ? (
+          <div className="loading-div">
+            <img className="loading" src="../logo-sq.png" />
+          </div>
+        ) : posts.length === 0 ? (
+          <div className="loading">
+            <h1>No posts yet!</h1>
+          </div>
+        ) : (
+          posts.map((post) => (
+            <PostCard key={post.id} {...post} setPosts={setPosts} posts={posts} />
+          ))
+        )}
       </div>
     </>
   );
