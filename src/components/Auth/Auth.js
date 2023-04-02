@@ -37,7 +37,7 @@ export default function Auth() {
     <>
       <div className="auth-container">
         {}
-        {}
+
         {}
         <div className="scene">
           <div className="cube">

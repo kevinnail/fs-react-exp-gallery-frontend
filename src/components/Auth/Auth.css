@@ -159,13 +159,13 @@
 }
 
 .front {
-  transform: translateZ(75px);
+  transform: rotateY(0deg) translateZ(75px);
   background-image: url('/public/bubbler.jpeg');
 }
 
 .back {
   transform: rotateY(180deg) translateZ(75px);
-  background-image: url('/public/7.jpg');
+  background-image: url('/public/marble.jpg');
 }
 
 .right {
@@ -175,7 +175,7 @@
 
 .left {
   transform: rotateY(-90deg) translateZ(75px);
-  background-image: url('/public/marble.jpg');
+  background-image: url('/public/7.jpg');
 }
 
 .top {

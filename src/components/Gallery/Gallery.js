@@ -4,8 +4,8 @@ import GalleryPostCard from '../GalleryPostCard/GalleryPostCard.js';
 import './Gallery.css';
 
 export default function Gallery() {
-  const { posts } = usePosts();
-  const { loading } = usePosts();
+  const { posts, loading } = usePosts();
+  // const { loading } = usePosts();
   const handleSearch = (e) => {
     e.preventDefault();
     // search logic here
