@@ -12,6 +12,16 @@
   background-attachment: fixed;
 }
 
+.auth-section-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  top: 150px;
+}
+
 .sign-in-sign-out {
   display: flex;
   justify-content: center;
@@ -19,6 +29,8 @@
   gap: 1rem;
   width: 100%;
   margin-bottom: 2rem;
+  /* margin-top: 100px; */
+  position: relative;
 }
 
 .auth-link {
@@ -96,5 +108,77 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+/* body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  perspective: 1000px;
+} */
+
+.scene {
+  width: 152px;
+  height: 152px;
+  position: relative;
+  top: 60px;
+}
+
+.cube {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  animation: rotate 5s infinite linear;
+}
+
+.face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.front {
+  transform: translateZ(75px);
+  background-image: url('/public/bubbler.jpeg');
+}
+
+.back {
+  transform: rotateY(180deg) translateZ(75px);
+  background-image: url('/public/7.jpg');
+}
+
+.right {
+  transform: rotateY(90deg) translateZ(75px);
+  background-image: url('/public/8.jpg');
+}
+
+.left {
+  transform: rotateY(-90deg) translateZ(75px);
+  background-image: url('/public/marble.jpg');
+}
+
+.top {
+  transform: rotateX(90deg) translateZ(75px);
+  background-image: url('/public/6.jpg');
+}
+
+.bottom {
+  transform: rotateX(-90deg) translateZ(75px);
+  background-image: url('/public/sherlock.jpeg');
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(360deg);
   }
 }
