@@ -13,6 +13,8 @@ export default function MainGallery() {
       </div>
     );
   }
+  console.log('posts', posts);
+
   return (
     <>
       <div className="search-container">{/* <CoolSearchBox onSearch={handleSearch} /> */}</div>
