@@ -322,3 +322,23 @@ export const getAdditionalImageUrlsPublicIds = async (id) => {
     throw error;
   }
 };
+
+export const fetchGalleryPosts = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/main-gallery`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    console.log('response', response);
+
+    const result = await response.json();
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
