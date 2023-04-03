@@ -462,11 +462,11 @@
     box-shadow: none;
   }
   65% {
-    transform: rotateX(298deg) rotateY(165deg) rotateZ(239deg) translateX(-500px) translateY(0px)
+    transform: rotateX(298deg) rotateY(250deg) rotateZ(239deg) translateX(-500px) translateY(0px)
       scaleX(0.6) scaleY(0.6) scaleZ(0.6);
   }
   70% {
-    transform: rotateX(325deg) rotateY(250deg) rotateZ(295deg) translateX(-100px) translateY(0px)
+    transform: rotateX(325deg) rotateY(250deg) rotateZ(295deg) translateX(25px) translateY(0px)
       scaleX(1) scaleY(1) scaleZ(1);
     box-shadow: none;
   }
