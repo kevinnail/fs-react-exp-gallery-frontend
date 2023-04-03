@@ -49,7 +49,62 @@ export default function Auth() {
             <div className="face bottom"></div>
           </div>
         </div>
-        {}
+        <div className="scene2">
+          <div className="cube2">
+            <div className="face2 front2"></div>
+            <div className="face2 back2"></div>
+            <div className="face2 right2"></div>
+            <div className="face2 left2"></div>
+            <div className="face2 top2"></div>
+            <div className="face2 bottom2"></div>
+          </div>
+        </div>
+        <div className="scene3">
+          <div className="dodecahedron">
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+            <div className="face3"></div>
+          </div>
+        </div>
+        <div className="scene4">
+          <div className="dodecahedron2">
+            <div className="face4"></div>
+            <div className="face4"></div>
+            <div className="face4"></div>
+            <div className="face4"></div>
+            <div className="face4"></div>
+            <div className="face4"></div>
+            <div className="face4"></div>
+            <div className="face4"></div>
+            <div className="face4"></div>
+            <div className="face4"></div>
+            <div className="face4"></div>
+          </div>
+        </div>
+        <div className="scene5">
+          <div className="triangle">
+            <div className="face5"></div>
+            <div className="face5"></div>
+            <div className="face5"></div>
+          </div>
+        </div>
         {}
         {}
         {/* <div className="marble-container">
