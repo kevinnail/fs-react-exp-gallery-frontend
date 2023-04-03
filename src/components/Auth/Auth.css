@@ -435,11 +435,11 @@
 
 @keyframes rotate2 {
   0% {
-    transform: rotateX(300deg) rotateY(100deg) rotateZ(730deg) translateX(0px) translateY(50px)
-      scaleX(1) scaleY(1) scaleZ(1);
+    transform: rotateX(300deg) rotateY(460deg) rotateZ(-350deg) translateX(0px) translateY(50px)
+      scaleX(0.6) scaleY(0.6) scaleZ(0.6);
     box-shadow: none;
   }
-  15% {
+  25% {
     transform: rotateX(60deg) rotateY(150deg) rotateZ(45deg) translateX(-25px) translateY(0px)
       scaleX(0.5) scaleY(0.5) scaleZ(0.5);
   }
@@ -461,23 +461,24 @@
   53% {
     box-shadow: none;
   }
+
   65% {
-    transform: rotateX(298deg) rotateY(250deg) rotateZ(239deg) translateX(-500px) translateY(0px)
+    transform: rotateX(298deg) rotateY(250deg) rotateZ(239deg) translateX(-500px) translateY(150px)
       scaleX(0.6) scaleY(0.6) scaleZ(0.6);
   }
   70% {
-    transform: rotateX(325deg) rotateY(250deg) rotateZ(295deg) translateX(25px) translateY(0px)
+    transform: rotateX(320deg) rotateY(270deg) rotateZ(540deg) translateX(25px) translateY(200px)
       scaleX(1) scaleY(1) scaleZ(1);
     box-shadow: none;
   }
-  92% {
-    transform: rotateX(450deg) rotateY(380deg) rotateZ(320deg) translateX(25px) translateY(0px)
+  85% {
+    transform: rotateX(360deg) rotateY(320deg) rotateZ(940deg) translateX(25px) translateY(50px)
       scaleX(3) scaleY(3) scaleZ(3);
   }
 
   100% {
-    transform: rotateX(300deg) rotateY(100deg) rotateZ(730deg) translateX(0px) translateY(50px)
-      scaleX(1) scaleY(1) scaleZ(1);
+    transform: rotateX(300deg) rotateY(460deg) rotateZ(730deg) translateX(0px) translateY(50px)
+      scaleX(0.6) scaleY(0.6) scaleZ(0.6);
     box-shadow: none;
   }
 }
