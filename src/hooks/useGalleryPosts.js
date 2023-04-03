@@ -10,9 +10,7 @@ export function useGalleryPosts() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('firing');
         const data = await fetchGalleryPosts();
-        console.log('data', data);
 
         setPosts(data);
         setLoading(false);
