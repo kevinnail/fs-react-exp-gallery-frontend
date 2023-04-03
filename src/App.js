@@ -24,8 +24,8 @@ function App() {
         <Route path="/admin/new" component={NewPost} />
         <Route exact path="/admin/:id" component={EditPost} />
         <Route path="/admin" component={Admin} />
-        <Route exact path="/">
-          {user ? <Redirect to="/admin" /> : <Redirect to="/auth/sign-in" />}
+        <Route path="*">
+          <Redirect to={user ? '/admin' : '/auth/sign-in'} />
         </Route>
       </Switch>
     </div>
