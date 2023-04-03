@@ -2,6 +2,8 @@ import React from 'react';
 import { useGalleryPosts } from '../../hooks/useGalleryPosts.js';
 // import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
+import '../Gallery/Gallery.css';
+// import './MainGallery.css';
 
 export default function MainGallery() {
   const { posts, loading } = useGalleryPosts();
@@ -13,11 +15,11 @@ export default function MainGallery() {
       </div>
     );
   }
-  console.log('posts', posts);
 
   return (
     <>
       <div className="search-container">{/* <CoolSearchBox onSearch={handleSearch} /> */}</div>
+
       <div className="gallery-list-container">
         {posts.map((post) => (
           <MainGalleryPostCard key={post.id} {...post} posts={posts} />

@@ -332,8 +332,6 @@ export const fetchGalleryPosts = async () => {
         'Content-Type': 'application/json',
       },
     });
-    console.log('response', response);
-
     const result = await response.json();
 
     return result;
