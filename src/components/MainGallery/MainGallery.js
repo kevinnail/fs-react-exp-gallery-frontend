@@ -1,10 +1,9 @@
 import React from 'react';
 import { useGalleryPosts } from '../../hooks/useGalleryPosts.js';
-import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
+// import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
 
 export default function MainGallery() {
-  console.log('MainGallery');
   const { posts, loading } = useGalleryPosts();
   if (loading) {
     return (
