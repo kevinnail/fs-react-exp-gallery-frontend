@@ -17,7 +17,7 @@ export default function Admin() {
     <>
       <div className="prod-header">
         <span className="grid-3">Title</span>
-        <span className="grid-5">Price</span>
+        <span className="grid-7">Price</span>
       </div>
 
       <div className="list-container">

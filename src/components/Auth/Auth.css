@@ -30,6 +30,12 @@
   width: 100%;
   position: relative;
   top: 150px;
+  /* background-color: #2f00ff83; */
+  padding: 10px 0;
+  background: linear-gradient(270deg, #7777f3bd, #5b36ff83);
+  border-top: 1px solid #2f00ff83;
+  border-bottom: 1px solid #2f00ff83;
+  backdrop-filter: blur(5px);
 }
 
 .sign-in-sign-out {
@@ -131,7 +137,7 @@
   height: 100%;
   position: absolute;
   transform-style: preserve-3d;
-  animation: rotate 10s infinite linear;
+  animation: rotate 15s infinite linear;
 }
 
 .face {
@@ -149,6 +155,7 @@
 .front {
   transform: rotateY(0deg) translateZ(75px);
   background-image: url('/public/bubbler.jpeg');
+  transition: 2s;
 }
 
 .back {
@@ -176,6 +183,48 @@
   background-image: url('/public/sherlock.jpeg');
 }
 
+/* @keyframes rotate {
+  0% {
+    transform: rotateX(150deg) rotateY(15deg) rotateZ(15deg) translateX(-100px) translateY(-100px);
+  }
+  25% {
+    transform: rotateX(1030deg) rotateY(96deg) rotateZ(123deg) translateX(0px) translateY(25px);
+  }
+  50% {
+    transform: rotateX(1800deg) rotateY(187deg) rotateZ(172deg) translateX(100px) translateY(75px);
+  }
+  75% {
+    transform: rotateX(2800deg) rotateY(265deg) rotateZ(292deg) translateX(0px) translateY(25px);
+  }
+  100% {
+    transform: rotateX(3750deg) rotateY(375deg) rotateZ(375deg) translateX(-100px)
+      translateY(-100px);
+  }
+} */
+/* @keyframes rotate {
+  0% {
+    transform: rotateX(15deg) rotateY(15deg) rotateZ(15deg) translateX(-100px) translateY(0px)
+      scaleX(1) scaleY(1);
+  }
+  25% {
+    transform: rotateX(300deg) rotateY(96deg) rotateZ(90deg) translateX(0px) translateY(25px)
+      scaleX(0.75) scaleY(0.75);
+  }
+  50% {
+    transform: rotateX(162deg) rotateY(187deg) rotateZ(180deg) translateX(100px) translateY(50px)
+      scaleX(0.5) scaleY(0.5);
+  }
+  75% {
+    transform: rotateX(298deg) rotateY(265deg) rotateZ(360deg) translateX(0px) translateY(25px)
+      scaleX(0.75) scaleY(0.75);
+  }
+  100% {
+    transform: rotateX(375deg) rotateY(375deg) rotateZ(375deg) translateX(-100px) translateY(0px)
+      scaleX(1) scaleY(1);
+  }
+} */
+
+/* original */
 @keyframes rotate {
   0% {
     transform: rotateX(15deg) rotateY(15deg) rotateZ(15deg) translateX(-100px) translateY(0px);
