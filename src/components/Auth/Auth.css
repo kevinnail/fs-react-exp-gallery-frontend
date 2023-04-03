@@ -160,11 +160,11 @@
   opacity: 1;
 } */
 .front {
-  animation: rotateCube 40s infinite, changeOpacity 40s infinite;
+  animation: openSesame 40s infinite, changeOpacity 40s infinite;
   background-image: url('/public/bubbler.jpeg');
 }
 
-@keyframes rotateCube {
+@keyframes openSesame {
   0% {
     transform: rotateY(0deg) translateZ(75px);
   }
@@ -177,7 +177,7 @@
   57% {
     transform: rotateY(90deg) translateZ(75px);
   }
-  58% {
+  60% {
     transform: rotateY(0deg) translateZ(75px);
   }
   100% {
