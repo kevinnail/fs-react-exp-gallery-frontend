@@ -138,7 +138,7 @@
   height: 100%;
   position: absolute;
   transform-style: preserve-3d;
-  animation: rotate 50s infinite linear;
+  animation: rotate 30s infinite linear;
 }
 
 .face {
@@ -296,7 +296,7 @@
   height: 100%;
   position: absolute;
   transform-style: preserve-3d;
-  animation: rotate2 50s infinite linear;
+  animation: rotate2 30s infinite linear;
 }
 
 .face2 {
@@ -343,12 +343,12 @@
 
 @keyframes rotate2 {
   0% {
-    transform: rotateX(15deg) rotateY(0deg) rotateZ(20deg) translateX(0px) translateY(50px)
+    transform: rotateX(300deg) rotateY(100deg) rotateZ(200deg) translateX(0px) translateY(50px)
       scaleX(1) scaleY(1) scaleZ(1);
   }
   15% {
-    transform: rotateX(25deg) rotateY(500deg) rotateZ(45deg) translateX(-25px) translateY(0px)
-      scaleX(1.5) scaleY(1.5) scaleZ(1.5);
+    transform: rotateX(60deg) rotateY(150deg) rotateZ(45deg) translateX(-25px) translateY(0px)
+      scaleX(0.5) scaleY(0.5) scaleZ(0.5);
   }
   35% {
     transform: rotateX(103deg) rotateY(96deg) rotateZ(90deg) translateX(-50px) translateY(0px)
@@ -356,21 +356,25 @@
   }
 
   50% {
-    transform: rotateX(191deg) rotateY(175deg) rotateZ(160deg) translateX(-150px) translateY(-150px)
+    transform: rotateX(210deg) rotateY(210deg) rotateZ(210deg) translateX(-200px) translateY(-150px)
       scaleX(0.2) scaleY(0.2) scaleZ(0.2);
   }
 
   65% {
-    transform: rotateX(298deg) rotateY(265deg) rotateZ(312deg) translateX(-50px) translateY(0px)
-      scaleX(0.4) scaleY(0.4) scaleZ(0.4);
+    transform: rotateX(298deg) rotateY(96deg) rotateZ(312deg) translateX(-50px) translateY(0px)
+      scaleX(0.6) scaleY(0.6) scaleZ(0.6);
+  }
+  78% {
+    transform: rotateX(298deg) rotateY(265deg) rotateZ(450deg) translateX(0px) translateY(0px)
+      scaleX(1) scaleY(1) scaleZ(1);
   }
   92% {
-    transform: rotateX(500deg) rotateY(200deg) rotateZ(360deg) translateX(-25px) translateY(0px)
+    transform: rotateX(350deg) rotateY(180deg) rotateZ(230deg) translateX(25px) translateY(0px)
       scaleX(2) scaleY(2) scaleZ(2);
   }
 
   100% {
-    transform: rotateX(375deg) rotateY(0deg) rotateZ(380deg) translateX(0px) translateY(50px)
+    transform: rotateX(300deg) rotateY(100deg) rotateZ(200deg) translateX(0px) translateY(50px)
       scaleX(1) scaleY(1) scaleZ(1);
   }
 }
