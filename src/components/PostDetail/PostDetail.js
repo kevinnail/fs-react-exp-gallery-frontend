@@ -45,14 +45,16 @@ export default function PostDetail() {
 
   return (
     <div className="post-detail-div">
-      <section>
+      <section className="title-container">
         <h1 className="detail-title">{postDetail.title}</h1>
+      </section>
+      <section className="title-cat-container">
         <span className="category-label">Category:</span>
-        <span>{postDetail.category}</span>
+        <span className="category-span">{postDetail.category}</span>
+        <span className="price-details">${postDetail.price}</span>
       </section>
       <section className="desc-price-container">
         <span className="desc-details">{postDetail.description}</span>
-        <span className="price-details">${postDetail.price}</span>
       </section>
       <div className="gallery-container">
         <img

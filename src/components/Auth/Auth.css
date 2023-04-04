@@ -263,7 +263,7 @@
   width: 100%;
   height: 100%;
   /* background-color: #a490ff; */
-  background-image: radial-gradient(ellipse at center, #5b36ff83 0%, #ffffff 100%);
+  background-image: radial-gradient(ellipse at center, #5b36ff83 0%, #ffffff8f 100%);
   opacity: 0;
   animation: flashEffect 40s infinite;
 }

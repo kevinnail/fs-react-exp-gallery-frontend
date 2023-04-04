@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Modal from 'react-modal';
 Modal.setAppElement('#root'); // If your app is using #root as the main container
+import '../PostDetail/PostDetail.css';
 
 export default function MainPostDetail() {
   const { id } = useParams();
@@ -34,14 +35,16 @@ export default function MainPostDetail() {
 
   return (
     <div className="post-detail-div">
-      <section>
+      <section className="title-container">
         <h1 className="detail-title">{postDetail.title}</h1>
+      </section>
+      <section className="title-cat-container">
         <span className="category-label">Category:</span>
-        <span>{postDetail.category}</span>
+        <span className="category-span">{postDetail.category}</span>
+        <span className="price-details">${postDetail.price}</span>
       </section>
       <section className="desc-price-container">
         <span className="desc-details">{postDetail.description}</span>
-        <span className="price-details">${postDetail.price}</span>
       </section>
       <div className="gallery-container">
         <img
