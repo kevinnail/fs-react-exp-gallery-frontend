@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, Redirect, useParams } from 'react-router-dom';
+import { Link, NavLink, Redirect, useParams } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 import './Auth.css';
 
@@ -9,6 +9,7 @@ export default function Auth() {
   const [isSignIn, setIsSignIn] = useState(true);
   const { user, logInUser, error, loading, setLoading } = useUser();
   const { type } = useParams();
+  const [isFormRetracted, setIsFormRetracted] = useState(true);
   // const [loading, setLoading] = useState(false);
   if (user) {
     return <Redirect to="/admin" />;
@@ -16,6 +17,7 @@ export default function Auth() {
     console.error(error);
   }
 
+  // submit form to log in or sign up
   const submitAuth = async () => {
     try {
       setLoading(true);
@@ -24,6 +26,7 @@ export default function Auth() {
       console.error(e);
     }
   };
+
   // show loading spinner while waiting for posts to load1
   if (loading) {
     return (
@@ -41,12 +44,42 @@ export default function Auth() {
         {}
         <div className="scene">
           <div className="cube">
-            <div className="face front"></div>
-            <div className="face back"></div>
-            <div className="face right"></div>
-            <div className="face left"></div>
-            <div className="face top"></div>
-            <div className="face bottom"></div>
+            <div className="face front">
+              <Link className="hidden-text-link" to="/main-gallery">
+                {' '}
+                {'This is a link to the gallery page if you are clever enough you might find it! '}
+              </Link>
+            </div>
+            <div className="face back">
+              {' '}
+              <Link className="hidden-text-link" to="/main-gallery">
+                {'This is a link to the gallery page if you are clever enough you might find it! '}
+              </Link>
+            </div>
+            <div className="face right">
+              {' '}
+              <Link className="hidden-text-link" to="/main-gallery">
+                {'This is a link to the gallery page if you are clever enough you might find it! '}
+              </Link>
+            </div>
+            <div className="face left">
+              {' '}
+              <Link className="hidden-text-link" to="/main-gallery">
+                {'This is a link to the gallery page if you are clever enough you might find it! '}
+              </Link>
+            </div>
+            <div className="face top">
+              {' '}
+              <Link className="hidden-text-link" to="/main-gallery">
+                {'This is a link to the gallery page if you are clever enough you might find it! '}
+              </Link>
+            </div>
+            <div className="face bottom">
+              {' '}
+              <Link className="hidden-text-link" to="/main-gallery">
+                {'This is a link to the gallery page if you are clever enough you might find it! '}
+              </Link>
+            </div>
           </div>
         </div>
         <div className="scene2">
@@ -59,66 +92,11 @@ export default function Auth() {
             <div className="face2 bottom2"></div>
           </div>
         </div>
-        <div className="scene3">
-          <div className="dodecahedron">
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-            <div className="face3"></div>
-          </div>
-        </div>
-        <div className="scene4">
-          <div className="dodecahedron2">
-            <div className="face4"></div>
-            <div className="face4"></div>
-            <div className="face4"></div>
-            <div className="face4"></div>
-            <div className="face4"></div>
-            <div className="face4"></div>
-            <div className="face4"></div>
-            <div className="face4"></div>
-            <div className="face4"></div>
-            <div className="face4"></div>
-            <div className="face4"></div>
-          </div>
-        </div>
-        <div className="scene5">
-          <div className="triangle">
-            <div className="face5"></div>
-            <div className="face5"></div>
-            <div className="face5"></div>
-          </div>
-        </div>
-        {}
-        {}
-        {/* <div className="marble-container">
-        <img className="rotating-marble" src="../marble-css.png" />
-      </div> */}
 
         {}
         {}
         {}
-        {}
-        {}
-        {}
-        {}
-        <div className="auth-section-container">
+        <div className={`auth-section-container ${isFormRetracted ? 'retracted' : ''}`}>
           <div className="sign-in-sign-out">
             <NavLink className="auth-link" to="/auth/sign-in" onClick={() => setIsSignIn(true)}>
               Sign-in
@@ -152,6 +130,13 @@ export default function Auth() {
           </div>
         </div>
       </div>
+      <button className="retract-button" onClick={() => setIsFormRetracted(!isFormRetracted)}>
+        {isFormRetracted ? (
+          <i className="fa fa-arrow-right" aria-hidden="true"></i>
+        ) : (
+          <i className="fa fa-arrow-left" aria-hidden="true"></i>
+        )}
+      </button>
     </>
   );
 }

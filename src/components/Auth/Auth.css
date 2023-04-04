@@ -9,6 +9,7 @@
   background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83);
   background-size: 400% 400%;
   animation: ocean 10s ease-in-out infinite;
+  letter-spacing: 1.5px;
 }
 
 @keyframes ocean {
@@ -36,6 +37,47 @@
   border-top: 1px solid #2f00ff83;
   border-bottom: 1px solid #2f00ff83;
   backdrop-filter: blur(5px);
+}
+
+.auth-container {
+  position: relative;
+}
+
+.auth-section-container {
+  /* ...existing styles */
+  transition: transform 1.2s ease-in-out;
+  will-change: transform;
+}
+
+.auth-section-container.retracted {
+  transform: translateX(-100%);
+}
+
+.retract-button {
+  position: absolute;
+  bottom: 20px;
+  z-index: 10;
+  left: 30px;
+  transform: translateX(-50%);
+  transition: 500ms;
+  /* Style the button as you prefer */
+  background-color: #5b36ff83;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 1.5px;
+  font-size: 1.2rem;
+}
+
+.retract-button:hover {
+  background-color: #4427b5;
+}
+
+.hidden-text-link {
+  opacity: 0;
 }
 
 .sign-in-sign-out {
@@ -91,6 +133,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
   width: 150px;
 }
 
