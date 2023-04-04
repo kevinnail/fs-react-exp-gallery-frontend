@@ -45,7 +45,7 @@
 
 .auth-section-container {
   /* ...existing styles */
-  transition: transform 1.2s ease-in-out;
+  transition: transform 0.6s ease;
   will-change: transform;
 }
 
@@ -252,7 +252,7 @@
 .back {
   transform: rotateY(180deg) translateZ(75px);
   background-image: url('/public/marble.jpg');
-  /* animation: changeImage 40s infinite; */
+  animation: changeImage 40s infinite;
 }
 
 .back::before {
@@ -287,8 +287,14 @@
   0% {
     background-image: url('/public/marble.jpg');
   }
-  53% {
+  50.2% {
+    background-image: url('/public/marble.jpg');
+  }
+  50.3% {
     background-image: url('/public/logo-sq.png');
+  }
+  50.7% {
+    background-image: url('/public/marble.jpg');
   }
   100% {
     background-image: url('/public/marble.jpg');
@@ -478,17 +484,18 @@
 
 @keyframes rotate2 {
   0% {
-    transform: rotateX(300deg) rotateY(460deg) rotateZ(-350deg) translateX(0px) translateY(50px)
+    transform: rotateX(300deg) rotateY(460deg) rotateZ(120deg) translateX(0px) translateY(50px)
       scaleX(0.6) scaleY(0.6) scaleZ(0.6);
     box-shadow: none;
   }
   25% {
-    transform: rotateX(60deg) rotateY(150deg) rotateZ(45deg) translateX(-25px) translateY(0px)
-      scaleX(0.5) scaleY(0.5) scaleZ(0.5);
-  }
-  35% {
-    transform: rotateX(103deg) rotateY(96deg) rotateZ(90deg) translateX(-50px) translateY(0px)
+    transform: rotateX(60deg) rotateY(150deg) rotateZ(75deg) translateX(-25px) translateY(0px)
       scaleX(1) scaleY(1) scaleZ(1);
+  }
+
+  35% {
+    transform: rotateX(103deg) rotateY(96deg) rotateZ(90deg) translateX(-80px) translateY(0px)
+      scaleX(0.5) scaleY(0.5) scaleZ(0.5);
   }
 
   41% {
@@ -497,30 +504,38 @@
   42% {
     box-shadow: 0px 0px 100px 100px white;
   }
+
   50% {
-    transform: rotateX(210deg) rotateY(120deg) rotateZ(210deg) translateX(-200px) translateY(-150px)
+    transform: rotateX(210deg) rotateY(120deg) rotateZ(210deg) translateX(-250px) translateY(0px)
       scaleX(0) scaleY(0) scaleZ(0);
   }
+
   53% {
     box-shadow: none;
   }
 
-  65% {
-    transform: rotateX(298deg) rotateY(250deg) rotateZ(239deg) translateX(-500px) translateY(150px)
-      scaleX(0.6) scaleY(0.6) scaleZ(0.6);
-  }
-  70% {
-    transform: rotateX(320deg) rotateY(270deg) rotateZ(540deg) translateX(25px) translateY(200px)
+  60% {
+    transform: rotateX(275deg) rotateY(460deg) rotateZ(260deg) translateX(-250px) translateY(0px)
       scaleX(1) scaleY(1) scaleZ(1);
-    box-shadow: none;
   }
+
+  80% {
+    transform: rotateX(100deg) rotateY(380deg) rotateZ(260deg) translateX(-250px) translateY(0px)
+      translateZ(-200px) scaleX(1.5) scaleY(1.5) scaleZ(1.5);
+    background-image: url('/public/logo-sq.png');
+  }
+
   85% {
-    transform: rotateX(360deg) rotateY(320deg) rotateZ(940deg) translateX(25px) translateY(50px)
-      scaleX(3) scaleY(3) scaleZ(3);
+    transform: rotateX(120deg) rotateY(430deg) rotateZ(290deg) translateX(0px) translateY(0px)
+      scaleX(2) scaleY(2) scaleZ(2);
+  }
+  89% {
+    transform: rotateX(360deg) rotateY(360deg) rotateZ(260deg) translateX(0px) translateY(0px)
+      scaleX(2.5) scaleY(2.5) scaleZ(2.5);
   }
 
   100% {
-    transform: rotateX(300deg) rotateY(460deg) rotateZ(730deg) translateX(0px) translateY(50px)
+    transform: rotateX(300deg) rotateY(460deg) rotateZ(120deg) translateX(0px) translateY(50px)
       scaleX(0.6) scaleY(0.6) scaleZ(0.6);
     box-shadow: none;
   }
