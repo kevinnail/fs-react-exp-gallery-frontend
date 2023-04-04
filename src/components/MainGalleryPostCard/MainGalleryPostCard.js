@@ -6,7 +6,6 @@ import '../GalleryPostCard/GalleryPostCard.css';
 
 export default function MainGalleryPostCard({ id, title, image_url, price }) {
   const post = useGalleryPost(id);
-  console.log('post', post);
   return (
     <>
       <div className="gallery-display-container" key={id}>
