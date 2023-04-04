@@ -1,11 +1,19 @@
+import { Redirect } from 'react-router-dom';
 import { usePosts } from '../../hooks/usePosts.js';
+import { useUser } from '../../hooks/useUser.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import GalleryPostCard from '../GalleryPostCard/GalleryPostCard.js';
 import './Gallery.css';
 
 export default function Gallery() {
   const { posts, loading } = usePosts();
-  // const { loading } = usePosts();
+  const { user, error } = useUser();
+
+  if (!user) {
+    return <Redirect to="/auth" />;
+  } else if (error) {
+    console.error(error);
+  }
   const handleSearch = (e) => {
     e.preventDefault();
     // search logic here

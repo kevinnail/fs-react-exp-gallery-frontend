@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import { usePost } from '../../hooks/usePost.js';
 import './PostDetail.css';
+import { useUser } from '../../hooks/useUser.js';
 
 Modal.setAppElement('#root'); // If your app is using #root as the main container
 
 export default function PostDetail() {
   const { id } = useParams();
   const { postDetail, imageUrls, loading, error } = usePost(id);
-
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const { user } = useUser();
+
+  if (!user) {
+    return <Redirect to="/auth" />;
+  } else if (error) {
+    console.error(error);
+  }
 
   const handleThumbnailClick = (index) => {
     setCurrentIndex(index);
