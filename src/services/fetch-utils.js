@@ -310,7 +310,7 @@ export const deleteImageData = async (id, public_id) => {
 // get additional image urls from in db
 export const getAdditionalImageUrlsPublicIds = async (id) => {
   try {
-    const response = await fetch(`http://localhost:7890/api/v1/main-gallery/${id}`, {
+    const response = await fetch(`http://localhost:7890/api/v1/admin/urls/${id}`, {
       method: 'GET',
       credentials: 'include',
     });
@@ -358,12 +358,8 @@ export async function getGalleryPostDetail(id) {
 }
 export const getAdditionalImageUrlsPublicIdsGallery = async (id) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/main-gallery/${id}`, {
+    const response = await fetch(`${BASE_URL}/api/v1/main-gallery/urls/${id}`, {
       method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
     });
     const result = await response.json();
 

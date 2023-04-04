@@ -11,7 +11,7 @@ export function useGalleryPost(id) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [isDeleted, setIsDeleted] = useState(false);
-  const [additionalImages, setAdditionalImages] = useState([]);
+  const [additionalImagesGallery, setAdditionalImagesGallery] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -19,10 +19,12 @@ export function useGalleryPost(id) {
       try {
         const data = await getGalleryPostDetail(id);
         // const additionalImages = await getAdditionalImageUrlsPublicIds(id);
-        const additionalImages = await getAdditionalImageUrlsPublicIdsGallery(id);
-        const additionalImageUrlsPublicIds = additionalImages.map((image) => image.image_url);
+        const additionalImagesGallery = await getAdditionalImageUrlsPublicIdsGallery(id);
+        const additionalImageUrlsPublicIds = additionalImagesGallery.map(
+          (image) => image.image_url
+        );
 
-        setAdditionalImages(additionalImages);
+        setAdditionalImagesGallery(additionalImagesGallery);
 
         setPostDetail(data);
         setImageUrls([...additionalImageUrlsPublicIds]);
@@ -33,7 +35,7 @@ export function useGalleryPost(id) {
       }
     };
     fetchData();
-  }, [id, additionalImages]);
+  }, [id]);
 
   return {
     postDetail,
@@ -46,7 +48,7 @@ export function useGalleryPost(id) {
     setError,
     isDeleted,
     setIsDeleted,
-    additionalImages,
-    setAdditionalImages,
+    additionalImagesGallery,
+    setAdditionalImagesGallery,
   };
 }

@@ -9,6 +9,10 @@ Modal.setAppElement('#root'); // If your app is using #root as the main containe
 export default function PostDetail() {
   const { id } = useParams();
   const { postDetail, imageUrls, loading, error } = usePost(id);
+  console.log('postDetail', postDetail);
+  console.log('imageUrls', imageUrls);
+  console.log('loading', loading);
+  console.log('error', error);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -24,7 +28,7 @@ export default function PostDetail() {
     setModalIsOpen(false);
   };
 
-  if (error) return <h1>{error}</h1>;
+  if (error) return <h1>{error} </h1>;
   // show loading spinner while waiting for posts to load
   if (loading) {
     return (
