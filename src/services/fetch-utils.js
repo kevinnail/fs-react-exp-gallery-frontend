@@ -310,7 +310,7 @@ export const deleteImageData = async (id, public_id) => {
 // get additional image urls from in db
 export const getAdditionalImageUrlsPublicIds = async (id) => {
   try {
-    const response = await fetch(`http://localhost:7890/api/v1/admin/urls/${id}`, {
+    const response = await fetch(`http://localhost:7890/api/v1/main-gallery/${id}`, {
       method: 'GET',
       credentials: 'include',
     });
@@ -323,9 +323,42 @@ export const getAdditionalImageUrlsPublicIds = async (id) => {
   }
 };
 
+//  public routes for gallery
+// fetch all posts
 export const fetchGalleryPosts = async () => {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/main-gallery`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    const result = await response.json();
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// public route for post detail
+export async function getGalleryPostDetail(id) {
+  const resp = await fetch(`${BASE_URL}/api/v1/main-gallery/${id}`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const msg = await resp.json();
+  return msg;
+}
+export const getAdditionalImageUrlsPublicIdsGallery = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/main-gallery/${id}`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',

@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
+import {
+  getAdditionalImageUrlsPublicIdsGallery,
+  getGalleryPostDetail,
+} from '../services/fetch-utils.js';
 
-export function useGalleryPosts(id) {
+export function useGalleryPost(id) {
   const [postDetail, setPostDetail] = useState({});
   const [imageUrls, setImageUrls] = useState([]);
   const [error, setError] = useState('');
@@ -15,6 +19,7 @@ export function useGalleryPosts(id) {
       try {
         const data = await getGalleryPostDetail(id);
         // const additionalImages = await getAdditionalImageUrlsPublicIds(id);
+        const additionalImages = await getAdditionalImageUrlsPublicIdsGallery(id);
         const additionalImageUrlsPublicIds = additionalImages.map((image) => image.image_url);
 
         setAdditionalImages(additionalImages);

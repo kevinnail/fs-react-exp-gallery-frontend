@@ -9,6 +9,7 @@ import EditPost from './components/EditPost/EditPost.js';
 import Gallery from './components/Gallery/Gallery.js';
 import PostDetail from './components/PostDetail/PostDetail.js';
 import MainGallery from './components/MainGallery/MainGallery.js';
+import MainPostDetail from './components/MainPostDetail/MainPostDetail.js';
 
 function App() {
   const { user } = useUser();
@@ -18,6 +19,7 @@ function App() {
       <Header />
       <Switch>
         <Route exact path="/auth/:type" component={Auth} />
+        <Route path="/main-gallery/:id" component={MainPostDetail} />
         <Route path="/main-gallery" component={MainGallery} />
         <Route path="/gallery/:id" component={PostDetail} />
         <Route path="/gallery" component={Gallery} />
