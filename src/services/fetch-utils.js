@@ -322,3 +322,50 @@ export const getAdditionalImageUrlsPublicIds = async (id) => {
     throw error;
   }
 };
+
+//  public routes for gallery
+// fetch all posts
+export const fetchGalleryPosts = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/main-gallery`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    const result = await response.json();
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// public route for post detail
+export async function getGalleryPostDetail(id) {
+  const resp = await fetch(`${BASE_URL}/api/v1/main-gallery/${id}`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const msg = await resp.json();
+  return msg;
+}
+export const getAdditionalImageUrlsPublicIdsGallery = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/main-gallery/urls/${id}`, {
+      method: 'GET',
+    });
+    const result = await response.json();
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

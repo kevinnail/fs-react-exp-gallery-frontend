@@ -1,25 +1,15 @@
-import React, { useState } from 'react';
-import { Redirect, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Modal from 'react-modal';
-import { usePost } from '../../hooks/usePost.js';
-import './PostDetail.css';
-import { useUser } from '../../hooks/useUser.js';
-
 Modal.setAppElement('#root'); // If your app is using #root as the main container
+import '../PostDetail/PostDetail.css';
 
-export default function PostDetail() {
+export default function MainPostDetail() {
   const { id } = useParams();
-  const { postDetail, imageUrls, loading, error } = usePost(id);
+  const { postDetail, imageUrls, loading, error } = useGalleryPost(id);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const { user } = useUser();
-
-  if (!user) {
-    return <Redirect to="/auth" />;
-  } else if (error) {
-    console.error(error);
-  }
 
   const handleThumbnailClick = (index) => {
     setCurrentIndex(index);
@@ -33,7 +23,7 @@ export default function PostDetail() {
     setModalIsOpen(false);
   };
 
-  if (error) return <h1>{error} </h1>;
+  if (error) return <h1>{error}</h1>;
   // show loading spinner while waiting for posts to load
   if (loading) {
     return (

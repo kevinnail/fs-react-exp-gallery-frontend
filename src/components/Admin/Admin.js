@@ -13,33 +13,27 @@ export default function Admin() {
     return <Redirect to="/auth/sign-in" />;
   }
 
-  if (loading) {
-    return (
-      <div className="loading">
-        <h1>Loading! One moment please!</h1>
-      </div>
-    );
-  }
-
-  if (posts.length === 0) {
-    return (
-      <div className="loading">
-        <h1>No posts yet!</h1>
-      </div>
-    );
-  }
-
   return (
     <>
       <div className="prod-header">
-        <span className="grid-2">Title</span>
-        <span className="grid-5">Price</span>
+        <span className="grid-3">Title</span>
+        <span className="grid-7">Price</span>
       </div>
 
       <div className="list-container">
-        {posts.map((post) => (
-          <PostCard key={post.id} {...post} setPosts={setPosts} posts={posts} />
-        ))}
+        {loading ? (
+          <div className="loading-div">
+            <img className="loading" src="../logo-sq.png" />
+          </div>
+        ) : posts.length === 0 ? (
+          <div className="loading">
+            <h1>No posts yet!</h1>
+          </div>
+        ) : (
+          posts.map((post) => (
+            <PostCard key={post.id} {...post} setPosts={setPosts} posts={posts} />
+          ))
+        )}
       </div>
     </>
   );

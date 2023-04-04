@@ -1,0 +1,45 @@
+/* CoolSearchBox component */
+.cool-search-box {
+  display: flex;
+  position: relative;
+  width: 80%;
+}
+
+.cool-search-input {
+  width: 100%;
+  padding: 0.5rem 2rem 0.5rem 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  outline: none;
+  transition: border-color 0.3s;
+  border-radius: 5px;
+  background-color: #111;
+  color: #333;
+}
+
+.cool-search-input:focus {
+  border-color: #5b36ff;
+  background-color: #333;
+  color: #fff;
+}
+
+.cool-search-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border: none;
+  background-color: transparent;
+  padding: 0 0.5rem;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+}
+
+.cool-search-icon {
+  font-size: 1rem;
+  color: #666;
+  transition: transform 0.5s;
+}

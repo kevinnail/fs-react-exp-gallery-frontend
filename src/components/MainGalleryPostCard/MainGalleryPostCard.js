@@ -1,23 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { usePost } from '../../hooks/usePost.js';
-import './GalleryPostCard.css';
+import { useGalleryPost } from '../../hooks/useGalleryPost.js';
+// import '../GalleryPostCard/GalleryPostCard.css ';
+import '../GalleryPostCard/GalleryPostCard.css';
 
-export default function GalleryPostCard({
-  id,
-  title,
-  image_url,
-  price,
-  // posts,
-  // description, //commented just for now
-  // category, //commented just for now
-}) {
-  const post = usePost(id);
-
+export default function MainGalleryPostCard({ id, title, image_url, price }) {
+  const post = useGalleryPost(id);
   return (
     <>
       <div className="gallery-display-container" key={id}>
-        <Link className="gallery-display" to={`/gallery/${id}`}>
+        <Link className="gallery-display" to={`/main-gallery/${id}`}>
           {image_url ? (
             <img className="gallery-img" src={image_url} alt="edit" />
           ) : (

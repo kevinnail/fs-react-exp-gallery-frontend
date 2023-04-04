@@ -19,6 +19,11 @@ header {
 .title {
   font-size: 1.5em;
   grid-area: title;
+  margin: 0;
+  position: relative;
+  top: -15px;
+  left: -15px;
+  font-family: 'Gruppo', cursive;
 }
 .header-section p {
   margin: 0;
@@ -73,6 +78,7 @@ header {
   background-color: rgb(123, 123, 255);
   font-size: 1rem;
   display: flex;
+  font-family: 'Shadows Into Light', cursive;
 
   transition: 2000ms;
   /* align-items: center; */
