@@ -262,7 +262,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #a490ff;
+  /* background-color: #a490ff; */
+  background-image: radial-gradient(ellipse at center, #5b36ff83 0%, #ffffff 100%);
   opacity: 0;
   animation: flashEffect 40s infinite;
 }
@@ -484,7 +485,7 @@
 
 @keyframes rotate2 {
   0% {
-    transform: rotateX(300deg) rotateY(460deg) rotateZ(120deg) translateX(0px) translateY(50px)
+    transform: rotateX(90deg) rotateY(-100deg) rotateZ(-120deg) translateX(0px) translateY(0px)
       scaleX(0.6) scaleY(0.6) scaleZ(0.6);
     box-shadow: none;
   }
@@ -506,36 +507,40 @@
   }
 
   50% {
-    transform: rotateX(210deg) rotateY(120deg) rotateZ(210deg) translateX(-250px) translateY(100px)
+    transform: rotateX(210deg) rotateY(120deg) rotateZ(300deg) translateX(-120px) translateY(0px)
       scaleX(0) scaleY(0) scaleZ(0);
   }
 
   53% {
     box-shadow: none;
   }
+  /* 
+  60% {
+    transform: rotateX(260deg) rotateY(200deg) rotateZ(180deg) translateX(-200px) translateY(100px)
+      scaleX(0) scaleY(0) scaleZ(0);
+  } */
 
   68% {
-    transform: rotateX(275deg) rotateY(460deg) rotateZ(260deg) translateX(150px) translateY(0px)
+    transform: rotateX(275deg) rotateY(460deg) rotateZ(260deg) translateX(0px) translateY(0px)
       scaleX(1) scaleY(1) scaleZ(1);
   }
 
   80% {
-    transform: rotateX(100deg) rotateY(380deg) rotateZ(260deg) translateX(-250px) translateY(0px)
+    transform: rotateX(100deg) rotateY(380deg) rotateZ(260deg) translateX(0px) translateY(0px)
       translateZ(-200px) scaleX(1.5) scaleY(1.5) scaleZ(1.5);
-    background-image: url('/public/logo-sq.png');
   }
 
   85% {
-    transform: rotateX(120deg) rotateY(430deg) rotateZ(290deg) translateX(0px) translateY(0px)
-      scaleX(2) scaleY(2) scaleZ(2);
+    transform: rotateX(180deg) rotateY(260deg) rotateZ(280deg) translateX(0px) translateY(0px)
+      translateZ(-75px) scaleX(2) scaleY(2) scaleZ(2);
   }
   89% {
-    transform: rotateX(90deg) rotateY(90deg) rotateZ(260deg) translateX(0px) translateY(0px)
+    transform: rotateX(-20deg) rotateY(90deg) rotateZ(60deg) translateX(0px) translateY(0px)
       scaleX(2.5) scaleY(2.5) scaleZ(2.5);
   }
 
   100% {
-    transform: rotateX(300deg) rotateY(460deg) rotateZ(120deg) translateX(0px) translateY(50px)
+    transform: rotateX(90deg) rotateY(-460deg) rotateZ(-480deg) translateX(0px) translateY(0px)
       scaleX(0.6) scaleY(0.6) scaleZ(0.6);
     box-shadow: none;
   }
