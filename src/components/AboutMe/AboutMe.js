@@ -8,15 +8,15 @@ export default function AboutMe() {
         <div className="cube3">
           <div className="face3 front3">
             {' '}
-            <video className="bgVideo" autoPlay muted loop>
+            {/* <video className="bgVideo" autoPlay muted loop>
               <source src="./drumming.mp4" type="video/mp4" />
-            </video>
+            </video> */}
           </div>
           <div className="face3 back3">
             {' '}
-            <video className="bgVideo" autoPlay muted loop>
+            {/* <video className="bgVideo" autoPlay muted loop>
               <source src="./blowing-glass.mp4" type="video/mp4" />
-            </video>
+            </video> */}
           </div>
           <div className="face3 right3"></div>
           <div className="face3 left3"></div>
@@ -25,7 +25,7 @@ export default function AboutMe() {
         </div>
       </div>
       <p className="about-me-p">
-        Welcome! I appreciate you checking my page out- I&apos;ve been blowing glass for about 25
+        Welcome! I appreciate you checking out my page. I&apos;ve been blowing glass for about 25
         years, and now I&apos;ve made a life pivot into web development making websites like this
         one!
       </p>
@@ -37,9 +37,14 @@ export default function AboutMe() {
         into some libraries like Three.js and GSAP.
       </p>
       <p className="about-me-p">
-        I&apos;m always looking to sell some glass and currently offering freelance work for fellow
-        artists who need a website. If you&apos;re interested in either, please reach out to me
+        Aside from that I&apos;m all over the place with my hobbies and interests. Musician at heart
+        and can&apos;t play my drums enough- I also enjoy fretless bass and a little bit of keys.
+        Astromony and astrophotography are another fun hobby, as well as I went down the mushroom
+        rabbithole and enjoy foraging and cultivating.I&apos;m always looking to sell some glass and
+        currently offering freelance work for fellow artists who need a website. If you&apos;re
+        interested in either, please reach out to me
         <a className="about-me-link" href="mailto:kevin@kevinnail.com">
+          {' '}
           via email{' '}
         </a>{' '}
         or on my pages below. Thanks for stopping by!
@@ -51,6 +56,7 @@ export default function AboutMe() {
           <a className="about-me-link" href="https://www.linkedin.com/kevinnail">
             <img className="ig-logo" src="./li.png" />
           </a>
+          <img className="me" src="./kevin.jpeg" />
         </div>
       </p>
     </div>

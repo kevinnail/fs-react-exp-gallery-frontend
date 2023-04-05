@@ -36,6 +36,7 @@
 }
 .me {
   width: 40%;
+  max-width: 200px;
   border: 1px solid #7777f3;
   border-radius: 5px;
   box-shadow: 0 0 10px 0 #7777f3;
@@ -46,7 +47,7 @@
   font-size: 1rem;
   font-weight: bold;
   text-align: left;
-  padding: 10px;
+  padding: 10px 40px;
   color: #ffffff;
   background-color: #7777f38e;
   border-radius: 5px;
@@ -56,6 +57,8 @@
 }
 .about-me-link {
   display: inline-block;
+  color: #7777f3;
+  text-shadow: 0px 0px 1px #ffffff;
 }
 .about-me-link-container {
   display: flex;
@@ -71,6 +74,7 @@
   border: 1px solid #7777f3;
   box-shadow: 0 0 10px 0 #7777f3;
   margin: 0 10px;
+  border-radius: 15px;
 }
 
 /* rotate cube*/
@@ -106,7 +110,7 @@
 }
 .front3 {
   transform: rotateY(0deg) rotateZ(90deg) translateZ(75px);
-  /* background-image: url('/public/drumming.mp4'); */
+  background-image: url('/public/drumming.gif');
 }
 
 .bgVideo {
@@ -120,7 +124,7 @@
 
 .back3 {
   transform: rotateY(180deg) rotateZ(270deg) translateZ(75px);
-  /* background-image: url('/public/comet.jpg'); */
+  background-image: url('/public/blowing-glass.gif');
 }
 
 .right3 {
@@ -144,8 +148,8 @@
 }
 @keyframes rotate3 {
   0% {
-    transform: rotateX(0deg) rotateY(360deg) rotateZ(0deg) translateX(0px) translateY(-30px)
-      scaleX(1.5) scaleY(1.5) scaleZ(1.5);
+    transform: rotateX(60deg) rotateY(360deg) rotateZ(0deg) translateX(0px) translateY(-30px)
+      scaleX(0.8) scaleY(0.8) scaleZ(0.8);
   }
   /* 25% {
     transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateX(0px) translateY(0px);
@@ -157,15 +161,15 @@
   }
 
   66% {
-    transform: rotateX(0deg) rotateY(540deg) rotateZ(0deg) translateX(0px) translateY(0px)
-      scaleX(0.9) scaleY(0.9) scaleZ(0.9);
+    transform: rotateX(20deg) rotateY(540deg) rotateZ(0deg) translateX(0px) translateY(0px)
+      scaleX(1.5) scaleY(1.5) scaleZ(1.5);
   }
   /*
   75% {
     transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateX(0px) translateY(0px);
   } */
   100% {
-    transform: rotateX(0deg) rotateY(0deg) rotateZ(360deg) translateX(0px) translateY(-30px)
-      scaleX(1) 5 scaleY(1) 5 scaleZ(1) 5;
+    transform: rotateX(60deg) rotateY(0deg) rotateZ(360deg) translateX(0px) translateY(-30px)
+      scaleX(0.8) scaleY(0.8) scaleZ(0.8);
   }
 }
