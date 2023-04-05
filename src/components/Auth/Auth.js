@@ -84,12 +84,42 @@ export default function Auth() {
         </div>
         <div className="scene2">
           <div className="cube2">
-            <div className="face2 front2"></div>
-            <div className="face2 back2"></div>
-            <div className="face2 right2"></div>
-            <div className="face2 left2"></div>
-            <div className="face2 top2"></div>
-            <div className="face2 bottom2"></div>
+            <div className="face2 front2">
+              {' '}
+              <Link className="hidden-text-linddk" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
+            <div className="face2 back2">
+              {' '}
+              <Link className="hidden-text-link" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
+            <div className="face2 right2">
+              {' '}
+              <Link className="hidden-text-link" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
+            <div className="face2 left2">
+              {' '}
+              <Link className="hidden-text-link" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
+            <div className="face2 top2">
+              {' '}
+              <Link className="hidden-text-link" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
+            <div className="face2 bottom2">
+              {' '}
+              <Link className="hidden-text-link" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
           </div>
         </div>
 

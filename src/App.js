@@ -10,6 +10,7 @@ import Gallery from './components/Gallery/Gallery.js';
 import PostDetail from './components/PostDetail/PostDetail.js';
 import MainGallery from './components/MainGallery/MainGallery.js';
 import MainPostDetail from './components/MainPostDetail/MainPostDetail.js';
+import AboutMe from './components/AboutMe/AboutMe.js';
 
 function App() {
   const { user } = useUser();
@@ -23,6 +24,7 @@ function App() {
         <Route path="/main-gallery" component={MainGallery} />
         <Route path="/gallery/:id" component={PostDetail} />
         <Route path="/gallery" component={Gallery} />
+        <Route path="/about-me" component={AboutMe} />
         <Route path="/admin/new" component={NewPost} />
         <Route exact path="/admin/:id" component={EditPost} />
         <Route path="/admin" component={Admin} />
