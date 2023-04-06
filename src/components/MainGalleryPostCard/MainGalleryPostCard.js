@@ -9,7 +9,7 @@ export default function MainGalleryPostCard({ id, title, image_url, price }) {
   return (
     <>
       <div className="gallery-display-container" key={id}>
-        <Link className="gallery-display" to={`/main-gallery/${id}`}>
+        <Link className="gallery-display a-gallery" to={`/main-gallery/${id}`}>
           {image_url ? (
             <img className="gallery-img" src={image_url} alt="edit" />
           ) : (

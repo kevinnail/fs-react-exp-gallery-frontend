@@ -86,7 +86,7 @@ export default function Auth() {
           <div className="cube2">
             <div className="face2 front2">
               {' '}
-              <Link className="hidden-text-linddk" to="/about-me">
+              <Link className="hidden-text-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>

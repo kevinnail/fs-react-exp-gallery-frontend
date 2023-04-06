@@ -25,16 +25,47 @@
 } */
 /* USE ABOVE CODE FOR REG GALLERY PAGE POSTS  */
 
+.admin-container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: 1fr;
+}
+
+.admin-panel {
+  background-color: #2f00ff83;
+}
+
 .list-container {
   /* width: ; */
   display: grid;
   grid-template-columns: 1fr;
+  grid-template-rows: repeat(auto-fill, minmax(50px, auto));
   flex-wrap: wrap;
-  /* justify-items: center; */
-  align-items: center;
+  justify-items: flex-start;
+  align-items: flex-start;
   margin: 0px auto;
   padding: 0 0rem;
-  max-width: 1200px;
+  /* max-width: 1200px; */
+  height: 90vh;
+  background-color: rgb(176, 176, 253);
+  background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83);
+  background-size: 400% 400%;
+  animation: ocean 10s ease-in-out infinite;
+  letter-spacing: 1.5px;
+  position: relative;
+  width: 100%;
+}
+
+@keyframes ocean {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .post {

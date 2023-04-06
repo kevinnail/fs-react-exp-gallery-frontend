@@ -4,12 +4,12 @@
   justify-content: flex-start;
   align-items: center;
   height: 100vh;
-  width: 100vw;
   background-color: rgb(176, 176, 253);
   background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83);
   background-size: 400% 400%;
   animation: ocean 10s ease-in-out infinite;
   letter-spacing: 1.5px;
+  position: relative;
 }
 
 @keyframes ocean {
@@ -37,10 +37,6 @@
   border-top: 1px solid #2f00ff83;
   border-bottom: 1px solid #2f00ff83;
   backdrop-filter: blur(5px);
-}
-
-.auth-container {
-  position: relative;
 }
 
 .auth-section-container {
