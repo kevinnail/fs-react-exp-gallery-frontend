@@ -4,7 +4,12 @@
   color: green;
   background-color: rgb(237, 237, 102);
 }
-
+/* .mobile-title-desk {
+  display: none;
+}
+.mobile-title {
+  display: block;
+} */
 .prod-header {
   display: grid;
   grid-template-columns: repeat(11, 1fr);
