@@ -228,4 +228,7 @@
     margin: 0;
     border-radius: 0px;
   }
+  .thumbnail-gallery {
+    width: 100px;
+  }
 }

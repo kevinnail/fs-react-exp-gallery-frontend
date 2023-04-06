@@ -27,12 +27,15 @@
 
 .admin-container {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 1fr;
   grid-template-rows: 1fr;
 }
 
 .admin-panel {
   background-color: #2f00ff83;
+  border: 2px solid rgb(176, 176, 253);
+  padding: 10px;
+  display: none;
 }
 
 .list-container {
@@ -173,4 +176,97 @@
 .grid-e7 {
   grid-column-end: 7;
   font-weight: bold;
+}
+@media (min-width: 414px) {
+}
+
+@media (min-width: 768px) {
+  .admin-panel {
+    display: block;
+  }
+  .admin-container {
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 1fr;
+  }
+  .admin-panel-section {
+    /* display: grid; */
+    /* grid-template-columns: 1fr; */
+    /* grid-template-rows: repeat(auto-fill, minmax(50px, auto)); */
+    flex-wrap: wrap;
+    justify-items: flex-start;
+    align-items: flex-start;
+    margin: 0px auto;
+    padding: 0 0rem;
+    background-color: rgb(176, 176, 253);
+  }
+  .menu-icon {
+    display: none;
+  }
+
+  .signout-button {
+    width: 100%;
+  }
+  .new-link,
+  .signout-button {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Shadows Into Light', cursive;
+  }
+  .new-link:hover,
+  .signout-button:hover,
+  .new-link:active,
+  .signout-button:active {
+    background-color: #ccc;
+    transform: scale(1);
+    transition: 500ms;
+    background: linear-gradient(to bottom right, #7777f3bd, #5b36ff83, #2f00ff83);
+    background-size: 400% 400%;
+    animation: shimmer 300ms ease-in-out;
+    color: white;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .post {
+    width: 100%;
+    height: 100px;
+    background-color: white;
+    display: grid;
+    grid-template-columns: 150px 300px 1fr 1fr 1fr;
+    align-items: center;
+    justify-items: self-start;
+    padding: 0 10px 0px 0px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    white-space: nowrap;
+  }
+
+  .admin-prod-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .list-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(auto-fill, 100px);
+    flex-wrap: wrap;
+    justify-items: flex-start;
+    align-items: flex-start;
+    margin: 0px auto;
+    padding: 0 0rem;
+    /* background-color: rgb(176, 176, 253); */
+  }
 }

@@ -44,7 +44,7 @@ header {
   display: flex;
   transition: 2000ms;
 }
-.new-link:hover,
+
 .new-link:active {
   color: rgb(255, 255, 255);
   /* background-color: transparent; */
@@ -80,13 +80,13 @@ header {
   display: flex;
   font-family: 'Shadows Into Light', cursive;
 
-  transition: 2000ms;
+  transition: 100ms;
   /* align-items: center; */
   /* width: 50%; */
 }
 
 /* style for button when hovered or focused */
-.signout-button:hover,
+
 .signout-button:focus {
   color: rgb(255, 255, 255);
   background-color: transparent;
@@ -156,4 +156,15 @@ header {
 }
 .new-post-span {
   margin-top: -4px;
+}
+
+@media (min-width: 768px) {
+  .menu-div {
+    display: none;
+  }
+  .new-link:active,
+  .signout-button:active {
+    transform: scale(1);
+    transition: 500ms;
+  }
 }
