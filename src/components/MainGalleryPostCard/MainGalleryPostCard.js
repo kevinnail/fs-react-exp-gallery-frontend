@@ -14,8 +14,12 @@ export default function MainGalleryPostCard({ id, title, image_url, price }) {
             <img className="gallery-img" src={image_url} alt="edit" />
           ) : (
             <>
-              {post.additionalImages[0] && (
-                <img className="gallery-img" src={post.additionalImages[0].image_url} alt="edit" />
+              {post.additionalImagesGallery[0] && (
+                <img
+                  className="gallery-img"
+                  src={post.additionalImagesGallery[0].image_url}
+                  alt="edit"
+                />
               )}
             </>
           )}
