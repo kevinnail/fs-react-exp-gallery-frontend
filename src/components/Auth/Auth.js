@@ -153,13 +153,12 @@ export default function Auth() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <div>
-            <button className="button-auth" onClick={submitAuth}>
-              {isSignIn ? 'Sign In' : 'Sign Up'}
-            </button>
-          </div>
+          <button className="button-auth" onClick={submitAuth}>
+            {isSignIn ? 'Sign In' : 'Sign Up'}
+          </button>
         </div>
       </div>
+
       <button className="retract-button" onClick={() => setIsFormRetracted(!isFormRetracted)}>
         {isFormRetracted ? (
           <i className="fa fa-arrow-right" aria-hidden="true"></i>
