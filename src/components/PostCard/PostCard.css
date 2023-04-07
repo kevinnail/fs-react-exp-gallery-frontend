@@ -300,9 +300,12 @@ body {
   .signout-button:hover {
     background-color: #ccc;
     transform: scale(1);
-    transition: 200ms;
+    /* transition: 500ms; */
     background: linear-gradient(
       to bottom right,
+
+      #b6b6fbbd,
+      #b6b6fbbd,
       #7777f3bd,
       #b6b6fbbd,
       #7777f3bd,
@@ -310,27 +313,27 @@ body {
       #2f00ff83
     );
     background-size: 400% 400%;
-    animation: shimmer 500ms ease-in-out;
+    animation: shimmer 300ms ease;
   }
   .new-link:active,
   .signout-button:active {
     background-color: #ccc;
     transform: scale(1);
-    transition: 500ms;
+    transition: 250ms;
     background: linear-gradient(to top left, #b6b6fbbd, #7777f3bd, #5b36ff83, #2f00ff83);
     background-size: 400% 400%;
-    animation: shimmer 500ms ease-in-out;
+    animation: shimmer 50ms ease-in-out;
   }
 
   @keyframes shimmer {
     0% {
-      background-position: 0% 50%;
+      background-position: 0% 100%;
     }
     50% {
       background-position: 100% 50%;
     }
     100% {
-      background-position: 0% 50%;
+      background-position: 0% 100%;
     }
   }
 }

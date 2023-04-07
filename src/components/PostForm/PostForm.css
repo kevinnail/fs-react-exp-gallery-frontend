@@ -316,6 +316,8 @@ option {
   .thumbnails-container {
     grid-row: 4;
     grid-column: 2;
+    align-self: self-start;
+    margin-top: 10px;
   }
   .btn-container {
     grid-row: 5;

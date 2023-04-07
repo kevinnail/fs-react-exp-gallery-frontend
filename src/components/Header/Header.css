@@ -26,6 +26,7 @@ header {
   font-family: 'Gruppo', cursive;
   min-width: 207px;
 }
+
 .header-section p {
   margin: 0;
   padding: 0;
@@ -128,6 +129,7 @@ header {
   position: absolute;
   top: 90px;
   z-index: 10;
+  min-width: 340px;
 }
 
 .menu-div.open {
@@ -148,8 +150,7 @@ header {
   box-shadow: 0 0 0 0.2rem rgba(50, 50, 50, 0.5);
 }
 
-.menu-icon:active,
-.menu-icon:hover {
+.menu-icon:active {
   background-color: #2f00ff;
   cursor: pointer;
   transition: 200ms ease-in;

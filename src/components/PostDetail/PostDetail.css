@@ -212,7 +212,7 @@
   .post-detail-div {
     display: grid;
     grid-template-columns: 1fr 3fr;
-    max-width: 800px;
+    max-width: 750px;
   }
 
   .thumbnail-container {
