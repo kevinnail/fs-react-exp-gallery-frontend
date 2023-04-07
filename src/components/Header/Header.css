@@ -24,6 +24,7 @@ header {
   top: -15px;
   left: -15px;
   font-family: 'Gruppo', cursive;
+  min-width: 207px;
 }
 .header-section p {
   margin: 0;
@@ -140,7 +141,7 @@ header {
   /* background-color: rgb(165, 165, 165); */
   padding: 0px;
   border-radius: 50%;
-  margin: 0 20px 0 40px;
+  margin: 0 20px 0 0px;
   height: 40px;
   box-shadow: 0 0 8px 0 white;
   transition: 200ms ease-in;

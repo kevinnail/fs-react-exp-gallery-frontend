@@ -4,6 +4,7 @@ import { useUser } from '../../hooks/useUser.js';
 import { signOut } from '../../services/auth.js';
 import './Header.css';
 import '../CoolSearchBox/CoolSearchBox.css';
+import Menu from '../Menu/Menu.js';
 
 export default function Header() {
   const { user, setUser } = useUser();
@@ -39,7 +40,7 @@ export default function Header() {
 
       {user && (
         <div className={`menu-div ${isMenuOpen ? 'open' : ''}`} onClick={handleMenuClick}>
-          <Link className="new-link" to="/gallery" onClick={handleMenuClick}>
+          {/* <Link className="new-link" to="/gallery" onClick={handleMenuClick}>
             <span className="new-post-span">Gallery</span>{' '}
             {<img className="new-post-icon" src="../gallery.png" />}
           </Link>
@@ -49,7 +50,8 @@ export default function Header() {
           </Link>
           <button className="signout-button" onClick={handleClick}>
             Sign Out {<img className="signout-nav-icon" src="../signout.png" />}
-          </button>
+          </button> */}
+          <Menu />
         </div>
       )}
     </>

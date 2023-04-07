@@ -5,6 +5,7 @@ import { useUser } from '../../hooks/useUser.js';
 import PostCard from '../PostCard/PostCard.js';
 import './Admin.css';
 import { signOut } from '../../services/auth.js';
+import Menu from '../Menu/Menu.js';
 
 export default function Admin() {
   const { user, setUser } = useUser();
@@ -28,20 +29,24 @@ export default function Admin() {
         <aside className="admin-panel ">
           <section className="admin-panel-section ">
             <div className="">
-              <Link className="new-link" to="/gallery">
-                <span className="new-post-span">Gallery</span>{' '}
-                {<img className="new-post-icon" src="../gallery.png" />}
-              </Link>
-              <Link className="new-link" to="/admin/new">
-                <span className="new-post-span">New Post</span>{' '}
-                {<img className="new-post-icon" src="../upload-1.png" />}
-              </Link>
-              <button className="signout-button" onClick={handleClick}>
-                Sign Out {<img className="signout-nav-icon" src="../signout.png" />}
-              </button>
+              {/* <div>
+                <Link className="new-link" to="/gallery">
+                  <span className="new-post-span">Gallery</span>{' '}
+                  {<img className="new-post-icon" src="../gallery.png" />}
+                </Link>
+                <Link className="new-link" to="/admin/new">
+                  <span className="new-post-span">New Post</span>{' '}
+                  {<img className="new-post-icon" src="../upload-1.png" />}
+                </Link>
+                <button className="signout-button" onClick={handleClick}>
+                  Sign Out {<img className="signout-nav-icon" src="../signout.png" />}
+                </button>
+              </div> */}
+              <Menu />
             </div>
           </section>
         </aside>
+
         <div className="list-container">
           {loading ? (
             <div className="loading-div">
