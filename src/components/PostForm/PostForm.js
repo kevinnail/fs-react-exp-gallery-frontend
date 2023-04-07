@@ -120,132 +120,126 @@ export default function PostForm({
 
   return (
     <>
-      <form className="new-post-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
-        <h1 id="form-title-header">{newOrEdit}</h1>
-        <div>
-          <br />
-          <select
-            id="category"
-            value={categoryInput}
-            onChange={handleCategoryChange}
-            className="image-input shadow-border"
-            required
-          >
-            <option value="" disabled>
-              Choose category
-            </option>
-            <option value="Beads">Beads</option>
-            <option value="Blunt Tips">Blunt Tips</option>
-            <option value="Bubblers">Bubblers</option>
-            <option value="Collabs">Collabs</option>
-            <option value="Cups">Cups</option>
-            <option value="Dry Pieces">Dry Pieces</option>
-            <option value="Goblets">Goblets</option>
-            <option value="Iso Stations">Iso Stations</option>
-            <option value="Marbles">Marbles</option>
-            <option value="Pendants">Pendants</option>
-            <option value="Recyclers">Recyclers</option>
-            <option value="Rigs">Rigs</option>
-            <option value="Slides">Slides</option>
-            <option value="Spinner Caps">Spinner Caps</option>
-            <option value="Terp Pearls">Terp Pearls</option>
-            <option value="Misc">Misc</option>
-          </select>
-        </div>
-        <div>
-          <br />
-          <input
-            required
-            maxLength={50}
-            placeholder="Enter title"
-            className="image-input"
-            type="text"
-            name="title"
-            value={titleInput}
-            onChange={(e) => setTitleInput(e.target.value)}
-          />
-        </div>
-        <div>
-          <br />
-          <textarea
-            required
-            maxLength={350}
-            placeholder="Enter description"
-            className="image-input description shadow-border"
-            name="description"
-            value={descriptionInput}
-            onChange={(e) => setDescriptionInput(e.target.value)}
-          />
-        </div>
-
-        <div className="input-wrapper">
-          <br />{' '}
-          <input
-            required
-            placeholder="Enter price"
-            className="image-input input-with-dollar-sign"
-            type="number"
-            step="1"
-            name="price"
-            value={priceInput}
-            onChange={(e) => setPriceInput(e.target.value)}
-          />{' '}
-          <span
-            style={{
-              position: 'relative',
-              left: '-300px',
-              top: '0',
-              transform: 'translateX(50%)',
-              display: 'inline',
-            }}
-          >
-            $
-          </span>
-        </div>
-
-        <div>
-          <br />
-          <input
-            // required
-            type="file"
-            id="image"
-            className="file-upload-btn shadow-border"
-            name="image"
-            onChange={handleFileInputChange}
-            multiple
-          />
-        </div>
-        {
-          //display images selected for upload
-        }
-        {getDisplayImages().length > 0 ? (
-          <div className="thumbnails-container">
-            {getDisplayImages().map((url, index) => (
-              <div key={index} className="thumbnail-wrapper">
-                <img className="thumbnail" src={url} alt={`Selected image ${index + 1}`} />
-                <button
-                  type="button" // Add this to prevent the button from submitting the form
-                  className="delete-button-form"
-                  onClick={(e) => {
-                    e.preventDefault(); // Add this to prevent the form from submitting
-                    // e.stopPropagation();
-                    handleImageDelete(index);
-                  }}
-                >
-                  X
-                </button>
-              </div>
-            ))}
+      <div className="form-wrapper">
+        <form className="new-post-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
+          <h1 id="form-title-header">{newOrEdit}</h1>
+          <div className="desk-cat-input">
+            <br />
+            <select
+              id="category"
+              value={categoryInput}
+              onChange={handleCategoryChange}
+              className="image-input shadow-border"
+              required
+            >
+              <option value="" disabled>
+                Choose category
+              </option>
+              <option value="Beads">Beads</option>
+              <option value="Blunt Tips">Blunt Tips</option>
+              <option value="Bubblers">Bubblers</option>
+              <option value="Collabs">Collabs</option>
+              <option value="Cups">Cups</option>
+              <option value="Dry Pieces">Dry Pieces</option>
+              <option value="Goblets">Goblets</option>
+              <option value="Iso Stations">Iso Stations</option>
+              <option value="Marbles">Marbles</option>
+              <option value="Pendants">Pendants</option>
+              <option value="Recyclers">Recyclers</option>
+              <option value="Rigs">Rigs</option>
+              <option value="Slides">Slides</option>
+              <option value="Spinner Caps">Spinner Caps</option>
+              <option value="Terp Pearls">Terp Pearls</option>
+              <option value="Misc">Misc</option>
+            </select>
           </div>
-        ) : null}
+          <div className="desk-title-input">
+            <br />
+            <input
+              required
+              maxLength={50}
+              placeholder="Enter title"
+              className="image-input"
+              type="text"
+              name="title"
+              value={titleInput}
+              onChange={(e) => setTitleInput(e.target.value)}
+            />
+          </div>
+          <div className="desk-desc-input">
+            <br />
+            <textarea
+              required
+              maxLength={350}
+              placeholder="Enter description"
+              className="image-input description shadow-border"
+              name="description"
+              value={descriptionInput}
+              onChange={(e) => setDescriptionInput(e.target.value)}
+            />
+          </div>
 
-        <div className="btn-container">
-          <button className="submit-btn" type="submit">
-            {<img className="upload-icon " src="/upload.png" alt="upload" />}
-          </button>
-        </div>
-      </form>
-      {/* )} */}
+          <div className="desk-price-input-wrapper">
+            <div className="desk-price-input">
+              <br />{' '}
+              <input
+                required
+                placeholder="Enter price"
+                className="image-input input-with-dollar-sign"
+                type="number"
+                step="1"
+                name="price"
+                value={priceInput}
+                onChange={(e) => setPriceInput(e.target.value)}
+              />{' '}
+              <span className="dollar-sign-span">$</span>
+            </div>
+          </div>
+
+          <div className="desk-image-input">
+            <br />
+            <input
+              // required
+              type="file"
+              id="image"
+              className="file-upload-btn shadow-border"
+              name="image"
+              onChange={handleFileInputChange}
+              multiple
+            />
+          </div>
+          {
+            //display images selected for upload
+          }
+          {getDisplayImages().length > 0 ? (
+            <div className="thumbnails-container">
+              {getDisplayImages().map((url, index) => (
+                <div key={index} className="thumbnail-wrapper">
+                  <img className="thumbnail" src={url} alt={`Selected image ${index + 1}`} />
+                  <button
+                    type="button" // Add this to prevent the button from submitting the form
+                    className="delete-button-form"
+                    onClick={(e) => {
+                      e.preventDefault(); // Add this to prevent the form from submitting
+                      // e.stopPropagation();
+                      handleImageDelete(index);
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : null}
+
+          <div className="btn-container">
+            <button className="submit-btn" type="submit">
+              {<img className="upload-icon " src="/upload.png" alt="upload" />}
+            </button>
+          </div>
+        </form>
+        {/* )} */}
+      </div>
     </>
   );
 }
