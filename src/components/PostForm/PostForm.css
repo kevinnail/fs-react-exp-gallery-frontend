@@ -22,6 +22,7 @@ body {
   display: grid;
   grid-template-rows: 50px 65px 65px 110px 60px 85px auto auto auto 70px;
   justify-items: center;
+  overflow: auto;
 }
 
 .form-title {
@@ -274,7 +275,7 @@ option {
     grid-template-rows: 75px 75px 75px auto;
     grid-template-columns: 1fr 1fr;
     padding: 20px;
-    overflow: auto;
+
     justify-items: center;
   }
   #form-title-header {
