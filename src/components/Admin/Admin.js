@@ -22,27 +22,10 @@ export default function Admin() {
   return (
     <>
       <div className="admin-container">
-        {/* <div className="prod-header">
-          <span className="grid-3">Title</span>
-          <span className="grid-2">All items:</span>
-        </div> */}
         <aside className="admin-panel ">
           <section className="admin-panel-section ">
             <div className="">
-              {/* <div>
-                <Link className="new-link" to="/gallery">
-                  <span className="new-post-span">Gallery</span>{' '}
-                  {<img className="new-post-icon" src="../gallery.png" />}
-                </Link>
-                <Link className="new-link" to="/admin/new">
-                  <span className="new-post-span">New Post</span>{' '}
-                  {<img className="new-post-icon" src="../upload-1.png" />}
-                </Link>
-                <button className="signout-button" onClick={handleClick}>
-                  Sign Out {<img className="signout-nav-icon" src="../signout.png" />}
-                </button>
-              </div> */}
-              <Menu />
+              <Menu handleClick={handleClick} />
             </div>
           </section>
         </aside>

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useUser } from '../../hooks/useUser.js';
 import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
+import Menu from '../Menu/Menu.js';
+import { signOut } from '../../services/auth.js';
 
 export default function PostForm({
   title = '',
@@ -16,7 +18,7 @@ export default function PostForm({
   const [imageFilesInput, setImageFilesInput] = useState([]);
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const [loading, setLoading] = useState(false);
   const [currentImages, setCurrentImages] = useState(imageUrls || []); // Added state for images currently in the post for display in the form
   const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
@@ -117,10 +119,21 @@ export default function PostForm({
       </div>
     );
   }
-
+  const handleClick = async () => {
+    await signOut();
+    setUser(null);
+  };
   return (
     <>
       <div className="form-wrapper">
+        <aside className="form-admin-panel ">
+          <section className="form-admin-panel-section ">
+            <div className="">
+              <Menu handleClick={handleClick} />
+            </div>
+          </section>
+        </aside>
+
         <form className="new-post-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
           <h1 id="form-title-header">{newOrEdit}</h1>
           <div className="desk-cat-input">

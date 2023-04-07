@@ -251,6 +251,9 @@ option {
   position: relative;
   width: 100%;
   height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
 }
 
 @keyframes ocean {
@@ -269,6 +272,10 @@ option {
   position: relative;
   left: 10px;
 }
+.form-admin-panel {
+  display: none;
+}
+
 @media (min-width: 768px) {
   .new-post-form {
     width: 700px;
@@ -320,5 +327,26 @@ option {
     height: 300px;
   }
   .dollar-sign-span {
+  }
+}
+
+@media (min-width: 1024px) {
+  .form-wrapper {
+    grid-template-columns: 200px 1fr;
+  }
+  .form-admin-panel {
+    background-color: #2f00ff83;
+    border: 2px solid rgb(176, 176, 253);
+    padding: 10px;
+    display: block;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  .form-admin-panel-section {
+    flex-wrap: wrap;
+    justify-items: flex-start;
+    align-items: flex-start;
+    margin: 5px auto;
+    padding: 0 0rem;
   }
 }
