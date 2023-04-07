@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export default function Menu({ handleClick }) {
   return (
     <>
-      <Link className="new-link" to="/gallery">
+      <Link className="new-link" to="/main-gallery">
         <span className="new-post-span menu-btn">Gallery</span>{' '}
         {<img className="new-post-icon" src="../gallery.png" />}
       </Link>
