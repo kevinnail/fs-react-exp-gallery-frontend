@@ -42,20 +42,32 @@ export default function AboutMe() {
         Astromony and astrophotography are another fun hobby, as well as I went down the mushroom
         rabbithole and enjoy foraging and cultivating.I&apos;m always looking to sell some glass and
         currently offering freelance work for fellow artists who need a website. If you&apos;re
-        interested in either, please reach out to me
+        interested in either, please reach out to me{' '}
         <a className="about-me-link" href="mailto:kevin@kevinnail.com">
-          {' '}
-          via email{' '}
+          via email
         </a>{' '}
         or on my pages below. Thanks for stopping by!
         <br />
         <div className="about-me-link-container">
           <a className="about-me-link" href="https://www.instagram.com/stresslessglass/">
-            <img className="ig-logo" src="./IG.png" />
+            <img className="link-logo" src="./IG.png" />
           </a>
           <a className="about-me-link" href="https://www.linkedin.com/kevinnail">
-            <img className="ig-logo" src="./li.png" />
+            <img className="link-logo" src="./li.png" />
           </a>
+          <a className="about-me-link" href="https://www.github.com/kevinnail">
+            <img className="link-logo" src="./github.png" />
+          </a>
+          <div className="about-me-link-sub-container">
+            <a className="about-me-link" href="https://www.instagram.com/good_morning_mushrooms">
+              <img className="link-logo" src="./gmm.png" />
+            </a>
+            <a className="about-me-link" href="https://www.kevinnail.com">
+              <img className="link-logo" src="./kcn-icon.png" />
+            </a>
+          </div>
+        </div>
+        <div className="about-me-img">
           <img className="me" src="./kevin.jpeg" />
         </div>
       </p>

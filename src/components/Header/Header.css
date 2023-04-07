@@ -160,6 +160,16 @@ header {
   margin-top: -4px;
 }
 
+.menu-btn {
+  display: none;
+}
+
+@media (min-width: 420px) {
+  .menu-btn {
+    display: block;
+  }
+}
+
 @media (min-width: 1024px) {
   .menu-div {
     display: none;
