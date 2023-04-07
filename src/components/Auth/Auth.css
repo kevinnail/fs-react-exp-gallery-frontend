@@ -10,6 +10,7 @@
   animation: ocean 10s ease-in-out infinite;
   letter-spacing: 1.5px;
   position: relative;
+  height: calc(100vh - 90px);
 }
 
 @keyframes ocean {
@@ -23,6 +24,7 @@
     background-position: 0% 50%;
   }
 }
+
 .auth-section-container {
   display: flex;
   flex-direction: column;
@@ -31,16 +33,11 @@
   width: 100%;
   position: relative;
   top: 150px;
-  /* background-color: #2f00ff83; */
   padding: 10px 0;
   background: linear-gradient(270deg, #7777f3bd, #5b36ff83);
   border-top: 1px solid #2f00ff83;
   border-bottom: 1px solid #2f00ff83;
   backdrop-filter: blur(5px);
-}
-
-.auth-section-container {
-  /* ...existing styles */
   transition: transform 0.6s ease;
   will-change: transform;
 }
@@ -408,7 +405,7 @@
   }
   50% {
     transform: rotateX(162deg) rotateY(187deg) rotateZ(180deg) translateX(100px) translateY(200px)
-      scaleX(5) scaleY(5) scaleZ(5);
+      scaleX(4.9) scaleY(4.9) scaleZ(4.9);
   }
   75% {
     transform: rotateX(298deg) rotateY(265deg) rotateZ(310deg) translateX(0px) translateY(25px);
