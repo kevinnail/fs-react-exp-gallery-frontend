@@ -22,7 +22,8 @@ export default function Menu({ handleClick }) {
           </Link>
           <button
             className={`signout-button 
-            ${location.pathname === '/admin' ? ' signout-button-adapt' : ''}`}
+            ${location.pathname === '/admin' ? ' signout-button-adapt' : ''}
+            ${location.pathname === '/admin/new' ? ' signout-button-adapt' : ''}`}
             onClick={handleClick}
           >
             Sign Out {<img className="signout-nav-icon" src="../signout.png" />}
