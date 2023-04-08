@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Link, NavLink, Redirect, useParams } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 import './Auth.css';
+import Menu from '../Menu/Menu.js';
+import { signOut } from '../../services/auth.js';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignIn, setIsSignIn] = useState(true);
-  const { user, logInUser, error, loading, setLoading } = useUser();
+  const { user, logInUser, error, loading, setLoading, setUser } = useUser();
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
   // const [loading, setLoading] = useState(false);
@@ -35,12 +37,17 @@ export default function Auth() {
       </div>
     );
   }
-
+  const handleClick = async () => {
+    await signOut();
+    setUser(null);
+  };
   return (
     <>
       <div className="auth-container">
         {}
-
+        <div className="menu-search-container">
+          <Menu handleClick={handleClick} />
+        </div>
         {}
         <div className="scene">
           <div className="cube">
