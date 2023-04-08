@@ -1,8 +1,20 @@
 import React from 'react';
 import './AboutMe.css';
+import Menu from '../Menu/Menu.js';
+import { signOut } from '../../services/auth.js';
+import { useUser } from '../../hooks/useUser.js';
 export default function AboutMe() {
+  const { setUser } = useUser();
+
+  const handleClick = async () => {
+    await signOut();
+    setUser(null);
+  };
   return (
     <div className="about-me-div">
+      <div className="menu-search-container">
+        <Menu handleClick={handleClick} />
+      </div>
       <h1 className="about-me-h1">About Kevin</h1>
       <div className="scene3">
         <div className="cube3">
