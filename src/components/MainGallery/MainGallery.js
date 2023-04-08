@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGalleryPosts } from '../../hooks/useGalleryPosts.js';
-import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
+// import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
 import '../Gallery/Gallery.css';
 import Menu from '../Menu/Menu.js';
