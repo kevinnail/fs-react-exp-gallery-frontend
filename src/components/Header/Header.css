@@ -24,7 +24,7 @@ header {
   top: -15px;
   left: -15px;
   font-family: 'Gruppo', cursive;
-  min-width: 207px;
+  /* min-width: 207px; */
 }
 
 .header-section p {
