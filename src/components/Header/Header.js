@@ -10,7 +10,7 @@ export default function Header() {
   const { user, setUser } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  console.log('location', location.pathname === '/auth/sign-in');
+  // console.log('location', location.pathname === '/auth/sign-in');
 
   const handleClick = async () => {
     await signOut();
@@ -28,11 +28,12 @@ export default function Header() {
   return (
     <>
       <header>
-        <Link className="link" to={user ? '/admin' : '/main-gallery'} onClick={handleHomeClick}>
+        <Link className="link" to={user ? '/admin' : '/auth/sign-in'} onClick={handleHomeClick}>
           <img className="logo" src="../logo-sq.png" />
         </Link>
         <h1 className="title">Stress Less Glass</h1>
-        {location.pathname === '/auth/sign-in' ? (
+        {/* {location.pathname === '/auth/sign-in' ? ( */}
+        {!user && (
           <>
             <Link className="new-link adjustment-1" to="/main-gallery">
               <span className="new-post-span menu-btn">Gallery</span>
@@ -43,7 +44,8 @@ export default function Header() {
               <img className="new-post-icon" src="../info.png" />
             </Link>
           </>
-        ) : null}
+        )}
+        {/* // ) : null} */}
         {user && (
           <div className="header-section">
             <img className="menu-icon" src="../menu.png" onClick={handleMenuClick} />
