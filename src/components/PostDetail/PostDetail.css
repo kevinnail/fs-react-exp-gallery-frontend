@@ -23,8 +23,10 @@
   margin-top: 5px;
 }
 .desc-price-container {
-  display: flex;
-  justify-content: space-between;
+  /* display: flex;
+  justify-content: space-between; */
+  display: grid;
+  grid-template-rows: 4fr 1fr;
   padding: 10px 10px 10px 10px;
   background-color: #5b36ff83;
   border: 1px solid #7777f3bd;
@@ -113,6 +115,46 @@
   padding: 0px 10px;
 }
 
+.contact {
+  margin-left: 0px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  text-decoration: none;
+}
+
+.contact a {
+  text-decoration: none;
+  margin-left: 40px;
+  padding: 5px 10px;
+}
+.contact a:hover {
+  border-radius: 5px;
+  border: 2px solid #ffffdb;
+  box-shadow: 0 0 5px 0 #ffffdb;
+  transition: 250ms;
+  background: linear-gradient(
+    to top left,
+    #b6b6fbbd,
+    #b6b6fbbd,
+    #b6b6fbbd,
+    #7777f3bd,
+    #5b36ff83,
+    #2f00ff83
+  );
+  background-size: 400% 400%;
+  animation: shimmer 250ms linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 100%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
 /* gallery image display */
 .gallery-container {
   display: flex;

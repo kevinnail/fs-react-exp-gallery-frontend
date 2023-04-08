@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Modal from 'react-modal';
 Modal.setAppElement('#root'); // If your app is using #root as the main container
@@ -56,6 +56,9 @@ export default function MainPostDetail() {
         </section>
         <section className="desc-price-container">
           <span className="desc-details">{postDetail.description}</span>
+          <p className="contact">
+            <a href="mailto:kevin@kevinnail.com">Email Kevin</a>{' '}
+          </p>
         </section>
         <div className="gallery-container">
           <img
