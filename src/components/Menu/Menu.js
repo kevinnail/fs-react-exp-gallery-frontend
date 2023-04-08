@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 
 export default function Menu({ handleClick }) {
   const { user } = useUser();
+  const { id } = useParams();
   return (
     <>
       <Link className="new-link" to="/main-gallery">
@@ -23,7 +24,10 @@ export default function Menu({ handleClick }) {
           <button
             className={`signout-button 
             ${location.pathname === '/admin' ? ' signout-button-adapt' : ''}
-            ${location.pathname === '/admin/new' ? ' signout-button-adapt' : ''}`}
+            ${location.pathname === '/admin/new' ? ' signout-button-adapt' : ''}
+            ${location.pathname === `/admin/${id}` ? ' signout-button-adapt' : ''}
+            
+            `}
             onClick={handleClick}
           >
             Sign Out {<img className="signout-nav-icon" src="../signout.png" />}
