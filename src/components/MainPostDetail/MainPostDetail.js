@@ -4,12 +4,16 @@ import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Modal from 'react-modal';
 Modal.setAppElement('#root'); // If your app is using #root as the main container
 import '../PostDetail/PostDetail.css';
+import Menu from '../Menu/Menu.js';
+import { signOut } from '../../services/auth.js';
+import { useUser } from '../../hooks/useUser.js';
 
 export default function MainPostDetail() {
   const { id } = useParams();
   const { postDetail, imageUrls, loading, error } = useGalleryPost(id);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const { setUser } = useUser();
 
   const handleThumbnailClick = (index) => {
     setCurrentIndex(index);
@@ -32,9 +36,15 @@ export default function MainPostDetail() {
       </div>
     );
   }
-
+  const handleClick = async () => {
+    await signOut();
+    setUser(null);
+  };
   return (
     <div className="post-detail-div-wrapper">
+      <div className="menu-search-container">
+        <Menu handleClick={handleClick} />
+      </div>
       <div className="post-detail-div">
         <section className="title-container">
           <h1 className="detail-title">{postDetail.title}</h1>
