@@ -17,21 +17,23 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
-      <Switch>
-        <Route exact path="/auth/:type" component={Auth} />
-        <Route path="/main-gallery/:id" component={MainPostDetail} />
-        <Route path="/main-gallery" component={MainGallery} />
-        <Route path="/gallery/:id" component={PostDetail} />
-        <Route path="/gallery" component={Gallery} />
-        <Route path="/about-me" component={AboutMe} />
-        <Route path="/admin/new" component={NewPost} />
-        <Route exact path="/admin/:id" component={EditPost} />
-        <Route path="/admin" component={Admin} />
-        <Route path="*">
-          <Redirect to={user ? '/admin' : '/auth/sign-in'} />
-        </Route>
-      </Switch>
+      <div className="app-wrapper">
+        <Header />
+        <Switch>
+          <Route exact path="/auth/:type" component={Auth} />
+          <Route path="/main-gallery/:id" component={MainPostDetail} />
+          <Route path="/main-gallery" component={MainGallery} />
+          <Route path="/gallery/:id" component={PostDetail} />
+          <Route path="/gallery" component={Gallery} />
+          <Route path="/about-me" component={AboutMe} />
+          <Route path="/admin/new" component={NewPost} />
+          <Route exact path="/admin/:id" component={EditPost} />
+          <Route path="/admin" component={Admin} />
+          <Route path="*">
+            <Redirect to={user ? '/admin' : '/auth/sign-in'} />
+          </Route>
+        </Switch>
+      </div>
     </div>
   );
 }
