@@ -22,7 +22,7 @@ export default function Header() {
   const handleHomeClick = () => {
     setIsMenuOpen(false);
   };
-  const hoh = 9;
+
   return (
     <>
       <header>
