@@ -9,16 +9,17 @@ export default function MainGallery() {
   const { posts, loading } = useGalleryPosts();
   if (loading) {
     return (
-      <div className="loading-div">
-        {/* <img className="loading" src="../logo-sq.png" /> */}
-        <img className="rotating-marble" src="../marble-css.png" />
+      <div className="loading-div-wrapper">
+        <div className="loading-div">
+          <img className="rotating-marble" src="../marble-css.png" />
+        </div>
       </div>
     );
   }
 
   return (
     <>
-      <div className="search-container">{/* <CoolSearchBox onSearch={handleSearch} /> */}</div>
+      {/* <div className="search-container"><CoolSearchBox onSearch={handleSearch} /></div> */}
 
       <div className="gallery-list-container">
         {posts.map((post) => (
