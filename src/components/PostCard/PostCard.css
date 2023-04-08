@@ -284,14 +284,16 @@ body {
     margin: 5px auto;
     padding: 0 0rem;
   }
+
   .menu-icon {
     display: none;
   }
 
-  .signout-button {
+  .signout-button-adapt {
     width: 100%;
     margin-top: 300px;
   }
+
   .new-link,
   .signout-button {
     display: flex;
@@ -299,6 +301,7 @@ body {
     font-family: 'Shadows Into Light', cursive;
     margin-bottom: 5px;
   }
+
   .new-link:hover,
   .signout-button:hover {
     background-color: #ccc;

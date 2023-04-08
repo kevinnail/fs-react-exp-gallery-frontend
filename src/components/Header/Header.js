@@ -9,7 +9,7 @@ import Menu from '../Menu/Menu.js';
 export default function Header() {
   const { user, setUser } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
+  // const location = useLocation();
   // console.log('location', location.pathname === '/auth/sign-in');
 
   const handleClick = async () => {
@@ -24,7 +24,7 @@ export default function Header() {
   const handleHomeClick = () => {
     setIsMenuOpen(false);
   };
-
+  const hoh = 9;
   return (
     <>
       <header>
@@ -35,30 +35,39 @@ export default function Header() {
         {/* {location.pathname === '/auth/sign-in' ? ( */}
         {!user && (
           <>
-            <Link className="new-link adjustment-1" to="/main-gallery">
+            {/* <Link className="new-link adjustment-1" to="/main-gallery">
               <span className="new-post-span menu-btn">Gallery</span>
               <img className="new-post-icon" src="../gallery.png" />
             </Link>
             <Link className="new-link adjustment-1" to="/about-me">
               <span className="new-post-span menu-btn">About</span>
               <img className="new-post-icon" src="../info.png" />
-            </Link>
+            </Link> */}
           </>
         )}
         {/* // ) : null} */}
-        {user && (
-          <div className="header-section">
-            <img className="menu-icon" src="../menu.png" onClick={handleMenuClick} />
-          </div>
-        )}
-        {!user && <img className="logo" src="../black-sq.jpg" />}
+        {/* {user && ( */}
+        <div className="header-section">
+          <img
+            className={user ? 'menu-icon' : 'menu-no-user'}
+            src="../menu.png"
+            onClick={handleMenuClick}
+          />
+        </div>
+        {/* // )} */}
+        {/* {!user && <img className="logo" src="../black-sq.jpg" />} */}
       </header>
 
-      {user && (
-        <div className={`menu-div ${isMenuOpen ? 'open' : ''}`} onClick={handleMenuClick}>
-          <Menu handleClick={handleClick} />
-        </div>
-      )}
+      {/* {user && ( */}
+      <div
+        className={`menu-icon-adapt menu-div ${isMenuOpen ? ' open ' : ''}${
+          location.pathname === '/admin' ? ' menu-div-adapt ' : ''
+        }`}
+        onClick={handleMenuClick}
+      >
+        <Menu handleClick={handleClick} />
+      </div>
+      {/* )} */}
     </>
   );
 }

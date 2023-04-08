@@ -20,7 +20,11 @@ export default function Menu({ handleClick }) {
             <span className="new-post-span">New Post</span>{' '}
             {<img className="new-post-icon" src="../upload-1.png" />}
           </Link>
-          <button className="signout-button" onClick={handleClick}>
+          <button
+            className={`signout-button 
+            ${location.pathname === '/admin' ? ' signout-button-adapt' : ''}`}
+            onClick={handleClick}
+          >
             Sign Out {<img className="signout-nav-icon" src="../signout.png" />}
           </button>
         </>
