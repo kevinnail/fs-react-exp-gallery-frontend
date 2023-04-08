@@ -10,16 +10,19 @@
   padding: 3px;
 }
 
-.search-container {
+.menu-search-container {
   /* background-color: white; */
   /* background: ; */
-  background-image: linear-gradient(145deg, #7777f3bd, #5b36ff83);
+  /* background-image: linear-gradient(145deg, #7777f3bd, #5b36ff83);
   height: 50px;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  display: flex;
+  justify-content: space-around; */
+  display: none;
 }
 
 .rotating-marble {
@@ -53,3 +56,20 @@
     grid-template-columns: repeat(3, 1fr);
   }
 } */
+
+@media (min-width: 1024px) {
+  .menu-search-container {
+    background-image: linear-gradient(145deg, #7777f3bd, #5b36ff83);
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    border-top: 2px solid #5b36ff83;
+    border-bottom: 2px solid #5b36ff83;
+    padding: 30px 0;
+  }
+}
