@@ -332,10 +332,10 @@ body {
     transition: 250ms;
     background: linear-gradient(to top left, #b6b6fbbd, #7777f3bd, #5b36ff83, #2f00ff83);
     background-size: 400% 400%;
-    animation: shimmer 50ms ease-in-out;
+    animation: shimmer2 250ms ease-in-out;
   }
 
-  @keyframes shimmer {
+  @keyframes shimmer2 {
     0% {
       background-position: 0% 100%;
     }
