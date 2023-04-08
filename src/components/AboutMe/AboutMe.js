@@ -48,7 +48,7 @@ export default function AboutMe() {
         That&apos;s just pure CSS by the way, no libraries or frameworks. I can&apos;t wait to get
         into some libraries like Three.js and GSAP.
       </p>
-      <p className="about-me-p">
+      <div className="about-me-p about-me-div-adjust">
         Aside from that I&apos;m all over the place with my hobbies and interests. Musician at heart
         and can&apos;t play my drums enough- I also enjoy fretless bass and a little bit of keys.
         Astromony and astrophotography are another fun hobby, as well as I went down the mushroom
@@ -82,7 +82,7 @@ export default function AboutMe() {
         <div className="about-me-img">
           <img className="me" src="./kevin.jpeg" />
         </div>
-      </p>
+      </div>
     </div>
   );
 }

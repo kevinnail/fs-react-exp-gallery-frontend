@@ -11,7 +11,9 @@
   animation: ocean 10s ease-in-out infinite;
   letter-spacing: 1.5px;
 }
-
+.about-me-div-adjust {
+  margin: 16px 0;
+}
 @keyframes ocean {
   0% {
     background-position: 0% 50%;
