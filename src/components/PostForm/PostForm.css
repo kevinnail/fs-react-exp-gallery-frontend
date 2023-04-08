@@ -171,6 +171,34 @@ option {
   width: 100%;
   display: flex;
   justify-content: center;
+  /* width: ; */
+  /* display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(auto-fill, minmax(50px, auto));
+  flex-wrap: wrap;
+  justify-items: flex-start;
+  align-items: flex-start; */
+  margin: 0px auto;
+  padding: 0 0rem;
+  /* max-width: 1200px; */
+  /* height: 90vh; */
+  /* background-color: rgb(176, 176, 253);
+  background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83);
+  background-size: 400% 400%;
+  animation: ocean 10s ease-in-out infinite; */
+  letter-spacing: 1.5px;
+  position: relative;
+  width: 100%;
+  /* height: calc(100vh - 90px); */
+  /* flex-grow: 1; */
+}
+
+.loading-div-wrapper {
+  background-color: rgb(176, 176, 253);
+  background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83);
+  background-size: 400% 400%;
+  animation: ocean 10s ease-in-out infinite;
+  height: calc(100vh - 90px);
 }
 
 .thumbnail {
