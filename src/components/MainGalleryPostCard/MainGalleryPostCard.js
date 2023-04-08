@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
-// import '../GalleryPostCard/GalleryPostCard.css ';
 import '../GalleryPostCard/GalleryPostCard.css';
 
 export default function MainGalleryPostCard({ id, title, image_url, price }) {

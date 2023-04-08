@@ -87,8 +87,6 @@ export default function PostForm({
       submitHandler(newPost, currentImages, deletedImages);
     } catch (error) {
       console.error(error);
-    } finally {
-      // setLoading(false);
     }
   };
 
@@ -212,7 +210,8 @@ export default function PostForm({
           <div className="desk-image-input">
             <br />
             <input
-              // required
+              // required   // this doesn't work because the user can not need to upload a new image- maybe fix this?
+              // Works just fine without it but would be better with a place holder image or required type functionality
               type="file"
               id="image"
               className="file-upload-btn shadow-border"
@@ -234,7 +233,6 @@ export default function PostForm({
                     className="delete-button-form"
                     onClick={(e) => {
                       e.preventDefault(); // Add this to prevent the form from submitting
-                      // e.stopPropagation();
                       handleImageDelete(index);
                     }}
                   >
@@ -251,7 +249,6 @@ export default function PostForm({
             </button>
           </div>
         </form>
-        {/* )} */}
       </div>
     </>
   );

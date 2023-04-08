@@ -5,7 +5,6 @@ import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
 import '../Gallery/Gallery.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
-// import './MainGallery.css';
 import { useUser } from '../../hooks/useUser.js';
 
 export default function MainGallery() {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 import { signOut } from '../../services/auth.js';
 import './Header.css';
@@ -9,8 +9,6 @@ import Menu from '../Menu/Menu.js';
 export default function Header() {
   const { user, setUser } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const location = useLocation();
-  // console.log('location', location.pathname === '/auth/sign-in');
 
   const handleClick = async () => {
     await signOut();
@@ -32,21 +30,7 @@ export default function Header() {
           <img className="logo" src="../logo-sq.png" />
         </Link>
         <h1 className="title">Stress Less Glass</h1>
-        {/* {location.pathname === '/auth/sign-in' ? ( */}
-        {!user && (
-          <>
-            {/* <Link className="new-link adjustment-1" to="/main-gallery">
-              <span className="new-post-span menu-btn">Gallery</span>
-              <img className="new-post-icon" src="../gallery.png" />
-            </Link>
-            <Link className="new-link adjustment-1" to="/about-me">
-              <span className="new-post-span menu-btn">About</span>
-              <img className="new-post-icon" src="../info.png" />
-            </Link> */}
-          </>
-        )}
-        {/* // ) : null} */}
-        {/* {user && ( */}
+
         <div className="header-section">
           <img
             className={user ? 'menu-icon' : 'menu-no-user'}
@@ -54,7 +38,6 @@ export default function Header() {
             onClick={handleMenuClick}
           />
         </div>
-        {/* // )} */}
         {/* {!user && <img className="logo" src="../black-sq.jpg" />} */}
       </header>
 
@@ -67,7 +50,6 @@ export default function Header() {
       >
         <Menu handleClick={handleClick} />
       </div>
-      {/* )} */}
     </>
   );
 }

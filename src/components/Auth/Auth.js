@@ -12,7 +12,6 @@ export default function Auth() {
   const { user, logInUser, error, loading, setLoading, setUser } = useUser();
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
-  // const [loading, setLoading] = useState(false);
   if (user) {
     return <Redirect to="/admin" />;
   } else if (error) {
