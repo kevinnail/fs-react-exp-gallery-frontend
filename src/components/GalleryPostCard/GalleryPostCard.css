@@ -81,14 +81,13 @@
   background-size: 400% 400%;
   animation: ocean 10s ease-in-out infinite;
 }
+.gallery-display-container {
+  width: 200px;
+  transition: 300ms;
+}
 @media (min-width: 414px) {
   .gallery-list-container {
     grid-template-columns: repeat(2, 1fr);
-    transition: 300ms;
-  }
-
-  .gallery-display-container {
-    width: 200px;
     transition: 300ms;
   }
 

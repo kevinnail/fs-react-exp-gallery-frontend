@@ -1,13 +1,13 @@
 .gallery-list-container {
   /* display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto; */
-  /* grid-auto-rows: auto; */
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  grid-auto-rows: auto; */
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
   gap: 15px;
-  /*  justify-items: center;
+  /* justify-items: center;
   align-items: center;
   margin: 5px auto;
   gap: 3px;
