@@ -143,7 +143,8 @@
     #2f00ff83
   );
   background-size: 400% 400%;
-  animation: shimmer 250ms linear infinite;
+  animation: shimmer 250ms ease-in;
+  color: white;
 }
 
 @keyframes shimmer {
@@ -151,7 +152,7 @@
     background-position: 0% 100%;
   }
   50% {
-    background-position: 100% 0%;
+    background-position: 100% 50%;
   }
   100% {
     background-position: 0% 100%;
@@ -299,6 +300,7 @@
 
   .desc-price-container {
     min-width: 225px;
+    height: unset;
   }
 
   .gallery-container,
