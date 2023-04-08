@@ -24,7 +24,9 @@ header {
   top: -15px;
   left: -15px;
   font-family: 'Gruppo', cursive;
+  /* min-width: 207px; */
 }
+
 .header-section p {
   margin: 0;
   padding: 0;
@@ -44,7 +46,7 @@ header {
   display: flex;
   transition: 2000ms;
 }
-.new-link:hover,
+
 .new-link:active {
   color: rgb(255, 255, 255);
   /* background-color: transparent; */
@@ -79,14 +81,14 @@ header {
   font-size: 1rem;
   display: flex;
   font-family: 'Shadows Into Light', cursive;
-
-  transition: 2000ms;
+  /* max-width: 100px; */
+  transition: 100ms;
   /* align-items: center; */
   /* width: 50%; */
 }
 
 /* style for button when hovered or focused */
-.signout-button:hover,
+
 .signout-button:focus {
   color: rgb(255, 255, 255);
   background-color: transparent;
@@ -127,6 +129,7 @@ header {
   position: absolute;
   top: 90px;
   z-index: 10;
+  min-width: 340px;
 }
 
 .menu-div.open {
@@ -134,21 +137,34 @@ header {
   position: absolute;
   transform: translateY(-100%);
   border-bottom: 2px solid #2f00ff;
+  /* display: flex; */
+  /* justify-content: space-around; */
 }
 
-.menu-icon {
+.menu-icon,
+.menu-no-user {
   /* background-color: rgb(165, 165, 165); */
   padding: 0px;
   border-radius: 50%;
-  margin: 0 20px 0 40px;
+  margin: 0 20px 0 0px;
   height: 40px;
   box-shadow: 0 0 8px 0 white;
   transition: 200ms ease-in;
   box-shadow: 0 0 0 0.2rem rgba(50, 50, 50, 0.5);
 }
-
+.menu-no-user {
+  display: block;
+  width: 40px;
+  margin-right: 20px;
+}
+.menu-icon:hover,
+.menu-no-user:hover {
+  cursor: pointer;
+  transition: 200ms ease-in;
+  box-shadow: 0 0 25px 0 rgba(255, 255, 255, 0.5);
+}
 .menu-icon:active,
-.menu-icon:hover {
+.menu-no-user:active {
   background-color: #2f00ff;
   cursor: pointer;
   transition: 200ms ease-in;
@@ -156,4 +172,34 @@ header {
 }
 .new-post-span {
   margin-top: -4px;
+}
+
+.menu-btn {
+  display: none;
+}
+
+@media (min-width: 420px) {
+  .menu-btn {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .menu-div {
+    display: none;
+  }
+
+  .menu-div-adapt {
+    display: none;
+  }
+
+  .new-link:active,
+  .signout-button:active {
+    transform: scale(1);
+    transition: 500ms;
+  }
+  .signout-button,
+  .new-link {
+    box-shadow: 0 0 10px 0 #7777f3bd;
+  }
 }

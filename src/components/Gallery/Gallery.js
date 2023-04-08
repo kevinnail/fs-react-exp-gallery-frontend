@@ -23,7 +23,6 @@ export default function Gallery() {
   if (loading) {
     return (
       <div className="loading-div">
-        {/* <img className="loading" src="../logo-sq.png" /> */}
         <img className="rotating-marble" src="../marble-css.png" />
       </div>
     );

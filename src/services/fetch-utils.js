@@ -31,7 +31,6 @@ export async function signUpUser(email, password) {
   const data = await resp.json();
 
   if (resp.ok) {
-    // location.replace('/auth');
     await signInUser(email, password);
     return resp;
   } else {

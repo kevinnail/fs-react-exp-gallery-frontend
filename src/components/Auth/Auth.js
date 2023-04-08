@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { Link, NavLink, Redirect, useParams } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 import './Auth.css';
+import Menu from '../Menu/Menu.js';
+import { signOut } from '../../services/auth.js';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignIn, setIsSignIn] = useState(true);
-  const { user, logInUser, error, loading, setLoading } = useUser();
+  const { user, logInUser, error, loading, setLoading, setUser } = useUser();
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
-  // const [loading, setLoading] = useState(false);
   if (user) {
     return <Redirect to="/admin" />;
   } else if (error) {
@@ -35,12 +36,17 @@ export default function Auth() {
       </div>
     );
   }
-
+  const handleClick = async () => {
+    await signOut();
+    setUser(null);
+  };
   return (
     <>
       <div className="auth-container">
         {}
-
+        <div className="menu-search-container">
+          <Menu handleClick={handleClick} />
+        </div>
         {}
         <div className="scene">
           <div className="cube">
@@ -84,12 +90,42 @@ export default function Auth() {
         </div>
         <div className="scene2">
           <div className="cube2">
-            <div className="face2 front2"></div>
-            <div className="face2 back2"></div>
-            <div className="face2 right2"></div>
-            <div className="face2 left2"></div>
-            <div className="face2 top2"></div>
-            <div className="face2 bottom2"></div>
+            <div className="face2 front2">
+              {' '}
+              <Link className="hidden-text-link" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
+            <div className="face2 back2">
+              {' '}
+              <Link className="hidden-text-link" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
+            <div className="face2 right2">
+              {' '}
+              <Link className="hidden-text-link" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
+            <div className="face2 left2">
+              {' '}
+              <Link className="hidden-text-link" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
+            <div className="face2 top2">
+              {' '}
+              <Link className="hidden-text-link" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
+            <div className="face2 bottom2">
+              {' '}
+              <Link className="hidden-text-link" to="/about-me">
+                {'About me '}
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -123,13 +159,12 @@ export default function Auth() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <div>
-            <button className="button-auth" onClick={submitAuth}>
-              {isSignIn ? 'Sign In' : 'Sign Up'}
-            </button>
-          </div>
+          <button className="button-auth" onClick={submitAuth}>
+            {isSignIn ? 'Sign In' : 'Sign Up'}
+          </button>
         </div>
       </div>
+
       <button className="retract-button" onClick={() => setIsFormRetracted(!isFormRetracted)}>
         {isFormRetracted ? (
           <i className="fa fa-arrow-right" aria-hidden="true"></i>

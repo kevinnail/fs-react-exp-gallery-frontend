@@ -12,9 +12,9 @@ export default function PostCard({
   id,
   posts,
   title,
-  // description, //commented just for now
-  image_url, //commented just for now
-  // category,  //commented just for now
+  description, //commented just for now
+  image_url,
+  category, //commented just for now
   price,
   setPosts,
 }) {
@@ -53,7 +53,7 @@ export default function PostCard({
 
   return (
     <div className="post" key={id}>
-      <Link to={`/gallery/${id}`}>
+      <Link to={`/main-gallery/${id}`}>
         {image_url ? (
           <img className="admin-prod-img" src={image_url} alt="edit" />
         ) : (
@@ -65,8 +65,13 @@ export default function PostCard({
         )}
       </Link>
 
-      <p className="grid-s2 grid-e3">{title.length > 14 ? title.slice(0, 14) + '...' : title}</p>
+      <p className="grid-s2 grid-e3 mobile-title">
+        {title.length > 14 ? title.slice(0, 14) + '...' : title}
+      </p>
+      <p className="grid-s2 grid-e3 mobile-title-desk">{title}</p>
       <p className="grid-3">${price}</p>
+      <p className="cat-desk">{category}</p>
+      <p className="desc-desk">{description}</p>
       <div className="admin-prod-btn-cont grid-7">
         <Link className="buttons btn-align" to={`/admin/${id}`}>
           <img src="/edit.png" className="edit-button" alt="edit" />

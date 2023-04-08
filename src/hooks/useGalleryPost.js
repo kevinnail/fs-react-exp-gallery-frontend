@@ -18,7 +18,6 @@ export function useGalleryPost(id) {
     const fetchData = async () => {
       try {
         const data = await getGalleryPostDetail(id);
-        // const additionalImages = await getAdditionalImageUrlsPublicIds(id);
         const additionalImagesGallery = await getAdditionalImageUrlsPublicIdsGallery(id);
         const additionalImageUrlsPublicIds = additionalImagesGallery.map(
           (image) => image.image_url
