@@ -126,7 +126,8 @@
     transition: 300ms;
   }
   .gallery-img {
-    max-width: 400px;
+    max-width: 300px;
+    max-height: 300px;
     transition: 300ms;
   }
 }
