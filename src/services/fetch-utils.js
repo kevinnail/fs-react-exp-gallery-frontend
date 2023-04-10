@@ -1,5 +1,5 @@
-// const BASE_URL = 'https://react-fs-ex-to-do-list.herokuapp.com';
-const BASE_URL = 'http://localhost:7890';
+const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
+// const BASE_URL = 'http://localhost:7890555';
 
 /* Auth related functions */
 export async function getUser() {
@@ -198,7 +198,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
   const formData = new FormData();
   imageFiles.forEach((file) => formData.append('imageFiles', file));
   try {
-    const response = await fetch('http://localhost:7890/api/v1/admin/upload', {
+    const response = await fetch('${BASE_URL}/api/v1/admin/upload', {
       method: 'POST',
       body: formData,
       credentials: 'include',
@@ -253,7 +253,7 @@ export const uploadRemainingImages = async (imageFiles) => {
   const formData = new FormData();
   imageFiles.forEach((file) => formData.append('imageFiles', file));
   try {
-    const response = await fetch('http://localhost:7890/api/v1/admin/upload', {
+    const response = await fetch('${BASE_URL}/api/v1/admin/upload', {
       method: 'POST',
       body: formData,
       credentials: 'include',
@@ -269,7 +269,7 @@ export const uploadRemainingImages = async (imageFiles) => {
 // delete image from cloudinary
 export const deleteImage = async (public_id) => {
   try {
-    const response = await fetch(`http://localhost:7890/api/v1/admin/delete`, {
+    const response = await fetch(`${BASE_URL}/api/v1/admin/delete`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -289,7 +289,7 @@ export const deleteImage = async (public_id) => {
 // delete single image data from db
 export const deleteImageData = async (id, public_id) => {
   try {
-    const response = await fetch(`http://localhost:7890/api/v1/admin/image/${id}`, {
+    const response = await fetch(`${BASE_URL}/api/v1/admin/image/${id}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {
@@ -309,7 +309,7 @@ export const deleteImageData = async (id, public_id) => {
 // get additional image urls from in db
 export const getAdditionalImageUrlsPublicIds = async (id) => {
   try {
-    const response = await fetch(`http://localhost:7890/api/v1/admin/urls/${id}`, {
+    const response = await fetch(`${BASE_URL}/api/v1/admin/urls/${id}`, {
       method: 'GET',
       credentials: 'include',
     });
