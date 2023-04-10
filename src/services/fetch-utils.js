@@ -1,5 +1,5 @@
 const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
-// const BASE_URL = 'http://localhost:7890555';
+// const BASE_URL = 'http://localhost:7890';
 
 /* Auth related functions */
 export async function getUser() {
