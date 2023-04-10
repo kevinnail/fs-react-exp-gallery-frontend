@@ -198,7 +198,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
   const formData = new FormData();
   imageFiles.forEach((file) => formData.append('imageFiles', file));
   try {
-    const response = await fetch('${BASE_URL}/api/v1/admin/upload', {
+    const response = await fetch(`${BASE_URL}/api/v1/admin/upload`, {
       method: 'POST',
       body: formData,
       credentials: 'include',
@@ -253,7 +253,7 @@ export const uploadRemainingImages = async (imageFiles) => {
   const formData = new FormData();
   imageFiles.forEach((file) => formData.append('imageFiles', file));
   try {
-    const response = await fetch('${BASE_URL}/api/v1/admin/upload', {
+    const response = await fetch(`${BASE_URL}/api/v1/admin/upload`, {
       method: 'POST',
       body: formData,
       credentials: 'include',
