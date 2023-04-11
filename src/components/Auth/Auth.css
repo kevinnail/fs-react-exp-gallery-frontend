@@ -56,13 +56,15 @@
   /* Style the button as you prefer */
   background-color: #5b36ff83;
   color: white;
-  padding: 5px 10px;
-  border: none;
+  padding: 3px 10px;
+  border: 1px solid white;
   border-radius: 5px;
   cursor: pointer;
   font-family: 'Shadows Into Light', cursive;
   letter-spacing: 1.5px;
   font-size: 1.2rem;
+  height: 40px;
+  width: 40px;
 }
 
 .retract-button:hover {
