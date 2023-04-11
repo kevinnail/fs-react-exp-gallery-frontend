@@ -31,12 +31,7 @@ export default function Auth() {
 
   // show loading spinner while waiting for posts to load1
   if (loading) {
-    return (
-      <div className="loading-div">
-        {/* <img className="loading" src="../logo-sq.png" /> */}
-        <Loading />
-      </div>
-    );
+    return <Loading />;
   }
   const handleClick = async () => {
     await signOut();

@@ -112,12 +112,7 @@ export default function PostForm({
 
   // show loading spinner while waiting for posts to load
   if (loading) {
-    return (
-      // <div className="loading-div">
-      //   <img className="loading" src="../logo-sq.png" />
-      // </div>
-      <Loading />
-    );
+    return <Loading />;
   }
   const handleClick = async () => {
     await signOut();
