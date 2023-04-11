@@ -54,7 +54,7 @@ export default function AboutMe() {
           <a className="about-me-link" href="https://www.instagram.com/stresslessglass/">
             <img className="link-logo" src="./IG.png" />
           </a>
-          <a className="about-me-link" href="https://www.linkedin.com/kevinnail">
+          <a className="about-me-link" href="https://www.linkedin.com/in/kevinnail">
             <img className="link-logo" src="./li.png" />
           </a>
           <a className="about-me-link" href="https://www.github.com/kevinnail">
