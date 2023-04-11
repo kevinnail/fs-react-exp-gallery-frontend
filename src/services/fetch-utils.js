@@ -81,7 +81,8 @@ export async function signOutUser() {
 
 // get all posts from database and display on admin page
 export async function fetchPosts() {
-  const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
+  // const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
+  const resp = await fetch('/.netlify/functions/fetchPosts', {
     method: 'GET',
     headers: {
       Accept: 'application/json',
