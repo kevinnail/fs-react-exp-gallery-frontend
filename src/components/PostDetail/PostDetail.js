@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import { usePost } from '../../hooks/usePost.js';
 import './PostDetail.css';
 import { useUser } from '../../hooks/useUser.js';
+import Loading from '../Loading/Loading.js';
 
 Modal.setAppElement('#root'); // If your app is using #root as the main container
 
@@ -34,12 +35,15 @@ export default function PostDetail() {
   };
 
   if (error) return <h1>{error} </h1>;
+
   // show loading spinner while waiting for posts to load
   if (loading) {
     return (
-      <div className="loading-div">
-        <img className="loading" src="../logo-sq.png" />
-      </div>
+      // <div className="loading-div">
+      //   as;ljfka;lsdjk;asd;flkjasdf;lkjasdf;lkjasdf;lkjasdf;lkjasdf;lkjasdf;lkj
+      //   <img className="loading" src="../logo-sq.png" />
+      // </div>
+      <Loading />
     );
   }
 

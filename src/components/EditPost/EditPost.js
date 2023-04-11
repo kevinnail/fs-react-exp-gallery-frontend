@@ -10,6 +10,7 @@ import PostForm from '../PostForm/PostForm.js';
 import { useUser } from '../../hooks/useUser.js';
 import { usePost } from '../../hooks/usePost.js';
 import React, { useState } from 'react';
+import Loading from '../Loading/Loading.js';
 
 export default function EditPost() {
   const { id } = useParams();
@@ -36,8 +37,9 @@ export default function EditPost() {
   // show loading spinner while waiting for posts to load1
   if (loading) {
     return (
-      <div className="loading-div">
-        <img className="loading" src="../logo-sq.png" />
+      <div className="loading-div-wrapper">
+        {/* <img className="loading" src="../logo-sq.png" /> */}
+        <Loading />
       </div>
     );
   }
