@@ -53,7 +53,6 @@ export default function MainPostDetail() {
                 title="Back to Gallery"
               >
                 <i className="fa fa-arrow-left" aria-hidden="true"></i>
-                Back to Gallery
               </Link>
             </div>
           </div>
