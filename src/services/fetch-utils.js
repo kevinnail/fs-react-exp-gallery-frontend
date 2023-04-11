@@ -3,7 +3,8 @@ const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
 
 /* Auth related functions */
 export async function getUser() {
-  const resp = await fetch(`${BASE_URL}/api/v1/users/me`, {
+  // const resp = await fetch(`${BASE_URL}/api/v1/users/me`, {
+  const resp = await fetch('/.netlify/functions/getUser', {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -19,7 +20,8 @@ export async function getUser() {
 }
 
 export async function signUpUser(email, password) {
-  const resp = await fetch(`${BASE_URL}/api/v1/users`, {
+  // const resp = await fetch(`${BASE_URL}/api/v1/users`, {
+  const resp = await fetch('/.netlify/functions/signUpUser', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -40,7 +42,8 @@ export async function signUpUser(email, password) {
 }
 
 export async function signInUser(email, password) {
-  const resp = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
+  // const resp = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
+  const resp = await fetch('/.netlify/functions/signInUser', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -63,7 +66,8 @@ export async function signInUser(email, password) {
 }
 
 export async function signOutUser() {
-  const resp = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
+  // const resp = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
+  const resp = await fetch('/.netlify/functions/signOutUser', {
     method: 'DELETE',
     credentials: 'include',
   });
