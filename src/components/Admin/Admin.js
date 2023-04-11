@@ -6,6 +6,7 @@ import PostCard from '../PostCard/PostCard.js';
 import './Admin.css';
 import { signOut } from '../../services/auth.js';
 import Menu from '../Menu/Menu.js';
+import Loading from '../Loading/Loading.js';
 
 export default function Admin() {
   const { user, setUser } = useUser();
@@ -32,9 +33,7 @@ export default function Admin() {
 
         <div className="list-container">
           {loading ? (
-            <div className="loading-div">
-              <img className="loading" src="../logo-sq.png" />
-            </div>
+            <Loading />
           ) : posts.length === 0 ? (
             <div className="loading">
               <h1>No posts yet!</h1>

@@ -4,6 +4,7 @@ import { useUser } from '../../hooks/useUser.js';
 import './Auth.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
+import Loading from '../Loading/Loading.js';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -32,7 +33,8 @@ export default function Auth() {
   if (loading) {
     return (
       <div className="loading-div">
-        <img className="loading" src="../logo-sq.png" />
+        {/* <img className="loading" src="../logo-sq.png" /> */}
+        <Loading />
       </div>
     );
   }

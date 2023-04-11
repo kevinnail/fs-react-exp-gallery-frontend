@@ -6,6 +6,7 @@ import '../Gallery/Gallery.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import { useUser } from '../../hooks/useUser.js';
+import Loading from '../Loading/Loading.js';
 
 export default function MainGallery() {
   const { posts, loading } = useGalleryPosts();
@@ -15,7 +16,8 @@ export default function MainGallery() {
     return (
       <div className="loading-div-wrapper">
         <div className="loading-div">
-          <img className="rotating-marble" src="../marble-css.png" />
+          {/* <img className="rotating-marble" src="../marble-css.png" /> */}
+          <Loading />
         </div>
       </div>
     );

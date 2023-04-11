@@ -4,6 +4,7 @@ import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
+import Loading from '../Loading/Loading.js';
 
 export default function PostForm({
   title = '',
@@ -112,9 +113,10 @@ export default function PostForm({
   // show loading spinner while waiting for posts to load
   if (loading) {
     return (
-      <div className="loading-div">
-        <img className="loading" src="../logo-sq.png" />
-      </div>
+      // <div className="loading-div">
+      //   <img className="loading" src="../logo-sq.png" />
+      // </div>
+      <Loading />
     );
   }
   const handleClick = async () => {

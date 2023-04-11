@@ -1,3 +1,17 @@
+.loading-div {
+  animation: scaleAnimation 6s infinite; /* 1s duration and loop infinitely */
+  width: 30%;
+  min-width: 200px;
+  margin: auto;
+  border-radius: 20px;
+  color: #5b36ff;
+  /* padding: 100px; */
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
+  font-weight: bold;
+  text-shadow: 0px 0px 10px rgba(0, 255, 26, 0.495);
+}
+
 .post-detail-div {
   background-image: linear-gradient(145deg, #7777f3bd, #5b36ff83);
   margin: 10px auto;

@@ -4,6 +4,8 @@ import { useUser } from '../../hooks/useUser.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import GalleryPostCard from '../GalleryPostCard/GalleryPostCard.js';
 import './Gallery.css';
+import Loading from '../Loading/Loading.js';
+import '../PostDetail/PostDetail.css';
 
 export default function Gallery() {
   const { posts, loading } = usePosts();
@@ -22,8 +24,9 @@ export default function Gallery() {
   // show loading spinner while waiting for posts to load1
   if (loading) {
     return (
-      <div className="loading-div">
-        <img className="rotating-marble" src="../marble-css.png" />
+      <div className="loading-div-wrapper">
+        {/* //   <img className="rotating-marble" src="../marble-css.png" /> */}
+        <Loading />{' '}
       </div>
     );
   }

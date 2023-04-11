@@ -7,6 +7,7 @@ import '../PostDetail/PostDetail.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import { useUser } from '../../hooks/useUser.js';
+import Loading from '../Loading/Loading.js';
 
 export default function MainPostDetail() {
   const { id } = useParams();
@@ -14,7 +15,6 @@ export default function MainPostDetail() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { setUser } = useUser();
-
   const handleThumbnailClick = (index) => {
     setCurrentIndex(index);
   };
@@ -31,8 +31,11 @@ export default function MainPostDetail() {
   // show loading spinner while waiting for posts to load
   if (loading) {
     return (
-      <div className="loading-div">
-        <img className="loading" src="../logo-sq.png" />
+      <div className="loading-div-wrapper">
+        {/* <div className="loading-div"> */}
+        <Loading />
+        {/* <img className="rotating-marble" src="../marble-css.png" /> */}
+        {/* </div> */}
       </div>
     );
   }
