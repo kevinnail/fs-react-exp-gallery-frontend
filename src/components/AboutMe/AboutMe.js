@@ -18,18 +18,8 @@ export default function AboutMe() {
       <h1 className="about-me-h1">About Kevin</h1>
       <div className="scene3">
         <div className="cube3">
-          <div className="face3 front3">
-            {' '}
-            {/* <video className="bgVideo" autoPlay muted loop>
-              <source src="./drumming.mp4" type="video/mp4" />
-            </video> */}
-          </div>
-          <div className="face3 back3">
-            {' '}
-            {/* <video className="bgVideo" autoPlay muted loop>
-              <source src="./blowing-glass.mp4" type="video/mp4" />
-            </video> */}
-          </div>
+          <div className="face3 front3"></div>
+          <div className="face3 back3"></div>
           <div className="face3 right3"></div>
           <div className="face3 left3"></div>
           <div className="face3 top3"></div>
