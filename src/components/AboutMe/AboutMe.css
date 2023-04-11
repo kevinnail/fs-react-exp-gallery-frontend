@@ -134,7 +134,7 @@
 }
 .front3 {
   transform: rotateY(0deg) rotateZ(90deg) translateZ(75px);
-  background-image: url('/public/drumming.gif');
+  background-image: url('/public/drumset.jpeg');
 }
 
 .bgVideo {
@@ -148,7 +148,7 @@
 
 .back3 {
   transform: rotateY(180deg) rotateZ(270deg) translateZ(75px);
-  background-image: url('/public/blowing-glass.gif');
+  background-image: url('/public/action-2.jpg');
 }
 
 .right3 {
