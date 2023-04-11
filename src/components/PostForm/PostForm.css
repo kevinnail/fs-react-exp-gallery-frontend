@@ -261,6 +261,8 @@ option {
   height: 28px;
   max-width: 28px;
   max-height: 28px;
+  min-width: 28px;
+  min-height: 28px;
   border-radius: 50%;
   border: 3px solid rgb(165, 167, 197);
   /* border: 3px solid rgb(245, 245, 220); */
