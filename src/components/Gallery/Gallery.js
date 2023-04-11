@@ -23,12 +23,7 @@ export default function Gallery() {
 
   // show loading spinner while waiting for posts to load1
   if (loading) {
-    return (
-      <div className="loading-div-wrapper">
-        {/* //   <img className="rotating-marble" src="../marble-css.png" /> */}
-        <Loading />{' '}
-      </div>
-    );
+    return <Loading />;
   }
   return (
     <>

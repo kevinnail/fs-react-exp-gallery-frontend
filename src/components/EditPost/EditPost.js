@@ -36,12 +36,7 @@ export default function EditPost() {
 
   // show loading spinner while waiting for posts to load1
   if (loading) {
-    return (
-      <div className="loading-div-wrapper">
-        {/* <img className="loading" src="../logo-sq.png" /> */}
-        <Loading />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) return <h1>{error}</h1>;

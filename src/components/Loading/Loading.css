@@ -1,11 +1,10 @@
-.loading-div {
-  animation: scaleAnimation 6s infinite; /* 1s duration and loop infinitely */
+/* .loading-div {
+  animation: scaleAnimation 6s infinite;
   width: 30%;
   min-width: 200px;
   margin: auto;
   border-radius: 20px;
   color: #5b36ff;
-  /* padding: 100px; */
   font-family: 'Shadows Into Light', cursive;
   letter-spacing: 2px;
   font-weight: bold;
@@ -16,4 +15,4 @@
   font-size: 2rem;
   text-align: center;
   margin-top: 20px;
-}
+} */

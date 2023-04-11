@@ -7,21 +7,24 @@ export default function Menu({ handleClick }) {
   const { id } = useParams();
   return (
     <>
-      <NavLink className="new-link" to="/main-gallery">
+      <NavLink className="new-link" to="/main-gallery" title="Gallery">
         <span className="new-post-span menu-btn">Gallery</span>{' '}
         {<img className="new-post-icon" src="../gallery.png" />}
       </NavLink>
       <NavLink className="new-link" to="/about-me">
-        <span className="new-post-span menu-btn">About</span>{' '}
+        <span className="new-post-span menu-btn" title="About Kevin">
+          About
+        </span>{' '}
         {<img className="new-post-icon" src="../info.png" />}
       </NavLink>
       {user && (
         <>
-          <NavLink className="new-link" to="/admin/new">
+          <NavLink className="new-link" to="/admin/new" title="Make new post">
             <span className="new-post-span">New Post</span>{' '}
             {<img className="new-post-icon" src="../upload-1.png" />}
           </NavLink>
           <button
+            title="Sign Out"
             className={`signout-button 
             ${location.pathname === '/admin' ? ' signout-button-adapt' : ''}
             ${location.pathname === '/admin/new' ? ' signout-button-adapt' : ''}

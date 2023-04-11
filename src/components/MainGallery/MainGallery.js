@@ -13,14 +13,7 @@ export default function MainGallery() {
   const { setUser } = useUser();
 
   if (loading) {
-    return (
-      <div className="loading-div-wrapper">
-        <div className="loading-div">
-          {/* <img className="rotating-marble" src="../marble-css.png" /> */}
-          <Loading />
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   const handleClick = async () => {
