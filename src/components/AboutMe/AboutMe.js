@@ -51,13 +51,19 @@ export default function AboutMe() {
         or on my pages below. Thanks for stopping by!
         <br />
         <div className="about-me-link-container">
+          <a
+            className="about-me-link  about-icon-adapt"
+            href="https://www.instagram.com/kevinnail_music/"
+          >
+            <img className="link-logo" src="./drumming-icon.png" />
+          </a>
           <a className="about-me-link" href="https://www.instagram.com/stresslessglass/">
-            <img className="link-logo" src="./IG.png" />
+            <img className="link-logo" src="./logo-sq-180.png" />
           </a>
           <a className="about-me-link" href="https://www.linkedin.com/in/kevinnail">
             <img className="link-logo" src="./li.png" />
           </a>
-          <a className="about-me-link" href="https://www.github.com/kevinnail">
+          <a className="about-me-link about-icon-adapt" href="https://www.github.com/kevinnail">
             <img className="link-logo" src="./github.png" />
           </a>
           <div className="about-me-link-sub-container">
