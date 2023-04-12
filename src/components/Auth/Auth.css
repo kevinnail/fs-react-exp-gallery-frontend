@@ -449,36 +449,42 @@
   background-color: #5b36ff;
   box-sizing: border-box;
   box-shadow: 0px 0px 5px 0px rgb(255, 255, 255);
-  z-index: 1000;
+  z-index: 1500;
 }
 .front2 {
   transform: rotateY(0deg) rotateZ(90deg) translateZ(25px);
   background-image: url('/public/logo-sq.png');
+  z-index: 1500;
 }
 
 .back2 {
   transform: rotateY(180deg) rotateZ(270deg) translateZ(25px);
   background-image: url('/public/logo-sq.png');
+  z-index: 1500;
 }
 
 .right2 {
   transform: rotateY(90deg) translateZ(25px);
   background-image: url('/public/marble-css.png');
+  z-index: 1500;
 }
 
 .left2 {
   transform: rotateY(-90deg) rotateZ(90deg) translateZ(25px);
   background-image: url('/public/marble-css.png');
+  z-index: 1500;
 }
 
 .top2 {
   transform: rotateX(90deg) rotateZ(270deg) translateZ(25px);
   background-image: url('/public/logo-sq.png');
+  z-index: 1500;
 }
 
 .bottom2 {
   transform: rotateX(-90deg) rotateZ(270deg) translateZ(25px);
   background-image: url('/public/logo-sq.png');
+  z-index: 1500;
 }
 
 @keyframes rotate2 {

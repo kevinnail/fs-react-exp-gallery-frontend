@@ -21,6 +21,11 @@
   font-weight: bold;
   text-shadow: 0px 0px 10px rgba(0, 255, 26, 0.495);
 }
+.detail-top-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
 
 .post-detail-div {
   background-image: linear-gradient(145deg, #7777f3bd, #5b36ff83);
@@ -115,7 +120,7 @@
   padding: 8px 0px 15px 0px;
   color: #ffffdb;
   text-shadow: 0 0 2px #00000096;
-  font-family: 'Fairview', cursive;
+  font-family: 'Raleway', sans-serif;
 }
 
 .price-details {
@@ -144,7 +149,7 @@
 
 .contact {
   margin-left: 0px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: 'Raleway', sans-serif;
   text-decoration: none;
 }
 

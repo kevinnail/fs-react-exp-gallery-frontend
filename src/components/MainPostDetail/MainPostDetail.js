@@ -43,7 +43,7 @@ export default function MainPostDetail() {
         <div className="menu-search-container">
           <Menu handleClick={handleClick} />
         </div>{' '}
-        <div>
+        <div className="detail-top-container">
           <div>
             {' '}
             <div className="back-btn">
