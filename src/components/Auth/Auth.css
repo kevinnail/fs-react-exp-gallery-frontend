@@ -192,6 +192,7 @@
   border: 10px solid #5b36ff83;
   box-sizing: border-box;
   box-shadow: 0px 0px 10px 0px rgb(255, 255, 255);
+  z-index: 1000;
 }
 
 /* .front {
@@ -203,6 +204,7 @@
 .front {
   animation: openSesame 40s infinite, changeOpacity 40s infinite;
   background-image: url('/public/bubbler.jpeg');
+  z-index: 1000;
 }
 
 @keyframes openSesame {
@@ -251,6 +253,7 @@
   transform: rotateY(180deg) translateZ(75px);
   background-image: url('/public/marble.jpg');
   animation: changeImage 40s infinite;
+  z-index: 1000;
 }
 
 .back::before {
@@ -303,21 +306,25 @@
 .right {
   transform: rotateY(90deg) translateZ(75px);
   background-image: url('/public/knaildriver.jpeg');
+  z-index: 1000;
 }
 
 .left {
   transform: rotateY(-90deg) translateZ(75px);
   background-image: url('/public/7.jpg');
+  z-index: 1000;
 }
 
 .top {
   transform: rotateX(90deg) translateZ(75px);
   background-image: url('/public/6.jpg');
+  z-index: 1000;
 }
 
 .bottom {
   transform: rotateX(-90deg) translateZ(75px);
   background-image: url('/public/sherlock.jpeg');
+  z-index: 1000;
 }
 
 /* @keyframes rotate {
