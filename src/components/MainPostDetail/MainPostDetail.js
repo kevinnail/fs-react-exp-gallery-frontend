@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Modal from 'react-modal';
 Modal.setAppElement('#root'); // If your app is using #root as the main container
@@ -15,6 +15,8 @@ export default function MainPostDetail() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { setUser } = useUser();
+  const history = useHistory();
+
   const handleThumbnailClick = (index) => {
     setCurrentIndex(index);
   };
@@ -47,13 +49,13 @@ export default function MainPostDetail() {
           <div>
             {' '}
             <div className="back-btn">
-              <Link
+              <button
                 className="retract-button2 btn-adjust"
-                to="/main-gallery"
-                title="Back to Gallery"
+                onClick={() => history.goBack()}
+                title="Back to previous page"
               >
                 <i className="fa fa-arrow-left" aria-hidden="true"></i>
-              </Link>
+              </button>
             </div>
           </div>
           <div className="post-detail-div">

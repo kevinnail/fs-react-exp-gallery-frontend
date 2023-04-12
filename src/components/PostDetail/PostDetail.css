@@ -325,7 +325,7 @@
   /* position: absolute; */
   /* bottom: 20px; */
   z-index: 10;
-  left: 1rem;
+  left: 1.8rem;
   transform: translateX(-50%);
   transition: 500ms;
   /* Style the button as you prefer */
