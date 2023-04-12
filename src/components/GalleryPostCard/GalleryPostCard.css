@@ -112,8 +112,12 @@
   transition: 300ms;
   font-family: 'Roboto', sans-serif;
   color: #ffffdbe3;
-  display: inline;
+  display: inline-block;
   /* width: 100%; */
+  border: 1px solid #ffffdbe3;
+  background-color: #2f00ff83;
+  display: grid;
+  padding-top: 5px;
 }
 
 .gallery-category {

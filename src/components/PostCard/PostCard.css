@@ -58,8 +58,10 @@ body {
 
 .list-container {
   /* width: ; */
-  display: grid;
-  grid-template-columns: 1fr;
+  /* display: grid;
+  grid-template-columns: 1fr; */
+  display: flex;
+  flex-direction: column;
   grid-template-rows: repeat(auto-fill, minmax(50px, auto));
   flex-wrap: wrap;
   justify-items: flex-start;
@@ -78,7 +80,9 @@ body {
   /* height: calc(100vh - 90px); */
   height: calc(100vh - 90px);
   /* flex-grow: 1; */
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
+  overflow-y: auto;
+  /* border-top: 2px solid rgb(176, 176, 253); */
 }
 
 @keyframes ocean {

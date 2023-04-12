@@ -1,8 +1,10 @@
-/* CoolSearchBox component */
 .cool-search-box {
   display: flex;
   position: relative;
   width: 80%;
+  max-width: 150px;
+  margin: 0;
+  top: -25px;
 }
 
 .cool-search-input {
@@ -45,10 +47,15 @@
 }
 
 .cool-search-wrapper {
+  position: absolute;
   background-color: black;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 0px;
+  min-width: 333px;
+  width: 100%;
+  position: relative;
 }
 
 .cool-search-wrapper:hover .cool-search-icon {

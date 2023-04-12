@@ -7,6 +7,7 @@ header {
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
+  min-width: 333px;
   /* top: 0;
   position: sticky; */ /* this is causing the header to be sticky but also the menu to malfunction since it's out of view...  */
 }
@@ -24,7 +25,7 @@ header {
   top: -15px;
   left: -15px;
   font-family: 'Gruppo', cursive;
-  /* min-width: 207px; */
+  min-width: 207px;
 }
 
 .header-section p {
