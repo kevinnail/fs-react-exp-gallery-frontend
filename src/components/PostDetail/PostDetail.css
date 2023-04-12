@@ -371,7 +371,9 @@
     margin: 0;
     border-radius: 0px;
   }
-
+  .gallery-image:hover {
+    cursor: pointer;
+  }
   .thumbnail-gallery {
     width: 100px;
   }
