@@ -133,14 +133,11 @@ body {
   object-position: center;
   margin: 0 5px;
 }
+
 .admin-prod-btn-cont {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  /* height: 100%; */
-  box-sizing: border-box;
   justify-self: flex-end;
+  display: block;
+  margin: 8px 0;
 }
 
 .grid-s1 {
