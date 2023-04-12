@@ -179,6 +179,7 @@
   position: absolute;
   transform-style: preserve-3d;
   animation: rotate 40s infinite linear;
+  z-index: 1000;
 }
 
 .face {
