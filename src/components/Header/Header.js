@@ -27,10 +27,6 @@ export default function Header() {
   };
 
   const handleSearch = async (searchTerm) => {
-    // e.preventDefault();
-    const search = searchTerm;
-    const results = await searchGalleryPosts(search);
-    console.log(results);
     history.push(`/search?q=${encodeURIComponent(searchTerm)}`);
   };
 
