@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Modal from 'react-modal';
 Modal.setAppElement('#root'); // If your app is using #root as the main container
