@@ -73,14 +73,14 @@
   flex-direction: row;
   justify-content: space-evenly; */
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   justify-items: center;
   align-items: center;
   width: 100%;
   margin: 40px 0 0 0;
 }
 .about-me-link-sub-container {
-  grid-column: 1/4;
+  grid-column: 1/5;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -170,6 +170,11 @@
   transform: rotateX(-90deg) rotateZ(270deg) translateZ(75px);
   background-image: url('/public/knaildriver4.jpg');
 }
+.about-icon-adapt {
+  position: relative;
+  top: 50px;
+}
+
 @keyframes rotate3 {
   0% {
     transform: rotateX(60deg) rotateY(360deg) rotateZ(0deg) translateX(0px) translateY(-30px)
@@ -201,11 +206,21 @@
   .about-me-p {
     width: 800px;
   }
+
   .link-logo {
     width: 100px;
     height: 100px;
   }
+
   .me {
     margin: -150px 0 20px 0;
+  }
+
+  .about-me-link-sub-container {
+    /* grid-column: 1/5;
+    display: flex;
+    justify-content: space-between;
+    width: 100%; */
+    margin-top: 95px;
   }
 }
