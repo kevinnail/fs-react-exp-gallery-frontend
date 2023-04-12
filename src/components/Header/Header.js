@@ -5,6 +5,7 @@ import { signOut } from '../../services/auth.js';
 import './Header.css';
 import '../CoolSearchBox/CoolSearchBox.css';
 import Menu from '../Menu/Menu.js';
+import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 
 export default function Header() {
   const { user, setUser } = useUser();
@@ -50,6 +51,7 @@ export default function Header() {
       >
         <Menu handleClick={handleClick} />
       </div>
+      <CoolSearchBox />
     </>
   );
 }

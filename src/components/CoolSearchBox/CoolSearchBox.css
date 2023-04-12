@@ -43,3 +43,14 @@
   color: #666;
   transition: transform 0.5s;
 }
+
+.cool-search-wrapper {
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cool-search-wrapper:hover .cool-search-icon {
+  transform: rotate(360deg);
+}
