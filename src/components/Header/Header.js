@@ -6,7 +6,6 @@ import './Header.css';
 import '../CoolSearchBox/CoolSearchBox.css';
 import Menu from '../Menu/Menu.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
-import { searchGalleryPosts } from '../../services/fetch-utils.js';
 import { useHistory } from 'react-router-dom';
 export default function Header() {
   const { user, setUser } = useUser();
