@@ -49,7 +49,7 @@
 
 .retract-button {
   position: absolute;
-  bottom: 20px;
+  bottom: 10px;
   z-index: 10;
   left: 30px;
   transform: translateX(-50%);
@@ -178,10 +178,26 @@
   height: 100%;
   position: absolute;
   transform-style: preserve-3d;
-  animation: rotate 40s infinite linear;
+  animation: rotate66 40s infinite linear;
   z-index: 1000;
 }
-
+@keyframes rotate66 {
+  0% {
+    transform: rotateX(150deg) rotateY(15deg) rotateZ(15deg) translateX(-100px) translateY(-100px);
+  }
+  25% {
+    transform: rotateX(103deg) rotateY(96deg) rotateZ(123deg) translateX(0px) translateY(25px);
+  }
+  50% {
+    transform: rotateX(180deg) rotateY(187deg) rotateZ(172deg) translateX(100px) translateY(75px);
+  }
+  75% {
+    transform: rotateX(280deg) rotateY(265deg) rotateZ(292deg) translateX(0px) translateY(25px);
+  }
+  100% {
+    transform: rotateX(375deg) rotateY(375deg) rotateZ(375deg) translateX(-100px) translateY(-100px);
+  }
+}
 .face {
   position: absolute;
   width: 100%;
@@ -327,25 +343,7 @@
   z-index: 1000;
 }
 
-/* @keyframes rotate {
-  0% {
-    transform: rotateX(150deg) rotateY(15deg) rotateZ(15deg) translateX(-100px) translateY(-100px);
-  }
-  25% {
-    transform: rotateX(1030deg) rotateY(96deg) rotateZ(123deg) translateX(0px) translateY(25px);
-  }
-  50% {
-    transform: rotateX(1800deg) rotateY(187deg) rotateZ(172deg) translateX(100px) translateY(75px);
-  }
-  75% {
-    transform: rotateX(2800deg) rotateY(265deg) rotateZ(292deg) translateX(0px) translateY(25px);
-  }
-  100% {
-    transform: rotateX(3750deg) rotateY(375deg) rotateZ(375deg) translateX(-100px)
-      translateY(-100px);
-  }
-} */
-/* @keyframes rotate {
+/* @keyframes rotate66 {
   0% {
     transform: rotateX(15deg) rotateY(15deg) rotateZ(15deg) translateX(-100px) translateY(0px)
       scaleX(1) scaleY(1);
@@ -366,9 +364,9 @@
     transform: rotateX(375deg) rotateY(375deg) rotateZ(375deg) translateX(-100px) translateY(0px)
       scaleX(1) scaleY(1);
   }
-}
-*/
-/* @keyframes rotate {
+} */
+
+/* @keyframes rotate66 {
   0% {
     transform: rotateX(15deg) rotateY(1000deg) rotateZ(15deg) translateX(20px) translateY(-75px)
       scaleX(1.2) scaleY(1.2) scaleZ(1.2);
@@ -727,3 +725,14 @@
     transform: rotateY(360deg) rotateX(360deg);
   }
 } */
+.scene2 {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .cube {
+    animation: rotate 40s infinite linear;
+  }
+  .scene2 {
+    display: unset;
+  }
+} ;
