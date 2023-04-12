@@ -121,6 +121,7 @@ header {
   padding: 0 0px;
   background-color: #838383;
   background-image: linear-gradient(315deg, #838383 0%, #2f00ffa1 74%);
+  z-index: 10;
   /* border-bottom: 2px solid #2f00ff; */
 
   height: 0px;
