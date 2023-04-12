@@ -6,10 +6,12 @@ import './Header.css';
 import '../CoolSearchBox/CoolSearchBox.css';
 import Menu from '../Menu/Menu.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
-
+import { searchGalleryPosts } from '../../services/fetch-utils.js';
+import { useHistory } from 'react-router-dom';
 export default function Header() {
   const { user, setUser } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const history = useHistory();
 
   const handleClick = async () => {
     await signOut();
@@ -22,6 +24,14 @@ export default function Header() {
 
   const handleHomeClick = () => {
     setIsMenuOpen(false);
+  };
+
+  const handleSearch = async (searchTerm) => {
+    // e.preventDefault();
+    const search = searchTerm;
+    const results = await searchGalleryPosts(search);
+    console.log(results);
+    history.push(`/search?q=${encodeURIComponent(searchTerm)}`);
   };
 
   return (
@@ -51,7 +61,7 @@ export default function Header() {
       >
         <Menu handleClick={handleClick} />
       </div>
-      <CoolSearchBox />
+      <CoolSearchBox onSearch={handleSearch} />
     </>
   );
 }

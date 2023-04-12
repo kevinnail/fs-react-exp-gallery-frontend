@@ -1,5 +1,5 @@
-const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
-// const BASE_URL = 'http://localhost:7890';
+// const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
+const BASE_URL = 'http://localhost:7890';
 
 /* Auth related functions */
 export async function getUser() {
@@ -368,3 +368,16 @@ export const getAdditionalImageUrlsPublicIdsGallery = async (id) => {
     throw error;
   }
 };
+
+export async function searchGalleryPosts(searchTerm) {
+  const resp = await fetch(`${BASE_URL}/api/v1/main-gallery/search/${searchTerm}`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const msg = await resp.json();
+  return msg;
+}
