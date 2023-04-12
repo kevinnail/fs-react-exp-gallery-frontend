@@ -7,6 +7,7 @@ import {
   getAdditionalImageUrlsPublicIds,
 } from '../../services/fetch-utils.js';
 import './PostCard.css';
+import { useState } from 'react';
 
 export default function PostCard({
   id,
@@ -22,6 +23,8 @@ export default function PostCard({
 
   const { user } = useUser();
   const { setLoading, setError } = usePost(id);
+  const [deletedRowId, setDeletedRowId] = useState(null);
+
   // const [isCompleted, setIsCompleted] = useState(completed);   // use later and change this to isSold/ isAvailable or something like that
 
   if (!user) {
@@ -31,6 +34,7 @@ export default function PostCard({
   // delete the post
   const handleDelete = async () => {
     try {
+      setDeletedRowId(id);
       // grab urls out of my database
       const postUrls = await getAdditionalImageUrlsPublicIds(id);
 
@@ -52,7 +56,7 @@ export default function PostCard({
   };
 
   return (
-    <div className="post" key={id}>
+    <div className={`post ${post.postDetail.id === deletedRowId ? 'grayed-out' : ''}`} key={id}>
       <Link to={`/main-gallery/${id}`}>
         {image_url ? (
           <img className="admin-prod-img" src={image_url} alt="edit" />

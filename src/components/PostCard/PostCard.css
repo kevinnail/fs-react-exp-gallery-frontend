@@ -207,6 +207,11 @@ body {
   white-space: nowrap;
 }
 
+.grayed-out {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 /* .menu-search-container {
   display: none;
 } */
