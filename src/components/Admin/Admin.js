@@ -20,6 +20,10 @@ export default function Admin() {
     setUser(null);
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <div className="admin-container">
@@ -32,9 +36,7 @@ export default function Admin() {
         </aside>
 
         <div className="list-container">
-          {loading ? (
-            <Loading />
-          ) : posts.length === 0 ? (
+          {posts.length === 0 ? (
             <div className="loading">
               <h1>No posts yet!</h1>
             </div>
