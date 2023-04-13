@@ -8,6 +8,8 @@ header {
   align-items: center;
   box-sizing: border-box;
   min-width: 333px;
+  /* top: 0;
+  position: sticky; */ /* this is causing the header to be sticky but also the menu to malfunction since it's out of view...  */
 }
 .logo {
   height: 80px;
@@ -24,7 +26,6 @@ header {
   left: -15px;
   font-family: 'Gruppo', cursive;
   min-width: 207px;
-  transition: 300ms;
 }
 
 .header-section p {
@@ -122,11 +123,9 @@ header {
   background-color: #838383;
   background-image: linear-gradient(315deg, #838383 0%, #2f00ffa1 74%);
   z-index: 10;
-  /* border-bottom: 2px solid #2f00ff; */
-
   height: 0px;
   overflow: hidden;
-  transition: 500ms ease;
+  transition: 250ms ease-in-out;
   position: absolute;
   top: 90px;
   z-index: 10;
@@ -136,7 +135,6 @@ header {
 .menu-div.open {
   height: 100px;
   position: absolute;
-  transition: 500ms ease;
   transform: translateY(-100%);
   border-bottom: 2px solid #2f00ff;
   /* display: flex; */
