@@ -96,19 +96,34 @@ export default function PostForm({
     setCategoryInput(event.target.value);
   };
 
-  // handle form input changes and update state for display on form
-  const readAndPreview = (files) => {
-    const urls = [];
-    for (const file of files) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        urls.push(event.target.result);
-        setNewImageDataURLs(urls);
-      };
-
-      reader.readAsDataURL(file);
-    }
+  // handle form input changes and update state for display on form /////////////////////////////////////////////////////vvvvvvvvvvvvvvvvvvvvvvvvvv
+  const readAndPreview = async (files) => {
+    const urls = await Promise.all(
+      Array.from(files).map((file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            resolve(event.target.result);
+          };
+          reader.readAsDataURL(file);
+        });
+      })
+    );
+    setNewImageDataURLs(urls);
   };
+  // const readAndPreview = (files) => {
+  //   const urls = [];
+  //   for (const file of files) {
+  //     const reader = new FileReader();
+  //     reader.onload = (event) => {
+  //       urls.push(event.target.result);
+  //       setNewImageDataURLs(urls);
+  //     };
+
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ^^^^^^^^^^^^^^^^^^^^^^^
 
   // show loading spinner while waiting for posts to load
   if (loading) {
