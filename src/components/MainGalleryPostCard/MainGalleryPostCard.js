@@ -12,6 +12,7 @@ export default function MainGalleryPostCard({
   category,
 }) {
   const post = useGalleryPost(id);
+
   return (
     <>
       <div className="gallery-display-container" key={id}>

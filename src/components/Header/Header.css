@@ -178,6 +178,25 @@ header {
   display: none;
 }
 
+.username {
+  position: absolute;
+  left: 75px;
+  top: 18px;
+  color: white;
+  font-size: 0.75rem;
+}
+
+/*
+
+
+
+@media rules begin here  //////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+*/
+
 @media (min-width: 420px) {
   .menu-btn {
     display: block;
