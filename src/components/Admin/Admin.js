@@ -15,6 +15,7 @@ export default function Admin() {
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
   }
+
   const handleClick = async () => {
     await signOut();
     setUser(null);
