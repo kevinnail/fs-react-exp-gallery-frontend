@@ -341,6 +341,40 @@
   height: 40px;
   width: 40px;
 }
+.modal-navigation {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 1.5rem;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.modal-navigation:hover {
+  opacity: 1;
+}
+
+.modal-navigation.previous {
+  left: 10px;
+}
+
+.modal-navigation.next {
+  right: 10px;
+}
+
+/*
+
+
+@media rules begin here ////////////////////////////////////////////
+
+
+*/
 
 @media (min-width: 768px) {
   .post-detail-div {

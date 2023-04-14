@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Modal from 'react-modal';
+import { useSwipeable } from 'react-swipeable'; // Add this import
 Modal.setAppElement('#root'); // If your app is using #root as the main container
 import '../PostDetail/PostDetail.css';
 import Menu from '../Menu/Menu.js';
@@ -28,6 +29,18 @@ export default function MainPostDetail() {
   const closeModal = () => {
     setModalIsOpen(false);
   };
+  const handlePrevious = () => {
+    setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : prevIndex));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex < imageUrls.length - 1 ? prevIndex + 1 : prevIndex));
+  };
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: handleNext,
+    onSwipedRight: handlePrevious,
+  });
 
   if (error) return <h1>{error}</h1>;
   // show loading spinner while waiting for posts to load
@@ -91,10 +104,27 @@ export default function MainPostDetail() {
                   className="modal-image"
                   src={imageUrls[currentIndex]}
                   alt={`modal-post-${currentIndex}`}
+                  {...swipeHandlers}
                 />
                 <button className="modal-close" onClick={closeModal}>
                   x
                 </button>
+                <button
+                  className="modal-navigation previous"
+                  onClick={handlePrevious}
+                  style={{ display: currentIndex === 0 ? 'none' : 'block' }}
+                >
+                  {`<`}
+                </button>{' '}
+                {/* Add this button */}
+                <button
+                  className="modal-navigation next"
+                  onClick={handleNext}
+                  style={{ display: currentIndex === imageUrls.length - 1 ? 'none' : 'block' }}
+                >
+                  {`>`}
+                </button>{' '}
+                {/* Add this button */}
               </Modal>
             </div>
             <div className="thumbnail-container">
