@@ -1,9 +1,9 @@
-const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
+// const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
 // const BASE_URL = 'http://localhost:7890';
 
 /* Auth related functions */
 export async function getUser() {
-  const resp = await fetch(`${BASE_URL}/api/v1/users/me`, {
+  const resp = await fetch(`/api/v1/users/me`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -19,7 +19,7 @@ export async function getUser() {
 }
 
 export async function signUpUser(email, password) {
-  const resp = await fetch(`${BASE_URL}/api/v1/users`, {
+  const resp = await fetch(`/api/v1/users`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -40,7 +40,7 @@ export async function signUpUser(email, password) {
 }
 
 export async function signInUser(email, password) {
-  const resp = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
+  const resp = await fetch(`/api/v1/users/sessions`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -63,7 +63,7 @@ export async function signInUser(email, password) {
 }
 
 export async function signOutUser() {
-  const resp = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
+  const resp = await fetch(`/api/v1/users/sessions`, {
     method: 'DELETE',
     credentials: 'include',
   });
@@ -77,7 +77,7 @@ export async function signOutUser() {
 
 // get all posts from database and display on admin page
 export async function fetchPosts() {
-  const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
+  const resp = await fetch(`/api/v1/admin`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -107,7 +107,7 @@ export async function postPost(
   public_id,
   num_imgs
 ) {
-  const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
+  const resp = await fetch(`/api/v1/admin`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -144,7 +144,7 @@ export async function postAddImages(imageFiles, id) {
 
   // Append the id to the formData
   formData.append('id', id);
-  const resp = await fetch(`${BASE_URL}/api/v1/admin/images`, {
+  const resp = await fetch(`/api/v1/admin/images`, {
     method: 'POST',
     body: formData,
     credentials: 'include',
@@ -156,7 +156,7 @@ export async function postAddImages(imageFiles, id) {
 
 // delete single post from database
 export async function deleteById(post_id) {
-  const resp = await fetch(`${BASE_URL}/api/v1/admin/${post_id}`, {
+  const resp = await fetch(`/api/v1/admin/${post_id}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -171,7 +171,7 @@ export async function deleteById(post_id) {
 
 // edit post called from EditPost
 export async function updatePost(id, post) {
-  const resp = await fetch(`${BASE_URL}/api/v1/admin/${id}`, {
+  const resp = await fetch(`/api/v1/admin/${id}`, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
@@ -187,7 +187,7 @@ export async function updatePost(id, post) {
 
 // return post detail (no image urls aside from the first one)
 export async function getPostDetail(id) {
-  const resp = await fetch(`${BASE_URL}/api/v1/admin/${id}`, {
+  const resp = await fetch(`/api/v1/admin/${id}`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -205,7 +205,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
   const formData = new FormData();
   imageFiles.forEach((file) => formData.append('imageFiles', file));
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/admin/upload`, {
+    const response = await fetch(`/api/v1/admin/upload`, {
       method: 'POST',
       body: formData,
       credentials: 'include',
@@ -260,7 +260,7 @@ export const uploadRemainingImages = async (imageFiles) => {
   const formData = new FormData();
   imageFiles.forEach((file) => formData.append('imageFiles', file));
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/admin/upload`, {
+    const response = await fetch(`/api/v1/admin/upload`, {
       method: 'POST',
       body: formData,
       credentials: 'include',
@@ -276,7 +276,7 @@ export const uploadRemainingImages = async (imageFiles) => {
 // delete image from cloudinary
 export const deleteImage = async (public_id) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/admin/delete`, {
+    const response = await fetch(`/api/v1/admin/delete`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -296,7 +296,7 @@ export const deleteImage = async (public_id) => {
 // delete single image data from db
 export const deleteImageData = async (id, public_id) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/admin/image/${id}`, {
+    const response = await fetch(`/api/v1/admin/image/${id}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {
@@ -316,7 +316,7 @@ export const deleteImageData = async (id, public_id) => {
 // get additional image urls from in db
 export const getAdditionalImageUrlsPublicIds = async (id) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/admin/urls/${id}`, {
+    const response = await fetch(`/api/v1/admin/urls/${id}`, {
       method: 'GET',
       credentials: 'include',
     });
@@ -333,7 +333,7 @@ export const getAdditionalImageUrlsPublicIds = async (id) => {
 // fetch all posts
 export const fetchGalleryPosts = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/main-gallery`, {
+    const response = await fetch(`/api/v1/main-gallery`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -351,7 +351,7 @@ export const fetchGalleryPosts = async () => {
 
 // public route for post detail
 export async function getGalleryPostDetail(id) {
-  const resp = await fetch(`${BASE_URL}/api/v1/main-gallery/${id}`, {
+  const resp = await fetch(`/api/v1/main-gallery/${id}`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -364,7 +364,7 @@ export async function getGalleryPostDetail(id) {
 }
 export const getAdditionalImageUrlsPublicIdsGallery = async (id) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/main-gallery/urls/${id}`, {
+    const response = await fetch(`/api/v1/main-gallery/urls/${id}`, {
       method: 'GET',
     });
     const result = await response.json();
@@ -377,7 +377,7 @@ export const getAdditionalImageUrlsPublicIdsGallery = async (id) => {
 };
 
 export async function searchGalleryPosts(searchTerm) {
-  const resp = await fetch(`${BASE_URL}/api/v1/main-gallery/search/${searchTerm}`, {
+  const resp = await fetch(`/api/v1/main-gallery/search/${searchTerm}`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
