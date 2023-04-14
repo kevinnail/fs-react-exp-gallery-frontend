@@ -113,17 +113,13 @@ export default function MainPostDetail() {
                   className="modal-navigation previous"
                   onClick={handlePrevious}
                   style={{ display: currentIndex === 0 ? 'none' : 'block' }}
-                >
-                  {`<`}
-                </button>{' '}
+                ></button>{' '}
                 {/* Add this button */}
                 <button
                   className="modal-navigation next"
                   onClick={handleNext}
                   style={{ display: currentIndex === imageUrls.length - 1 ? 'none' : 'block' }}
-                >
-                  {`>`}
-                </button>{' '}
+                ></button>{' '}
                 {/* Add this button */}
               </Modal>
             </div>

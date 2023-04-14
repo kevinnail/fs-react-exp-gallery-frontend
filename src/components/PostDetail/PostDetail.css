@@ -368,6 +368,18 @@
   right: 10px;
 }
 
+.next {
+  background-image: url('../../../public/next.png');
+  background-position: center;
+  width: 30px;
+  height: 30px;
+}
+.previous {
+  background-image: url('../../../public/back.png');
+  background-position: center;
+  width: 30px;
+  height: 30px;
+}
 /*
 
 
