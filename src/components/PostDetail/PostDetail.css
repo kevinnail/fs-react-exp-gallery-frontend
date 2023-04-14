@@ -341,11 +341,12 @@
   height: 40px;
   width: 40px;
 }
+
 .modal-navigation {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.3);
   color: #fff;
   font-size: 1.5rem;
   border: none;
@@ -354,6 +355,8 @@
   border-radius: 4px;
   opacity: 0.8;
   transition: opacity 0.2s ease;
+  width: 40px;
+  height: 40px;
 }
 
 .modal-navigation:hover {
@@ -370,16 +373,17 @@
 
 .next {
   background-image: url('../../../public/next.png');
+  background-size: contain;
+  background-repeat: no-repeat;
   background-position: center;
-  width: 30px;
-  height: 30px;
 }
 .previous {
   background-image: url('../../../public/back.png');
+  background-size: contain;
+  background-repeat: no-repeat;
   background-position: center;
-  width: 30px;
-  height: 30px;
 }
+
 /*
 
 
