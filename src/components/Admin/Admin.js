@@ -10,7 +10,7 @@ import Loading from '../Loading/Loading.js';
 
 export default function Admin() {
   const { user, setUser } = useUser();
-  const { posts, loading, setPosts } = usePosts();
+  const { posts, loading, setPosts, error } = usePosts();
 
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
@@ -23,6 +23,19 @@ export default function Admin() {
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <div className="loading-div-wrapper">
+        <h2 className="error-state">
+          Something went wrong. Please refresh the page or try again later. Here{`'`}s the error
+          message if it helps:
+          <br />
+          <span className="error-span">{error}</span>
+        </h2>
+      </div>
+    );
   }
 
   return (

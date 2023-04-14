@@ -14,6 +14,9 @@ export function usePosts() {
         setPosts(data);
         setLoading(false);
       } catch (e) {
+        if (e.response && e.response.status === 401) {
+          console.error(e.response.data.message);
+        }
         setError(e.message);
         setLoading(false);
       }

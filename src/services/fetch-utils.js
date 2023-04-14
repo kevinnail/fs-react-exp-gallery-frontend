@@ -91,7 +91,8 @@ export async function fetchPosts() {
     return data;
   } else {
     // eslint-disable-next-line no-console
-    console.error(data.message);
+    // console.error(data.message);
+    throw new Error(data.message);
   }
 }
 
@@ -126,7 +127,13 @@ export async function postPost(
   });
 
   const msg = await resp.json();
-  return msg;
+  if (resp.ok) {
+    return msg;
+  } else {
+    // eslint-disable-next-line no-console
+    console.error(msg.message);
+    throw new Error(msg.message);
+  }
 }
 
 // upload images to cloudinary and send urls and public ids to db

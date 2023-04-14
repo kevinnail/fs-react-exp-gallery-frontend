@@ -1,3 +1,27 @@
+.error-state {
+  background-color: rgb(189, 0, 0);
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin: 0.5rem;
+  text-align: center;
+  border: 2px solid red;
+  height: 60%;
+  width: 98%;
+  position: relative;
+  top: -80px;
+  margin: auto;
+}
+.error-span {
+  display: block;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: red;
+  font-weight: bold;
+  background-color: white;
+  margin-top: 50px;
+}
 .admin {
   text-align: center;
   font-weight: bold;
