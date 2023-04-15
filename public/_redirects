@@ -1,1 +1,1 @@
-/api/* https://glass-art-gallery.herokuapp.com/api/:splat 200
+/api/* https://glass-art-gallery.herokuapp.com/api/v1/:splat 200
