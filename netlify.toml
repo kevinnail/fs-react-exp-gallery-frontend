@@ -3,7 +3,3 @@ command = 'npm run build'
 functions = 'functions'
 publish = 'build'
 
-[[redirects]]
-from = "/api/v1/*"
-to = "https://shopping-backend.herokuapp.com/api/v1/:splat"
-status = 200
