@@ -16,7 +16,7 @@ export async function getUser() {
     const user = await resp.json();
     return user;
   } else if (resp.status === 401 || resp.status === 403) {
-    throw new Error('User not logged in');
+    return null;
   } else {
     throw new Error('An error occurred while fetching user');
   }
