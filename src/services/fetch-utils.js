@@ -86,6 +86,7 @@ export async function fetchPosts() {
     credentials: 'include',
   });
   const data = await resp.json();
+  console.log('data', data);
 
   if (resp.ok) {
     return data;
