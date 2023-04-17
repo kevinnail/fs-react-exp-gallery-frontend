@@ -13,15 +13,18 @@ export default function Auth() {
   const { user, logInUser, error, loading, setLoading, setUser } = useUser();
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
+
   if (user) {
     return <Redirect to="/admin" />;
   } else if (error) {
     console.error(error);
   }
+
   const isEmailAllowed = (email) => {
     const allowedEmails = process.env.REACT_APP_ALLOWED_EMAILS.split(',');
     return allowedEmails.includes(email);
   };
+
   // submit form to log in or sign up
   const submitAuth = async () => {
     // Check if the email is allowed
