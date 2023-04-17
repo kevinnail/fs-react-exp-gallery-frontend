@@ -18,9 +18,18 @@ export default function Auth() {
   } else if (error) {
     console.error(error);
   }
-
+  const isEmailAllowed = (email) => {
+    const allowedEmails = process.env.REACT_APP_ALLOWED_EMAILS.split(',');
+    return allowedEmails.includes(email);
+  };
   // submit form to log in or sign up
   const submitAuth = async () => {
+    // Check if the email is allowed
+    if (!isEmailAllowed(email)) {
+      alert('This email is not allowed to create an account.');
+      return;
+    }
+
     try {
       setLoading(true);
       await logInUser(email, password, type);
