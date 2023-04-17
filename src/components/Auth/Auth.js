@@ -13,14 +13,26 @@ export default function Auth() {
   const { user, logInUser, error, loading, setLoading, setUser } = useUser();
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
+
   if (user) {
     return <Redirect to="/admin" />;
   } else if (error) {
     console.error(error);
   }
 
+  const isEmailAllowed = (email) => {
+    const allowedEmails = process.env.REACT_APP_ALLOWED_EMAILS.split(',');
+    return allowedEmails.includes(email);
+  };
+
   // submit form to log in or sign up
   const submitAuth = async () => {
+    // Check if the email is allowed
+    if (!isEmailAllowed(email)) {
+      alert('This email is not allowed to create an account.');
+      return;
+    }
+
     try {
       setLoading(true);
       await logInUser(email, password, type);
@@ -32,6 +44,18 @@ export default function Auth() {
   // show loading spinner while waiting for posts to load1
   if (loading) {
     return <Loading />;
+  }
+  if (error) {
+    return (
+      <div className="loading-div-wrapper">
+        <h2 className="error-state">
+          Something went wrong. Please refresh the page or try again later. Here{`'`}s the error
+          message if it helps:
+          <br />
+          <span className="error-span">{error}</span>
+        </h2>
+      </div>
+    );
   }
   const handleClick = async () => {
     await signOut();
