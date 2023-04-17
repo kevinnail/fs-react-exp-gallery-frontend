@@ -7,15 +7,18 @@ const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [authError, setAuthError] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const user = await getUser();
         setUser(user);
-        setLoading(false);
       } catch (error) {
-        setError(error);
+        if (error.message !== 'User not logged in') {
+          setError(error);
+        }
+      } finally {
         setLoading(false);
       }
     };
@@ -23,7 +26,9 @@ const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser, error, setError, loading, setLoading }}>
+    <UserContext.Provider
+      value={{ user, setUser, error, setError, loading, setLoading, authError, setAuthError }}
+    >
       {children}
     </UserContext.Provider>
   );
