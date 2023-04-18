@@ -97,32 +97,61 @@ export default function PostForm({
   };
 
   // handle form input changes and update state for display on form /////////////////////////////////////////////////////vvvvvvvvvvvvvvvvvvvvvvvvvv
+  // const readAndPreview = async (files) => {
+  //   const urls = await Promise.all(
+  //     Array.from(files).map((file) => {
+  //       return new Promise((resolve) => {
+  //         const reader = new FileReader();
+  //         reader.onload = (event) => {
+  //           resolve(event.target.result);
+  //         };
+  //         reader.readAsDataURL(file);
+  //       });
+  //     })
+  //   );
+  //   setNewImageDataURLs(urls);
+  // };
+  // old works^^^^
+  function generateVideoThumbnail(file, callback) {
+    const video = document.createElement('video');
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const url = URL.createObjectURL(file);
+
+    video.src = url;
+
+    video.addEventListener('loadeddata', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+      const thumbnailDataURL = canvas.toDataURL();
+      callback(thumbnailDataURL);
+      URL.revokeObjectURL(url);
+    });
+  }
+
   const readAndPreview = async (files) => {
     const urls = await Promise.all(
       Array.from(files).map((file) => {
         return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            resolve(event.target.result);
-          };
-          reader.readAsDataURL(file);
+          const isVideo = file.type.startsWith('video/');
+          if (isVideo) {
+            generateVideoThumbnail(file, (thumbnailDataURL) => {
+              resolve(thumbnailDataURL);
+            });
+          } else {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              resolve(event.target.result);
+            };
+            reader.readAsDataURL(file);
+          }
         });
       })
     );
     setNewImageDataURLs(urls);
   };
-  // const readAndPreview = (files) => {
-  //   const urls = [];
-  //   for (const file of files) {
-  //     const reader = new FileReader();
-  //     reader.onload = (event) => {
-  //       urls.push(event.target.result);
-  //       setNewImageDataURLs(urls);
-  //     };
 
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ^^^^^^^^^^^^^^^^^^^^^^^
 
   // show loading spinner while waiting for posts to load
@@ -230,6 +259,7 @@ export default function PostForm({
               name="image"
               onChange={handleFileInputChange}
               multiple
+              accept="image/*,video/*"
             />
           </div>
           {
