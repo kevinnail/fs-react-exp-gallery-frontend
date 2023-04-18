@@ -131,25 +131,25 @@ export default function PostForm({
   }
 
   const readAndPreview = async (files) => {
-    const urls = await Promise.all(
+    const urlsAndTypes = await Promise.all(
       Array.from(files).map((file) => {
         return new Promise((resolve) => {
           const isVideo = file.type.startsWith('video/');
           if (isVideo) {
             generateVideoThumbnail(file, (thumbnailDataURL) => {
-              resolve(thumbnailDataURL);
+              resolve({ url: thumbnailDataURL, type: file.type });
             });
           } else {
             const reader = new FileReader();
             reader.onload = (event) => {
-              resolve(event.target.result);
+              resolve({ url: event.target.result, type: file.type });
             };
             reader.readAsDataURL(file);
           }
         });
       })
     );
-    setNewImageDataURLs(urls);
+    setNewImageDataURLs(urlsAndTypes);
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ^^^^^^^^^^^^^^^^^^^^^^^
@@ -267,9 +267,13 @@ export default function PostForm({
           }
           {getDisplayImages().length > 0 ? (
             <div className="thumbnails-container">
-              {getDisplayImages().map((url, index) => (
+              {getDisplayImages().map((item, index) => (
                 <div key={index} className="thumbnail-wrapper">
-                  <img className="thumbnail" src={url} alt={`Selected image ${index + 1}`} />
+                  {item.type.startsWith('video/') ? (
+                    <video className="thumbnail" src={item.url} controls />
+                  ) : (
+                    <img className="thumbnail" src={item.url} alt={`Selected file ${index + 1}`} />
+                  )}
                   <button
                     type="button" // Add this to prevent the button from submitting the form
                     className="delete-button-form"
