@@ -1,6 +1,3 @@
-// const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
-// const BASE_URL = 'http://localhost:7890';
-
 /* Auth related functions */
 export async function getUser() {
   const resp = await fetch(`/api/v1/users/me`, {

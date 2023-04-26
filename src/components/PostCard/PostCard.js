@@ -13,9 +13,9 @@ export default function PostCard({
   id,
   posts,
   title,
-  description, //commented just for now
+  description,
   image_url,
-  category, //commented just for now
+  category,
   price,
   setPosts,
 }) {

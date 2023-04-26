@@ -12,7 +12,6 @@
 }
 
 .rotating-marble {
-  /* transform: rotateX('360deg'); */
   width: 30%;
   display: flex;
   justify-content: center;
@@ -31,18 +30,6 @@
     transform: rotate(360deg);
   }
 }
-
-/* @media (min-width: 480px) {
-  .gallery-list-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 768px) {
-  .gallery-list-container {
-    grid-template-columns: repeat(3, 1fr);
-  }
-} */
 
 @media (min-width: 1024px) {
   .menu-search-container {

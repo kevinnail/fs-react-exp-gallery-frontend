@@ -8,13 +8,10 @@ header {
   align-items: center;
   box-sizing: border-box;
   min-width: 333px;
-  /* top: 0;
-  position: sticky; */ /* this is causing the header to be sticky but also the menu to malfunction since it's out of view...  */
 }
 .logo {
   height: 80px;
   margin-top: 5px;
-  /* grid-area: logo; */
 }
 
 .title {
@@ -50,7 +47,6 @@ header {
 
 .new-link:active {
   color: rgb(255, 255, 255);
-  /* background-color: transparent; */
   background-color: rgb(0, 0, 0, 0.5);
   border: none;
   cursor: pointer;
@@ -61,7 +57,6 @@ header {
 .upload-icon {
   height: 60px;
   width: 60px;
-  /* margin-left: 20px; */
 }
 
 .upload-icon:hover,
@@ -82,10 +77,7 @@ header {
   font-size: 1rem;
   display: flex;
   font-family: 'Shadows Into Light', cursive;
-  /* max-width: 100px; */
   transition: 100ms;
-  /* align-items: center; */
-  /* width: 50%; */
 }
 
 /* style for button when hovered or focused */
@@ -102,9 +94,7 @@ header {
 }
 
 .signout-nav-icon {
-  /* margin: 0 20px 0 40px; */
   height: 40px;
-  /* box-shadow: 0 0 8px 0 white; */
 }
 .user-email {
   font-size: 0.8rem;
@@ -137,13 +127,10 @@ header {
   position: absolute;
   transform: translateY(-100%);
   border-bottom: 2px solid #2f00ff;
-  /* display: flex; */
-  /* justify-content: space-around; */
 }
 
 .menu-icon,
 .menu-no-user {
-  /* background-color: rgb(165, 165, 165); */
   padding: 0px;
   border-radius: 50%;
   margin: 0 20px 0 0px;

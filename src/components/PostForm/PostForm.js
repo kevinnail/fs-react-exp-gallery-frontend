@@ -111,18 +111,7 @@ export default function PostForm({
     );
     setNewImageDataURLs(urls);
   };
-  // const readAndPreview = (files) => {
-  //   const urls = [];
-  //   for (const file of files) {
-  //     const reader = new FileReader();
-  //     reader.onload = (event) => {
-  //       urls.push(event.target.result);
-  //       setNewImageDataURLs(urls);
-  //     };
 
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ^^^^^^^^^^^^^^^^^^^^^^^
 
   // show loading spinner while waiting for posts to load
