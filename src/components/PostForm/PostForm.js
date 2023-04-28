@@ -46,10 +46,19 @@ export default function PostForm({
   };
 
   const handleImageDelete = (index) => {
+    // if the image is a newly created one...
+    // filter out the deleted DataURL from newImageDataURLs array
+    // by index which are used for display in the form
+    // filter out the deleted image from the ImageFilesInput array so it's not uploaded
     if (index < newImageDataURLs.length) {
       setNewImageDataURLs((prevDataURLs) => prevDataURLs.filter((_, i) => i !== index));
       setImageFilesInput((prevFiles) => prevFiles.filter((_, i) => i !== index));
     } else {
+      // if the image is an existing one...
+      // filter out deleted image URL from currentImages and assign new array newCurrentImages
+      // find URL of deleted image in CurrentImages and assign it to removedImagesUrl
+      // append the newly deleted images with the deletedImages array
+      // return new currentImages array
       setCurrentImages((prevImages) => {
         const newCurrentImages = prevImages.filter((_, i) => i !== index - newImageDataURLs.length);
         const removedImageUrl = prevImages[index - newImageDataURLs.length];
