@@ -13,6 +13,7 @@ export default function PostForm({
   category = '',
   submitHandler,
   imageUrls,
+  getThumbnailUrl,
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
@@ -54,7 +55,7 @@ export default function PostForm({
 
   // get all dataURLS and URLS from cloudinary images for display
   const getDisplayImages = () => {
-    return [...newImageDataURLs, ...currentImages];
+    return [...newImageDataURLs, ...currentImages.map((imageUrl) => getThumbnailUrl(imageUrl))];
   };
 
   let newOrEdit = '';
