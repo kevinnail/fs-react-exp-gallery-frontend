@@ -310,6 +310,25 @@ option {
   display: none;
 }
 
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; /* added line */
+}
+.file-upload-label {
+  border: 2px solid white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: #ccc;
+}
+.file-upload-label:hover {
+  cursor: pointer;
+}
+
 @media (min-width: 768px) {
   .new-post-form {
     width: 700px;
