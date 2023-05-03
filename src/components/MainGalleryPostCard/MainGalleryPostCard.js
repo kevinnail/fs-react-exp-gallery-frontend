@@ -21,7 +21,7 @@ export default function MainGalleryPostCard({
             image_url.endsWith('.mp4') ? (
               <img
                 className="gallery-img"
-                src={`${image_url.replace('.mp4', '.jpg')}#t=0.5`}
+                src={`${image_url.replace('.mp4', '.jpg')}#t=0.8`}
                 alt="thumbnail"
               />
             ) : (
