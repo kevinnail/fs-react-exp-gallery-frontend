@@ -145,7 +145,7 @@ export async function postAddImages(imageFiles, id) {
   const formData = new FormData();
   formData.append('image_urls', JSON.stringify(imageFiles.map((image) => image.secure_url)));
   formData.append('image_public_ids', JSON.stringify(imageFiles.map((image) => image.public_id)));
-
+  formData.append('resource_types', JSON.stringify(imageFiles.map((image) => image.resource_type)));
   // Append the id to the formData
   formData.append('id', id);
   const resp = await fetch(`${BASE_URL}/api/v1/admin/images`, {
@@ -214,8 +214,8 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
       body: formData,
       credentials: 'include',
     });
-
     const result = await response.json();
+
     const image_urls = result.map((image) => image.secure_url);
     const public_ids = result.map((image) => image.public_id);
 
@@ -229,6 +229,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
       additionalImages = result.map((image) => ({
         public_id: image.public_id,
         secure_url: image.secure_url,
+        resource_type: image.resource_type,
       }));
 
       // create new post object with default image url and public id,
@@ -278,7 +279,7 @@ export const uploadRemainingImages = async (imageFiles) => {
 };
 
 // delete image from cloudinary
-export const deleteImage = async (public_id) => {
+export const deleteImage = async (public_id, resource_type) => {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/admin/delete`, {
       method: 'POST',
@@ -286,7 +287,7 @@ export const deleteImage = async (public_id) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ public_id: public_id }),
+      body: JSON.stringify({ public_id: public_id, resource_type: resource_type }),
     });
     const result = await response.json();
 
