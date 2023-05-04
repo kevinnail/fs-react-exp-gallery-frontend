@@ -170,29 +170,6 @@ export default function PostForm({
     setCategoryInput(event.target.value);
   };
 
-  // handle form input changes and update state for display on form /////////////////////////////////////////////////////vvvvvvvvvvvvvvvvvvvvvvvvvv
-  const readAndPreview = async (files) => {
-    const urls = await Promise.all(
-      Array.from(files).map((file) => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = async (event) => {
-            if (file.type.includes('video')) {
-              const thumbnail = await generateVideoThumbnail(file);
-              resolve(thumbnail.url);
-            } else {
-              resolve(event.target.result);
-            }
-          };
-          reader.readAsDataURL(file);
-        });
-      })
-    );
-    setNewImageDataURLs(urls);
-  };
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ^^^^^^^^^^^^^^^^^^^^^^^
-
   // show loading spinner while waiting for posts to load
   if (loading) {
     return <Loading />;
