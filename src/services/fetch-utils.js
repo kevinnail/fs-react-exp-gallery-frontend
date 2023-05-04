@@ -244,6 +244,7 @@ export const uploadImagesAndCreatePost = async (imageFiles, formFunctionMode) =>
       newImages = result.map((image) => ({
         secure_url: image.secure_url,
         public_id: image.public_id,
+        resource_type: image.resource_type,
       }));
       // create edited post object with new images
       editedPost = {
