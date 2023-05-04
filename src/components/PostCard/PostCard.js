@@ -40,7 +40,7 @@ export default function PostCard({
 
       // delete all images from cloudinary
       for (let i = 0; i < postUrls.length; i++) {
-        await deleteImage(postUrls[i].public_id);
+        await deleteImage(postUrls[i].public_id, postUrls[i].resource_type);
       }
 
       // delete the post from my database
