@@ -18,7 +18,15 @@ export default function MainGalleryPostCard({
       <div className="gallery-display-container" key={id}>
         <Link className="gallery-display a-gallery" to={`/main-gallery/${id}`} title={`${title}`}>
           {image_url ? (
-            <img className="gallery-img" src={image_url} alt="edit" />
+            image_url.endsWith('.mp4') ? (
+              <img
+                className="gallery-img"
+                src={`${image_url.replace('.mp4', '.jpg')}#t=0.8`}
+                alt="thumbnail"
+              />
+            ) : (
+              <img className="gallery-img" src={image_url} alt="edit" />
+            )
           ) : (
             <>
               {post.additionalImagesGallery[0] && (

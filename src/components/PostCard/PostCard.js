@@ -40,7 +40,7 @@ export default function PostCard({
 
       // delete all images from cloudinary
       for (let i = 0; i < postUrls.length; i++) {
-        await deleteImage(postUrls[i].public_id);
+        await deleteImage(postUrls[i].public_id, postUrls[i].resource_type);
       }
 
       // delete the post from my database
@@ -59,11 +59,23 @@ export default function PostCard({
     <div className={`post ${post.postDetail.id === deletedRowId ? 'grayed-out' : ''}`} key={id}>
       <Link to={`/main-gallery/${id}`}>
         {image_url ? (
-          <img className="admin-prod-img" src={image_url} alt="edit" />
+          <img
+            className="admin-prod-img"
+            src={image_url.endsWith('.mp4') ? `${image_url.slice(0, -4)}.jpg` : image_url}
+            alt="edit"
+          />
         ) : (
           <>
             {post.additionalImages[0] && (
-              <img className="admin-prod-img" src={post.additionalImages[0].image_url} alt="edit" />
+              <img
+                className="admin-prod-img"
+                src={
+                  post.additionalImages[0].image_url.endsWith('.mp4')
+                    ? `${post.additionalImages[0].image_url.slice(0, -4)}.jpg`
+                    : post.additionalImages[0].image_url
+                }
+                alt="edit"
+              />
             )}
           </>
         )}

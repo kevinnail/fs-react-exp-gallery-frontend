@@ -88,39 +88,45 @@ export default function MainPostDetail() {
               </p>
             </section>
             <div className="gallery-container">
-              <img
-                className="gallery-image"
-                src={imageUrls[currentIndex]}
-                alt={`post-${currentIndex}`}
-                onClick={openModal}
-              />
+              {imageUrls[currentIndex].endsWith('.mp4') ? (
+                <video className="gallery-video" controls>
+                  <source src={imageUrls[currentIndex]} type="video/mp4" />
+                </video>
+              ) : (
+                <img
+                  className="gallery-image"
+                  src={imageUrls[currentIndex].replace('.mp4', '.jpg')}
+                  alt={`post-${currentIndex}`}
+                  onClick={openModal}
+                />
+              )}
               <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 className="modal"
                 overlayClassName="overlay2"
               >
-                <img
-                  className="modal-image"
-                  src={imageUrls[currentIndex]}
-                  alt={`modal-post-${currentIndex}`}
-                  {...swipeHandlers}
-                />
+                {imageUrls[currentIndex].endsWith('.mp4') ? (
+                  <video className="modal-video" controls>
+                    <source src={imageUrls[currentIndex]} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img
+                    className="modal-image"
+                    src={imageUrls[currentIndex].replace('.mp4', '.jpg')}
+                    alt={`modal-post-${currentIndex}`}
+                    {...swipeHandlers}
+                  />
+                )}
                 <button className="modal-close" onClick={closeModal}>
                   x
                 </button>
-                <button
-                  className="modal-navigation previous"
-                  onClick={handlePrevious}
-                  style={{ display: currentIndex === 0 ? 'none' : 'block' }}
-                ></button>{' '}
-                {/* Add this button */}
-                <button
-                  className="modal-navigation next"
-                  onClick={handleNext}
-                  style={{ display: currentIndex === imageUrls.length - 1 ? 'none' : 'block' }}
-                ></button>{' '}
-                {/* Add this button */}
+                {currentIndex > 0 && (
+                  <button className="modal-navigation previous" onClick={handlePrevious}></button>
+                )}
+                {currentIndex < imageUrls.length - 1 && (
+                  <button className="modal-navigation next" onClick={handleNext}></button>
+                )}
               </Modal>
             </div>
             <div className="thumbnail-container">
@@ -128,7 +134,7 @@ export default function MainPostDetail() {
                 <img
                   key={index}
                   className={`thumbnail-gallery ${index === currentIndex ? 'active' : ''}`}
-                  src={imageUrl}
+                  src={imageUrl.endsWith('.mp4') ? imageUrl.replace('.mp4', '.jpg') : imageUrl}
                   alt={`thumbnail-gallery-${index}`}
                   onClick={() => handleThumbnailClick(index)}
                 />

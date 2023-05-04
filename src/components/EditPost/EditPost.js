@@ -40,6 +40,12 @@ export default function EditPost() {
   }
 
   if (error) return <h1>{error}</h1>;
+  const getThumbnailUrl = (mediaUrl) => {
+    if (mediaUrl.endsWith('.mp4')) {
+      return mediaUrl.replace('.mp4', '.jpg');
+    }
+    return mediaUrl;
+  };
 
   //  handleSubmit is called when the user clicks the submit button on the EditPost form
   const handleSubmit = async (post, currentImages, deletedImages) => {
@@ -58,7 +64,7 @@ export default function EditPost() {
         const removedImage = additionalImages.find((image) => image.image_url === removedImageUrl);
 
         if (removedImage) {
-          await deleteImage(removedImage.public_id);
+          await deleteImage(removedImage.public_id, removedImage.resource_type);
           await deleteImageData(id, removedImage.public_id);
         }
       }
@@ -78,6 +84,7 @@ export default function EditPost() {
       additionalImages={additionalImages}
       deletedImagePublicIds={deletedImagePublicIds}
       setDeletedImagePublicIds={setDeletedImagePublicIds}
+      getThumbnailUrl={getThumbnailUrl}
     />
   );
 }
