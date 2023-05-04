@@ -64,7 +64,7 @@ export default function EditPost() {
         const removedImage = additionalImages.find((image) => image.image_url === removedImageUrl);
 
         if (removedImage) {
-          await deleteImage(removedImage.public_id);
+          await deleteImage(removedImage.public_id, removedImage.resource_type);
           await deleteImageData(id, removedImage.public_id);
         }
       }
