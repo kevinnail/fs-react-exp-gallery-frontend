@@ -13,7 +13,6 @@ export default function PostForm({
   category = '',
   submitHandler,
   imageUrls,
-  getThumbnailUrl,
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
@@ -26,35 +25,26 @@ export default function PostForm({
   const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
   const [deletedImages, setDeletedImages] = useState([]);
 
-  const [numFilesSelected, setNumFilesSelected] = useState(0);
-
-  // This function generates a thumbnail for the given video file
-
-  // eslint-disable-next-line no-console
-
-  // not sure if I tried this yet or not:
-  const generateVideoThumbnail = async (file) => {
-    const video = document.createElement('video');
-    video.preload = 'metadata';
-
+  const generateVideoThumbnail = async (videoFile) => {
+    // This function generates a thumbnail for the given video file
     return new Promise((resolve) => {
-      video.onloadedmetadata = () => {
-        window.URL.revokeObjectURL(video.src);
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
+      const video = document.createElement('video');
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      video.src = URL.createObjectURL(videoFile);
 
+      video.addEventListener('loadeddata', () => {
+        canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        const thumbnail = canvas.toDataURL('image/png');
-        resolve({ url: thumbnail, type: 'video' });
-      };
-      video.src = URL.createObjectURL(file);
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
+        resolve({ type: 'video', url: thumbnailUrl });
+      });
     });
   };
 
-  // get all dataURLS and URLS from cloudinary images for display
   const getDisplayImages = () => {
-    return [...newImageDataURLs, ...currentImages.map((imageUrl) => getThumbnailUrl(imageUrl))];
+    return [...newImageDataURLs, ...currentImages];
   };
 
   let newOrEdit = '';
@@ -77,35 +67,17 @@ export default function PostForm({
 
     setLoading(true);
 
-    const newFiles = [];
-    const newDataURLs = [];
+    // check if the selected file is a video and generate a thumbnail
+    if (files[0].type.startsWith('video/')) {
+      const thumbnail = await generateVideoThumbnail(files[0]);
+      setCurrentImages((prevImages) => [...prevImages, thumbnail.url]);
+      setImageFilesInput((prevFiles) => [...prevFiles, files[0]]);
+    } else {
+      // handle image files normally
+      setImageFilesInput([...files]);
+      readAndPreview(files);
+    }
 
-    const promises = Array.from(files).map(async (file) => {
-      // check if the selected file is a video and generate a thumbnail
-      if (file.type.startsWith('video/')) {
-        const thumbnail = await generateVideoThumbnail(file);
-        newFiles.push(file);
-        newDataURLs.push(thumbnail.url);
-      } else {
-        // handle image files normally
-        newFiles.push(file);
-
-        const reader = new FileReader();
-        return new Promise((resolve) => {
-          reader.onload = (event) => {
-            newDataURLs.push(event.target.result);
-            resolve();
-          };
-          reader.readAsDataURL(file);
-        });
-      }
-    });
-
-    await Promise.all(promises);
-
-    setImageFilesInput(newFiles);
-    setNewImageDataURLs(newDataURLs);
-    setNumFilesSelected(newFiles.length); // Set the number of files selected
     setLoading(false);
   };
 
@@ -168,6 +140,29 @@ export default function PostForm({
   const handleCategoryChange = (event) => {
     setCategoryInput(event.target.value);
   };
+
+  // handle form input changes and update state for display on form /////////////////////////////////////////////////////vvvvvvvvvvvvvvvvvvvvvvvvvv
+  const readAndPreview = async (files) => {
+    const urls = await Promise.all(
+      Array.from(files).map((file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = async (event) => {
+            if (file.type.includes('video')) {
+              const thumbnail = await generateVideoThumbnail(file);
+              resolve(thumbnail.url);
+            } else {
+              resolve(event.target.result);
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+      })
+    );
+    setNewImageDataURLs(urls);
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ^^^^^^^^^^^^^^^^^^^^^^^
 
   // show loading spinner while waiting for posts to load
   if (loading) {
@@ -270,16 +265,11 @@ export default function PostForm({
               // Works just fine without it but would be better with a place holder image or required type functionality
               type="file"
               id="image"
-              className="file-upload-btn shadow-border visually-hidden"
+              className="file-upload-btn shadow-border"
               name="image"
               onChange={handleFileInputChange}
               multiple
             />
-            <label htmlFor="image" className="file-upload-label">
-              {numFilesSelected === 0
-                ? 'Choose images or videos'
-                : `${numFilesSelected} file${numFilesSelected > 1 ? 's' : ''} selected`}
-            </label>
           </div>
           {
             //display images selected for upload
