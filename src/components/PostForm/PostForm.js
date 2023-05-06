@@ -31,67 +31,26 @@ export default function PostForm({
   // This function generates a thumbnail for the given video file
 
   // eslint-disable-next-line no-console
-  const generateVideoThumbnail = async (file) => {
-    const video = document.createElement('video');
-    video.src = URL.createObjectURL(file);
-    video.preload = 'auto';
-    video.muted = true;
-
-    const offscreenCanvas = new OffscreenCanvas(1, 1);
-    const offscreenCtx = offscreenCanvas.getContext('2d');
-
-    await new Promise((resolve) => {
-      const checkVideoFrame = () => {
-        offscreenCanvas.width = video.videoWidth;
-        offscreenCanvas.height = video.videoHeight;
-        offscreenCtx.drawImage(video, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
-        const imageData = offscreenCtx.getImageData(0, 0, 1, 1);
-        const [, , , a] = imageData.data;
-
-        if (a !== 0) {
-          resolve();
-        } else {
-          requestAnimationFrame(checkVideoFrame);
-        }
-      };
-
-      video.play().then(() => {
-        // eslint-disable-next-line no-console
-        console.log('Video started playing');
-        checkVideoFrame();
-      });
-    });
-
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(offscreenCanvas, 0, 0, canvas.width, canvas.height);
-    const thumbnailDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-    URL.revokeObjectURL(video.src);
-
-    return thumbnailDataUrl;
-  };
 
   // not sure if I tried this yet or not:
-  // const generateVideoThumbnail = async (file) => {
-  //   const video = document.createElement('video');
-  //   video.preload = 'metadata';
+  const generateVideoThumbnail = async (file) => {
+    const video = document.createElement('video');
+    video.preload = 'metadata';
 
-  //   return new Promise((resolve) => {
-  //     video.onloadedmetadata = () => {
-  //       window.URL.revokeObjectURL(video.src);
-  //       const canvas = document.createElement('canvas');
-  //       canvas.width = video.videoWidth;
+    return new Promise((resolve) => {
+      video.onloadedmetadata = () => {
+        window.URL.revokeObjectURL(video.src);
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
 
-  //       canvas.height = video.videoHeight;
-  //       canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-  //       const thumbnail = canvas.toDataURL('image/png');
-  //       resolve({ url: thumbnail, type: 'video' });
-  //     };
-  //     video.src = URL.createObjectURL(file);
-  //   });
-  // };
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        const thumbnail = canvas.toDataURL('image/png');
+        resolve({ url: thumbnail, type: 'video' });
+      };
+      video.src = URL.createObjectURL(file);
+    });
+  };
 
   // get all dataURLS and URLS from cloudinary images for display
   const getDisplayImages = () => {
