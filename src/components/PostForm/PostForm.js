@@ -41,9 +41,9 @@ export default function PostForm({
       // eslint-disable-next-line no-console
       console.log('Video and canvas elements created');
 
-      video.addEventListener('loadedmetadata', () => {
+      video.addEventListener('canplay', () => {
         // eslint-disable-next-line no-console
-        console.log('Video metadata loaded');
+        console.log('Video can play');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -55,6 +55,7 @@ export default function PostForm({
     });
   };
 
+  // eslint-disable-next-line no-console
   // get all dataURLS and URLS from cloudinary images for display
   const getDisplayImages = () => {
     return [...newImageDataURLs, ...currentImages.map((imageUrl) => getThumbnailUrl(imageUrl))];
