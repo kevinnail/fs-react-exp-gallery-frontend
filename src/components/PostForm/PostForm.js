@@ -31,6 +31,7 @@ export default function PostForm({
   // This function generates a thumbnail for the given video file
   const generateVideoThumbnail = async (videoFile) => {
     // This function generates a thumbnail for the given video file
+    // eslint-disable-next-line no-console
     console.log('Generating thumbnail for video file: ', videoFile);
 
     return new Promise((resolve) => {
@@ -38,15 +39,18 @@ export default function PostForm({
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
       video.src = URL.createObjectURL(videoFile);
+      // eslint-disable-next-line no-console
       console.log('Video and canvas elements created');
       // Wait for the video to be able to play through without stopping
       video.addEventListener('canplaythrough', () => {
         // Seek to 1 second into the video
+        // eslint-disable-next-line no-console
         console.log('Video can play through without stopping');
         video.currentTime = 1;
       });
 
       video.addEventListener('seeked', () => {
+        // eslint-disable-next-line no-console
         console.log('Video seeked to 1 second');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
