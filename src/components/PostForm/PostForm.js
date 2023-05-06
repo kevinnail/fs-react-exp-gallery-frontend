@@ -46,6 +46,8 @@ export default function PostForm({
       checkVideoFrame();
     });
 
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
