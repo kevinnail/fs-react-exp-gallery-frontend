@@ -30,7 +30,8 @@ export default function PostForm({
 
   // This function generates a thumbnail for the given video file
   const generateVideoThumbnail = async (videoFile) => {
-    // This function generates a thumbnail for the given video file
+    // eslint-disable-next-line no-console
+    console.log('Generating thumbnail for video file: ', videoFile);
 
     return new Promise((resolve) => {
       const video = document.createElement('video');
@@ -40,18 +41,12 @@ export default function PostForm({
       // eslint-disable-next-line no-console
       console.log('Video and canvas elements created');
 
-      video.addEventListener('loadedmetadata', () => {
-        // eslint-disable-next-line no-console
-        console.log('Video metadata loaded');
-        video.currentTime = 1;
-      });
+      const checkVideoReady = () => {
+        if (video.readyState >= 2) {
+          // eslint-disable-next-line no-console
+          console.log('Video data is ready');
+          video.currentTime = 1;
 
-      // Listen for the timeupdate event instead of the seeked event
-      video.addEventListener('timeupdate', () => {
-        // eslint-disable-next-line no-console
-        console.log('Video time updated');
-        if (video.currentTime >= 1) {
-          video.pause(); // Pause the video to stop time updates
           canvas.width = video.videoWidth;
           canvas.height = video.videoHeight;
           context.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -59,8 +54,12 @@ export default function PostForm({
           // eslint-disable-next-line no-console
           console.log('Thumbnail URL generated: ', thumbnailUrl);
           resolve({ type: 'video', url: thumbnailUrl });
+        } else {
+          requestAnimationFrame(checkVideoReady);
         }
-      });
+      };
+
+      requestAnimationFrame(checkVideoReady);
     });
   };
 
