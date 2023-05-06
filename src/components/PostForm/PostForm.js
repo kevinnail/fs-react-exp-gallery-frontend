@@ -42,16 +42,17 @@ export default function PostForm({
       // eslint-disable-next-line no-console
       console.log('Video and canvas elements created');
       // Wait for the video to be able to play through without stopping
-      video.addEventListener('loadedmetadata', () => {
-        // Seek to 1 second into the video
-        // eslint-disable-next-line no-console
-        console.log('Video metadata loaded');
-        video.currentTime = 1;
-      });
 
-      video.addEventListener('seeked', () => {
+      // video.addEventListener('loadedmetadata', () => {
+      //   // Seek to 1 second into the video
+      //   // eslint-disable-next-line no-console
+      //   console.log('Video metadata loaded');
+      //   video.currentTime = 1;
+      // });
+
+      video.addEventListener('loadeddata', () => {
         // eslint-disable-next-line no-console
-        console.log('Video seeked to 1 second');
+        console.log('Video data loaded');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
