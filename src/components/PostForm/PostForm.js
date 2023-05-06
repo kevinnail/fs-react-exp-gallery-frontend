@@ -56,6 +56,7 @@ export default function PostForm({
         canvas.height = video.videoHeight;
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         const thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
+        // eslint-disable-next-line no-console
         console.log('Thumbnail URL generated: ', thumbnailUrl);
         resolve({ type: 'video', url: thumbnailUrl });
       });
