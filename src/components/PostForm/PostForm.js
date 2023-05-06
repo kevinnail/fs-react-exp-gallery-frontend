@@ -29,26 +29,49 @@ export default function PostForm({
   const [numFilesSelected, setNumFilesSelected] = useState(0);
 
   // This function generates a thumbnail for the given video file
-  const generateVideoThumbnail = (file) => {
-    return new Promise((resolve, reject) => {
-      const video = document.createElement('video');
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+  const generateVideoThumbnail = async (file) => {
+    const video = document.createElement('video');
+    video.src = URL.createObjectURL(file);
+    video.preload = 'metadata';
 
-      video.addEventListener('loadeddata', () => {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const thumbnail = canvas.toDataURL('image/png');
-        resolve({ url: thumbnail, type: 'video' });
+    const waitForEvent = (element, eventName) =>
+      new Promise((resolve) => element.addEventListener(eventName, resolve, { once: true }));
+
+    const waitForReadyState = (element, state) =>
+      new Promise((resolve) => {
+        if (element.readyState >= state) {
+          resolve();
+        } else {
+          element.addEventListener(
+            'readystatechange',
+            () => {
+              if (element.readyState >= state) {
+                resolve();
+              }
+            },
+            { once: true }
+          );
+        }
       });
 
-      video.addEventListener('error', (err) => {
-        reject(err);
-      });
+    await Promise.all([
+      waitForEvent(video, 'loadedmetadata'),
+      waitForReadyState(video, 2), // Ready state 2 is when the video's current data is available
+    ]);
 
-      video.src = URL.createObjectURL(file);
-    });
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const thumbnailDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+    URL.revokeObjectURL(video.src);
+
+    return {
+      type: 'video',
+      url: thumbnailDataUrl,
+    };
   };
 
   // eslint-disable-next-line no-console
