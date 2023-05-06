@@ -34,15 +34,23 @@ export default function PostForm({
     video.preload = 'metadata';
 
     return new Promise((resolve, reject) => {
-      video.onloadedmetadata = () => {
-        window.URL.revokeObjectURL(video.src);
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        const thumbnail = canvas.toDataURL('image/jpg');
-        resolve({ url: thumbnail, type: 'video' });
+      video.onloadeddata = () => {
+        const checkVideoReady = () => {
+          if (video.readyState >= 2) {
+            window.URL.revokeObjectURL(video.src);
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const thumbnail = canvas.toDataURL('image/png');
+            resolve({ url: thumbnail, type: 'video' });
+          } else {
+            requestAnimationFrame(checkVideoReady);
+          }
+        };
+        checkVideoReady();
       };
+
       video.onerror = reject;
       video.src = URL.createObjectURL(file);
     });
