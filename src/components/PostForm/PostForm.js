@@ -42,10 +42,10 @@ export default function PostForm({
       // eslint-disable-next-line no-console
       console.log('Video and canvas elements created');
       // Wait for the video to be able to play through without stopping
-      video.addEventListener('canplaythrough', () => {
+      video.addEventListener('loadedmetadata', () => {
         // Seek to 1 second into the video
         // eslint-disable-next-line no-console
-        console.log('Video can play through without stopping');
+        console.log('Video metadata loaded');
         video.currentTime = 1;
       });
 
