@@ -32,46 +32,29 @@ export default function PostForm({
   const generateVideoThumbnail = async (file) => {
     const video = document.createElement('video');
     video.src = URL.createObjectURL(file);
-    video.preload = 'metadata';
+    video.preload = 'auto';
+    video.muted = true;
 
-    const waitForEvent = (element, eventName) =>
-      new Promise((resolve) => element.addEventListener(eventName, resolve, { once: true }));
-
-    const waitForReadyState = (element, state) =>
-      new Promise((resolve) => {
-        if (element.readyState >= state) {
+    await new Promise((resolve) => {
+      const checkVideoFrame = () => {
+        if (video.videoWidth > 0 && video.videoHeight > 0) {
           resolve();
         } else {
-          element.addEventListener(
-            'readystatechange',
-            () => {
-              if (element.readyState >= state) {
-                resolve();
-              }
-            },
-            { once: true }
-          );
+          requestAnimationFrame(checkVideoFrame);
         }
-      });
-
-    await Promise.all([
-      waitForEvent(video, 'loadedmetadata'),
-      waitForReadyState(video, 2), // Ready state 2 is when the video's current data is available
-    ]);
+      };
+      checkVideoFrame();
+    });
 
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const thumbnailDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-
+    const thumbnailDataUrl = canvas.toDataURL('image/jpeg', 0.8);
     URL.revokeObjectURL(video.src);
 
-    return {
-      type: 'video',
-      url: thumbnailDataUrl,
-    };
+    return thumbnailDataUrl;
   };
 
   // eslint-disable-next-line no-console
