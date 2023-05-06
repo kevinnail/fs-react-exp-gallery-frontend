@@ -41,7 +41,9 @@ export default function EditPost() {
 
   if (error) return <h1>{error}</h1>;
   const getThumbnailUrl = (mediaUrl) => {
-    if (mediaUrl.endsWith('.mp4')) {
+    if (mediaUrl.endsWith('.mov')) {
+      return mediaUrl.replace('.mov', '.jpg');
+    } else if (mediaUrl.endsWith('.mp4')) {
       return mediaUrl.replace('.mp4', '.jpg');
     }
     return mediaUrl;

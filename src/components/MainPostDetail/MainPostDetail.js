@@ -52,6 +52,32 @@ export default function MainPostDetail() {
     setUser(null);
   };
 
+  const getThumbnailUrl = (url) => {
+    if (url.endsWith('.mp4')) {
+      return url.replace('.mp4', '.jpg');
+    } else if (url.endsWith('.mov')) {
+      return url.replace('.mov', '.jpg');
+    } else {
+      return url;
+    }
+  };
+
+  const renderGalleryItem = (url, currentIndex) => {
+    if (url.endsWith('.mp4') || url.endsWith('.mov')) {
+      const videoType = url.endsWith('.mp4') ? 'video/mp4' : 'video/mov';
+
+      return (
+        <video className="gallery-video" controls>
+          <source src={url} type={videoType} />
+        </video>
+      );
+    } else {
+      return (
+        <img className="gallery-image" src={url} alt={`post-${currentIndex}`} onClick={openModal} />
+      );
+    }
+  };
+
   return (
     <>
       <div className="post-detail-div-wrapper">
@@ -88,9 +114,10 @@ export default function MainPostDetail() {
               </p>
             </section>
             <div className="gallery-container">
-              {imageUrls[currentIndex].endsWith('.mp4') ? (
+              {/* {imageUrls[currentIndex].endsWith('.mp4') ? (
                 <video className="gallery-video" controls>
                   <source src={imageUrls[currentIndex]} type="video/mp4" />
+                  <source src={imageUrls[currentIndex]} type="video/mov" />
                 </video>
               ) : (
                 <img
@@ -99,7 +126,8 @@ export default function MainPostDetail() {
                   alt={`post-${currentIndex}`}
                   onClick={openModal}
                 />
-              )}
+              )} */}
+              {renderGalleryItem(imageUrls[currentIndex], currentIndex)}
               <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
@@ -109,6 +137,7 @@ export default function MainPostDetail() {
                 {imageUrls[currentIndex].endsWith('.mp4') ? (
                   <video className="modal-video" controls>
                     <source src={imageUrls[currentIndex]} type="video/mp4" />
+                    <source src={imageUrls[currentIndex]} type="video/mov" />
                   </video>
                 ) : (
                   <img
@@ -134,7 +163,7 @@ export default function MainPostDetail() {
                 <img
                   key={index}
                   className={`thumbnail-gallery ${index === currentIndex ? 'active' : ''}`}
-                  src={imageUrl.endsWith('.mp4') ? imageUrl.replace('.mp4', '.jpg') : imageUrl}
+                  src={getThumbnailUrl(imageUrl)}
                   alt={`thumbnail-gallery-${index}`}
                   onClick={() => handleThumbnailClick(index)}
                 />

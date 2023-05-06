@@ -31,23 +31,28 @@ export default function PostForm({
   // This function generates a thumbnail for the given video file
   const generateVideoThumbnail = async (videoFile) => {
     // This function generates a thumbnail for the given video file
+    console.log('Generating thumbnail for video file: ', videoFile);
+
     return new Promise((resolve) => {
       const video = document.createElement('video');
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
       video.src = URL.createObjectURL(videoFile);
-
+      console.log('Video and canvas elements created');
       // Wait for the video to be able to play through without stopping
       video.addEventListener('canplaythrough', () => {
         // Seek to 1 second into the video
+        console.log('Video can play through without stopping');
         video.currentTime = 1;
       });
 
       video.addEventListener('seeked', () => {
+        console.log('Video seeked to 1 second');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         const thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
+        console.log('Thumbnail URL generated: ', thumbnailUrl);
         resolve({ type: 'video', url: thumbnailUrl });
       });
     });

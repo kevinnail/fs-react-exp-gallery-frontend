@@ -36,12 +36,7 @@ export default function Header() {
           <img className="logo" src="../logo-sq.png" />
         </Link>
         <h1 className="title">Stress Less Glass</h1>
-        {user && (
-          <p className="username">
-            Logged in as:
-            {user.email}
-          </p>
-        )}
+        {user && <p className="username">Logged in as: {user.email}</p>}
 
         <div className="header-section">
           <img

@@ -22,11 +22,23 @@ export function useGalleryPost(id) {
         const additionalImageUrlsPublicIds = additionalImagesGallery.map(
           (image) => image.image_url
         );
+        const transformedUrls = additionalImageUrlsPublicIds.map((url) => {
+          if (url.endsWith('.mov') || url.endsWith('.mp4')) {
+            const [version, folder, filename] = url.split('/').slice(-3);
+            const transformedUrl = `https://res.cloudinary.com/dxmizigwh/video/upload/f_auto/${version}/${folder}/${filename}`;
+            // const transformedUrl = url.replace('.mov', '.webm').replace('.mp4', '.webm');
+            return transformedUrl;
+          }
+          return url;
+        });
+
+        // console.log('transformedUrls', transformedUrls);
 
         setAdditionalImagesGallery(additionalImagesGallery);
 
         setPostDetail(data);
-        setImageUrls([...additionalImageUrlsPublicIds]);
+        // setImageUrls([...additionalImageUrlsPublicIds]);
+        setImageUrls([...transformedUrls]);
         setLoading(false);
       } catch (e) {
         setError(e.message);
