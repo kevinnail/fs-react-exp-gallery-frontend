@@ -29,42 +29,30 @@ export default function PostForm({
   const [numFilesSelected, setNumFilesSelected] = useState(0);
 
   // This function generates a thumbnail for the given video file
-  const generateVideoThumbnail = async (videoFile) => {
-    // eslint-disable-next-line no-console
-    console.log('Generating thumbnail for video file: ', videoFile);
+  const generateVideoThumbnail = async (file) => {
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.muted = true;
 
-    return new Promise((resolve) => {
-      const video = document.createElement('video');
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      video.src = URL.createObjectURL(videoFile);
-      // eslint-disable-next-line no-console
-      console.log('Video and canvas elements created');
-
-      video.addEventListener('loadeddata', () => {
-        // eslint-disable-next-line no-console
-        console.log('Video data is ready');
-
-        const checkVideoReady = () => {
-          if (video.readyState >= 2) {
-            // eslint-disable-next-line no-console
-            console.log('Video first frame is ready');
-            video.currentTime = 1;
-
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
-            // eslint-disable-next-line no-console
-            console.log('Thumbnail URL generated: ', thumbnailUrl);
-            resolve({ type: 'video', url: thumbnailUrl });
-          } else {
-            requestAnimationFrame(checkVideoReady);
-          }
-        };
-
-        requestAnimationFrame(checkVideoReady);
+    return new Promise((resolve, reject) => {
+      video.addEventListener('loadedmetadata', () => {
+        video.currentTime = 1;
       });
+
+      video.addEventListener('timeupdate', () => {
+        if (video.readyState >= 2) {
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+          const thumbnail = canvas.toDataURL('image/png');
+          window.URL.revokeObjectURL(video.src);
+          resolve({ url: thumbnail, type: 'video' });
+        }
+      });
+
+      video.onerror = reject;
+      video.src = URL.createObjectURL(file);
     });
   };
 
