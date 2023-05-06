@@ -40,7 +40,7 @@ export default function PostForm({
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        const thumbnail = canvas.toDataURL('image/png');
+        const thumbnail = canvas.toDataURL('image/jpg');
         resolve({ url: thumbnail, type: 'video' });
       };
       video.onerror = reject;
