@@ -29,29 +29,24 @@ export default function PostForm({
   const [numFilesSelected, setNumFilesSelected] = useState(0);
 
   // This function generates a thumbnail for the given video file
-  const generateVideoThumbnail = async (file) => {
-    const video = document.createElement('video');
-    video.preload = 'metadata';
-    video.muted = true;
-
+  const generateVideoThumbnail = (file) => {
     return new Promise((resolve, reject) => {
-      video.addEventListener('loadedmetadata', () => {
-        video.currentTime = 1;
+      const video = document.createElement('video');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      video.addEventListener('loadeddata', () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const thumbnail = canvas.toDataURL('image/png');
+        resolve({ url: thumbnail, type: 'video' });
       });
 
-      video.addEventListener('timeupdate', () => {
-        if (video.readyState >= 2) {
-          const canvas = document.createElement('canvas');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-          const thumbnail = canvas.toDataURL('image/png');
-          window.URL.revokeObjectURL(video.src);
-          resolve({ url: thumbnail, type: 'video' });
-        }
+      video.addEventListener('error', (err) => {
+        reject(err);
       });
 
-      video.onerror = reject;
       video.src = URL.createObjectURL(file);
     });
   };
