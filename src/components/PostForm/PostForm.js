@@ -32,37 +32,42 @@ export default function PostForm({
 
   // eslint-disable-next-line no-console
   const generateVideoThumbnail = async (file) => {
-    // eslint-disable-next-line no-console
-    console.log('Generating thumbnail for video file:', file);
     const video = document.createElement('video');
     video.src = URL.createObjectURL(file);
     video.preload = 'auto';
     video.muted = true;
 
+    const offscreenCanvas = new OffscreenCanvas(1, 1);
+    const offscreenCtx = offscreenCanvas.getContext('2d');
+
     await new Promise((resolve) => {
-      video.addEventListener('play', () => {
+      const checkVideoFrame = () => {
+        offscreenCanvas.width = video.videoWidth;
+        offscreenCanvas.height = video.videoHeight;
+        offscreenCtx.drawImage(video, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
+        const imageData = offscreenCtx.getImageData(0, 0, 1, 1);
+        const [, , , a] = imageData.data;
+
+        if (a !== 0) {
+          resolve();
+        } else {
+          requestAnimationFrame(checkVideoFrame);
+        }
+      };
+
+      video.play().then(() => {
         // eslint-disable-next-line no-console
-        console.log('Video play event fired');
-        resolve();
+        console.log('Video started playing');
+        checkVideoFrame();
       });
-      // eslint-disable-next-line no-console
-      // eslint-disable-next-line no-console
-      console.log('Calling video.play()');
-      video.play();
     });
 
-    // eslint-disable-next-line no-console
-    console.log('Video and canvas elements created');
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
-    // eslint-disable-next-line no-console
-    console.log('Drawing video frame onto canvas');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(offscreenCanvas, 0, 0, canvas.width, canvas.height);
     const thumbnailDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-    // eslint-disable-next-line no-console
-    console.log('Thumbnail data URL generated');
     URL.revokeObjectURL(video.src);
 
     return thumbnailDataUrl;
