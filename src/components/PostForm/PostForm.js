@@ -35,18 +35,20 @@ export default function PostForm({
     video.preload = 'auto';
     video.muted = true;
 
+    const isVideoReady = () => {
+      return video.readyState === 4;
+    };
+
     await new Promise((resolve) => {
-      const checkVideoFrame = () => {
-        if (video.videoWidth > 0 && video.videoHeight > 0) {
+      const checkVideoReady = () => {
+        if (isVideoReady()) {
           resolve();
         } else {
-          requestAnimationFrame(checkVideoFrame);
+          setTimeout(checkVideoReady, 100);
         }
       };
-      checkVideoFrame();
+      checkVideoReady();
     });
-
-    await new Promise((resolve) => setTimeout(resolve, 200));
 
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
