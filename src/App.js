@@ -12,6 +12,7 @@ import MainGallery from './components/MainGallery/MainGallery.js';
 import MainPostDetail from './components/MainPostDetail/MainPostDetail.js';
 import AboutMe from './components/AboutMe/AboutMe.js';
 import SearchResults from './components/SearchResults/SearchResults.js';
+import CreatorProfile from './components/CreatorProfile/CreatorProfile.js';
 
 function App() {
   const { user } = useUser();
@@ -28,6 +29,7 @@ function App() {
           <Route path="/gallery/:id" component={PostDetail} />
           <Route path="/gallery" component={Gallery} />
           <Route path="/about-me" component={AboutMe} />
+          <Route path="/creator-profile" component={CreatorProfile} />
           <Route path="/admin/new" component={NewPost} />
           <Route exact path="/admin/:id" component={EditPost} />
           <Route path="/admin" component={Admin} />
