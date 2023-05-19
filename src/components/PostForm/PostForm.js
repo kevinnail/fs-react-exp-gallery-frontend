@@ -275,7 +275,6 @@ export default function PostForm({
               name="image"
               onChange={handleFileInputChange}
               multiple
-              accept="image/*,video/*"
             />
             <label htmlFor="image" className="file-upload-label">
               {numFilesSelected === 0
@@ -288,13 +287,9 @@ export default function PostForm({
           }
           {getDisplayImages().length > 0 ? (
             <div className="thumbnails-container">
-              {getDisplayImages().map((item, index) => (
+              {getDisplayImages().map((url, index) => (
                 <div key={index} className="thumbnail-wrapper">
-                  {item.type.startsWith('video/') ? (
-                    <video className="thumbnail" src={item.url} controls />
-                  ) : (
-                    <img className="thumbnail" src={item.url} alt={`Selected file ${index + 1}`} />
-                  )}
+                  <img className="thumbnail" src={url} alt={`Selected image ${index + 1}`} />
                   <button
                     type="button" // Add this to prevent the button from submitting the form
                     className="delete-button-form"
