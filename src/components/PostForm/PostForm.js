@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useUser } from '../../hooks/useUser.js';
-import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
+import { postAddImages, uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
@@ -25,22 +25,14 @@ export default function PostForm({
   const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
   const [deletedImages, setDeletedImages] = useState([]);
 
-  const generateVideoThumbnail = async (videoFile) => {
-    // This function generates a thumbnail for the given video file
-    return new Promise((resolve) => {
-      const video = document.createElement('video');
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      video.src = URL.createObjectURL(videoFile);
+  const generateVideoThumbnail = async (file) => {
+    // Upload the video to Cloudinary first
+    const videoUrl = await postAddImages(file);
 
-      video.addEventListener('loadeddata', () => {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
-        resolve({ type: 'video', url: thumbnailUrl });
-      });
-    });
+    // Replace the video file extension with .jpg to generate the thumbnail URL
+    const thumbnailUrl = videoUrl.replace(/\.(mp4|mov|avi|wmv|flv|webm|mkv)$/i, '.jpg');
+
+    return thumbnailUrl;
   };
 
   const getDisplayImages = () => {
