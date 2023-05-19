@@ -1,11 +1,4 @@
 .btn-adjust {
-  /* position: relative; */
-  /* top: 20px;
-  left: 20px; */
-  /* height: 40px; */
-  /* bottom: unset; */
-  /* position: relative; */
-  /* background-color: unset; */
 }
 
 .gallery-display-container {
@@ -43,11 +36,9 @@
   top: 0px;
   font-family: 'Shadows Into Light', cursive;
   padding: 0;
-  /* width: 400px; */
   transition: 300ms;
 }
 
-/* postCard image- needs to match the width of the gallery-display-container line 1 */
 .gallery-img {
   max-width: 190px;
   transition: 300ms;
@@ -56,14 +47,10 @@
 .gallery-title {
   display: inline;
   margin: 0 0 5px 0;
-  /* font-size: 1.3rem; */
   font-size: 1rem;
   font-weight: bold;
-  /* color: rgb(187, 187, 187); */
-  /* text-shadow: 0 0 2px #ff00005f; */
   padding: 0px;
   height: 1rem;
-  /* line-height: 1.5rem; */
   transition: 300ms;
   white-space: nowrap;
   overflow: hidden;
@@ -76,7 +63,6 @@
 }
 
 .gallery-desc {
-  /* font-size: 1rem; */
   font-size: 0.8rem;
   font-weight: 600;
   color: rgba(179, 179, 179, 0.512);
@@ -106,14 +92,12 @@
   padding: 0px 8px;
   border-radius: 5px;
   margin: 3px 0 0 0;
-  /* display: inline-block; */
   height: 1.7rem;
   line-height: 1rem;
   transition: 300ms;
   font-family: 'Roboto', sans-serif;
   color: #ffffdbe3;
   display: inline-block;
-  /* width: 100%; */
   border: 1px solid #ffffdbe3;
   background-color: #2f00ff83;
   display: grid;
@@ -127,14 +111,12 @@
   padding: 0px 8px;
   border-radius: 5px;
   margin: 3px 0 0 0;
-  /* display: inline-block; */
   height: 1.7rem;
   line-height: 1rem;
   transition: 300ms;
   font-family: 'Roboto', sans-serif;
   color: #ffffdbe3;
   display: inline;
-  /* width: 100%; */
 }
 
 .gallery-detail-container {
@@ -218,14 +200,4 @@
     font-size: 1rem;
     transition: 300ms;
   }
-  /* .btn-adjust {
-    position: relative;
-    top: 20px;
-    left: 20px;
-  } */
 }
-/* @media (min-width: 1024px) {
-  .back-btn {
-    display: none;
-  }
-} */

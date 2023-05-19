@@ -38,13 +38,7 @@ export default function PostDetail() {
 
   // show loading spinner while waiting for posts to load
   if (loading) {
-    return (
-      // <div className="loading-div">
-      //   as;ljfka;lsdjk;asd;flkjasdf;lkjasdf;lkjasdf;lkjasdf;lkjasdf;lkjasdf;lkj
-      //   <img className="loading" src="../logo-sq.png" />
-      // </div>
-      <Loading />
-    );
+    return <Loading />;
   }
 
   return (

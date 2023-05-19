@@ -13,6 +13,7 @@ export default function PostForm({
   category = '',
   submitHandler,
   imageUrls,
+  getThumbnailUrl,
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
@@ -25,8 +26,36 @@ export default function PostForm({
   const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
   const [deletedImages, setDeletedImages] = useState([]);
 
+  const [numFilesSelected, setNumFilesSelected] = useState(0);
+
+  // This function generates a thumbnail for the given video file
+  const generateVideoThumbnail = async (videoFile) => {
+    // This function generates a thumbnail for the given video file
+    return new Promise((resolve) => {
+      const video = document.createElement('video');
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      video.src = URL.createObjectURL(videoFile);
+
+      // Wait for the video to be able to play through without stopping
+      video.addEventListener('canplaythrough', () => {
+        // Seek to 1 second into the video
+        video.currentTime = 1;
+      });
+
+      video.addEventListener('seeked', () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
+        resolve({ type: 'video', url: thumbnailUrl });
+      });
+    });
+  };
+
+  // get all dataURLS and URLS from cloudinary images for display
   const getDisplayImages = () => {
-    return [...newImageDataURLs, ...currentImages];
+    return [...newImageDataURLs, ...currentImages.map((imageUrl) => getThumbnailUrl(imageUrl))];
   };
 
   let newOrEdit = '';
@@ -40,16 +69,61 @@ export default function PostForm({
   }
 
   // handle and parse images for display in the form onChange
-  const handleFileInputChange = (event) => {
-    setImageFilesInput([...event.target.files]);
-    readAndPreview(event.target.files);
+  const handleFileInputChange = async (event) => {
+    const files = event.target.files;
+
+    if (files.length === 0) {
+      return;
+    }
+
+    setLoading(true);
+
+    const newFiles = [];
+    const newDataURLs = [];
+
+    const promises = Array.from(files).map(async (file) => {
+      // check if the selected file is a video and generate a thumbnail
+      if (file.type.startsWith('video/')) {
+        const thumbnail = await generateVideoThumbnail(file);
+        newFiles.push(file);
+        newDataURLs.push(thumbnail.url);
+      } else {
+        // handle image files normally
+        newFiles.push(file);
+
+        const reader = new FileReader();
+        return new Promise((resolve) => {
+          reader.onload = (event) => {
+            newDataURLs.push(event.target.result);
+            resolve();
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    });
+
+    await Promise.all(promises);
+
+    setImageFilesInput(newFiles);
+    setNewImageDataURLs(newDataURLs);
+    setNumFilesSelected(newFiles.length); // Set the number of files selected
+    setLoading(false);
   };
 
   const handleImageDelete = (index) => {
+    // if the image is a newly created one...
+    // filter out the deleted DataURL from newImageDataURLs array
+    // by index which are used for display in the form
+    // filter out the deleted image from the ImageFilesInput array so it's not uploaded
     if (index < newImageDataURLs.length) {
       setNewImageDataURLs((prevDataURLs) => prevDataURLs.filter((_, i) => i !== index));
       setImageFilesInput((prevFiles) => prevFiles.filter((_, i) => i !== index));
     } else {
+      // if the image is an existing one...
+      // filter out deleted image URL from currentImages and assign new array newCurrentImages
+      // find URL of deleted image in CurrentImages and assign it to removedImagesUrl
+      // append the newly deleted images with the deletedImages array
+      // return new currentImages array
       setCurrentImages((prevImages) => {
         const newCurrentImages = prevImages.filter((_, i) => i !== index - newImageDataURLs.length);
         const removedImageUrl = prevImages[index - newImageDataURLs.length];
@@ -95,64 +169,6 @@ export default function PostForm({
   const handleCategoryChange = (event) => {
     setCategoryInput(event.target.value);
   };
-
-  // handle form input changes and update state for display on form /////////////////////////////////////////////////////vvvvvvvvvvvvvvvvvvvvvvvvvv
-  // const readAndPreview = async (files) => {
-  //   const urls = await Promise.all(
-  //     Array.from(files).map((file) => {
-  //       return new Promise((resolve) => {
-  //         const reader = new FileReader();
-  //         reader.onload = (event) => {
-  //           resolve(event.target.result);
-  //         };
-  //         reader.readAsDataURL(file);
-  //       });
-  //     })
-  //   );
-  //   setNewImageDataURLs(urls);
-  // };
-  // old works^^^^
-  function generateVideoThumbnail(file, callback) {
-    const video = document.createElement('video');
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    const url = URL.createObjectURL(file);
-
-    video.src = url;
-
-    video.addEventListener('loadeddata', () => {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-      const thumbnailDataURL = canvas.toDataURL();
-      callback(thumbnailDataURL);
-      URL.revokeObjectURL(url);
-    });
-  }
-
-  const readAndPreview = async (files) => {
-    const urlsAndTypes = await Promise.all(
-      Array.from(files).map((file) => {
-        return new Promise((resolve) => {
-          const isVideo = file.type.startsWith('video/');
-          if (isVideo) {
-            generateVideoThumbnail(file, (thumbnailDataURL) => {
-              resolve({ url: thumbnailDataURL, type: file.type });
-            });
-          } else {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              resolve({ url: event.target.result, type: file.type });
-            };
-            reader.readAsDataURL(file);
-          }
-        });
-      })
-    );
-    setNewImageDataURLs(urlsAndTypes);
-  };
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ^^^^^^^^^^^^^^^^^^^^^^^
 
   // show loading spinner while waiting for posts to load
   if (loading) {
@@ -255,12 +271,17 @@ export default function PostForm({
               // Works just fine without it but would be better with a place holder image or required type functionality
               type="file"
               id="image"
-              className="file-upload-btn shadow-border"
+              className="file-upload-btn shadow-border visually-hidden"
               name="image"
               onChange={handleFileInputChange}
               multiple
               accept="image/*,video/*"
             />
+            <label htmlFor="image" className="file-upload-label">
+              {numFilesSelected === 0
+                ? 'Choose images or videos'
+                : `${numFilesSelected} file${numFilesSelected > 1 ? 's' : ''} selected`}
+            </label>
           </div>
           {
             //display images selected for upload

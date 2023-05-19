@@ -3,15 +3,7 @@ import { Link } from 'react-router-dom';
 import { usePost } from '../../hooks/usePost.js';
 import './GalleryPostCard.css';
 
-export default function GalleryPostCard({
-  id,
-  title,
-  image_url,
-  price,
-  // posts,
-  // description, //commented just for now
-  // category, //commented just for now
-}) {
+export default function GalleryPostCard({ id, title, image_url, price }) {
   const post = usePost(id);
 
   return (
