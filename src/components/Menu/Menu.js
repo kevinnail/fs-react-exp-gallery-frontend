@@ -23,6 +23,10 @@ export default function Menu({ handleClick }) {
             <span className="new-post-span">New Post</span>{' '}
             {<img className="new-post-icon" src="../upload-1.png" />}
           </NavLink>
+          <NavLink className="new-link" to="/creator-profile" title="Creator Profile">
+            <span className="new-post-span">Creator Profile</span>{' '}
+            {<img className="new-post-icon" src="../upload-1.png" />}
+          </NavLink>
           <button
             title="Sign Out"
             className={`signout-button 
