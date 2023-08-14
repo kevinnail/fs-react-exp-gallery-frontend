@@ -5,11 +5,12 @@ import { useGalleryPosts } from '../../hooks/useGalleryPosts.js';
 import Menu from '../Menu/Menu.js';
 import { useUser } from '../../hooks/useUser.js';
 import { signOut } from '../../services/auth.js';
-import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
+// import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
 
 export default function Inventory() {
   const { posts, loading } = useGalleryPosts();
   const { setUser } = useUser();
+  // eslint-disable-next-line no-console
   console.log('posts', posts);
 
   if (loading) {
