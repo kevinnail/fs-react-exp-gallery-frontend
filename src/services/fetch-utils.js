@@ -1,6 +1,7 @@
-// const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
+/// urls for both local and deployed
+const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
 // const BASE_URL = 'http://localhost:7890';
-const BASE_URL = ''; // for netlify
+// const BASE_URL = ''; // for netlify
 
 /* Auth related functions */
 export async function getUser() {
@@ -394,4 +395,27 @@ export async function searchGalleryPosts(searchTerm) {
 
   const msg = await resp.json();
   return msg;
+}
+
+export async function downloadInventoryCSV() {
+  // console.log('hi');
+  const data = await fetch(`${BASE_URL}/api/v1/admin/download-inventory-csv`, {
+    credentials: 'include',
+  })
+    .then((response) => {
+      return response.blob();
+    })
+    .then((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'inventory.csv';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
+    .catch((error) => {
+      console.error('Error during fetch or download:', error);
+    });
+
+  return data;
 }
