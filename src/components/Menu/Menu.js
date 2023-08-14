@@ -1,10 +1,16 @@
 import React from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
+import { downloadInventoryCSV } from '../../services/fetch-utils.js';
 
 export default function Menu({ handleClick }) {
   const { user } = useUser();
   const { id } = useParams();
+
+  const handleDownloadCSV = () => {
+    downloadInventoryCSV();
+  };
+
   return (
     <>
       <NavLink className="new-link" to="/main-gallery" title="Gallery">
@@ -23,10 +29,15 @@ export default function Menu({ handleClick }) {
             <span className="new-post-span">New Post</span>{' '}
             {<img className="new-post-icon" src="../upload-1.png" />}
           </NavLink>
-          <NavLink className="new-link" to="/creator-profile" title="Creator Profile">
-            <span className="new-post-span">Creator Profile</span>{' '}
+          <button
+            className="new-link download-button"
+            title="Download Inventory CSV"
+            onClick={handleDownloadCSV}
+          >
+            <span className="new-post-span">Inventory</span>{' '}
             {<img className="new-post-icon" src="../upload-1.png" />}
-          </NavLink>
+          </button>
+
           <button
             title="Sign Out"
             className={`signout-button 
