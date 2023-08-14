@@ -399,7 +399,7 @@ export async function searchGalleryPosts(searchTerm) {
 
 export async function downloadInventoryCSV() {
   // console.log('hi');
-  const data = await fetch('http://localhost:7890/api/v1/admin/download-inventory-csv', {
+  const data = await fetch(`${BASE_URL}/api/v1/admin/download-inventory-csv`, {
     credentials: 'include',
   })
     .then((response) => {
