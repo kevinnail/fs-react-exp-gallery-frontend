@@ -23,3 +23,6 @@
   object-fit: cover;
   margin: 0 auto;
 }
+.download-button {
+  cursor: pointer;
+}
