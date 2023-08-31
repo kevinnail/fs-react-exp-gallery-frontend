@@ -25,7 +25,13 @@ export default function MainGallery() {
       <div className="menu-search-container">
         <Menu handleClick={handleClick} />
       </div>
-
+      <div className="up-top-msg">
+        <span>Please hit me up with offers or questions! </span>
+        <span>
+          <a href="mailto:kevin@kevinnail.com">Email</a> or{' '}
+          <a href="https://www.instagram.com/stresslessglass">DM</a> me!
+        </span>
+      </div>
       <div className="gallery-list-container">
         {posts.map((post) => (
           <MainGalleryPostCard key={post.id} {...post} posts={posts} />
