@@ -281,7 +281,7 @@ body {
     display: block;
   }
   .admin-container {
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 200px 1fr 250px;
     grid-template-rows: 1fr;
   }
   .admin-panel-section {

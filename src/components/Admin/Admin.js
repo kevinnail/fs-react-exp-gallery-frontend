@@ -7,6 +7,7 @@ import './Admin.css';
 import { signOut } from '../../services/auth.js';
 import Menu from '../Menu/Menu.js';
 import Loading from '../Loading/Loading.js';
+import Inventory from '../Inventory/Inventory.js';
 
 export default function Admin() {
   const { user, setUser } = useUser();
@@ -60,6 +61,7 @@ export default function Admin() {
             ))
           )}
         </div>
+        <Inventory posts={posts} />
       </div>
     </>
   );
