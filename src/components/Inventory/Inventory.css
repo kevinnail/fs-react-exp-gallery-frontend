@@ -1,28 +1,25 @@
-.creator-profile-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
+.inventory-container {
+  background-color: #2f00ff83;
+  padding: 0;
+  /* padding-top: 70px; */
+  /* color: rgb(0, 163, 63); */
+}
+.inventory-table {
+  height: auto;
+  background-color: #ffffff;
+  padding: 0 20px 20px 20px;
   width: 100%;
-  max-width: 1200px;
-  padding: 0 20px;
+  border-collapse: collapse; /* Ensures there aren't any double borders */
+  border: 1px solid black;
 }
 
-.creator-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  flex-grow: 1;
-  padding-top: 20px;
-  min-width: 333px;
+.inventory-table th,
+.inventory-table td {
+  border: 1px solid black;
+  padding: 8px; /* Optional: adds some space inside your cells */
+  text-align: left; /* Optional: Aligns text to the left, can be center or right as well */
 }
 
-.creator-gallery-img {
-  width: 100%;
-  object-fit: cover;
-  margin: 0 auto;
-}
-.download-button {
-  cursor: pointer;
+.inventory-table thead {
+  background-color: #d1d1d1; /* Optional: provides a light grey background for the header */
 }
