@@ -30,10 +30,10 @@ export default function MainGallery() {
           HALLOWEEN SALE 30% OFF UNTIL NOV 3!!! All prices have been marked down and include
           shipping
         </p>
-        <span>Please hit me up with offers or questions! </span>
+        <span>Please hit me up with any questions! </span>
         <span>
           <a href="mailto:kevin@kevinnail.com">Email</a> or{' '}
-          <a href="https://www.instagram.com/stresslessglass">DM</a> me!
+          <a href="https://www.instagram.com/stresslessglass">DM</a> me and I'll get you sorted out!
         </span>
       </div>
       <div className="gallery-list-container">
