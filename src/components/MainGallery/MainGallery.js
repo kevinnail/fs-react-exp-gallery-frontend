@@ -26,7 +26,10 @@ export default function MainGallery() {
         <Menu handleClick={handleClick} />
       </div>
       <div className="up-top-msg">
-        <p>HALLOWEEN SALE 30% OFF UNTIL NOV 1!!!</p>
+        <p>
+          HALLOWEEN SALE 30% OFF UNTIL NOV 3!!! All prices have been marked down and include
+          shipping
+        </p>
         <span>Please hit me up with offers or questions! </span>
         <span>
           <a href="mailto:kevin@kevinnail.com">Email</a> or{' '}
