@@ -33,7 +33,8 @@ export default function MainGallery() {
         <span>Please hit me up with any questions! </span>
         <span>
           <a href="mailto:kevin@kevinnail.com">Email</a> or{' '}
-          <a href="https://www.instagram.com/stresslessglass">DM</a> me and I'll get you sorted out!
+          <a href="https://www.instagram.com/stresslessglass">DM</a> me and I will get you sorted
+          out!
         </span>
       </div>
       <div className="gallery-list-container">
