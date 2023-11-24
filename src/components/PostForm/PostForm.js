@@ -1,10 +1,12 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { useUser } from '../../hooks/useUser.js';
 import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
+import React, { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 
 export default function PostForm({
   title = '',
@@ -13,50 +15,102 @@ export default function PostForm({
   category = '',
   submitHandler,
   imageUrls,
-  getThumbnailUrl,
+  // getThumbnailUrl,
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
-  const [imageFilesInput, setImageFilesInput] = useState([]);
+  // const [files, setfiles] = useState([]);
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
   const { user, setUser } = useUser();
   const [loading, setLoading] = useState(false);
   const [currentImages, setCurrentImages] = useState(imageUrls || []); // Added state for images currently in the post for display in the form
-  const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
+  // const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
   const [deletedImages, setDeletedImages] = useState([]);
 
-  const [numFilesSelected, setNumFilesSelected] = useState(0);
+  // const [numFilesSelected, setNumFilesSelected] = useState(0);
+
+  const [files, setFiles] = useState([]);
+  const onDrop = useCallback((acceptedFiles) => {
+    // Do something with the files
+    setFiles(
+      acceptedFiles.map((file) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      )
+    );
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: 'image/*' });
+
+  // Display thumbnails
+  const thumbs = (
+    <div className="thumbnails-container">
+      {/* Display newly selected files */}
+      {files.map((file, index) => (
+        <div key={file.name} className="thumbnail-wrapper">
+          <img src={file.preview} alt={`New image ${index + 1}`} className="thumbnail" />
+          <button
+            type="button"
+            className="delete-button-form"
+            onClick={(e) => {
+              e.preventDefault();
+              handleImageDelete(index);
+            }}
+          >
+            X
+          </button>
+        </div>
+      ))}
+      {/* Display current images */}
+      {currentImages.map((url, index) => (
+        <div key={url} className="thumbnail-wrapper">
+          <img src={url} alt={`Current image ${index + 1}`} className="thumbnail" />
+          <button
+            type="button"
+            className="delete-button-form"
+            onClick={(e) => {
+              e.preventDefault();
+              handleImageDelete(files.length + index);
+            }}
+          >
+            X
+          </button>
+        </div>
+      ))}
+    </div>
+  );
 
   // This function generates a thumbnail for the given video file
-  const generateVideoThumbnail = async (videoFile) => {
-    // This function generates a thumbnail for the given video file
-    return new Promise((resolve) => {
-      const video = document.createElement('video');
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      video.src = URL.createObjectURL(videoFile);
+  // const generateVideoThumbnail = async (videoFile) => {
+  //   // This function generates a thumbnail for the given video file
+  //   return new Promise((resolve) => {
+  //     const video = document.createElement('video');
+  //     const canvas = document.createElement('canvas');
+  //     const context = canvas.getContext('2d');
+  //     video.src = URL.createObjectURL(videoFile);
 
-      // Wait for the video to be able to play through without stopping
-      video.addEventListener('canplaythrough', () => {
-        // Seek to 1 second into the video
-        video.currentTime = 1;
-      });
+  //     // Wait for the video to be able to play through without stopping
+  //     video.addEventListener('canplaythrough', () => {
+  //       // Seek to 1 second into the video
+  //       video.currentTime = 1;
+  //     });
 
-      video.addEventListener('seeked', () => {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
-        resolve({ type: 'video', url: thumbnailUrl });
-      });
-    });
-  };
+  //     video.addEventListener('seeked', () => {
+  //       canvas.width = video.videoWidth;
+  //       canvas.height = video.videoHeight;
+  //       context.drawImage(video, 0, 0, canvas.width, canvas.height);
+  //       const thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
+  //       resolve({ type: 'video', url: thumbnailUrl });
+  //     });
+  //   });
+  // };
 
   // get all dataURLS and URLS from cloudinary images for display
-  const getDisplayImages = () => {
-    return [...newImageDataURLs, ...currentImages.map((imageUrl) => getThumbnailUrl(imageUrl))];
-  };
+  // const getDisplayImages = () => {
+  //   return [...newImageDataURLs, ...currentImages.map((imageUrl) => getThumbnailUrl(imageUrl))];
+  // };
 
   let newOrEdit = '';
   let formFunctionMode = '';
@@ -69,67 +123,60 @@ export default function PostForm({
   }
 
   // handle and parse images for display in the form onChange
-  const handleFileInputChange = async (event) => {
-    const files = event.target.files;
+  // const handleFileInputChange = async (event) => {
+  //   const files = event.target.files;
 
-    if (files.length === 0) {
-      return;
-    }
+  //   if (files.length === 0) {
+  //     return;
+  //   }
 
-    setLoading(true);
+  //   setLoading(true);
 
-    const newFiles = [];
-    const newDataURLs = [];
+  //   const newFiles = [];
+  //   const newDataURLs = [];
 
-    const promises = Array.from(files).map(async (file) => {
-      // check if the selected file is a video and generate a thumbnail
-      if (file.type.startsWith('video/')) {
-        const thumbnail = await generateVideoThumbnail(file);
-        newFiles.push(file);
-        newDataURLs.push(thumbnail.url);
-      } else {
-        // handle image files normally
-        newFiles.push(file);
+  //   const promises = Array.from(files).map(async (file) => {
+  //     // check if the selected file is a video and generate a thumbnail
+  //     if (file.type.startsWith('video/')) {
+  //       const thumbnail = await generateVideoThumbnail(file);
+  //       newFiles.push(file);
+  //       newDataURLs.push(thumbnail.url);
+  //     } else {
+  //       // handle image files normally
+  //       newFiles.push(file);
 
-        const reader = new FileReader();
-        return new Promise((resolve) => {
-          reader.onload = (event) => {
-            newDataURLs.push(event.target.result);
-            resolve();
-          };
-          reader.readAsDataURL(file);
-        });
-      }
-    });
+  //       const reader = new FileReader();
+  //       return new Promise((resolve) => {
+  //         reader.onload = (event) => {
+  //           newDataURLs.push(event.target.result);
+  //           resolve();
+  //         };
+  //         reader.readAsDataURL(file);
+  //       });
+  //     }
+  //   });
 
-    await Promise.all(promises);
+  //   await Promise.all(promises);
 
-    setImageFilesInput(newFiles);
-    setNewImageDataURLs(newDataURLs);
-    setNumFilesSelected(newFiles.length); // Set the number of files selected
-    setLoading(false);
-  };
+  //   setfiles(newFiles);
+  //   setNewImageDataURLs(newDataURLs);
+  //   setNumFilesSelected(newFiles.length); // Set the number of files selected
+  //   setLoading(false);
+  // };
 
   const handleImageDelete = (index) => {
-    // if the image is a newly created one...
-    // filter out the deleted DataURL from newImageDataURLs array
-    // by index which are used for display in the form
-    // filter out the deleted image from the ImageFilesInput array so it's not uploaded
-    if (index < newImageDataURLs.length) {
-      setNewImageDataURLs((prevDataURLs) => prevDataURLs.filter((_, i) => i !== index));
-      setImageFilesInput((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    // Deleting a newly uploaded file
+    if (index < files.length) {
+      setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
     } else {
-      // if the image is an existing one...
-      // filter out deleted image URL from currentImages and assign new array newCurrentImages
-      // find URL of deleted image in CurrentImages and assign it to removedImagesUrl
-      // append the newly deleted images with the deletedImages array
-      // return new currentImages array
-      setCurrentImages((prevImages) => {
-        const newCurrentImages = prevImages.filter((_, i) => i !== index - newImageDataURLs.length);
-        const removedImageUrl = prevImages[index - newImageDataURLs.length];
-        setDeletedImages((prevDeletedImages) => [...prevDeletedImages, removedImageUrl]);
-        return newCurrentImages;
-      });
+      // Deleting an existing image
+      // Adjust the index to target the correct image in currentImages
+      const currentIndex = index - files.length;
+      setCurrentImages((prevImages) => prevImages.filter((_, i) => i !== currentIndex));
+
+      // If you need to track which existing images have been deleted
+      const deletedImageUrl = currentImages[currentIndex];
+      setDeletedImages((prevDeletedImages) => [...prevDeletedImages, deletedImageUrl]);
     }
   };
 
@@ -149,12 +196,12 @@ export default function PostForm({
         price: priceInput,
         category: categoryInput,
         author_id: user.id,
-        num_imgs: imageFilesInput.length,
+        num_imgs: files.length,
       };
 
       // Upload new images to Cloudinary and get their URLs + post details
       const newPost = {
-        ...(await uploadImagesAndCreatePost(imageFilesInput, formFunctionMode)),
+        ...(await uploadImagesAndCreatePost(files, formFunctionMode)),
         ...postDetails,
       };
 
@@ -178,6 +225,7 @@ export default function PostForm({
     await signOut();
     setUser(null);
   };
+
   return (
     <>
       <div className="form-wrapper">
@@ -246,7 +294,6 @@ export default function PostForm({
               onChange={(e) => setDescriptionInput(e.target.value)}
             />
           </div>
-
           <div className="desk-price-input-wrapper">
             <div className="desk-price-input">
               <br />{' '}
@@ -263,12 +310,9 @@ export default function PostForm({
               <span className="dollar-sign-span">$</span>
             </div>
           </div>
-
-          <div className="desk-image-input">
-            <br />
-            <input
-              // required   // this doesn't work because the user can not need to upload a new image- maybe fix this?
-              // Works just fine without it but would be better with a place holder image or required type functionality
+          {/* <div className="desk-image-input"> */}
+          <br />
+          {/* <input
               type="file"
               id="image"
               className="file-upload-btn shadow-border visually-hidden"
@@ -303,8 +347,16 @@ export default function PostForm({
                 </div>
               ))}
             </div>
-          ) : null}
-
+          ) : null}{' '} */}
+          <div {...getRootProps()} className="dropzone">
+            <input {...getInputProps()} />
+            <label className="file-upload-label">
+              {files.length === 0
+                ? 'Choose images or videos'
+                : `${files.length} file${files.length > 1 ? 's' : ''} selected`}
+            </label>
+          </div>
+          {thumbs}
           <div className="btn-container">
             <button className="submit-btn" type="submit">
               {<img className="upload-icon " src="/upload.png" alt="upload" />}
