@@ -29,7 +29,7 @@ export default function MainGallery() {
         <span>
           <span style="background-color:yellow;">DECEMBER HOLIDAY SALE! 40% OFF!! </span>Prices
           reflect disount. If you&apos;re interested in anything, please hit me up with any
-          questions!{' '}
+          questions!
         </span>
         <span>
           <a href="mailto:kevin@kevinnail.com">Email</a> or{' '}
