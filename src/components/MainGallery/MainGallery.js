@@ -28,7 +28,9 @@ export default function MainGallery() {
       <div className="up-top-msg">
         <span>
           {' '}
-          <span style={{ backgroundColor: 'yellow' }}>DECEMBER HOLIDAY SALE! 40% OFF!! </span>
+          <span style={{ backgroundColor: 'yellow' }}>
+            DECEMBER HOLIDAY SALE! 40% OFF!!gfggggggggggggggggggggggggggggggggggggggggg{' '}
+          </span>
           {'    '}Prices reflect disount. If you&apos;re interested in anything, please hit me up
           with any questions!
           <a href="mailto:kevin@kevinnail.com">Email</a> or{' '}
