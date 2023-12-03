@@ -26,12 +26,12 @@ export default function MainGallery() {
         <Menu handleClick={handleClick} />
       </div>
       <div className="up-top-msg">
-        <span>
-          <span style="background-color:yellow;">DECEMBER HOLIDAY SALE! 40% OFF!! </span>Prices
+     
+          <span> DECEMBER HOLIDAY SALE! 40% OFF!! Prices
           reflect disount. If you&apos;re interested in anything, please hit me up with any
-          questions!
-        </span>
-        <span>
+          questions!   </span>
+
+
           <a href="mailto:kevin@kevinnail.com">Email</a> or{' '}
           <a href="https://www.instagram.com/stresslessglass">DM</a> me and I will get you sorted
           out!
