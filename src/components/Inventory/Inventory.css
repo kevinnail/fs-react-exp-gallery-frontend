@@ -6,11 +6,12 @@
 }
 .inventory-table {
   height: auto;
-  background-color: #ffffff;
+  background-color: #575757;
   padding: 0 20px 20px 20px;
   width: 100%;
   border-collapse: collapse; /* Ensures there aren't any double borders */
   border: 1px solid black;
+  color: white;
 }
 
 .inventory-table th,
@@ -20,6 +21,45 @@
   text-align: left; /* Optional: Aligns text to the left, can be center or right as well */
 }
 
+.inventory-table tr:hover {
+  background-color: #878787; /* Optional: hovers are a nice touch */
+  cursor: pointer;
+}
+
 .inventory-table thead {
-  background-color: #d1d1d1; /* Optional: provides a light grey background for the header */
+  background-color: #000000; /* Optional: provides a light grey background for the header */
+  cursor: pointer;
+}
+
+.category-button,
+.category-button-all {
+  background-color: #2f00ff83;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  color: rgb(137, 192, 255);
+  width: 100%;
+}
+
+.category-button-all {
+  background-color: #9a84ff83;
+}
+.category-button-all:hover {
+  background-color: #532dff83;
+  cursor: pointer;
+}
+
+.category-button:hover {
+  border-color: #2f00ff83;
+  background-color: #2f00ff83;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
+.selectedRow {
+  box-shadow: 0 0 0 2px green inset;
+  background-color: #2f00ff83;
 }

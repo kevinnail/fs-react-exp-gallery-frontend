@@ -1,7 +1,7 @@
 import React from 'react';
 import './Inventory.css';
 
-const Inventory = ({ posts }) => {
+const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
   const categories = {
     Beads: 0,
     'Blunt Tips': 0,
@@ -50,6 +50,14 @@ const Inventory = ({ posts }) => {
 
   return (
     <div className="inventory-container">
+      {' '}
+      <button
+        disabled={!selectedCategory}
+        onClick={() => onCategorySelect(null)}
+        className={selectedCategory ? 'category-button-all' : 'category-button'}
+      >
+        Show All Categories
+      </button>
       <div>
         <table className="inventory-table">
           <thead>
@@ -61,8 +69,15 @@ const Inventory = ({ posts }) => {
           </thead>
           <tbody>
             {Object.keys(categories).map((category) => (
-              <tr key={category} style={{ color: getColor(categories[category]) }}>
-                <td>{category}</td>
+              <tr
+                key={category}
+                className={selectedCategory === category ? 'selectedRow' : ''}
+                style={{ color: getColor(categories[category]) }}
+                onClick={() => {
+                  onCategorySelect(category);
+                }}
+              >
+                <td onClick={() => onCategorySelect(category)}>{category}</td>
                 <td>{categories[category]}</td>
                 <td>${categoryTotalPrices[category].toFixed(2)}</td>
               </tr>
