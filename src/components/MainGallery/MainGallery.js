@@ -29,7 +29,7 @@ export default function MainGallery() {
         <span>
           {' '}
           If you&apos;re interested in anything, please hit me up with any questions!{' '}
-          <a href="mailto:kevin@kevinnail.com">Email</a> or{' '}
+          <a href="mailto:kevin@kevinnail.com"> Email</a> or{' '}
           <a href="https://www.instagram.com/stresslessglass">DM</a> me and I will get you sorted
           out!
         </span>
