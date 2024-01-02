@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { usePosts } from '../../hooks/usePosts.js';
 import { useUser } from '../../hooks/useUser.js';
@@ -12,6 +12,7 @@ import Inventory from '../Inventory/Inventory.js';
 export default function Admin() {
   const { user, setUser } = useUser();
   const { posts, loading, setPosts, error } = usePosts();
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
@@ -56,12 +57,16 @@ export default function Admin() {
               <h1>No posts yet!</h1>
             </div>
           ) : (
-            posts.map((post) => (
-              <PostCard key={post.id} {...post} setPosts={setPosts} posts={posts} />
-            ))
+            posts
+              .filter((post) => !selectedCategory || post.category === selectedCategory)
+              .map((post) => <PostCard key={post.id} {...post} setPosts={setPosts} posts={posts} />)
           )}
         </div>
-        <Inventory posts={posts} />
+        <Inventory
+          posts={posts}
+          onCategorySelect={setSelectedCategory}
+          selectedCategory={selectedCategory}
+        />
       </div>
     </>
   );
