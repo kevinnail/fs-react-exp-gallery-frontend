@@ -28,8 +28,8 @@ export default function MainGallery() {
       <div className="up-top-msg">
         <span>
           {' '}
-          If you&apos;re interested in anything, please hit me up with any questions!
-          <a href="mailto:kevin@kevinnail.com">Email</a> or{' '}
+          If you&apos;re interested in anything, please hit me up with any questions!{' '}
+          <a href="mailto:kevin@kevinnail.com"> Email</a> or{' '}
           <a href="https://www.instagram.com/stresslessglass">DM</a> me and I will get you sorted
           out!
         </span>
