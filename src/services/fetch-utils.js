@@ -1,7 +1,6 @@
 /// urls for both local and deployed
-const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
 // const BASE_URL = 'http://localhost:7890';
-// const BASE_URL = ''; // for netlify
+const BASE_URL = 'https://stresslessglass.kevinnail.com';
 
 /* Auth related functions */
 export async function getUser() {
