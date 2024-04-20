@@ -26,7 +26,7 @@ export default function MainGallery() {
         <Menu handleClick={handleClick} />
       </div>
       <div className="up-top-msg">
-        <span>
+        <span style={{ backgroundColor: 'yellow' }}>
           {' '}
           If you&apos;re interested in anything, please hit me up with any questions!{' '}
           <a href="mailto:kevin@kevinnail.com"> Email</a> or{' '}
