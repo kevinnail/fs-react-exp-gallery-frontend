@@ -26,10 +26,10 @@ export default function MainGallery() {
         <Menu handleClick={handleClick} />
       </div>
       <div className="up-top-msg">
-        <span style={{ backgroundColor: 'yellow' }}>
+        {/* <span style={{ backgroundColor: 'yellow' }}> */}
+        <span>
           {' '}
-          Happy 4/20!!! Everything is on sale 20%-50% off posted prices through the end of the month
-          of April. If you&apos;re interested in anything, please hit me up with any questions!{' '}
+          Welcome! If you&apos;re interested in anything, please hit me up with any questions!{' '}
           <a href="mailto:kevin@kevinnail.com"> Email</a> or{' '}
           <a href="https://www.instagram.com/stresslessglass">DM</a> me and I will get you sorted
           out!
