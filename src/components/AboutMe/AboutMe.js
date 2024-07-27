@@ -27,7 +27,7 @@ export default function AboutMe() {
         </div>
       </div>
       <p className="about-me-p">
-        Welcome! I appreciate you checking out my page. I&apos;ve been blowing glass for about 25
+        Welcome! I appreciate you checking out my page. I&apos;ve been blowing glass for about 27
         years, and now I&apos;ve made a life pivot into web development making websites like this
         one!
       </p>
