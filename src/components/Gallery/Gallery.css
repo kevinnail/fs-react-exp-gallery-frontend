@@ -45,7 +45,8 @@
 }
 @media (min-width: 1024px) {
   .menu-search-container {
-    background-image: linear-gradient(145deg, #7777f3bd, #5b36ff83);
+    /* background-image: linear-gradient(145deg, #7777f3bd, #5b36ff83); */
+    background-image: linear-gradient(145deg, rgb(74, 74, 74), black);
     height: 50px;
     width: 100%;
     display: flex;
@@ -54,8 +55,10 @@
     margin: 0 auto;
     display: flex;
     justify-content: space-around;
-    border-top: 2px solid #5b36ff83;
-    border-bottom: 2px solid #5b36ff83;
+    /* border-top: 2px solid #5b36ff83; */
+    border-top: 2px solid black;
+    /* border-bottom: 2px solid #5b36ff83; */
+    border-bottom: 2px solid black;
     padding: 30px 0;
   }
   .header-section {

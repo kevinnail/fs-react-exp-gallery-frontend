@@ -194,10 +194,10 @@ option {
 }
 
 .loading-div-wrapper {
-  background-color: rgb(176, 176, 253);
+  /* background-color: rgb(176, 176, 253);
   background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83);
   background-size: 400% 400%;
-  animation: ocean 10s ease-in-out infinite;
+  animation: ocean 10s ease-in-out infinite; */
   height: calc(100vh - 90px);
 }
 
