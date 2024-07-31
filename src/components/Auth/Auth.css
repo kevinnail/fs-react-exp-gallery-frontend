@@ -131,7 +131,8 @@
 }
 
 .active {
-  background-image: linear-gradient(315deg, #7777f3c4, #5b36ff83);
+  /* background-image: linear-gradient(315deg, #7777f3c4, #5b36ff83); */
+  background-image: linear-gradient(315deg, black, grey);
 }
 
 .marble-container {
