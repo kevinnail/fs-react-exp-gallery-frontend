@@ -36,11 +36,13 @@
   text-align: center;
   font-weight: bold;
   padding: 5px 15px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva,
+    Verdana, sans-serif;
 }
 
 .up-top-msg a {
   text-decoration: none;
-  color: rgb(63, 13, 179);
+  color: rgb(85, 145, 255);
   text-shadow: 0px 0px 5px #5b36ff83;
 }
 @media (min-width: 1024px) {

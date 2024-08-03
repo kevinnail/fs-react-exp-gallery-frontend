@@ -15,19 +15,19 @@ export default function Menu({ handleClick }) {
     <>
       <NavLink className="new-link" to="/main-gallery" title="Gallery">
         <span className="new-post-span menu-btn">Gallery</span>{' '}
-        {<img className="new-post-icon" src="../gallery.png" />}
+        {/* {<img className="new-post-icon" src="../gallery.png" />} */}
       </NavLink>
       <NavLink className="new-link" to="/about-me">
         <span className="new-post-span menu-btn" title="About Kevin">
-          About
+          About Me
         </span>{' '}
-        {<img className="new-post-icon" src="../info.png" />}
+        {/* {<img className="new-post-icon" src="../info.png" />} */}
       </NavLink>
       {user && (
         <>
           <NavLink className="new-link" to="/admin/new" title="Make new post">
             <span className="new-post-span">New Post</span>{' '}
-            {<img className="new-post-icon" src="../upload-1.png" />}
+            {/* {<img className="new-post-icon" src="../upload-1.png" />} */}
           </NavLink>
           <button
             className="new-link download-button"
@@ -35,7 +35,7 @@ export default function Menu({ handleClick }) {
             onClick={handleDownloadCSV}
           >
             <span className="new-post-span">Inventory</span>{' '}
-            {<img className="new-post-icon" src="../upload-1.png" />}
+            {/* {<img className="new-post-icon" src="../upload-1.png" />} */}
           </button>
 
           <button
@@ -48,7 +48,8 @@ export default function Menu({ handleClick }) {
             `}
             onClick={handleClick}
           >
-            Sign Out {<img className="signout-nav-icon" src="../signout.png" />}
+            Sign Out
+            {/* {<img className="signout-nav-icon" src="../signout.png" />} */}
           </button>
         </>
       )}

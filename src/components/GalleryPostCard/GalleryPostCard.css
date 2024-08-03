@@ -5,7 +5,7 @@
   /* width: 100%; */
   margin: 0 0 5px 0;
   padding: 0 0;
-  box-shadow: 0 0 10px 0 #7777f3bd;
+  box-shadow: 0 0 10px 0 #808080bd;
   transition: 300ms;
   width: 190px;
   /* height: 100%; */
@@ -173,7 +173,7 @@
 
   .gallery-display:hover {
     transform: scale(1.01);
-    box-shadow: 0 5px 10px #ccc;
+    box-shadow: 0 0 10px #ccc;
     background-color: rgb(83, 25, 255);
     transition: 300ms;
   }

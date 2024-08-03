@@ -1,8 +1,6 @@
 .inventory-container {
-  background-color: #2f00ff83;
   padding: 0;
-  /* padding-top: 70px; */
-  /* color: rgb(0, 163, 63); */
+  border: 2px solid #2f00ff83;
 }
 .inventory-table {
   height: auto;
@@ -33,7 +31,7 @@
 
 .category-button,
 .category-button-all {
-  background-color: #2f00ff83;
+  background-color: black;
   border: none;
   color: white;
   padding: 10px 20px;
@@ -41,25 +39,25 @@
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  color: rgb(137, 192, 255);
+  color: rgb(0, 119, 255);
   width: 100%;
 }
 
 .category-button-all {
-  background-color: #9a84ff83;
+  background-color: #3a3a3a83;
 }
 .category-button-all:hover {
-  background-color: #532dff83;
+  background-color: #6c6c6c83;
   cursor: pointer;
 }
 
 .category-button:hover {
-  border-color: #2f00ff83;
-  background-color: #2f00ff83;
+  border-color: #36363683;
+  background-color: #000000;
   color: rgb(255, 255, 255);
   cursor: pointer;
 }
 .selectedRow {
-  box-shadow: 0 0 0 2px green inset;
-  background-color: #2f00ff83;
+  box-shadow: 0 0 0 2px rgb(0, 0, 0) inset;
+  background-color: #8d8d8d83;
 }
