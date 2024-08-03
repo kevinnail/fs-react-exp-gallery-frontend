@@ -1,7 +1,7 @@
 /// urls for both local and deployed
-const BASE_URL = 'http://localhost:7890'; // works for local host, can't do deployed db for some reason with local...
+// const BASE_URL = 'http://localhost:7890'; // works for local host, can't do deployed db for some reason with local...
 // const BASE_URL = 'https://stresslessglass.kevinnail.com';
-// const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
+const BASE_URL = 'https://glass-art-gallery.herokuapp.com';
 
 /* Auth related functions */
 export async function getUser() {
