@@ -57,7 +57,7 @@
   min-width: 333px;
   width: 100%;
   position: relative;
-  left: 150px;
+  padding-left: 150px;
 }
 
 .cool-search-wrapper:hover .cool-search-icon {
