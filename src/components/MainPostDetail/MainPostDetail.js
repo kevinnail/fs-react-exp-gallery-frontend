@@ -19,8 +19,9 @@ export default function MainPostDetail() {
   const history = useHistory();
 
   // Determine whether to show discounted price or not
-  const isDiscounted =
-    postDetail.discountedPrice && postDetail.discountedPrice < postDetail.originalPrice;
+  const originalPrice = parseFloat(postDetail.originalPrice);
+  const discountedPrice = parseFloat(postDetail.discountedPrice);
+  const isDiscounted = discountedPrice && discountedPrice < originalPrice;
 
   const handleThumbnailClick = (index) => {
     setCurrentIndex(index);

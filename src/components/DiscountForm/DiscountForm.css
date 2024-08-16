@@ -7,7 +7,8 @@
 
 .discount-form {
   width: 100%;
-  background-image: linear-gradient(315deg, #919191c4, #5b36ff83);
+  /* background-image: linear-gradient(315deg, #919191c4, #5b36ff83); */
+  /* background-color: grey; */
   min-width: 350px;
   height: calc(100vh - 90px);
   box-sizing: border-box;
@@ -22,6 +23,7 @@
   grid-template-rows: 110px 60px 85px 70px;
   justify-items: center;
   overflow: auto;
+  color: white;
 }
 .discount-form h2 {
   text-align: center;
