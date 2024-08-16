@@ -10,44 +10,69 @@ export default function MainGalleryPostCard({
   price,
   description,
   category,
+  discountedPrice,
+  originalPrice,
 }) {
-  const post = useGalleryPost(id);
+  const { additionalImagesGallery, loading } = useGalleryPost(id);
+
+  // Determine whether to show discounted price or not
+  const isDiscounted = discountedPrice && parseFloat(discountedPrice) < parseFloat(originalPrice);
+
+  // Handle loading state
+  if (loading) {
+    return (
+      <div className="gallery-display-container loading">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className="gallery-display-container" key={id}>
-        <Link className="gallery-display a-gallery" to={`/main-gallery/${id}`} title={`${title}`}>
-          {image_url ? (
-            image_url.endsWith('.mp4') ? (
-              <img
-                className="gallery-img"
-                src={`${image_url.replace('.mp4', '.jpg')}#t=0.8`}
-                alt="thumbnail"
-              />
-            ) : (
-              <img className="gallery-img" src={image_url} alt="edit" />
-            )
-          ) : (
-            <>
-              {post.additionalImagesGallery[0] && (
-                <img
-                  className="gallery-img"
-                  src={post.additionalImagesGallery[0].image_url}
-                  alt="edit"
-                />
+    <div className="gallery-display-container" key={id}>
+      <Link className="gallery-display a-gallery" to={`/main-gallery/${id}`} title={`${title}`}>
+        {image_url ? (
+          <img
+            className="gallery-img"
+            src={image_url.endsWith('.mp4') ? `${image_url.slice(0, -4)}.jpg` : image_url}
+            alt="gallery"
+          />
+        ) : (
+          additionalImagesGallery[0] && (
+            <img
+              className="gallery-img"
+              src={
+                additionalImagesGallery[0].image_url.endsWith('.mp4')
+                  ? `${additionalImagesGallery[0].image_url.slice(0, -4)}.jpg`
+                  : additionalImagesGallery[0].image_url
+              }
+              alt="gallery"
+            />
+          )
+        )}
+        <div className="gallery-detail-container">
+          <span className="gallery-title">
+            {title.length > 20 ? title.slice(0, 20) + '...' : title}
+          </span>
+          <span className="gallery-desc">{description}</span>
+          <div className="price-category-wrapper">
+            <span className="gallery-price">
+              {isDiscounted ? (
+                <>
+                  <span
+                    style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
+                  >
+                    ${originalPrice}
+                  </span>
+                  <span>${discountedPrice}</span>
+                </>
+              ) : (
+                <span>${price}</span>
               )}
-            </>
-          )}
-          <div className="gallery-detail-container">
-            <span className="gallery-title">{title}</span>
-            <span className="gallery-desc">{description}</span>
-            <div className="price-category-wrapper">
-              <span className="gallery-price">${price}</span>
-              <span className="gallery-category"> {category}</span>
-            </div>
+            </span>
+            <span className="gallery-category"> {category}</span>
           </div>
-        </Link>
-      </div>
-    </>
+        </div>
+      </Link>
+    </div>
   );
 }
