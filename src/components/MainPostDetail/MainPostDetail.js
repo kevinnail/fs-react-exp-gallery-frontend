@@ -18,6 +18,10 @@ export default function MainPostDetail() {
   const { setUser } = useUser();
   const history = useHistory();
 
+  // Determine whether to show discounted price or not
+  const isDiscounted =
+    postDetail.discountedPrice && postDetail.discountedPrice < postDetail.originalPrice;
+
   const handleThumbnailClick = (index) => {
     setCurrentIndex(index);
   };
@@ -79,7 +83,21 @@ export default function MainPostDetail() {
             <section className="title-cat-container">
               <span className="category-label">Category:</span>
               <span className="category-span">{postDetail.category}</span>
-              <span className="price-details">${postDetail.price}</span>
+              <span className="price-details">
+                {' '}
+                {isDiscounted ? (
+                  <>
+                    <span
+                      style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
+                    >
+                      ${postDetail.originalPrice}
+                    </span>
+                    <span>${postDetail.discountedPrice}</span>
+                  </>
+                ) : (
+                  <span>${postDetail.price}</span>
+                )}
+              </span>
             </section>
             <section className="desc-price-container">
               <span className="desc-details">{postDetail.description}</span>

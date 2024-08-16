@@ -39,7 +39,9 @@ export default function Menu({ handleClick }) {
             {/* <span className="new-post-span">Inventory</span>{' '} */}Inventory
             {/* {<img className="new-post-icon" src="../upload-1.png" />} */}
           </button>
-
+          <NavLink className="new-link" to="/admin/discounts" title="Make new post">
+            Sale!
+          </NavLink>
           <button
             title="Sign Out"
             className={`signout-button 
@@ -52,7 +54,6 @@ export default function Menu({ handleClick }) {
           >
             Sign <br />
             Out
-            {/* {<img className="signout-nav-icon" src="../signout.png" />} */}
           </button>
         </>
       )}

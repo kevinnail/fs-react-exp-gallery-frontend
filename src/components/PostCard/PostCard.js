@@ -1,5 +1,4 @@
 import { Link, Redirect } from 'react-router-dom';
-import { usePost } from '../../hooks/usePost.js';
 import { useUser } from '../../hooks/useUser.js';
 import {
   deleteById,
@@ -8,6 +7,7 @@ import {
 } from '../../services/fetch-utils.js';
 import './PostCard.css';
 import { useState } from 'react';
+import { usePost } from '../../hooks/usePost.js';
 
 export default function PostCard({
   id,
@@ -18,17 +18,27 @@ export default function PostCard({
   category,
   price,
   setPosts,
+  discountedPrice,
+  originalPrice,
 }) {
-  const post = usePost(id);
-
   const { user } = useUser();
-  const { setLoading, setError } = usePost(id);
+  const { postDetail, additionalImages, loading } = usePost(id); // Destructuring loading state
   const [deletedRowId, setDeletedRowId] = useState(null);
-
-  // const [isCompleted, setIsCompleted] = useState(completed);   // use later and change this to isSold/ isAvailable or something like that
 
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
+  }
+
+  // Determine whether to show discounted price or not
+  const isDiscounted = discountedPrice && parseFloat(discountedPrice) < parseFloat(originalPrice);
+
+  // Handle the case where data is still loading
+  if (loading) {
+    return (
+      <div className="post loading">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   // delete the post
@@ -49,14 +59,13 @@ export default function PostCard({
       // delete the post from state, so it doesn't show up on the page
       const updatedPosts = posts.filter((post) => post.id !== id);
       setPosts(updatedPosts);
-      setLoading(true);
     } catch (e) {
-      setError(e.message);
+      console.error('Error deleting post:', e.message);
     }
   };
 
   return (
-    <div className={`post ${post.postDetail.id === deletedRowId ? 'grayed-out' : ''}`} key={id}>
+    <div className={`post ${postDetail.id === deletedRowId ? 'grayed-out' : ''}`} key={id}>
       <Link to={`/main-gallery/${id}`}>
         {image_url ? (
           <img
@@ -65,19 +74,17 @@ export default function PostCard({
             alt="edit"
           />
         ) : (
-          <>
-            {post.additionalImages[0] && (
-              <img
-                className="admin-prod-img"
-                src={
-                  post.additionalImages[0].image_url.endsWith('.mp4')
-                    ? `${post.additionalImages[0].image_url.slice(0, -4)}.jpg`
-                    : post.additionalImages[0].image_url
-                }
-                alt="edit"
-              />
-            )}
-          </>
+          additionalImages[0] && (
+            <img
+              className="admin-prod-img"
+              src={
+                additionalImages[0].image_url.endsWith('.mp4')
+                  ? `${additionalImages[0].image_url.slice(0, -4)}.jpg`
+                  : additionalImages[0].image_url
+              }
+              alt="edit"
+            />
+          )
         )}
       </Link>
 
@@ -85,7 +92,18 @@ export default function PostCard({
         {title.length > 14 ? title.slice(0, 14) + '...' : title}
       </p>
       <p className="grid-s2 grid-e3 mobile-title-desk">{title}</p>
-      <p className="grid-3">${price}</p>
+      <p className="grid-3">
+        {isDiscounted ? (
+          <>
+            <span style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}>
+              ${originalPrice}
+            </span>
+            <span>${discountedPrice}</span>
+          </>
+        ) : (
+          <span>${price}</span>
+        )}
+      </p>
       <p className="cat-desk">{category}</p>
       <p className="desc-desk">{description}</p>
       <div className="admin-prod-btn-cont grid-7">
@@ -93,13 +111,7 @@ export default function PostCard({
           <img src="/edit.png" className="edit-button" alt="edit" />
         </Link>
         <Link className="buttons red-border" to={`/admin`} onClick={handleDelete}>
-          <img
-            className="delete-button"
-            onClick={() => {}}
-            src="/delete.png"
-            name="delete"
-            alt="delete"
-          />
+          <img className="delete-button" src="/delete.png" name="delete" alt="delete" />
         </Link>
       </div>
     </div>

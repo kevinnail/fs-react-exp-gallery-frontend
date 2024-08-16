@@ -9,10 +9,6 @@ export function usePost(id) {
   const [isDeleted, setIsDeleted] = useState(false);
   const [additionalImages, setAdditionalImages] = useState([]);
 
-  //
-  //
-  //
-  //
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {

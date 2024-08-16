@@ -28,7 +28,6 @@ export default function MainGallery() {
       <div className="up-top-msg">
         {/* <span style={{ backgroundColor: 'yellow' }}> */}
         <span>
-          {' '}
           Welcome! If you&apos;re interested in anything, please hit me up with any questions!{' '}
           <a href="mailto:kevin@kevinnail.com"> Email</a> or{' '}
           <a href="https://www.instagram.com/stresslessglass">DM</a> me and I will get you sorted
@@ -37,7 +36,7 @@ export default function MainGallery() {
       </div>
       <div className="gallery-list-container">
         {posts.map((post) => (
-          <MainGalleryPostCard key={post.id} {...post} posts={posts} />
+          <MainGalleryPostCard key={post.id} {...post} />
         ))}
       </div>
     </>

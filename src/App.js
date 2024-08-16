@@ -12,6 +12,7 @@ import MainGallery from './components/MainGallery/MainGallery.js';
 import MainPostDetail from './components/MainPostDetail/MainPostDetail.js';
 import AboutMe from './components/AboutMe/AboutMe.js';
 import SearchResults from './components/SearchResults/SearchResults.js';
+import DiscountForm from './components/DiscountForm/DiscountForm.js';
 
 function App() {
   const { user } = useUser();
@@ -28,8 +29,10 @@ function App() {
           <Route path="/gallery/:id" component={PostDetail} />
           <Route path="/gallery" component={Gallery} />
           <Route path="/about-me" component={AboutMe} />
+          <Route path="/admin/discounts" component={DiscountForm} />
           <Route path="/admin/new" component={NewPost} />
           <Route exact path="/admin/:id" component={EditPost} />
+
           <Route path="/admin" component={Admin} />
           <Route path="*">
             <Redirect to={user ? '/admin' : '/auth/sign-in'} />
