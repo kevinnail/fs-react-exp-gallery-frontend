@@ -418,3 +418,37 @@ export async function downloadInventoryCSV() {
 
   return data;
 }
+
+export async function bulkPostEdit(action, percentage = 0) {
+  // Prepare the data to send to the backend
+  const data = {
+    action,
+    percentage: action === 'apply' ? percentage : 0,
+  };
+
+  try {
+    // Make the fetch call to your backend
+    const response = await fetch(`${BASE_URL}/api/v1/admin/discounts`, {
+      method: 'POST',
+      credentials: 'include',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    // Check if the response is ok
+    if (response.ok) {
+      const result = await response.json();
+
+      return result.message; // Return the message for further handling in your component
+    } else {
+      console.error('Failed to apply/undo discount');
+      throw new Error('Failed to apply/undo discount');
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
+    throw error;
+  }
+}
