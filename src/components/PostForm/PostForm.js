@@ -114,11 +114,6 @@ export default function PostForm({
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    // if (newImages.length === 0 && currentImages.length === 0) {
-    //   // Show an error message if no images are selected or displayed
-    //   alert('Please select at least one image.');
-    //   return;
-    // }
     setLoading(true);
 
     try {
@@ -129,6 +124,7 @@ export default function PostForm({
         category: categoryInput,
         author_id: user.id,
         num_imgs: files.length,
+        discountedPrice: discountedPriceInput,
       };
 
       // Upload new images to Cloudinary and get their URLs + post details
