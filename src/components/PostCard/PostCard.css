@@ -48,8 +48,8 @@ body {
 }
 
 .admin-panel {
-  background-color: #2f00ff83;
-  border: 2px solid rgb(176, 176, 253);
+  /* background-color: #2f00ff83; */
+  border: 2px solid #2f00ff83;
   padding: 10px;
   display: none;
   height: 100%;
@@ -70,8 +70,14 @@ body {
   padding: 0 0rem;
   /* max-width: 1200px; */
   height: 90vh;
-  background-color: rgb(176, 176, 253);
-  background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83);
+  /* background-color: rgb(176, 176, 253); */
+  /* background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83); */
+  background: linear-gradient(
+    270deg,
+    rgba(89, 89, 89, 0.458),
+    rgba(40, 40, 40, 0.532),
+    rgba(21, 21, 21, 0.577)
+  );
   background-size: 400% 400%;
   animation: ocean 10s ease-in-out infinite;
   letter-spacing: 1.5px;
@@ -281,7 +287,7 @@ body {
     display: block;
   }
   .admin-container {
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 200px 1fr 250px;
     grid-template-rows: 1fr;
   }
   .admin-panel-section {
@@ -313,31 +319,22 @@ body {
   .signout-button:hover {
     background-color: #ccc;
     transform: scale(1);
-    background: linear-gradient(
-      to bottom right,
-
-      #b6b6fbbd,
-      #b6b6fbbd,
-      #7777f3bd,
-      #b6b6fbbd,
-      #7777f3bd,
-      #5b36ff83,
-      #2f00ff83
-    );
-    background-size: 400% 400%;
-    animation: shimmer 300ms ease;
+    background: linear-gradient(to bottom right, white, grey, black, grey, white);
+    background-size: 150% 150%;
+    /* animation: shimmer 300ms ease; */
   }
   .new-link:active,
   .signout-button:active {
-    background-color: #ccc;
+    /* background-color: #ccc; */
     transform: scale(1);
     transition: 250ms;
-    background: linear-gradient(to top left, #b6b6fbbd, #7777f3bd, #5b36ff83, #2f00ff83);
+    color: black;
+    /* background: linear-gradient(to top left, #b6b6fbbd, #7777f3bd, #5b36ff83, #2f00ff83); */
     background-size: 400% 400%;
-    animation: shimmer2 250ms ease-in-out;
+    /* animation: shimmer2 250ms ease-in-out; */
   }
 
-  @keyframes shimmer2 {
+  /* @keyframes shimmer2 {
     0% {
       background-position: 0% 100%;
     }
@@ -347,7 +344,7 @@ body {
     100% {
       background-position: 0% 100%;
     }
-  }
+  } */
 }
 
 @media (min-width: 1200px) {

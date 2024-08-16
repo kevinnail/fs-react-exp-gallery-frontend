@@ -7,12 +7,23 @@ export function useGalleryPosts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  // Assuming your fetch result is stored in a variable called 'data'
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchGalleryPosts();
+        const randomizedData = shuffleArray(data);
 
-        setPosts(data);
+        setPosts(randomizedData);
         setLoading(false);
       } catch (e) {
         setError(e.message);

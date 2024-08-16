@@ -27,16 +27,18 @@ export default function AboutMe() {
         </div>
       </div>
       <p className="about-me-p">
-        Welcome! I appreciate you checking out my page. I&apos;ve been blowing glass for about 25
+        Welcome! I appreciate you checking out my page. I&apos;ve been blowing glass for about 27
         years, and now I&apos;ve made a life pivot into web development making websites like this
         one!
       </p>
       <p className="about-me-p">
-        I&apos;m a full stack developer currently using React, Node, and Express. Hope you enjoyed
-        the animations- I&apos;m a big fan of CSS I&apos;ve been trying to incorporate them into my
-        projects as much as possible. This project with the cubes is definitely my coolest yet!
-        That&apos;s just pure CSS by the way, no libraries or frameworks. I can&apos;t wait to get
-        into some libraries like Three.js and GSAP.
+        I fell in love with gold and silver fuming before I even know how to do it- once I saw my
+        teacher Ezra Z. do it the first time I was hooked! My other work is I&apos;m a full stack
+        developer currently using React, Node, and Express for web- hope you enjoyed the animations!
+        I&apos;m a big fan of CSS I&apos;ve been trying to incorporate them into my projects as much
+        as possible. This project with the cubes is definitely my coolest yet! That&apos;s just pure
+        CSS by the way, no libraries or frameworks! Recently I started working with C++ and Arduino/
+        Clearcore + 4D Systems HMI for automating a glass saw- another fun arena of solving puzzles.
       </p>
       <div className="about-me-p about-me-div-adjust">
         Aside from that I&apos;m all over the place with my hobbies and interests. Musician at heart

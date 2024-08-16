@@ -10,7 +10,7 @@
 .cool-search-input {
   width: 100%;
   padding: 0.5rem 2rem 0.5rem 0.5rem;
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   border: 1px solid #ccc;
   border-radius: 3px;
   outline: none;
@@ -18,7 +18,7 @@
   border-radius: 5px;
   background-color: #111;
   color: #333;
-  height: 20px;
+  height: 35px;
 }
 
 .cool-search-input:focus {
@@ -52,11 +52,12 @@
   background-color: black;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   height: 0px;
   min-width: 333px;
   width: 100%;
   position: relative;
+  padding-left: 150px;
 }
 
 .cool-search-wrapper:hover .cool-search-icon {

@@ -1,0 +1,63 @@
+.inventory-container {
+  padding: 0;
+  border: 2px solid #2f00ff83;
+}
+.inventory-table {
+  height: auto;
+  background-color: #575757;
+  padding: 0 20px 20px 20px;
+  width: 100%;
+  border-collapse: collapse; /* Ensures there aren't any double borders */
+  border: 1px solid black;
+  color: white;
+}
+
+.inventory-table th,
+.inventory-table td {
+  border: 1px solid black;
+  padding: 8px; /* Optional: adds some space inside your cells */
+  text-align: left; /* Optional: Aligns text to the left, can be center or right as well */
+}
+
+.inventory-table tr:hover {
+  background-color: #878787; /* Optional: hovers are a nice touch */
+  cursor: pointer;
+}
+
+.inventory-table thead {
+  background-color: #000000; /* Optional: provides a light grey background for the header */
+  cursor: pointer;
+}
+
+.category-button,
+.category-button-all {
+  background-color: black;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  color: rgb(0, 119, 255);
+  width: 100%;
+}
+
+.category-button-all {
+  background-color: #3a3a3a83;
+}
+.category-button-all:hover {
+  background-color: #6c6c6c83;
+  cursor: pointer;
+}
+
+.category-button:hover {
+  border-color: #36363683;
+  background-color: #000000;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
+.selectedRow {
+  box-shadow: 0 0 0 2px rgb(0, 0, 0) inset;
+  background-color: #8d8d8d83;
+}
