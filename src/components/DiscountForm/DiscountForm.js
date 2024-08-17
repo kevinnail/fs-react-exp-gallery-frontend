@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Menu from '../Menu/Menu.js';
 import { useUser } from '../../hooks/useUser.js';
 import { signOut } from '../../services/auth.js';
 import './DiscountForm.css';
-import { bulkPostEdit } from '../../services/fetch-utils.js';
+import { bulkPostEdit, postAdminMessage, getSiteMessage } from '../../services/fetch-utils.js';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
 
 export default function DiscountForm() {
   const [percentage, setPercentage] = useState('');
+  const [message, setMessage] = useState('');
   const { setUser } = useUser();
   const [action, setAction] = useState('apply');
   const history = useHistory();
+
+  useEffect(() => {
+    const fetchMessage = async () => {
+      try {
+        const currentMessage = await getSiteMessage();
+        setMessage(currentMessage.message);
+      } catch (error) {
+        console.error('An error occurred while fetching the message:', error);
+      }
+    };
+
+    fetchMessage();
+  }, []);
+
   const handleClick = async () => {
     await signOut();
     setUser(null);
@@ -20,8 +35,16 @@ export default function DiscountForm() {
     e.preventDefault();
 
     try {
-      // apply discount /undo all discounts
-      await bulkPostEdit(action, percentage);
+      if (action === 'apply' && percentage) {
+        await bulkPostEdit(action, percentage);
+      } else if (action === 'undo') {
+        await bulkPostEdit(action);
+      }
+
+      if (message) {
+        await postAdminMessage(message);
+      }
+
       history.push('/admin');
     } catch (error) {
       console.error('An error occurred:', error);
@@ -38,8 +61,10 @@ export default function DiscountForm() {
         </section>
       </aside>
       <form className="discount-form" onSubmit={handleSubmit}>
-        <h2>{action === 'apply' ? 'Enter Discount Percentage' : 'Undo Discount'}</h2>
-        <section>
+        <h2 className="form-title">
+          {action === 'apply' ? 'Enter Discount Percentage' : 'Undo Discount'}
+        </h2>
+        <section className="form-section">
           <input
             type="number"
             value={percentage}
@@ -47,35 +72,46 @@ export default function DiscountForm() {
             placeholder="%"
             max="99"
             min="0"
-            width="300px"
-            className="discount-input"
-            maxLength={2}
+            className="input-field percentage-input"
             disabled={action === 'undo'}
           />
-          <div>
-            <label>
-              <input
-                type="radio"
-                value="apply"
-                checked={action === 'apply'}
-                onChange={() => setAction('apply')}
-              />
-              Apply Discount
-            </label>
-            <label>
-              <input
-                type="radio"
-                value="undo"
-                checked={action === 'undo'}
-                onChange={() => setAction('undo')}
-              />
-              Undo Discount
-            </label>
-          </div>
         </section>
-        <button className="discount-submit-btn" type="submit">
-          Submit
-        </button>
+        <div className="radio-group">
+          <label className="radio-label">
+            <input
+              type="radio"
+              value="apply"
+              checked={action === 'apply'}
+              onChange={() => setAction('apply')}
+            />
+            Apply Discount to ALL posts
+          </label>
+          <label className="radio-label">
+            <input
+              type="radio"
+              value="undo"
+              checked={action === 'undo'}
+              onChange={() => setAction('undo')}
+            />
+            Undo ALL Discounts
+          </label>
+        </div>
+
+        <section className="form-section2">
+          <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Enter a message for your customers"
+            rows="4"
+            className="input-field message-input"
+          />
+        </section>
+        <div>
+          {' '}
+          <button className="submit-button" type="submit">
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   );
