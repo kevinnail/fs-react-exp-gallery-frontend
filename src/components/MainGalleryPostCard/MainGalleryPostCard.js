@@ -13,19 +13,10 @@ export default function MainGalleryPostCard({
   discountedPrice,
   originalPrice,
 }) {
-  const { additionalImagesGallery, loading } = useGalleryPost(id);
+  const { additionalImagesGallery } = useGalleryPost(id);
 
   // Determine whether to show discounted price or not
   const isDiscounted = discountedPrice && parseFloat(discountedPrice) < parseFloat(originalPrice);
-
-  // Handle loading state
-  if (loading) {
-    return (
-      <div className="gallery-display-container loading">
-        <p>Loading...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="gallery-display-container" key={id}>

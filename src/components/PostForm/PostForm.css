@@ -337,6 +337,7 @@ option {
 
 .price-in-form {
   display: grid;
+  justify-content: center;
 }
 
 .labels-form-inputs {
@@ -351,6 +352,13 @@ option {
   margin-top: 20px;
 }
 
+.form-wrapper span {
+  color: white;
+}
+.form-wrapper .price-input {
+  text-align: right;
+  justify-self: flex-end;
+}
 @media (min-width: 768px) {
   .new-post-form {
     width: 700px;

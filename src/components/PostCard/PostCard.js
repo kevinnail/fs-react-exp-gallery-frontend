@@ -32,15 +32,6 @@ export default function PostCard({
   // Determine whether to show discounted price or not
   const isDiscounted = discountedPrice && parseFloat(discountedPrice) < parseFloat(originalPrice);
 
-  // Handle the case where data is still loading
-  if (loading) {
-    return (
-      <div className="post loading">
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
   // delete the post
   const handleDelete = async () => {
     try {

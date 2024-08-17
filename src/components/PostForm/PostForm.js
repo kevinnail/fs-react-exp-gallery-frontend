@@ -229,7 +229,7 @@ export default function PostForm({
             <input
               required
               placeholder="Enter price"
-              className="image-input input-with-dollar-sign"
+              className="image-input  price-input"
               type="number"
               step="1"
               name="price"
@@ -242,7 +242,7 @@ export default function PostForm({
             <span>Discount Price</span>
             <input
               placeholder="Enter discounted price"
-              className="image-input input-with-dollar-sign"
+              className="image-input  price-input"
               type="number"
               step="1"
               name="discountedPrice"
