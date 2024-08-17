@@ -31,6 +31,9 @@ export default function Menu({ handleClick }) {
             {/* <span className="new-post-span">New</span>{' '} */}New
             {/* {<img className="new-post-icon" src="../upload-1.png" />} */}
           </NavLink>
+          <NavLink className="new-link" to="/admin/discounts" title="Make new post">
+            Sale!
+          </NavLink>
           <button
             className="new-link download-button"
             title="Download Inventory CSV"
@@ -39,9 +42,6 @@ export default function Menu({ handleClick }) {
             {/* <span className="new-post-span">Inventory</span>{' '} */}Inventory
             {/* {<img className="new-post-icon" src="../upload-1.png" />} */}
           </button>
-          <NavLink className="new-link" to="/admin/discounts" title="Make new post">
-            Sale!
-          </NavLink>
           <button
             title="Sign Out"
             className={`signout-button 
