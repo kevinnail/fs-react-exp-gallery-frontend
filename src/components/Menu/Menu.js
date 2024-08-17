@@ -13,23 +13,36 @@ export default function Menu({ handleClick }) {
 
   return (
     <>
-      <NavLink className="new-link" to="/main-gallery" title="Gallery">
-        Gallery
-        {/* <span className="new-post-span menu-btn"></span>{' '} */}
-        {/* {<img className="new-post-icon" src="../gallery.png" />} */}
-      </NavLink>
-      <NavLink className="new-link" to="/about-me">
-        About
-        {/* <span className="new-post-span menu-btn" title="About Kevin"> */}
-        {/* About Me */}
-        {/* </span>{' '} */}
-        {/* {<img className="new-post-icon" src="../info.png" />} */}
-      </NavLink>
+      {/* Display these links when the user is not signed in */}
+      {!user && (
+        <>
+          {' '}
+          <NavLink className="new-link" to="/main-gallery" title="Gallery">
+            Gallery
+          </NavLink>
+          <NavLink className="new-link" to="/about-me">
+            About
+          </NavLink>
+          {/* <a href="mailto:kevin@kevinnail.com">
+            <img className="site-msg-link-ig" width="48px" src="/email.png" alt="Email" />
+          </a>
+          <a href="https://www.instagram.com/stresslessglass">
+            <img width="48px" src="/IG.png" alt="Instagram" />
+          </a> */}
+        </>
+      )}
+
+      {/* Display these links when the user is signed in */}
       {user && (
         <>
+          <NavLink className="new-link" to="/main-gallery" title="Gallery">
+            Gallery
+          </NavLink>
+          <NavLink className="new-link" to="/about-me">
+            About
+          </NavLink>
           <NavLink className="new-link" to="/admin/new" title="Make new post">
-            {/* <span className="new-post-span">New</span>{' '} */}New
-            {/* {<img className="new-post-icon" src="../upload-1.png" />} */}
+            New
           </NavLink>
           <NavLink className="new-link" to="/admin/discounts" title="Make new post">
             Sale!
@@ -39,8 +52,7 @@ export default function Menu({ handleClick }) {
             title="Download Inventory CSV"
             onClick={handleDownloadCSV}
           >
-            {/* <span className="new-post-span">Inventory</span>{' '} */}Inventory
-            {/* {<img className="new-post-icon" src="../upload-1.png" />} */}
+            Inventory
           </button>
           <button
             title="Sign Out"
@@ -48,7 +60,6 @@ export default function Menu({ handleClick }) {
             ${location.pathname === '/admin' ? ' signout-button-adapt' : ''}
             ${location.pathname === '/admin/new' ? ' signout-button-adapt' : ''}
             ${location.pathname === `/admin/${id}` ? ' signout-button-adapt' : ''}
-            
             `}
             onClick={handleClick}
           >
