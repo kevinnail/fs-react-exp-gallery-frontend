@@ -1,8 +1,8 @@
 .cool-search-box {
   display: flex;
   position: relative;
-  width: 80%;
-  max-width: 150px;
+  width: 100%;
+  max-width: 210px;
   margin: 0;
   top: -25px;
 }
@@ -57,7 +57,7 @@
   min-width: 333px;
   width: 100%;
   position: relative;
-  padding-left: 150px;
+  padding-left: 84px;
 }
 
 .cool-search-wrapper:hover .cool-search-icon {

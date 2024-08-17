@@ -22,7 +22,7 @@ export default function PostCard({
   originalPrice,
 }) {
   const { user } = useUser();
-  const { postDetail, additionalImages, loading } = usePost(id); // Destructuring loading state
+  const { postDetail, additionalImages } = usePost(id); // Destructuring loading state
   const [deletedRowId, setDeletedRowId] = useState(null);
 
   if (!user) {

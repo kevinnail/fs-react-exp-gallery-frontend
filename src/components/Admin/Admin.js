@@ -45,7 +45,7 @@ export default function Admin() {
       <div className="admin-container">
         <aside className="admin-panel ">
           <section className="admin-panel-section ">
-            <div className="">
+            <div>
               <Menu handleClick={handleClick} />
             </div>
           </section>

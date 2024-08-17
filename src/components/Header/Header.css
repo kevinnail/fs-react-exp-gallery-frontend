@@ -74,13 +74,13 @@ header {
   border-radius: 5px;
   padding: 4px 4px 2px 4px;
   /* background-color: rgb(123, 123, 255); */
-  background-image: linear-gradient(315deg, black, grey);
+  background-image: linear-gradient(315deg, grey, black, grey);
   font-size: 0.9rem;
   display: flex;
   /* font-family: 'Shadows Into Light', cursive; */
   transition: 100ms;
   justify-content: center;
-  width: 110px;
+  width: 118px;
 }
 
 /* style for button when hovered or focused */
@@ -194,12 +194,29 @@ header {
 }
 
 @media (min-width: 768px) {
-  .new-link{
+  .new-link {
     font-size: 1.5rem;
   }
 }
 
 @media (min-width: 1024px) {
+  .signout-button {
+    /* color: white; */
+    /* background-color: transparent; */
+    /* border: none; */
+    /* cursor: pointer; */
+    /* box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5); */
+    /* border-radius: 5px; */
+    /* padding: 4px 4px 2px 4px; */
+    /* background-color: rgb(123, 123, 255); */
+    /* background-image: linear-gradient(315deg, grey, black, grey); */
+    font-size: 01.5rem;
+    /* display: flex; */
+    /* font-family: 'Shadows Into Light', cursive; */
+    /* transition: 100ms; */
+    /* justify-content: center; */
+    /* width: 118px; */
+  }
   .menu-div {
     display: none;
   }
