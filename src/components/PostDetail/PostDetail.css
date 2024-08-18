@@ -31,8 +31,8 @@
   border-radius: 5px;
   box-shadow: 0 0 10px #ccc;
   /* margin-bottom: 20px; */
-  font-family: 'Shadows Into Light', cursive;
-  font-weight: bold;
+  /* font-family: 'Shadows Into Light', cursive; */
+  /* font-weight: bold; */
 }
 .post-detail-div {
   font-size: 1.2rem;
@@ -421,7 +421,7 @@
 }
 
 .gallery-on-sale {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   color: yellow;
 }
 .detail-on-sale {
@@ -447,7 +447,9 @@
 @media (min-width: 768px) {
   /*
   */
-
+  .gallery-on-sale {
+    font-size: 1rem;
+  }
   .post-detail-div {
     display: grid;
     grid-template-columns: 3fr 5fr;

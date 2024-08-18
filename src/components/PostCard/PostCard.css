@@ -73,7 +73,7 @@ body {
     rgba(21, 21, 21, 0.577)
   );
   background-color: rgba(0, 0, 0, 0.51);
-  letter-spacing: 1.5px;
+  /* letter-spacing: 1.5px; */
   position: relative;
   width: 100%;
   height: calc(100vh - 90px);
@@ -97,7 +97,7 @@ body {
   height: 55px;
   background-color: white;
   display: grid;
-  grid-template-columns: 60px 150px 1fr 1fr 1fr;
+  grid-template-columns: 60px 150px 100px 1fr 1fr;
   align-items: center;
   justify-items: self-start;
   padding: 0 10px 0px 0px;
@@ -196,11 +196,15 @@ body {
   opacity: 0.5;
   pointer-events: none;
 }
-
+.sold-hightlight {
+  color: rgb(0, 153, 23);
+  position: relative;
+  top: -10px;
+}
 /*
   
   
-  @media BEGIN
+  @media BEGIN =================================================
   
   
   */

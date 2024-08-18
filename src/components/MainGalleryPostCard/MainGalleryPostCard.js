@@ -24,16 +24,10 @@ export default function MainGalleryPostCard({
         <div
           style={{
             position: 'absolute',
-            color: 'black',
-            fontSize: '1.5rem',
-            backgroundColor: 'yellow',
-            fontWeight: 'bold',
-            fontFamily: 'Raleway, sans-serif',
-            padding: '0 5px 0 5px',
           }}
         >
-          {sold ? 'SOLD OUT' : ''}
-        </div>{' '}
+          {sold ? <img src="/sold.png" /> : ''}
+        </div>
         {image_url ? (
           <img
             className="gallery-img"
@@ -60,18 +54,49 @@ export default function MainGalleryPostCard({
           <span className="gallery-desc">{description}</span>
           <div className="price-category-wrapper">
             <span className="gallery-price">
-              {isDiscounted ? (
+              {sold ? (
                 <>
-                  <span className="gallery-on-sale">ON SALE! </span>
-                  <span
-                    style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
-                  >
-                    ${originalPrice}
-                  </span>
-                  <span>${discountedPrice}</span>
+                  {isDiscounted ? (
+                    <>
+                      <span
+                        style={{
+                          textDecoration: 'line-through',
+                          color: 'red',
+                        }}
+                      >
+                        <span>${originalPrice}</span>
+                      </span>
+                    </>
+                  ) : (
+                    <span
+                      style={{
+                        textDecoration: 'line-through',
+                      }}
+                    >
+                      ${price}
+                    </span>
+                  )}
                 </>
               ) : (
-                <span>${price}</span>
+                <>
+                  {isDiscounted ? (
+                    <>
+                      <span className="gallery-on-sale">ON SALE! </span>
+                      <span
+                        style={{
+                          textDecoration: 'line-through',
+                          marginRight: '10px',
+                          color: 'red',
+                        }}
+                      >
+                        ${originalPrice}
+                      </span>
+                      <span>${discountedPrice}</span>
+                    </>
+                  ) : (
+                    <span>${price}</span>
+                  )}
+                </>
               )}
             </span>
           </div>

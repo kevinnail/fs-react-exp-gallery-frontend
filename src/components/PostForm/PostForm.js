@@ -15,22 +15,19 @@ export default function PostForm({
   category = '',
   submitHandler,
   imageUrls,
-  // getThumbnailUrl,
-  // originalPrice,
   discountedPrice,
+  sold = false, // Add the sold prop with a default value
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
-  // const [files, setfiles] = useState([]);
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
   const { user, setUser } = useUser();
   const [loading, setLoading] = useState(false);
   const [currentImages, setCurrentImages] = useState(imageUrls || []); // Added state for images currently in the post for display in the form
-  // const [newImageDataURLs, setNewImageDataURLs] = useState([]); // <--- these are for new posts for display in the form
   const [deletedImages, setDeletedImages] = useState([]);
-  // const [originalPriceInput, setOriginalPriceInput] = useState(originalPrice);
   const [discountedPriceInput, setDiscountedPriceInput] = useState(discountedPrice);
+  const [soldInput, setSoldInput] = useState(sold);
 
   // const [numFilesSelected, setNumFilesSelected] = useState(0);
 
@@ -125,6 +122,7 @@ export default function PostForm({
         author_id: user.id,
         num_imgs: files.length,
         discountedPrice: discountedPriceInput,
+        sold: soldInput,
       };
 
       // Upload new images to Cloudinary and get their URLs + post details
@@ -249,12 +247,31 @@ export default function PostForm({
               value={discountedPriceInput}
               onChange={(e) => setDiscountedPriceInput(e.target.value)}
             />
-            {/* <span className="dollar-sign-span">$</span> */}
+          </div>
+          <div className="sold-radio-group">
+            <span className="labels-form-inputs">Sold Status</span>
+            <label className="radio-label">
+              <input
+                type="radio"
+                value="true"
+                checked={soldInput === true}
+                onChange={() => setSoldInput(true)}
+              />
+              Sold
+            </label>
+            <label className="radio-label">
+              <input
+                type="radio"
+                value="false"
+                checked={soldInput === false}
+                onChange={() => setSoldInput(false)}
+              />
+              Available
+            </label>
           </div>
 
           <div {...getRootProps()} className="dropzone">
             <input {...getInputProps()} />
-
             <label className="file-upload-label">
               {files.length === 0
                 ? 'Choose images or videos'

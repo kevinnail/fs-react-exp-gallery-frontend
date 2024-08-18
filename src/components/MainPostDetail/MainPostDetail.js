@@ -89,33 +89,71 @@ export default function MainPostDetail() {
                 </span>
               </div>
               <div className="price-details">
-                {isDiscounted ? (
+                {postDetail.sold ? (
                   <>
-                    <span className="detail-on-sale">ON SALE! </span>
                     <span
-                      style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
+                      style={{
+                        textDecoration: 'line-through',
+                        marginRight: '10px',
+                        color: 'red',
+                      }}
                     >
-                      ${postDetail.originalPrice}
+                      {isDiscounted ? (
+                        <>
+                          <span style={{ textDecoration: 'line-through' }}>
+                            ${postDetail.originalPrice}
+                          </span>
+                        </>
+                      ) : (
+                        <span style={{ textDecoration: 'line-through' }}>${postDetail.price}</span>
+                      )}
                     </span>
-                    <span>${postDetail.discountedPrice}</span>
                   </>
                 ) : (
-                  <span>${postDetail.price}</span>
+                  <>
+                    {isDiscounted ? (
+                      <>
+                        <span className="detail-on-sale">ON SALE! </span>
+                        <span
+                          style={{
+                            textDecoration: 'line-through',
+                            marginRight: '10px',
+                            color: 'red',
+                          }}
+                        >
+                          ${postDetail.originalPrice}
+                        </span>
+                        <span>${postDetail.discountedPrice}</span>
+                      </>
+                    ) : (
+                      <span>${postDetail.price}</span>
+                    )}
+                  </>
                 )}
               </div>
             </section>
             <div className="gallery-container">
+              <div
+                style={{
+                  position: 'absolute',
+                  alignSelf: 'flex-start',
+                }}
+              >
+                {postDetail.sold ? <img src="/sold.png" /> : ''}
+              </div>
               {imageUrls[currentIndex].endsWith('.mp4') ? (
                 <video className="gallery-video" controls>
                   <source src={imageUrls[currentIndex]} type="video/mp4" />
                 </video>
               ) : (
-                <img
-                  className="gallery-image"
-                  src={imageUrls[currentIndex].replace('.mp4', '.jpg')}
-                  alt={`post-${currentIndex}`}
-                  onClick={openModal}
-                />
+                <>
+                  <img
+                    className="gallery-image"
+                    src={imageUrls[currentIndex].replace('.mp4', '.jpg')}
+                    alt={`post-${currentIndex}`}
+                    onClick={openModal}
+                  />
+                </>
               )}
               <Modal
                 isOpen={modalIsOpen}

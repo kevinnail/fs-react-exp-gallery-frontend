@@ -79,24 +79,35 @@ export default function PostCard({
         )}
       </Link>
 
-      <p className="grid-s2 grid-e3 mobile-title">
-        {title.length > 14 ? title.slice(0, 14) + '...' : title}
-      </p>
-      <p className="grid-s2 grid-e3 mobile-title-desk">{title}</p>
-      <p className="grid-3">
-        {isDiscounted ? (
-          <>
-            <span style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}>
-              ${originalPrice}
-            </span>
-            <span>${discountedPrice}</span>
-          </>
-        ) : (
-          <span>${price}</span>
-        )}
-      </p>
-      <p className="cat-desk">{category}</p>
-      <p className="desc-desk">{description}</p>
+      <div className="grid-s2" style={{ display: 'grid', gridTemplateRows: '30px' }}>
+        <span className="grid-s2 grid-e3 mobile-title">
+          {title.length > 14 ? title.slice(0, 14) + '...' : title}
+        </span>
+        <span className="grid-s2 grid-e3 mobile-title sold-hightlight">
+          {postDetail.sold ? ' SOLD ' : ''}
+        </span>
+        <span className="grid-s2 grid-e3 mobile-title-desk">{title}</span>
+        <span className="grid-s2 grid-e3 mobile-title-desk sold-hightlight">
+          {postDetail.sold ? 'SOLD' : ''}
+        </span>
+      </div>
+      <div>
+        {' '}
+        <span className="grid-3" style={{ display: 'grid' }}>
+          {isDiscounted ? (
+            <>
+              <span style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}>
+                ${originalPrice}
+              </span>
+              <span>${discountedPrice}</span>
+            </>
+          ) : (
+            <span>${price}</span>
+          )}
+        </span>
+      </div>
+      <span className="cat-desk">{category}</span>
+      <span className="desc-desk">{description}</span>
       <div className="admin-prod-btn-cont grid-7">
         <Link className="buttons btn-align" to={`/admin/${id}`}>
           <img src="/edit.png" className="edit-button" alt="edit" />
