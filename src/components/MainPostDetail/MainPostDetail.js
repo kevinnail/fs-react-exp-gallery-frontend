@@ -57,6 +57,10 @@ export default function MainPostDetail() {
     setUser(null);
   };
 
+  const handleCategoryClick = () => {
+    history.push(`/search?q=${postDetail.category}`);
+  };
+
   return (
     <>
       <div className="post-detail-div-wrapper">
@@ -80,7 +84,9 @@ export default function MainPostDetail() {
             <section className="title-cat-container">
               <div>
                 <span className="category-label">Category:</span>
-                <span className="category-span">{postDetail.category}</span>
+                <span className="new-link category-span" onClick={handleCategoryClick}>
+                  {postDetail.category}
+                </span>
               </div>
               <div className="price-details">
                 {isDiscounted ? (
