@@ -9,9 +9,9 @@ export default function MainGalleryPostCard({
   image_url,
   price,
   description,
-  category,
   discountedPrice,
   originalPrice,
+  sold,
 }) {
   const { additionalImagesGallery } = useGalleryPost(id);
 
@@ -21,6 +21,19 @@ export default function MainGalleryPostCard({
   return (
     <div className="gallery-display-container" key={id}>
       <Link className="gallery-display a-gallery" to={`/main-gallery/${id}`} title={`${title}`}>
+        <div
+          style={{
+            position: 'absolute',
+            color: 'black',
+            fontSize: '1.5rem',
+            backgroundColor: 'yellow',
+            fontWeight: 'bold',
+            fontFamily: 'Raleway, sans-serif',
+            padding: '0 5px 0 5px',
+          }}
+        >
+          {sold ? 'SOLD OUT' : ''}
+        </div>{' '}
         {image_url ? (
           <img
             className="gallery-img"
