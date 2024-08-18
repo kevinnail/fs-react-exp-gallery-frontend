@@ -146,6 +146,11 @@
   font-family: 'Raleway', sans-serif;
   padding: 0px 10px;
 }
+.filler-div {
+  background-color: black;
+  width: 100%;
+  margin-top: 6px;
+}
 
 .contact {
   margin-left: 0px;
@@ -430,6 +435,9 @@
 }
 
 @media (min-width: 768px) {
+  /*
+  */
+
   .post-detail-div {
     display: grid;
     grid-template-columns: 3fr 5fr;

@@ -163,12 +163,9 @@ export default function MainPostDetail() {
                 </a>
               </div>
             </section>
-            <div style={{ backgroundColor: 'black', width: '100%' }}></div>
+            <div className="filler-div"></div>
             <section className="desc-price-container">
               <span className="desc-details">{postDetail.description}</span>
-              {/* <p className="contact">
-                <a href="mailto:kevin@kevinnail.com">Email Kevin</a>{' '}
-              </p> */}
             </section>
           </div>
         </div>
