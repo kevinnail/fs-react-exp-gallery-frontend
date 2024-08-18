@@ -49,6 +49,7 @@ export default function MainGalleryPostCard({
             <span className="gallery-price">
               {isDiscounted ? (
                 <>
+                  <span className="gallery-on-sale">ON SALE! </span>
                   <span
                     style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
                   >
@@ -60,7 +61,6 @@ export default function MainGalleryPostCard({
                 <span>${price}</span>
               )}
             </span>
-            <span className="gallery-category"> {category}</span>
           </div>
         </div>
       </Link>

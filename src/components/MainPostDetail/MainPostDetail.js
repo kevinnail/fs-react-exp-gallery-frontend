@@ -85,6 +85,7 @@ export default function MainPostDetail() {
               <div className="price-details">
                 {isDiscounted ? (
                   <>
+                    <span className="detail-on-sale">ON SALE! </span>
                     <span
                       style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
                     >

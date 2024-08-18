@@ -83,7 +83,9 @@
 }
 
 .price-category-wrapper {
-  display: flex;
+  /* display: flex; */
+  /* justify-self: flex-end; */
+  align-self: flex-end;
 }
 
 .gallery-price {

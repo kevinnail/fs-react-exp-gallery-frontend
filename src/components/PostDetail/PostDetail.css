@@ -317,6 +317,7 @@
   letter-spacing: 1.5px;
   position: relative;
   width: 100%;
+  min-width: 350px;
   flex-grow: 1;
 }
 
@@ -402,6 +403,15 @@
   display: flex;
   justify-content: space-around;
   width: 150px;
+}
+
+.gallery-on-sale {
+  font-size: 0.8rem;
+  color: yellow;
+}
+.detail-on-sale {
+  font-size: 1rem;
+  color: yellow;
 }
 
 /*
