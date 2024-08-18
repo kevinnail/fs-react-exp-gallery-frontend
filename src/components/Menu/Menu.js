@@ -63,8 +63,7 @@ export default function Menu({ handleClick }) {
             `}
             onClick={handleClick}
           >
-            Sign <br />
-            Out
+            Sign Out
           </button>
         </>
       )}

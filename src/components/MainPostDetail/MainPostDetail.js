@@ -64,28 +64,25 @@ export default function MainPostDetail() {
           <Menu handleClick={handleClick} />
         </div>{' '}
         <div className="detail-top-container">
-          <div>
-            {' '}
-            <div className="back-btn">
+          <div className="post-detail-div">
+            <section className="title-container">
               <button
                 className="retract-button2 btn-adjust"
-                onClick={() => history.goBack()}
+                onClick={() =>
+                  history.length > 0 ? history.goBack() : history.push('/main-gallery')
+                }
                 title="Back to previous page"
               >
                 <i className="fa fa-arrow-left" aria-hidden="true"></i>
               </button>
-            </div>
-          </div>
-          <div className="post-detail-div">
-            {' '}
-            <section className="title-container">
               <h1 className="detail-title">{postDetail.title}</h1>
             </section>
             <section className="title-cat-container">
-              <span className="category-label">Category:</span>
-              <span className="category-span">{postDetail.category}</span>
-              <span className="price-details">
-                {' '}
+              <div>
+                <span className="category-label">Category:</span>
+                <span className="category-span">{postDetail.category}</span>
+              </div>
+              <div className="price-details">
                 {isDiscounted ? (
                   <>
                     <span
@@ -98,13 +95,7 @@ export default function MainPostDetail() {
                 ) : (
                   <span>${postDetail.price}</span>
                 )}
-              </span>
-            </section>
-            <section className="desc-price-container">
-              <span className="desc-details">{postDetail.description}</span>
-              <p className="contact">
-                <a href="mailto:kevin@kevinnail.com">Email Kevin</a>{' '}
-              </p>
+              </div>
             </section>
             <div className="gallery-container">
               {imageUrls[currentIndex].endsWith('.mp4') ? (
@@ -159,6 +150,25 @@ export default function MainPostDetail() {
                 />
               ))}
             </div>
+            <section className="detail-contact-wrapper">
+              <span className="detail-contact-text">Contact: </span>
+              <div className="detail-contact-img-link-wrapper">
+                {' '}
+                <a href={'mailto:kevin@kevinnail.com'}>
+                  <img className="site-msg-link-ig" width={'48px'} src="/email.png" />
+                </a>
+                <a href="https://www.instagram.com/stresslessglass">
+                  <img width={'48px'} src="/IG.png" />
+                </a>
+              </div>
+            </section>
+            <div style={{ backgroundColor: 'black', width: '100%' }}></div>
+            <section className="desc-price-container">
+              <span className="desc-details">{postDetail.description}</span>
+              {/* <p className="contact">
+                <a href="mailto:kevin@kevinnail.com">Email Kevin</a>{' '}
+              </p> */}
+            </section>
           </div>
         </div>
       </div>

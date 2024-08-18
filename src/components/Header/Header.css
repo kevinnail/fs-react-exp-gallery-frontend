@@ -80,7 +80,9 @@ header {
   /* font-family: 'Shadows Into Light', cursive; */
   transition: 100ms;
   justify-content: center;
+  align-items: center;
   width: 118px;
+  height: 40px;
 }
 
 /* style for button when hovered or focused */
@@ -197,6 +199,9 @@ header {
   .new-link {
     font-size: 1.5rem;
   }
+  .signout-button {
+    font-size: 1.4rem;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -210,8 +215,10 @@ header {
     /* padding: 4px 4px 2px 4px; */
     /* background-color: rgb(123, 123, 255); */
     /* background-image: linear-gradient(315deg, grey, black, grey); */
-    font-size: 01.5rem;
+    font-size: 1rem;
+    /* padding: 0px; */
     /* display: flex; */
+    /* flex-direction: row; */
     /* font-family: 'Shadows Into Light', cursive; */
     /* transition: 100ms; */
     /* justify-content: center; */
