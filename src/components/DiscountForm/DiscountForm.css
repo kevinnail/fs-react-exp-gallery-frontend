@@ -20,7 +20,7 @@
   border: 1px solid black;
   box-sizing: border-box;
   display: grid;
-  grid-template-rows: 85px 50px 50px 120px 130px;
+  grid-template-rows: 85px 50px 40px 250px 100px;
   justify-items: center;
   overflow: auto;
   color: white;
@@ -105,7 +105,7 @@
   justify-self: flex-start;
 }
 .form-section2 {
-  margin-top: 40px;
+  /* margin-top: 40px; */
 }
 .radio-label {
   font-size: 20px;

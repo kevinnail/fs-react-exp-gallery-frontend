@@ -102,14 +102,13 @@ export default function DiscountForm() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Enter a message for your customers"
-            rows="4"
+            rows="8"
             className="input-field message-input"
           />
         </section>
         <div>
-          {' '}
-          <button className="submit-button" type="submit">
-            Submit
+          <button className="submit-btn" type="submit">
+            <img src="/upload.png" alt="upload" />
           </button>
         </div>
       </form>
