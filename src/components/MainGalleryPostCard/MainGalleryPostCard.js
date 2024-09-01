@@ -91,7 +91,7 @@ export default function MainGalleryPostCard({
                       >
                         ${originalPrice}
                       </span>
-                      <span>${discountedPrice}</span>
+                      <span>${Math.floor(discountedPrice)}</span>
                     </>
                   ) : (
                     <span>${price}</span>
