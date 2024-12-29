@@ -9,13 +9,16 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
     Collabs: 0,
     Cups: 0,
     'Dry Pieces': 0,
+    Goblets: 0,
     'Iso Stations': 0,
     Marbles: 0,
     Pendants: 0,
+    Recyclers: 0,
+    Rigs: 0,
+    Slides: 0,
     'Spinner Caps': 0,
     'Terp Pearls': 0,
-    Tubes: 0,
-    Recyclers: 0,
+    Misc: 0,
   };
 
   const categoryTotalPrices = { ...categories };
