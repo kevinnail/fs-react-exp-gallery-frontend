@@ -7,22 +7,17 @@ import {
 } from '../../services/fetch-utils.js';
 import './PostCard.css';
 import { useState } from 'react';
-import { usePost } from '../../hooks/usePost.js';
 
 export default function PostCard({
   id,
+  post,
   posts,
-  title,
-  description,
   image_url,
-  category,
-  price,
   setPosts,
   discountedPrice,
   originalPrice,
 }) {
   const { user } = useUser();
-  const { postDetail, additionalImages } = usePost(id); // Destructuring loading state
   const [deletedRowId, setDeletedRowId] = useState(null);
 
   if (!user) {
@@ -56,7 +51,7 @@ export default function PostCard({
   };
 
   return (
-    <div className={`post ${postDetail.id === deletedRowId ? 'grayed-out' : ''}`} key={id}>
+    <div className={`post ${id === deletedRowId ? 'grayed-out' : ''}`} key={id}>
       <Link to={`/main-gallery/${id}`}>
         {image_url ? (
           <img
@@ -65,13 +60,13 @@ export default function PostCard({
             alt="edit"
           />
         ) : (
-          additionalImages[0] && (
+          post.image_url && (
             <img
               className="admin-prod-img"
               src={
-                additionalImages[0].image_url.endsWith('.mp4')
-                  ? `${additionalImages[0].image_url.slice(0, -4)}.jpg`
-                  : additionalImages[0].image_url
+                post.image_url.endsWith('.mp4')
+                  ? `${post.image_url.slice(0, -4)}.jpg`
+                  : post.image_url
               }
               alt="edit"
             />
@@ -81,14 +76,14 @@ export default function PostCard({
 
       <div className="grid-s2" style={{ display: 'grid', gridTemplateRows: '30px' }}>
         <span className="grid-s2 grid-e3 mobile-title">
-          {title.length > 14 ? title.slice(0, 14) + '...' : title}
+          {post.title.length > 14 ? post.title.slice(0, 14) + '...' : post.title}
         </span>
         <span className="grid-s2 grid-e3 mobile-title sold-hightlight">
-          {postDetail.sold ? ' SOLD ' : ''}
+          {post.sold ? ' SOLD ' : ''}
         </span>
-        <span className="grid-s2 grid-e3 mobile-title-desk">{title}</span>
+        <span className="grid-s2 grid-e3 mobile-title-desk">{post.title}</span>
         <span className="grid-s2 grid-e3 mobile-title-desk sold-hightlight">
-          {postDetail.sold ? 'SOLD' : ''}
+          {post.sold ? 'SOLD' : ''}
         </span>
       </div>
       <div>
@@ -99,15 +94,15 @@ export default function PostCard({
               <span style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}>
                 ${originalPrice}
               </span>
-              <span>${discountedPrice}</span>
+              <span>${post.discountedPrice}</span>
             </>
           ) : (
-            <span>${price}</span>
+            <span>${post.price}</span>
           )}
         </span>
       </div>
-      <span className="cat-desk">{category}</span>
-      <span className="desc-desk">{description}</span>
+      <span className="cat-desk">{post.category}</span>
+      <span className="desc-desk">{post.description}</span>
       <div className="admin-prod-btn-cont grid-7">
         <Link className="buttons btn-align" to={`/admin/${id}`}>
           <img src="/edit.png" className="edit-button" alt="edit" />
