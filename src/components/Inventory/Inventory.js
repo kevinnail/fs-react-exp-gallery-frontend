@@ -18,6 +18,7 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
     Slides: 0,
     'Spinner Caps': 0,
     'Terp Pearls': 0,
+    Tubes: 0,
     Misc: 0,
   };
 
