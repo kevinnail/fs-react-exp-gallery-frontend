@@ -19,8 +19,9 @@ export default function MainPostDetail() {
   const history = useHistory();
 
   // Determine whether to show discounted price or not
-  const isDiscounted =
-    postDetail.discountedPrice && postDetail.discountedPrice < postDetail.originalPrice;
+  const originalPrice = parseFloat(postDetail.originalPrice);
+  const discountedPrice = parseFloat(postDetail.discountedPrice);
+  const isDiscounted = discountedPrice && discountedPrice < originalPrice;
 
   const handleThumbnailClick = (index) => {
     setCurrentIndex(index);
@@ -56,6 +57,10 @@ export default function MainPostDetail() {
     setUser(null);
   };
 
+  const handleCategoryClick = () => {
+    history.push(`/search?q=${postDetail.category}`);
+  };
+
   return (
     <>
       <div className="post-detail-div-wrapper">
@@ -63,60 +68,92 @@ export default function MainPostDetail() {
           <Menu handleClick={handleClick} />
         </div>{' '}
         <div className="detail-top-container">
-          <div>
-            {' '}
-            <div className="back-btn">
+          <div className="post-detail-div">
+            <section className="title-container">
               <button
                 className="retract-button2 btn-adjust"
-                onClick={() => history.goBack()}
+                onClick={() =>
+                  history.length > 0 ? history.goBack() : history.push('/main-gallery')
+                }
                 title="Back to previous page"
               >
                 <i className="fa fa-arrow-left" aria-hidden="true"></i>
               </button>
-            </div>
-          </div>
-          <div className="post-detail-div">
-            {' '}
-            <section className="title-container">
               <h1 className="detail-title">{postDetail.title}</h1>
             </section>
             <section className="title-cat-container">
-              <span className="category-label">Category:</span>
-              <span className="category-span">{postDetail.category}</span>
-              <span className="price-details">
-                {' '}
-                {isDiscounted ? (
+              <div>
+                <span className="category-label">Category:</span>
+                <span className="new-link category-span" onClick={handleCategoryClick}>
+                  {postDetail.category}
+                </span>
+              </div>
+              <div className="price-details">
+                {postDetail.sold ? (
                   <>
                     <span
-                      style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
+                      style={{
+                        textDecoration: 'line-through',
+                        marginRight: '10px',
+                        color: 'red',
+                      }}
                     >
-                      ${postDetail.originalPrice}
+                      {isDiscounted ? (
+                        <>
+                          <span style={{ textDecoration: 'line-through' }}>
+                            ${postDetail.originalPrice}
+                          </span>
+                        </>
+                      ) : (
+                        <span style={{ textDecoration: 'line-through' }}>${postDetail.price}</span>
+                      )}
                     </span>
-                    <span>${postDetail.discountedPrice}</span>
                   </>
                 ) : (
-                  <span>${postDetail.price}</span>
+                  <>
+                    {isDiscounted ? (
+                      <>
+                        <span className="detail-on-sale">ON SALE! </span>
+                        <span
+                          style={{
+                            textDecoration: 'line-through',
+                            marginRight: '10px',
+                            color: 'red',
+                          }}
+                        >
+                          ${postDetail.originalPrice}
+                        </span>
+                        <span>${postDetail.discountedPrice}</span>
+                      </>
+                    ) : (
+                      <span>${postDetail.price}</span>
+                    )}
+                  </>
                 )}
-              </span>
-            </section>
-            <section className="desc-price-container">
-              <span className="desc-details">{postDetail.description}</span>
-              <p className="contact">
-                <a href="mailto:kevin@kevinnail.com">Email Kevin</a>{' '}
-              </p>
+              </div>
             </section>
             <div className="gallery-container">
+              <div
+                style={{
+                  position: 'absolute',
+                  alignSelf: 'flex-start',
+                }}
+              >
+                {postDetail.sold ? <img src="/sold.png" /> : ''}
+              </div>
               {imageUrls[currentIndex].endsWith('.mp4') ? (
                 <video className="gallery-video" controls>
                   <source src={imageUrls[currentIndex]} type="video/mp4" />
                 </video>
               ) : (
-                <img
-                  className="gallery-image"
-                  src={imageUrls[currentIndex].replace('.mp4', '.jpg')}
-                  alt={`post-${currentIndex}`}
-                  onClick={openModal}
-                />
+                <>
+                  <img
+                    className="gallery-image"
+                    src={imageUrls[currentIndex].replace('.mp4', '.jpg')}
+                    alt={`post-${currentIndex}`}
+                    onClick={openModal}
+                  />
+                </>
               )}
               <Modal
                 isOpen={modalIsOpen}
@@ -158,6 +195,22 @@ export default function MainPostDetail() {
                 />
               ))}
             </div>
+            <section className="detail-contact-wrapper">
+              <span className="detail-contact-text">Contact: </span>
+              <div className="detail-contact-img-link-wrapper">
+                {' '}
+                <a href={'mailto:kevin@kevinnail.com'}>
+                  <img className="site-msg-link-ig" width={'48px'} src="/email.png" />
+                </a>
+                <a href="https://www.instagram.com/stresslessglass">
+                  <img width={'48px'} src="/IG.png" />
+                </a>
+              </div>
+            </section>
+            <div className="filler-div"></div>
+            <section className="desc-price-container">
+              <span className="desc-details">{postDetail.description}</span>
+            </section>
           </div>
         </div>
       </div>

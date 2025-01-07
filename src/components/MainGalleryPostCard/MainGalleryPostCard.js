@@ -9,27 +9,25 @@ export default function MainGalleryPostCard({
   image_url,
   price,
   description,
-  category,
   discountedPrice,
   originalPrice,
+  sold,
 }) {
-  const { additionalImagesGallery, loading } = useGalleryPost(id);
+  const { additionalImagesGallery } = useGalleryPost(id);
 
   // Determine whether to show discounted price or not
   const isDiscounted = discountedPrice && parseFloat(discountedPrice) < parseFloat(originalPrice);
 
-  // Handle loading state
-  if (loading) {
-    return (
-      <div className="gallery-display-container loading">
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="gallery-display-container" key={id}>
       <Link className="gallery-display a-gallery" to={`/main-gallery/${id}`} title={`${title}`}>
+        <div
+          style={{
+            position: 'absolute',
+          }}
+        >
+          {sold ? <img src="/sold.png" /> : ''}
+        </div>
         {image_url ? (
           <img
             className="gallery-img"
@@ -56,20 +54,51 @@ export default function MainGalleryPostCard({
           <span className="gallery-desc">{description}</span>
           <div className="price-category-wrapper">
             <span className="gallery-price">
-              {isDiscounted ? (
+              {sold ? (
                 <>
-                  <span
-                    style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
-                  >
-                    ${originalPrice}
-                  </span>
-                  <span>${discountedPrice}</span>
+                  {isDiscounted ? (
+                    <>
+                      <span
+                        style={{
+                          textDecoration: 'line-through',
+                          color: 'red',
+                        }}
+                      >
+                        <span>${originalPrice}</span>
+                      </span>
+                    </>
+                  ) : (
+                    <span
+                      style={{
+                        textDecoration: 'line-through',
+                      }}
+                    >
+                      ${price}
+                    </span>
+                  )}
                 </>
               ) : (
-                <span>${price}</span>
+                <>
+                  {isDiscounted ? (
+                    <>
+                      <span className="gallery-on-sale">ON SALE! </span>
+                      <span
+                        style={{
+                          textDecoration: 'line-through',
+                          marginRight: '10px',
+                          color: 'red',
+                        }}
+                      >
+                        ${originalPrice}
+                      </span>
+                      <span>${Math.floor(discountedPrice)}</span>
+                    </>
+                  ) : (
+                    <span>${price}</span>
+                  )}
+                </>
               )}
             </span>
-            <span className="gallery-category"> {category}</span>
           </div>
         </div>
       </Link>

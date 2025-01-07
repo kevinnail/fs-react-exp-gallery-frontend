@@ -13,6 +13,8 @@ export default function Admin() {
   const { user, setUser } = useUser();
   const { posts, loading, setPosts, error } = usePosts();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 10;
 
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
@@ -31,7 +33,7 @@ export default function Admin() {
     return (
       <div className="loading-div-wrapper">
         <h2 className="error-state">
-          Something went wrong. Please refresh the page or try again later. Here{`'`}s the error
+          Something went wrong. Please refresh the page or try again later. Here{"'"}s the error
           message if it helps:
           <br />
           <span className="error-span">{error}</span>
@@ -40,12 +42,70 @@ export default function Admin() {
     );
   }
 
+  // Filter posts based on selected category
+  const filteredPosts = posts.filter(
+    (post) => !selectedCategory || post.category === selectedCategory
+  );
+
+  // Calculate pagination values
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+
+  // Handle page changes
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo(0, 0);
+  };
+
+  // Generate page numbers
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
+  // Create pagination controls
+  const PaginationControls = () => {
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="pagination-controls">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="pagination-button"
+        >
+          Previous
+        </button>
+
+        {pageNumbers.map((number) => (
+          <button
+            key={number}
+            onClick={() => handlePageChange(number)}
+            className={`pagination-button ${currentPage === number ? 'active' : ''}`}
+          >
+            {number}
+          </button>
+        ))}
+
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="pagination-button"
+        >
+          Next
+        </button>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="admin-container">
-        <aside className="admin-panel ">
-          <section className="admin-panel-section ">
-            <div className="">
+        <aside className="admin-panel">
+          <section className="admin-panel-section">
+            <div>
               <Menu handleClick={handleClick} />
             </div>
           </section>
@@ -57,9 +117,18 @@ export default function Admin() {
               <h1>No posts yet!</h1>
             </div>
           ) : (
-            posts
-              .filter((post) => !selectedCategory || post.category === selectedCategory)
-              .map((post) => <PostCard key={post.id} {...post} setPosts={setPosts} posts={posts} />)
+            <>
+              {currentPosts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  id={post.id}
+                  post={post}
+                  setPosts={setPosts}
+                  posts={posts}
+                />
+              ))}
+              <PaginationControls />
+            </>
           )}
         </div>
         <Inventory

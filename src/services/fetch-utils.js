@@ -452,3 +452,43 @@ export async function bulkPostEdit(action, percentage = 0) {
     throw error;
   }
 }
+
+export async function getSiteMessage() {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/main-gallery/home-message`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const msg = await response.json();
+    return msg;
+  } catch (error) {
+    console.error('An error occurred', error);
+    throw error;
+  }
+}
+
+export async function postAdminMessage(message) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/admin/home-message`, {
+      method: 'PUT', // or PATCH, depending on whether you're doing a full or partial update
+      credentials: 'include',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message }), // Wrap the message in an object
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to post the message');
+    }
+
+    return await response.json();
+  } catch (e) {
+    console.error('An error occurred:', e);
+    throw e;
+  }
+}
