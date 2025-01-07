@@ -192,6 +192,7 @@ export default function PostForm({
               <option value="Slides">Slides</option>
               <option value="Spinner Caps">Spinner Caps</option>
               <option value="Terp Pearls">Terp Pearls</option>
+              <option value="Tubes">Tubes</option>
               <option value="Misc">Misc</option>
             </select>
           </div>
