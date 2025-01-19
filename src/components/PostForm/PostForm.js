@@ -294,7 +294,7 @@ export default function PostForm({
                 : `${files.length} file${files.length > 1 ? 's' : ''} selected`}
             </label>
           </div>
-          {files.length > 0 && thumbs}
+          {files.length > 0 || currentImages?.length > 0 ? thumbs : null}
           <div className="btn-container">
             <button className="submit-btn" type="submit">
               {<img className="upload-icon " src="/upload.png" alt="upload" />}
