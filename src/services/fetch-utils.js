@@ -110,7 +110,8 @@ export async function postPost(
   price,
   author_id,
   public_id,
-  num_imgs
+  num_imgs,
+  link
 ) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
     method: 'POST',
@@ -127,6 +128,7 @@ export async function postPost(
       author_id,
       public_id,
       num_imgs,
+      link,
     }),
     credentials: 'include',
   });

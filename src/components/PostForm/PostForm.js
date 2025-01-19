@@ -9,14 +9,15 @@ import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 export default function PostForm({
+  category = '',
   title = '',
   description = '',
   price = '',
-  category = '',
-  submitHandler,
-  imageUrls,
   discountedPrice,
-  sold = false, // Add the sold prop with a default value
+  selling_link = '',
+  sold = false,
+  imageUrls,
+  submitHandler,
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
@@ -28,6 +29,7 @@ export default function PostForm({
   const [deletedImages, setDeletedImages] = useState([]);
   const [discountedPriceInput, setDiscountedPriceInput] = useState(discountedPrice);
   const [soldInput, setSoldInput] = useState(sold);
+  const [sellingLink, setSellingLink] = useState(selling_link);
 
   // const [numFilesSelected, setNumFilesSelected] = useState(0);
 
@@ -123,6 +125,7 @@ export default function PostForm({
         num_imgs: files.length,
         discountedPrice: discountedPriceInput,
         sold: soldInput,
+        link: sellingLink,
       };
 
       // Upload new images to Cloudinary and get their URLs + post details
@@ -249,6 +252,19 @@ export default function PostForm({
               onChange={(e) => setDiscountedPriceInput(e.target.value)}
             />
           </div>
+          <div className="price-in-form selling-link">
+            <span>GlassPass || Etsy Link:</span>
+            <input
+              placeholder="GlassPass or Etsy link"
+              className="image-input  price-input"
+              type="text"
+              step="1"
+              name="link"
+              value={sellingLink}
+              onChange={(e) => setSellingLink(e.target.value)}
+            />
+          </div>
+
           <div className="sold-radio-group">
             <span className="labels-form-inputs">Sold Status</span>
             <label className="radio-label">

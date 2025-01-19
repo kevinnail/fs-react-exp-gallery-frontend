@@ -18,9 +18,22 @@ export default function MainPostDetail() {
   const { setUser } = useUser();
   const history = useHistory();
 
+  const glasspassLogoLink =
+    'https://stress-less-glass.s3.us-west-2.amazonaws.com/stress-less-glass-assets/glasspass_logo.PNG';
+  const etsyLogoLink =
+    'https://stress-less-glass.s3.us-west-2.amazonaws.com/stress-less-glass-assets/etsy_logo.PNG';
+
+  // First get the boolean
+  const isEtsy = postDetail?.selling_link?.includes('etsy');
+
+  // Then use that boolean for both the logo selection and store name
+  const sellingLogoLink = isEtsy ? etsyLogoLink : glasspassLogoLink;
+  const store = isEtsy ? 'Etsy' : 'GlassPass';
+
+  // console.log('postDetail?', postDetail?);
   // Determine whether to show discounted price or not
-  const originalPrice = parseFloat(postDetail.originalPrice);
-  const discountedPrice = parseFloat(postDetail.discountedPrice);
+  const originalPrice = parseFloat(postDetail?.originalPrice);
+  const discountedPrice = parseFloat(postDetail?.discountedPrice);
   const isDiscounted = discountedPrice && discountedPrice < originalPrice;
 
   const handleThumbnailClick = (index) => {
@@ -58,7 +71,7 @@ export default function MainPostDetail() {
   };
 
   const handleCategoryClick = () => {
-    history.push(`/search?q=${postDetail.category}`);
+    history.push(`/search?q=${postDetail?.category}`);
   };
 
   return (
@@ -79,17 +92,17 @@ export default function MainPostDetail() {
               >
                 <i className="fa fa-arrow-left" aria-hidden="true"></i>
               </button>
-              <h1 className="detail-title">{postDetail.title}</h1>
+              <h1 className="detail-title">{postDetail?.title}</h1>
             </section>
             <section className="title-cat-container">
               <div>
                 <span className="category-label">Category:</span>
                 <span className="new-link category-span" onClick={handleCategoryClick}>
-                  {postDetail.category}
+                  {postDetail?.category}
                 </span>
               </div>
               <div className="price-details">
-                {postDetail.sold ? (
+                {postDetail?.sold ? (
                   <>
                     <span
                       style={{
@@ -101,11 +114,11 @@ export default function MainPostDetail() {
                       {isDiscounted ? (
                         <>
                           <span style={{ textDecoration: 'line-through' }}>
-                            ${postDetail.originalPrice}
+                            ${postDetail?.originalPrice}
                           </span>
                         </>
                       ) : (
-                        <span style={{ textDecoration: 'line-through' }}>${postDetail.price}</span>
+                        <span style={{ textDecoration: 'line-through' }}>${postDetail?.price}</span>
                       )}
                     </span>
                   </>
@@ -121,12 +134,12 @@ export default function MainPostDetail() {
                             color: 'red',
                           }}
                         >
-                          ${postDetail.originalPrice}
+                          ${postDetail?.originalPrice}
                         </span>
-                        <span>${postDetail.discountedPrice}</span>
+                        <span>${postDetail?.discountedPrice}</span>
                       </>
                     ) : (
-                      <span>${postDetail.price}</span>
+                      <span>${postDetail?.price}</span>
                     )}
                   </>
                 )}
@@ -139,7 +152,7 @@ export default function MainPostDetail() {
                   alignSelf: 'flex-start',
                 }}
               >
-                {postDetail.sold ? <img src="/sold.png" /> : ''}
+                {postDetail?.sold ? <img src="/sold.png" /> : ''}
               </div>
               {imageUrls[currentIndex].endsWith('.mp4') ? (
                 <video className="gallery-video" controls>
@@ -202,14 +215,39 @@ export default function MainPostDetail() {
                 <a href={'mailto:kevin@kevinnail.com'}>
                   <img className="site-msg-link-ig" width={'48px'} src="/email.png" />
                 </a>
-                <a href="https://www.instagram.com/stresslessglass">
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href="https://www.instagram.com/stresslessglass"
+                >
                   <img width={'48px'} src="/IG.png" />
                 </a>
               </div>
             </section>
+            <section className="selling-link-wrapper">
+              <div>
+                {postDetail.selling_link && (
+                  <>
+                    <span className={'selling-link-span'}>{`Buy now on ${store}!`} </span>
+                    <a
+                      href={`${postDetail?.selling_link}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        className="selling-logo-link"
+                        src={sellingLogoLink}
+                        alt="Link to shopping cart"
+                      />
+                    </a>
+                  </>
+                )}
+              </div>
+            </section>
+
             <div className="filler-div"></div>
             <section className="desc-price-container">
-              <span className="desc-details">{postDetail.description}</span>
+              <span className="desc-details">{postDetail?.description}</span>
             </section>
           </div>
         </div>

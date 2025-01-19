@@ -13,8 +13,17 @@ export default function NewPost() {
 
   const handleSubmit = async (newPost) => {
     try {
-      const { title, description, image_url, category, price, author_id, public_id, num_imgs } =
-        newPost;
+      const {
+        title,
+        description,
+        image_url,
+        category,
+        price,
+        author_id,
+        public_id,
+        num_imgs,
+        link,
+      } = newPost;
 
       // create new post with fetch call to db
       const post = await postPost(
@@ -25,7 +34,8 @@ export default function NewPost() {
         price,
         author_id,
         public_id,
-        num_imgs
+        num_imgs,
+        link
       );
 
       // send image urls and public ids to db
