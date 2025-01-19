@@ -4,7 +4,7 @@ import {
   getAdditionalImageUrlsPublicIdsGallery,
   getGalleryPostDetail,
 } from '../services/fetch-utils.js';
-
+import { useHistory } from 'react-router-dom';
 export function useGalleryPost(id) {
   const [postDetail, setPostDetail] = useState({});
   const [imageUrls, setImageUrls] = useState([]);
@@ -12,12 +12,15 @@ export function useGalleryPost(id) {
   const [loading, setLoading] = useState(true);
   const [isDeleted, setIsDeleted] = useState(false);
   const [additionalImagesGallery, setAdditionalImagesGallery] = useState([]);
-
+  const history = useHistory();
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
       try {
         const data = await getGalleryPostDetail(id);
+        if (!data) {
+          history.push('/main-gallery');
+        }
         const additionalImagesGallery = await getAdditionalImageUrlsPublicIdsGallery(id);
         const additionalImageUrlsPublicIds = additionalImagesGallery.map(
           (image) => image.image_url

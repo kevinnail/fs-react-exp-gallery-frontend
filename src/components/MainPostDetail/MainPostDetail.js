@@ -154,7 +154,7 @@ export default function MainPostDetail() {
               >
                 {postDetail?.sold ? <img src="/sold.png" /> : ''}
               </div>
-              {imageUrls[currentIndex].endsWith('.mp4') ? (
+              {imageUrls[currentIndex]?.endsWith('.mp4') ? (
                 <video className="gallery-video" controls>
                   <source src={imageUrls[currentIndex]} type="video/mp4" />
                 </video>
@@ -162,7 +162,7 @@ export default function MainPostDetail() {
                 <>
                   <img
                     className="gallery-image"
-                    src={imageUrls[currentIndex].replace('.mp4', '.jpg')}
+                    src={imageUrls[currentIndex]?.replace('.mp4', '.jpg')}
                     alt={`post-${currentIndex}`}
                     onClick={openModal}
                   />
@@ -174,14 +174,14 @@ export default function MainPostDetail() {
                 className="modal"
                 overlayClassName="overlay2"
               >
-                {imageUrls[currentIndex].endsWith('.mp4') ? (
+                {imageUrls[currentIndex]?.endsWith('.mp4') ? (
                   <video className="modal-video" controls>
                     <source src={imageUrls[currentIndex]} type="video/mp4" />
                   </video>
                 ) : (
                   <img
                     className="modal-image"
-                    src={imageUrls[currentIndex].replace('.mp4', '.jpg')}
+                    src={imageUrls[currentIndex]?.replace('.mp4', '.jpg')}
                     alt={`modal-post-${currentIndex}`}
                     {...swipeHandlers}
                   />
