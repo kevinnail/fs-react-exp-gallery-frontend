@@ -22,13 +22,21 @@ export default function MainPostDetail() {
     'https://stress-less-glass.s3.us-west-2.amazonaws.com/stress-less-glass-assets/glasspass_logo.PNG';
   const etsyLogoLink =
     'https://stress-less-glass.s3.us-west-2.amazonaws.com/stress-less-glass-assets/etsy_logo.PNG';
+  const instagramLogoLink = '/IG.png';
 
-  // First get the boolean
-  const isEtsy = postDetail?.selling_link?.includes('etsy');
+  let sellingLogoLink = glasspassLogoLink;
+  let store = 'GlassPass';
+  let isInstagram = false;
 
-  // Then use that boolean for both the logo selection and store name
-  const sellingLogoLink = isEtsy ? etsyLogoLink : glasspassLogoLink;
-  const store = isEtsy ? 'Etsy' : 'GlassPass';
+  const platform = postDetail?.selling_link?.toLowerCase();
+  if (platform?.includes('etsy')) {
+    sellingLogoLink = etsyLogoLink;
+    store = 'Etsy';
+  } else if (platform?.includes('instagram')) {
+    sellingLogoLink = instagramLogoLink;
+    store = 'Instagram';
+    isInstagram = true;
+  }
 
   // console.log('postDetail?', postDetail?);
   // Determine whether to show discounted price or not
@@ -228,7 +236,11 @@ export default function MainPostDetail() {
               <div>
                 {postDetail.selling_link && (
                   <>
-                    <span className={'selling-link-span'}>{`Buy now on ${store}!`} </span>
+                    <span className={'selling-link-span'}>
+                      {platform?.includes('instagram')
+                        ? `Up for auction on ${store}!`
+                        : `Buy now on ${store}!`}{' '}
+                    </span>
                     <a
                       href={`${postDetail?.selling_link}`}
                       target="_blank"
