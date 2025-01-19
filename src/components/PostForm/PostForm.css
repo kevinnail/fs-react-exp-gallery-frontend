@@ -7,8 +7,6 @@ body {
 }
 
 .new-post-form {
-  /* background-image: linear-gradient(315deg, #7777f3c4, #5b36ff83); */
-  /* width: 80%; */
   background-image: linear-gradient(125deg, rgb(255, 255, 255), rgba(0, 0, 0, 0.23));
   background-color: rgba(0, 0, 0, 0.507);
   min-width: 350px;
@@ -26,7 +24,6 @@ body {
   grid-template-rows: auto;
   justify-items: center;
   overflow: auto;
-  /* margin-bottom: 50px; */
 }
 
 .form-title {
@@ -43,7 +40,6 @@ body {
   background-color: rgb(255, 254, 254);
   font-size: large;
   border-radius: 5px;
-  /* font-family: 'Shadows Into Light', cursive; */
   font-family: 'Courier New', Courier, monospace;
   letter-spacing: 2px;
   font-weight: bold;
@@ -106,40 +102,25 @@ body {
 
 .submit-btn {
   background-color: rgb(176, 176, 253, 0.5);
-  /* background: none; */
   box-sizing: border-box;
   border: 1px solid black;
-  /* padding: 10px; */
-  /* font-size: large; */
-  /* width: 300px; */
-  /* font-size: 1.3rem; */
   border-radius: 50%;
   padding: 5px 5px 3px 5px;
   box-shadow: 2px 2px 4px 0 black;
-  /* font-family: 'Shadows Into Light', cursive;
-  letter-spacing: 2px; */
   cursor: pointer;
+  margin-top: 50px;
 }
 .submit-btn:active {
   background-color: rgba(163, 163, 231, 0.5);
-  /* border-top: 2px solid black;
-  border-left: 2px solid black; */
-  /* box-shadow: 0px 0px 5px 0 black;*/
   box-shadow: inset 2px 2px 5px #d3c9ff;
   position: relative;
   left: 1px;
   top: 1px;
 }
 
-.upload-icon {
-  /* display: block; */
-  /* width: 40px;
-  height: 40px; */
-}
 .new-post-icon {
   width: 35px;
   height: 35px;
-  /* margin-right: 10px; */
   margin-left: 10px;
 }
 option {
@@ -155,7 +136,6 @@ option {
   margin: auto;
   border-radius: 20px;
   color: #5b36ff;
-  /* padding: 100px; */
   font-family: 'Shadows Into Light', cursive;
   letter-spacing: 2px;
   font-weight: bold;
@@ -177,33 +157,14 @@ option {
   width: 100%;
   display: flex;
   justify-content: center;
-  /* width: ; */
-  /* display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(auto-fill, minmax(50px, auto));
-  flex-wrap: wrap;
-  justify-items: flex-start;
-  align-items: flex-start; */
   margin: 0px auto;
   padding: 0 0rem;
-  /* max-width: 1200px; */
-  /* height: 90vh; */
-  /* background-color: rgb(176, 176, 253);
-  background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83);
-  background-size: 400% 400%;
-  animation: ocean 10s ease-in-out infinite; */
   letter-spacing: 1.5px;
   position: relative;
   width: 100%;
-  /* height: calc(100vh - 90px); */
-  /* flex-grow: 1; */
 }
 
 .loading-div-wrapper {
-  /* background-color: rgb(176, 176, 253);
-  background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83);
-  background-size: 400% 400%;
-  animation: ocean 10s ease-in-out infinite; */
   height: calc(100vh - 90px);
 }
 
@@ -225,9 +186,7 @@ option {
 }
 
 .input-with-dollar-sign {
-  /* position: relative; */
   padding-left: 25px;
-  /* left: 10px; */
 }
 .dollar-sign-span {
   position: relative;
@@ -285,9 +244,6 @@ option {
   box-sizing: border-box;
 }
 .form-wrapper {
-  /* background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83); */
-  /* background-size: 400% 400%;
-  animation: ocean 10s ease-in-out infinite; */
   letter-spacing: 1.5px;
   position: relative;
   width: 100%;
@@ -347,6 +303,10 @@ option {
 
 .thumbnails-container {
   margin-top: 20px;
+  height: 250px;
+  overflow-y: scroll;
+  display: flex;
+  align-items: start;
 }
 
 .dropzone {
@@ -369,12 +329,21 @@ option {
 /*
 
 @media rules start ======================================================
-
+mobile BELOW this point due to min-width parameter
 */
+
+.submit-btn {
+  margin-top: 0px;
+}
 
 @media (min-width: 768px) {
   .selling-link {
-    grid-row: 5;
+    grid-row: 4;
+    grid-column: 2;
+  }
+
+  .image-input-button {
+    grid-row: 7;
     grid-column: 2;
   }
 
@@ -417,16 +386,16 @@ option {
     grid-column: 2;
   }
   .thumbnails-container {
-    grid-row: 6;
+    grid-row: 7;
     grid-column: 2;
-    /* align-self: self-start;
-    margin-top: 46px; */
+    min-height: 250px;
+    overflow-y: scroll;
+    display: flex;
+    align-items: start;
   }
   .dropzone {
-    grid-row: 4;
+    grid-row: 5;
     grid-column: 2;
-    /* align-self: self-start;
-    margin-top: -160px; */
   }
   .btn-container {
     grid-row: 9;

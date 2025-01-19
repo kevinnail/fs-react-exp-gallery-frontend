@@ -264,7 +264,6 @@ export default function PostForm({
               onChange={(e) => setSellingLink(e.target.value)}
             />
           </div>
-
           <div className="sold-radio-group">
             <span className="labels-form-inputs">Sold Status</span>
             <label className="radio-label">
@@ -286,8 +285,7 @@ export default function PostForm({
               Available
             </label>
           </div>
-
-          <div {...getRootProps()} className="dropzone">
+          <div {...getRootProps()} className="dropzone image-input-button">
             <input {...getInputProps()} />
             <label className="file-upload-label">
               {files.length === 0
@@ -295,7 +293,7 @@ export default function PostForm({
                 : `${files.length} file${files.length > 1 ? 's' : ''} selected`}
             </label>
           </div>
-          {thumbs}
+          {files.length > 0 && thumbs}
           <div className="btn-container">
             <button className="submit-btn" type="submit">
               {<img className="upload-icon " src="/upload.png" alt="upload" />}
