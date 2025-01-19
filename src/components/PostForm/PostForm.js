@@ -253,14 +253,15 @@ export default function PostForm({
             />
           </div>
           <div className="price-in-form selling-link">
-            <span>GlassPass || Etsy Link:</span>
+            <span>GlassPass || Etsy || Insta Link:</span>
             <input
-              placeholder="GlassPass or Etsy link"
+              placeholder="GP or Etsy or IG"
               className="image-input  price-input"
               type="text"
               step="1"
               name="link"
               value={sellingLink}
+              style={{ textAlign: 'left' }}
               onChange={(e) => setSellingLink(e.target.value)}
             />
           </div>
