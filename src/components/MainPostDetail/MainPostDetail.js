@@ -237,9 +237,13 @@ export default function MainPostDetail() {
                 {postDetail.selling_link && (
                   <>
                     <span className={'selling-link-span'}>
-                      {platform?.includes('instagram')
-                        ? `Up for auction on ${store}!`
-                        : `Available on ${store}!`}{' '}
+                      {platform?.includes('instagram') ? (
+                        `Up for auction on ${store}!`
+                      ) : (
+                        <>
+                          <span className="shimmer">Available</span> on {store}!
+                        </>
+                      )}
                     </span>
                     <a
                       href={`${postDetail?.selling_link}`}
