@@ -413,6 +413,12 @@
 }
 .selling-link-wrapper > a {
   text-decoration: none;
+  color: inherit;
+}
+
+.selling-link-wrapper > a:visited {
+  text-decoration: none;
+  color: inherit;
 }
 
 .selling-link-span {
@@ -474,12 +480,19 @@
 
 
 */
-@media (min-width: 424px) {
-  /* .post-detail-div {
-    display: grid;
-    grid-template-columns: 3fr 5fr;
-    max-width: 750px;
-  } */
+@media (max-width: 768px) {
+  .detail-contact-wrapper {
+    height: 100px;
+  }
+  .detail-contact-wrapper {
+    width: 100%;
+    background-color: black;
+    padding: 8px 10px 35px 25px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-top: 3px;
+  }
 }
 
 @media (min-width: 768px) {
@@ -489,6 +502,7 @@
   .gallery-on-sale {
     font-size: 1rem;
   }
+
   .post-detail-div {
     display: grid;
     grid-template-columns: 3fr 5fr;

@@ -260,7 +260,6 @@ export default function MainPostDetail() {
                 </a>
               </div>
             </section>
-            {/* <div className="filler-div"></div> */}
           </div>
         </div>
       </div>
