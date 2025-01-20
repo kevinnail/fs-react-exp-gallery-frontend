@@ -216,6 +216,34 @@ export default function MainPostDetail() {
                 />
               ))}
             </div>
+            <section className="desc-price-container">
+              <span className="desc-details">{postDetail?.description}</span>
+            </section>
+            <section className="selling-link-wrapper">
+              <a href={`${postDetail?.selling_link}`} target="_blank" rel="noopener noreferrer">
+                <div>
+                  {postDetail.selling_link && (
+                    <div className="inner-selling-link">
+                      {' '}
+                      <span className={'selling-link-span'}>
+                        {platform?.includes('instagram') ? (
+                          `Up for auction on ${store}!`
+                        ) : (
+                          <>
+                            <span className="shimmer">Available</span> on {store}!
+                          </>
+                        )}
+                      </span>
+                      <img
+                        className="selling-logo-link"
+                        src={sellingLogoLink}
+                        alt="Link to shopping cart"
+                      />
+                    </div>
+                  )}
+                </div>
+              </a>
+            </section>
             <section className="detail-contact-wrapper">
               <span className="detail-contact-text">Contact: </span>
               <div className="detail-contact-img-link-wrapper">
@@ -232,39 +260,7 @@ export default function MainPostDetail() {
                 </a>
               </div>
             </section>
-            <section className="selling-link-wrapper">
-              <div>
-                {postDetail.selling_link && (
-                  <>
-                    <span className={'selling-link-span'}>
-                      {platform?.includes('instagram') ? (
-                        `Up for auction on ${store}!`
-                      ) : (
-                        <>
-                          <span className="shimmer">Available</span> on {store}!
-                        </>
-                      )}
-                    </span>
-                    <a
-                      href={`${postDetail?.selling_link}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img
-                        className="selling-logo-link"
-                        src={sellingLogoLink}
-                        alt="Link to shopping cart"
-                      />
-                    </a>
-                  </>
-                )}
-              </div>
-            </section>
-
-            <div className="filler-div"></div>
-            <section className="desc-price-container">
-              <span className="desc-details">{postDetail?.description}</span>
-            </section>
+            {/* <div className="filler-div"></div> */}
           </div>
         </div>
       </div>

@@ -47,7 +47,7 @@
   padding: 10px 10px 10px 10px;
   background-color: black;
   border: 1px solid grey;
-  height: 150px;
+  /* height: 150px; */
   overflow: auto;
 }
 
@@ -389,6 +389,10 @@
   width: 150px;
 }
 
+.detail-contact-img-link-wrapper a {
+  text-decoration: none;
+}
+
 .gallery-on-sale {
   font-size: 0.7rem;
   color: yellow;
@@ -399,20 +403,23 @@
 }
 .selling-link-wrapper {
   width: 100%;
-  background-color: rgb(200, 200, 200);
-  background-image: linear-gradient(180deg, black, rgb(175, 255, 200), rgb(175, 255, 200), black);
+  background-color: rgba(175, 236, 255, 0.8);
   padding: 8px 10px 0 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
   margin-top: 3px;
-  box-shadow: inset 0px 0px 10px rgb(0, 4, 255);
+  box-shadow: inset 0px 0px 15px rgba(0, 4, 255, 0.6);
   color: black;
+  grid-column: 2;
+  grid-row: 5;
+}
+.selling-link-wrapper > a {
+  text-decoration: none;
 }
 
 .selling-link-span {
   position: relative;
-  top: -20px;
+  top: 7px;
+  display: inline-block;
+  font-weight: 500;
 }
 
 .shimmer {
@@ -447,7 +454,17 @@
   height: auto;
   border-radius: 10px;
   position: relative;
-  /* top: 20px; */
+  box-shadow: 0px 0px 15px rgb(255, 255, 255);
+  top: -4px;
+}
+
+.inner-selling-link {
+  display: flex;
+  justify-content: space-around;
+}
+
+.inner-selling-link a span {
+  text-decoration: none;
 }
 
 /*
@@ -468,6 +485,7 @@
 @media (min-width: 768px) {
   /*
   */
+
   .gallery-on-sale {
     font-size: 1rem;
   }
