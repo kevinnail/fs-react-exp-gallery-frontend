@@ -400,18 +400,35 @@
 
 .selling-link-wrapper {
   width: 100%;
-  background-color: black;
+  background-color: rgb(200, 200, 200);
+  background-image: linear-gradient(180deg, black, rgb(175, 255, 200), rgb(175, 255, 200), black);
   padding: 8px 10px 0 25px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   margin-top: 3px;
-  box-shadow: inset 0px 0px 10px rgb(176, 177, 255);
+  box-shadow: inset 0px 0px 10px rgb(0, 4, 255);
+  color: black;
 }
 
 .selling-link-span {
+  background: linear-gradient(90deg, black 0%, white 10%, black 11%, black 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-size: 200% auto;
+  animation: shimmer 15s linear infinite;
   position: relative;
   top: -20px;
+}
+
+@keyframes shimmer {
+  100% {
+    background-position: 0 0;
+  }
+  0% {
+    background-position: 400% 0;
+  }
 }
 
 .selling-logo-link {

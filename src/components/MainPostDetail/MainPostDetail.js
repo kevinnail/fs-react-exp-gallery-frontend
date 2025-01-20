@@ -239,7 +239,7 @@ export default function MainPostDetail() {
                     <span className={'selling-link-span'}>
                       {platform?.includes('instagram')
                         ? `Up for auction on ${store}!`
-                        : `Buy now on ${store}!`}{' '}
+                        : `Available on ${store}!`}{' '}
                     </span>
                     <a
                       href={`${postDetail?.selling_link}`}
