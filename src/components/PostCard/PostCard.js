@@ -91,7 +91,9 @@ export default function PostCard({
           {post.sold ? ' SOLD ' : ''}
         </Typography>
 
-        <Typography className="grid-s2 grid-e3 mobile-title-desk">{post.title}</Typography>
+        <Typography className="grid-s2 grid-e3 mobile-title-desk">
+          {post.hide ? post.title + ' (HIDDEN) ' : post.title}
+        </Typography>
         <Typography className="grid-s2 grid-e3 mobile-title-desk sold-highlight">
           {post.sold ? 'SOLD' : ''}
         </Typography>
