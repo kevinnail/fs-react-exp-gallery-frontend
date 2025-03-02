@@ -167,14 +167,22 @@ body {
   opacity: 0.5;
   pointer-events: none;
 }
-.sold-hightlight {
+
+.sold-highlight {
   color: rgb(0, 153, 23);
   position: relative;
   top: -10px;
 }
+
+.hide-highlight {
+  color: rgb(255, 153, 0);
+  position: relative;
+  /* top: 10px; */
+}
+
 /*
-  
-  
+/  
+ / 
   @media BEGIN =================================================
   
   

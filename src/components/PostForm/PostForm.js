@@ -1,23 +1,22 @@
-// import { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useUser } from '../../hooks/useUser.js';
 import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
-import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 export default function PostForm({
-  category = '',
   title = '',
   description = '',
   price = '',
-  discountedPrice,
-  selling_link = '',
-  sold = false,
-  imageUrls,
+  category = '',
   submitHandler,
+  imageUrls,
+  discountedPrice,
+  sold = false, // Add default value for sold
+  hide = false, // Add default value for hide
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
@@ -29,9 +28,7 @@ export default function PostForm({
   const [deletedImages, setDeletedImages] = useState([]);
   const [discountedPriceInput, setDiscountedPriceInput] = useState(discountedPrice);
   const [soldInput, setSoldInput] = useState(sold);
-  const [sellingLink, setSellingLink] = useState(selling_link);
-
-  // const [numFilesSelected, setNumFilesSelected] = useState(0);
+  const [hideInput, setHideInput] = useState(hide); // Add state for hide input
 
   const [files, setFiles] = useState([]);
   const onDrop = useCallback((acceptedFiles) => {
@@ -125,7 +122,7 @@ export default function PostForm({
         num_imgs: files.length,
         discountedPrice: discountedPriceInput,
         sold: soldInput,
-        link: sellingLink,
+        hide: hideInput, // Include hide in post details
       };
 
       // Upload new images to Cloudinary and get their URLs + post details
@@ -252,19 +249,6 @@ export default function PostForm({
               onChange={(e) => setDiscountedPriceInput(e.target.value)}
             />
           </div>
-          <div className="price-in-form selling-link">
-            <span>GlassPass || Etsy || Insta Link:</span>
-            <input
-              placeholder="GP or Etsy or IG"
-              className="image-input  price-input"
-              type="text"
-              step="1"
-              name="link"
-              value={sellingLink}
-              style={{ textAlign: 'left' }}
-              onChange={(e) => setSellingLink(e.target.value)}
-            />
-          </div>
           <div className="sold-radio-group">
             <span className="labels-form-inputs">Sold Status</span>
             <label className="radio-label">
@@ -286,7 +270,29 @@ export default function PostForm({
               Available
             </label>
           </div>
-          <div {...getRootProps()} className="dropzone image-input-button">
+          {/* New Hide Radio Group */}
+          <div className="hide-radio-group">
+            <span className="labels-form-inputs">Hide Status</span>
+            <label className="radio-label">
+              <input
+                type="radio"
+                value="true"
+                checked={hideInput === true}
+                onChange={() => setHideInput(true)}
+              />
+              Hidden
+            </label>
+            <label className="radio-label">
+              <input
+                type="radio"
+                value="false"
+                checked={hideInput === false}
+                onChange={() => setHideInput(false)}
+              />
+              Visible
+            </label>
+          </div>
+          <div {...getRootProps()} className="dropzone">
             <input {...getInputProps()} />
             <label className="file-upload-label">
               {files.length === 0
@@ -294,7 +300,7 @@ export default function PostForm({
                 : `${files.length} file${files.length > 1 ? 's' : ''} selected`}
             </label>
           </div>
-          {files.length > 0 || currentImages?.length > 0 ? thumbs : null}
+          {thumbs}
           <div className="btn-container">
             <button className="submit-btn" type="submit">
               {<img className="upload-icon " src="/upload.png" alt="upload" />}

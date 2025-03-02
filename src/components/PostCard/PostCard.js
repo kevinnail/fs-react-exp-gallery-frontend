@@ -7,6 +7,7 @@ import {
 } from '../../services/fetch-utils.js';
 import './PostCard.css';
 import { useState } from 'react';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 export default function PostCard({
   id,
@@ -19,6 +20,9 @@ export default function PostCard({
 }) {
   const { user } = useUser();
   const [deletedRowId, setDeletedRowId] = useState(null);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
@@ -51,7 +55,11 @@ export default function PostCard({
   };
 
   return (
-    <div className={`post ${id === deletedRowId ? 'grayed-out' : ''}`} key={id}>
+    <Box
+      className={`post ${id === deletedRowId ? 'grayed-out' : ''}`}
+      key={id}
+      sx={{ backgroundColor: post.hide ? 'orange' : '' }}
+    >
       <Link to={`/main-gallery/${id}`}>
         {image_url ? (
           <img
@@ -74,43 +82,47 @@ export default function PostCard({
         )}
       </Link>
 
-      <div className="grid-s2" style={{ display: 'grid', gridTemplateRows: '30px' }}>
-        <span className="grid-s2 grid-e3 mobile-title">
+      <Box className="grid-s2" style={{ display: 'grid', gridTemplateRows: '30px' }}>
+        <Typography className="grid-s2 grid-e3 mobile-title">
           {post.title.length > 14 ? post.title.slice(0, 14) + '...' : post.title}
-        </span>
-        <span className="grid-s2 grid-e3 mobile-title sold-hightlight">
+        </Typography>
+
+        <Typography className="grid-s2 grid-e3 mobile-title sold-highlight">
           {post.sold ? ' SOLD ' : ''}
-        </span>
-        <span className="grid-s2 grid-e3 mobile-title-desk">{post.title}</span>
-        <span className="grid-s2 grid-e3 mobile-title-desk sold-hightlight">
+        </Typography>
+
+        <Typography className="grid-s2 grid-e3 mobile-title-desk">{post.title}</Typography>
+        <Typography className="grid-s2 grid-e3 mobile-title-desk sold-highlight">
           {post.sold ? 'SOLD' : ''}
-        </span>
-      </div>
-      <div>
+        </Typography>
+      </Box>
+      <Box>
         {' '}
-        <span className="grid-3" style={{ display: 'grid' }}>
+        <Typography className="grid-3" style={{ display: 'grid' }}>
           {isDiscounted ? (
             <>
-              <span style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}>
+              <Typography
+                style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
+              >
                 ${originalPrice}
-              </span>
-              <span>${post.discountedPrice}</span>
+              </Typography>
+              <Typography>${post.discountedPrice}</Typography>
             </>
           ) : (
-            <span>${post.price}</span>
+            <Typography>${post.price}</Typography>
           )}
-        </span>
-      </div>
-      <span className="cat-desk">{post.category}</span>
-      <span className="desc-desk">{post.description}</span>
-      <div className="admin-prod-btn-cont grid-7">
+        </Typography>
+      </Box>
+      <Typography className="cat-desk">{post.category}</Typography>
+      <Typography className="desc-desk">{post.description}</Typography>
+      <Box className="admin-prod-btn-cont grid-7">
         <Link className="buttons btn-align" to={`/admin/${id}`}>
           <img src="/edit.png" className="edit-button" alt="edit" />
         </Link>
         <Link className="buttons red-border" to={`/admin`} onClick={handleDelete}>
           <img className="delete-button" src="/delete.png" name="delete" alt="delete" />
         </Link>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

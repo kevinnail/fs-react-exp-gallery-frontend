@@ -6,7 +6,7 @@ import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import { useUser } from '../../hooks/useUser.js';
 import Loading from '../Loading/Loading.js';
-import { getSiteMessage } from '../../services/fetch-utils.js'; // Import getSiteMessage
+import { getSiteMessage } from '../../services/fetch-utils.js';
 
 //
 //
