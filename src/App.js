@@ -26,8 +26,6 @@ function App() {
           <Route path="/main-gallery/:id" component={MainPostDetail} />
           <Route path="/main-gallery" component={MainGallery} />
           <Route path="/search" component={SearchResults} />
-          <Route path="/gallery/:id" component={PostDetail} />
-          <Route path="/gallery" component={Gallery} />
           <Route path="/about-me" component={AboutMe} />
           <Route path="/admin/discounts" component={DiscountForm} />
           <Route path="/admin/new" component={NewPost} />
