@@ -9,7 +9,7 @@ import Loading from '../Loading/Loading.js';
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignIn, setIsSignIn] = useState(true);
+  // const [isSignIn, setIsSignIn] = useState(true);
   const { user, logInUser, error, loading, setLoading, setUser } = useUser();
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
@@ -154,15 +154,6 @@ export default function Auth() {
         {}
         {}
         <div className={`auth-section-container ${isFormRetracted ? 'retracted' : ''}`}>
-          <div className="sign-in-sign-out">
-            <NavLink className="auth-link" to="/auth/sign-in" onClick={() => setIsSignIn(true)}>
-              Sign-in
-            </NavLink>
-            <NavLink className="auth-link" to="/auth/sign-up" onClick={() => setIsSignIn(false)}>
-              Sign-up
-            </NavLink>
-          </div>
-
           <div className="email-container">
             <input
               className="input-auth"
@@ -181,7 +172,7 @@ export default function Auth() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button className="button-auth" onClick={submitAuth}>
-            {isSignIn ? 'Sign In' : 'Sign Up'}
+            Admin Login
           </button>
         </div>
       </div>
