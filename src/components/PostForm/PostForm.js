@@ -52,7 +52,7 @@ export default function PostForm({
   });
 
   // Display thumbnails
-  const thumbs = (
+  const thumbs = files.length > 0 && (
     <div className="thumbnails-container">
       {/* Display newly selected files */}
       {files.map((file, index) => (
