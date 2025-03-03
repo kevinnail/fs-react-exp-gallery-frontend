@@ -373,7 +373,7 @@ mobile BELOW this point due to min-width parameter
   .desk-desc-input {
     grid-row: 6;
     grid-column: 1;
-    margin-top: 70px;
+    height: 100%;
   }
 
   .desk-price-input {
@@ -405,7 +405,7 @@ mobile BELOW this point due to min-width parameter
 
   .description {
     max-height: 600px;
-    height: 300px;
+    height: 250px;
   }
 
   .sold-radio-group {
@@ -414,7 +414,8 @@ mobile BELOW this point due to min-width parameter
     border-radius: 10px;
     background-color: white;
     min-width: 300px;
-    grid-row: 4;
+    grid-row-start: 4;
+    grid-row-end: 6;
     grid-column: 1;
   }
 }
