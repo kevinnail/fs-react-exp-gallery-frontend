@@ -4,10 +4,6 @@
   justify-content: flex-start;
   align-items: center;
   height: 100vh;
-  /* background-color: rgb(176, 176, 253);
-  background: linear-gradient(270deg, #7777f3bd, #5b36ff83, #2f00ff83); */
-  /* background-size: 400% 400%; */
-  /* animation: ocean 10s ease-in-out infinite; */
   letter-spacing: 1.5px;
   position: relative;
   height: calc(100vh - 90px);
@@ -109,6 +105,7 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   margin-bottom: 1rem;
+  width: 100px;
 }
 
 .input-auth:focus {
@@ -127,7 +124,6 @@
   transition: all 0.3s ease;
   font-family: 'Shadows Into Light', cursive;
   letter-spacing: 2px;
-  width: 150px;
 }
 
 .active {

@@ -1,11 +1,10 @@
-// import { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useUser } from '../../hooks/useUser.js';
 import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
-import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 export default function PostForm({
@@ -16,7 +15,8 @@ export default function PostForm({
   submitHandler,
   imageUrls,
   discountedPrice,
-  sold = false, // Add the sold prop with a default value
+  sold = false, // Add default value for sold
+  hide = false, // Add default value for hide
 }) {
   const [titleInput, setTitleInput] = useState(title);
   const [descriptionInput, setDescriptionInput] = useState(description);
@@ -28,8 +28,7 @@ export default function PostForm({
   const [deletedImages, setDeletedImages] = useState([]);
   const [discountedPriceInput, setDiscountedPriceInput] = useState(discountedPrice);
   const [soldInput, setSoldInput] = useState(sold);
-
-  // const [numFilesSelected, setNumFilesSelected] = useState(0);
+  const [hideInput, setHideInput] = useState(hide); // Add state for hide input
 
   const [files, setFiles] = useState([]);
   const onDrop = useCallback((acceptedFiles) => {
@@ -43,10 +42,17 @@ export default function PostForm({
     );
   }, []);
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: 'image/*' });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    maxFiles: 10,
+    accept: {
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/png': ['.png'],
+    },
+  });
 
   // Display thumbnails
-  const thumbs = (
+  const thumbs = !loading && (files.length > 0 || currentImages.length > 0) && (
     <div className="thumbnails-container">
       {/* Display newly selected files */}
       {files.map((file, index) => (
@@ -123,6 +129,7 @@ export default function PostForm({
         num_imgs: files.length,
         discountedPrice: discountedPriceInput,
         sold: soldInput,
+        hide: hideInput, // Include hide in post details
       };
 
       // Upload new images to Cloudinary and get their URLs + post details
@@ -206,7 +213,7 @@ export default function PostForm({
               className="image-input"
               type="text"
               name="title"
-              value={titleInput}
+              value={titleInput || ''}
               onChange={(e) => setTitleInput(e.target.value)}
             />
           </div>
@@ -270,7 +277,28 @@ export default function PostForm({
               Available
             </label>
           </div>
-
+          {/* New Hide Radio Group */}
+          <div className="hide-radio-group">
+            <span className="labels-form-inputs">Hide Status</span>
+            <label className="radio-label">
+              <input
+                type="radio"
+                value="true"
+                checked={hideInput === true}
+                onChange={() => setHideInput(true)}
+              />
+              Hidden
+            </label>
+            <label className="radio-label">
+              <input
+                type="radio"
+                value="false"
+                checked={hideInput === false}
+                onChange={() => setHideInput(false)}
+              />
+              Visible
+            </label>
+          </div>
           <div {...getRootProps()} className="dropzone">
             <input {...getInputProps()} />
             <label className="file-upload-label">

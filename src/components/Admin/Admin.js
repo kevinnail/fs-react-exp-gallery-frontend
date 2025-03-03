@@ -8,6 +8,17 @@ import { signOut } from '../../services/auth.js';
 import Menu from '../Menu/Menu.js';
 import Loading from '../Loading/Loading.js';
 import Inventory from '../Inventory/Inventory.js';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Button,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Admin() {
   const { user, setUser } = useUser();
@@ -16,9 +27,18 @@ export default function Admin() {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
   }
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setCurrentPage(1);
+  };
 
   const handleClick = async () => {
     await signOut();
@@ -100,9 +120,25 @@ export default function Admin() {
     );
   };
 
+  //! fucking around with webhooks
+  // const handleFetch = async () => {
+  //   try {
+  //     const response = await fetch('https://www.atthefire.com/api/v1/stuff', {
+  //       method: 'POST',
+  //       // headers: { 'Content-Type': 'application/json' },
+  //       // body: JSON.stringify({}), // Include an empty body if your backend expects it
+  //     });
+  //     const data = await response.json();
+  //     console.log(data);
+  //   } catch (error) {
+  //     console.error('Error fetching:', error);
+  //   }
+  // };
+
   return (
     <>
       <div className="admin-container">
+        {/* <button onClick={handleFetch}>Fetch Data</button> */}
         <aside className="admin-panel">
           <section className="admin-panel-section">
             <div>
@@ -110,7 +146,6 @@ export default function Admin() {
             </div>
           </section>
         </aside>
-
         <div className="list-container">
           {posts.length === 0 ? (
             <div className="loading">
@@ -131,11 +166,51 @@ export default function Admin() {
             </>
           )}
         </div>
-        <Inventory
+        {/* <Inventory
           posts={posts}
           onCategorySelect={setSelectedCategory}
           selectedCategory={selectedCategory}
-        />
+        /> */}
+        <Box
+          sx={{
+            borderWidth: '1px',
+            borderStyle: 'solid',
+            borderColor: (theme) => theme.palette.primary.dark,
+          }}
+          className="large-size-inventory"
+        >
+          <Accordion
+            defaultExpanded={isTablet ? false : true}
+            // disabled={!isMobile} // This will disable the accordion when not on mobile
+            sx={{ backgroundColor: 'rgb(40, 40, 40)' }}
+          >
+            {(isMobile || isTablet) && (
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                Inventory/ Category Selector
+              </AccordionSummary>
+            )}
+            <AccordionDetails sx={{ padding: '0' }}>
+              <Button
+                style={{ marginTop: '0px' }}
+                disabled={!selectedCategory}
+                onClick={() => {
+                  setSelectedCategory(null);
+                  setCurrentPage(1);
+                }}
+              >
+                <Typography variant="h5">
+                  {selectedCategory ? 'Show All Categories' : 'Select Category'}
+                </Typography>
+              </Button>
+
+              <Inventory
+                posts={posts}
+                selectedCategory={selectedCategory}
+                onCategorySelect={handleCategorySelect}
+              />
+            </AccordionDetails>
+          </Accordion>
+        </Box>
       </div>
     </>
   );

@@ -1,3 +1,24 @@
+.image-placeholder {
+  background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+  background-size: 200% 100%;
+  animation: loading-pulse 1.5s infinite;
+  border-radius: 5px;
+}
+
+@keyframes loading-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Improve image transitions */
+.gallery-img {
+  transition: opacity 0.3s ease-in-out;
+}
+
 .gallery-list-container {
   display: flex;
   flex-wrap: wrap;

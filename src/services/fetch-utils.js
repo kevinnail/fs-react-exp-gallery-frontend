@@ -110,7 +110,8 @@ export async function postPost(
   price,
   author_id,
   public_id,
-  num_imgs
+  num_imgs,
+  link
 ) {
   const resp = await fetch(`${BASE_URL}/api/v1/admin`, {
     method: 'POST',
@@ -127,6 +128,7 @@ export async function postPost(
       author_id,
       public_id,
       num_imgs,
+      link,
     }),
     credentials: 'include',
   });
@@ -141,7 +143,7 @@ export async function postPost(
   }
 }
 
-// upload images to cloudinary and send urls and public ids to db
+// upload images to S3 and send urls and public ids to db
 export async function postAddImages(imageFiles, id) {
   const formData = new FormData();
   formData.append('image_urls', JSON.stringify(imageFiles.map((image) => image.secure_url)));
@@ -280,7 +282,7 @@ export const uploadRemainingImages = async (imageFiles) => {
   }
 };
 
-// delete image from cloudinary
+// delete image from S3
 export const deleteImage = async (public_id, resource_type) => {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/admin/delete`, {

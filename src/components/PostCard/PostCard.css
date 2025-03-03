@@ -35,7 +35,7 @@ body {
   justify-items: flex-start;
   align-items: flex-start;
   margin: 0px auto;
-  padding: 0 0rem;
+  padding: 50px 0 0 0rem;
   height: 90vh;
   background: linear-gradient(
     270deg,
@@ -167,14 +167,22 @@ body {
   opacity: 0.5;
   pointer-events: none;
 }
-.sold-hightlight {
+
+.sold-highlight {
   color: rgb(0, 153, 23);
   position: relative;
   top: -10px;
 }
+
+.hide-highlight {
+  color: rgb(255, 153, 0);
+  position: relative;
+  /* top: 10px; */
+}
+
 /*
-  
-  
+/  
+ / 
   @media BEGIN =================================================
   
   
@@ -251,7 +259,7 @@ body {
     display: block;
   }
   .admin-container {
-    grid-template-columns: 200px 1fr 250px;
+    grid-template-columns: 200px 1fr 350px;
     grid-template-rows: 1fr;
   }
   .admin-panel-section {

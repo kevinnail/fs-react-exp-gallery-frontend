@@ -7,6 +7,19 @@ import {
 } from '../../services/fetch-utils.js';
 import './PostCard.css';
 import { useState } from 'react';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
 
 export default function PostCard({
   id,
@@ -17,8 +30,16 @@ export default function PostCard({
   discountedPrice,
   originalPrice,
 }) {
+  const history = useHistory();
+
   const { user } = useUser();
   const [deletedRowId, setDeletedRowId] = useState(null);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
@@ -50,8 +71,29 @@ export default function PostCard({
     }
   };
 
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    await handleDelete();
+    handleCloseDialog();
+  };
+
+  const handleEditPost = () => {
+    history.push(`/admin/${id}`);
+  };
+
   return (
-    <div className={`post ${id === deletedRowId ? 'grayed-out' : ''}`} key={id}>
+    <Box
+      className={`post ${id === deletedRowId ? 'grayed-out' : ''}`}
+      key={id}
+      sx={{ backgroundColor: post.hide ? 'orange' : '' }}
+    >
       <Link to={`/main-gallery/${id}`}>
         {image_url ? (
           <img
@@ -73,44 +115,97 @@ export default function PostCard({
           )
         )}
       </Link>
-
-      <div className="grid-s2" style={{ display: 'grid', gridTemplateRows: '30px' }}>
-        <span className="grid-s2 grid-e3 mobile-title">
+      <Box className="grid-s2" style={{ display: 'grid', gridTemplateRows: '30px' }}>
+        <Typography className="grid-s2 grid-e3 mobile-title">
           {post.title.length > 14 ? post.title.slice(0, 14) + '...' : post.title}
-        </span>
-        <span className="grid-s2 grid-e3 mobile-title sold-hightlight">
+        </Typography>
+
+        <Typography className="grid-s2 grid-e3 mobile-title sold-highlight">
           {post.sold ? ' SOLD ' : ''}
-        </span>
-        <span className="grid-s2 grid-e3 mobile-title-desk">{post.title}</span>
-        <span className="grid-s2 grid-e3 mobile-title-desk sold-hightlight">
+        </Typography>
+
+        <Typography className="grid-s2 grid-e3 mobile-title-desk">
+          {post.hide ? post.title + ' (HIDDEN) ' : post.title}
+        </Typography>
+        <Typography className="grid-s2 grid-e3 mobile-title-desk sold-highlight">
           {post.sold ? 'SOLD' : ''}
-        </span>
-      </div>
-      <div>
+        </Typography>
+      </Box>
+      <Box>
         {' '}
-        <span className="grid-3" style={{ display: 'grid' }}>
+        <Typography className="grid-3" style={{ display: 'grid' }}>
           {isDiscounted ? (
             <>
-              <span style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}>
+              <Typography
+                style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
+              >
                 ${originalPrice}
-              </span>
-              <span>${post.discountedPrice}</span>
+              </Typography>
+              <Typography>${post.discountedPrice}</Typography>
             </>
           ) : (
-            <span>${post.price}</span>
+            <Typography>${post.price}</Typography>
           )}
-        </span>
-      </div>
-      <span className="cat-desk">{post.category}</span>
-      <span className="desc-desk">{post.description}</span>
-      <div className="admin-prod-btn-cont grid-7">
-        <Link className="buttons btn-align" to={`/admin/${id}`}>
-          <img src="/edit.png" className="edit-button" alt="edit" />
-        </Link>
-        <Link className="buttons red-border" to={`/admin`} onClick={handleDelete}>
-          <img className="delete-button" src="/delete.png" name="delete" alt="delete" />
-        </Link>
-      </div>
-    </div>
+        </Typography>
+      </Box>
+      <Typography className="cat-desk">{post.category}</Typography>
+      <Typography className="desc-desk">{post.description}</Typography>
+      <Box className="admin-prod-btn-cont grid-7">
+        <Button
+          onClick={handleEditPost}
+          sx={{ fontSize: '1rem' }}
+          disabled={post.restricted ? post.restricted : false}
+        >
+          Edit
+        </Button>
+
+        <Button onClick={handleOpenDialog} sx={{ fontSize: '1rem' }}>
+          Delete
+        </Button>
+      </Box>{' '}
+      <Dialog
+        open={openDialog}
+        onClose={isDeleting ? undefined : handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Deleting this post will remove it permanently. This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          {!isDeleting ? (
+            <Box>
+              {' '}
+              <Button onClick={handleCloseDialog} color="primary" sx={{ fontSize: '1rem' }}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleConfirmDelete}
+                color="primary"
+                sx={{ fontSize: '1rem' }}
+                autoFocus
+              >
+                Confirm
+              </Button>
+            </Box>
+          ) : (
+            <Typography
+              color="primary"
+              sx={{
+                padding: '5px',
+                borderRadius: '5px',
+                width: '150px',
+                textAlign: 'center',
+              }}
+            >
+              Deleting...
+            </Typography>
+          )}
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 }
