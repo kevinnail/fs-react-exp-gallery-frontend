@@ -1,5 +1,6 @@
 import React from 'react';
 import './Inventory.css';
+import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 
 const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
   const categories = {
@@ -10,7 +11,7 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
     Cups: 0,
     'Dry Pieces': 0,
     Goblets: 0,
-    'Iso Stations': 0,
+    'Iso Station': 0,
     Marbles: 0,
     Pendants: 0,
     Recyclers: 0,
@@ -24,10 +25,18 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
 
   const categoryTotalPrices = { ...categories };
 
+  let numSoldItems = 0;
+  let subTotalSoldItems = 0;
+
   posts.forEach((post) => {
     if (categories[post.category] !== undefined) {
       categories[post.category]++;
       categoryTotalPrices[post.category] += parseFloat(post.price);
+    }
+
+    if (post.sold) {
+      numSoldItems += 1;
+      subTotalSoldItems += parseFloat(post.price);
     }
   });
 
@@ -53,48 +62,113 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
   };
 
   return (
-    <div className="inventory-container">
+    <Box
+      sx={{
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        borderColor: (theme) => theme.palette.primary.dark,
+        paddingX: (theme) => theme.spacing(2),
+        paddingY: (theme) => theme.spacing(2),
+        borderRadius: (theme) => theme.spacing(1),
+        gap: (theme) => theme.spacing(2),
+      }}
+      className="inventory-container"
+    >
       {' '}
-      <button
-        disabled={!selectedCategory}
-        onClick={() => onCategorySelect(null)}
-        className={selectedCategory ? 'category-button-all' : 'category-button'}
+      <Typography variant="body1">Inventory Totals:</Typography>
+      <Table
+        className="inventory-table"
+        sx={{
+          borderWidth: '1px',
+          borderStyle: 'solid',
+          borderColor: (theme) => theme.palette.primary.light,
+          backgroundColor: (theme) => theme.palette.background.default, // Background color based on theme
+        }}
       >
-        Show All Categories
-      </button>
-      <div>
-        <table className="inventory-table">
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Total Items</th>
-              <th>Total Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(categories).map((category) => (
-              <tr
-                key={category}
-                className={selectedCategory === category ? 'selectedRow' : ''}
-                style={{ color: getColor(categories[category]) }}
+        <TableHead>
+          <TableRow>
+            <TableCell component="th" style={{ width: '40%' }}>
+              Category
+            </TableCell>
+            <TableCell component="th" style={{ width: '20%' }}>
+              Total Items
+            </TableCell>
+            <TableCell component="th" style={{ width: '40%' }}>
+              Total Price
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {Object.keys(categories).map((category) => (
+            <TableRow
+              key={category}
+              className={selectedCategory === category ? 'selectedRow' : ''}
+              onClick={() => {
+                onCategorySelect(category);
+              }}
+            >
+              <TableCell
+                style={{
+                  color: getColor(categories[category]),
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                }}
                 onClick={() => {
                   onCategorySelect(category);
                 }}
               >
-                <td onClick={() => onCategorySelect(category)}>{category}</td>
-                <td>{categories[category]}</td>
-                <td>${categoryTotalPrices[category].toFixed(2)}</td>
-              </tr>
-            ))}
-            <tr style={{ fontWeight: 'bold' }}>
-              <td>Total</td>
-              <td>{totalInventoryCount}</td>
-              <td>${totalInventoryPrice.toFixed(2)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+                {category}
+              </TableCell>
+              <TableCell
+                style={{
+                  color: getColor(categories[category]),
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  onCategorySelect(category);
+                }}
+              >
+                {categories[category]}
+              </TableCell>
+              <TableCell
+                style={{
+                  color: getColor(categories[category]),
+                  textAlign: 'right',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  onCategorySelect(category);
+                }}
+              >
+                ${Number(categoryTotalPrices[category].toFixed(0)).toLocaleString()}
+              </TableCell>
+            </TableRow>
+          ))}
+          <TableRow style={{ fontWeight: 'bold' }}>
+            <TableCell style={{ textAlign: 'left' }}>Total Value</TableCell>
+            <TableCell style={{ textAlign: 'center' }}>{totalInventoryCount}</TableCell>
+            <TableCell style={{ textAlign: 'right' }}>
+              ${Number(totalInventoryPrice.toFixed(2)).toLocaleString()}
+            </TableCell>
+          </TableRow>
+          <TableRow style={{ fontWeight: 'bold' }}>
+            <TableCell style={{ textAlign: 'left' }}>Sold Items</TableCell>
+            <TableCell style={{ textAlign: 'center' }}>{numSoldItems}</TableCell>
+            <TableCell style={{ textAlign: 'right' }}>${Number(subTotalSoldItems)}</TableCell>
+          </TableRow>
+          <TableRow style={{ fontWeight: 'bold' }}>
+            <TableCell style={{ textAlign: 'left', fontWeight: 'bold' }}>Total For Sale</TableCell>
+            <TableCell style={{ textAlign: 'center', fontWeight: 'bold' }}>
+              {totalInventoryCount - numSoldItems}
+            </TableCell>
+            <TableCell style={{ textAlign: 'right', fontWeight: 'bold' }}>
+              ${Number(totalInventoryPrice - subTotalSoldItems)}
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </Box>
   );
 };
 
