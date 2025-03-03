@@ -29,7 +29,7 @@ export default function Admin() {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const isDesktop = useMediaQuery(theme.breakpoints.down('lg'));
 
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
@@ -72,7 +72,6 @@ export default function Admin() {
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
-
   // Handle page changes
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -82,12 +81,58 @@ export default function Admin() {
   // Generate page numbers
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
+    if (i < 5 && isMobile) {
+      pageNumbers.push(i);
+    } else if (!isMobile) {
+      pageNumbers.push(i);
+    }
   }
 
   // Create pagination controls
+  // Replace your current PaginationControls function with this improved version
+  // Replace your current PaginationControls function with this improved version
+  // Replace your current PaginationControls function with this improved version
   const PaginationControls = () => {
     if (totalPages <= 1) return null;
+
+    // Logic for which page numbers to display
+    let displayedPageNumbers = [];
+
+    if (isMobile) {
+      // For mobile: Show fewer buttons (maximum of 3) to prevent overflow
+      if (totalPages <= 3) {
+        // If 3 or fewer pages, show all
+        for (let i = 1; i <= totalPages; i++) {
+          displayedPageNumbers.push(i);
+        }
+      } else {
+        // Always include first page
+        displayedPageNumbers.push(1);
+
+        // Add ellipsis if current page is not near the beginning
+        if (currentPage > 2) {
+          displayedPageNumbers.push('...');
+        }
+
+        // Add current page if not first or last
+        if (currentPage !== 1 && currentPage !== totalPages) {
+          displayedPageNumbers.push(currentPage);
+        }
+
+        // Add ellipsis if current page is not near the end
+        if (currentPage < totalPages - 1) {
+          displayedPageNumbers.push('...');
+        }
+
+        // Always include last page
+        displayedPageNumbers.push(totalPages);
+      }
+    } else {
+      // For desktop: show all pages
+      for (let i = 1; i <= totalPages; i++) {
+        displayedPageNumbers.push(i);
+      }
+    }
 
     return (
       <div className="pagination-controls">
@@ -99,15 +144,25 @@ export default function Admin() {
           Previous
         </button>
 
-        {pageNumbers.map((number) => (
-          <button
-            key={number}
-            onClick={() => handlePageChange(number)}
-            className={`pagination-button ${currentPage === number ? 'active' : ''}`}
-          >
-            {number}
-          </button>
-        ))}
+        {displayedPageNumbers.map((item, index) => {
+          if (item === '...') {
+            return (
+              <span key={`ellipsis-${index}`} className="pagination-button ellipsis">
+                ...
+              </span>
+            );
+          }
+
+          return (
+            <button
+              key={item}
+              onClick={() => handlePageChange(item)}
+              className={`pagination-button ${currentPage === item ? 'active' : ''}`}
+            >
+              {item}
+            </button>
+          );
+        })}
 
         <button
           onClick={() => handlePageChange(currentPage + 1)}
@@ -180,11 +235,11 @@ export default function Admin() {
           className="large-size-inventory"
         >
           <Accordion
-            defaultExpanded={isTablet ? false : true}
+            defaultExpanded={isDesktop ? false : true}
             // disabled={!isMobile} // This will disable the accordion when not on mobile
             sx={{ backgroundColor: 'rgb(40, 40, 40)' }}
           >
-            {(isMobile || isTablet) && (
+            {(isMobile || isDesktop) && (
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 Inventory/ Category Selector
               </AccordionSummary>
