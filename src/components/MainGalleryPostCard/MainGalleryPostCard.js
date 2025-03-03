@@ -16,7 +16,7 @@ export default function MainGalleryPostCard({
   const { additionalImagesGallery } = useGalleryPost(id);
   const [isVisible, setIsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const imageRef = useRef(null);
+  const containerRef = useRef(null);
 
   // Determine whether to show discounted price or not
   const isDiscounted = discountedPrice && parseFloat(discountedPrice) < parseFloat(originalPrice);
@@ -26,35 +26,48 @@ export default function MainGalleryPostCard({
     setIsLoaded(true);
   };
 
+  // Get the correct image source
+  const getImageSource = () => {
+    if (image_url) {
+      return image_url.endsWith('.mp4') ? `${image_url.slice(0, -4)}.jpg` : image_url;
+    } else if (additionalImagesGallery && additionalImagesGallery.length > 0) {
+      const additionalSrc = additionalImagesGallery[0].image_url;
+      return additionalSrc.endsWith('.mp4') ? `${additionalSrc.slice(0, -4)}.jpg` : additionalSrc;
+    }
+    return '';
+  };
+
   // Set up intersection observer for lazy loading
   useEffect(() => {
-    const observerCallback = (entries) => {
-      if (entries[0].isIntersecting) {
-        setIsVisible(true);
-        if (observer) observer.disconnect(); // Disconnect observer once it's loaded
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // If container is in view
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin: '100px',
+        threshold: 0.1,
       }
-    };
+    );
 
-    let observer;
-    if (imageRef.current) {
-      observer = new IntersectionObserver(observerCallback, {
-        threshold: 0.1, // Trigger when 10% of the image is visible
-        rootMargin: '100px', // Load images that are 100px away from viewport
-      });
+    // Store the current value of the ref in a variable
+    const currentRef = containerRef.current;
 
-      observer.observe(imageRef.current);
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (observer) observer.disconnect();
+      // Use the stored value in the cleanup function
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+      observer.disconnect();
     };
-  }, [imageRef]);
-
-  // Helper function to get appropriate image URL
-  const getImageUrl = (url) => {
-    if (!url) return '';
-    return url.endsWith('.mp4') ? `${url.slice(0, -4)}.jpg` : url;
-  };
+  }, [containerRef]);
 
   return (
     <div className="gallery-display-container" key={id}>
@@ -62,42 +75,45 @@ export default function MainGalleryPostCard({
         <div
           style={{
             position: 'absolute',
+            alignSelf: 'flex-start',
+            zIndex: 10, // Add z-index to ensure it's above other elements
           }}
         >
           {sold ? <img src="/sold.png" /> : ''}
         </div>
 
-        {/* Lazy loading image container */}
-        <div ref={imageRef} style={{ position: 'relative', width: '100%', minHeight: '190px' }}>
-          {/* Placeholder while loading */}
-          {!isLoaded && (
-            <div
-              className="image-placeholder"
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#333',
-                borderRadius: '5px',
-              }}
-            ></div>
-          )}
+        <div
+          ref={containerRef}
+          className="lazy-image-container"
+          style={{ position: 'relative', width: '100%' }}
+        >
+          {/* Always render placeholder, hide when image is loaded */}
+          <div
+            className="image-placeholder"
+            style={{
+              width: '100%',
+              paddingBottom: '100%', // Maintain aspect ratio
+              backgroundColor: '#333',
+              borderRadius: '5px',
+              display: isLoaded ? 'none' : 'block',
+            }}
+          ></div>
 
-          {/* Actual image - only load when in viewport */}
-          {isVisible && (
-            <img
-              className="gallery-img"
-              src={
-                getImageUrl(image_url) ||
-                (additionalImagesGallery[0] && getImageUrl(additionalImagesGallery[0].image_url))
-              }
-              alt="gallery"
-              style={{ opacity: isLoaded ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }}
-              onLoad={handleImageLoad}
-            />
-          )}
+          {/* Always render the image element, but only set the src when visible */}
+          <img
+            className="gallery-img"
+            src={isVisible ? getImageSource() : ''}
+            alt={title}
+            style={{
+              display: 'block',
+              opacity: isLoaded ? 1 : 0,
+              transition: 'opacity 0.3s ease-in-out',
+              position: isLoaded ? 'relative' : 'absolute', // Position it absolutely when not loaded
+              top: 0,
+              left: 0,
+            }}
+            onLoad={handleImageLoad}
+          />
         </div>
 
         <div className="gallery-detail-container">
