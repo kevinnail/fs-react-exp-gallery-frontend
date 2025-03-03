@@ -52,7 +52,7 @@ export default function PostForm({
   });
 
   // Display thumbnails
-  const thumbs = files.length > 0 && (
+  const thumbs = !loading && (files.length > 0 || currentImages.length > 0) && (
     <div className="thumbnails-container">
       {/* Display newly selected files */}
       {files.map((file, index) => (
@@ -213,7 +213,7 @@ export default function PostForm({
               className="image-input"
               type="text"
               name="title"
-              value={titleInput}
+              value={titleInput || ''}
               onChange={(e) => setTitleInput(e.target.value)}
             />
           </div>
