@@ -42,7 +42,14 @@ export default function PostForm({
     );
   }, []);
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: 'image/*' });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    maxFiles: 10,
+    accept: {
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/png': ['.png'],
+    },
+  });
 
   // Display thumbnails
   const thumbs = (
