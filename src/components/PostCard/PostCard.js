@@ -7,7 +7,19 @@ import {
 } from '../../services/fetch-utils.js';
 import './PostCard.css';
 import { useState } from 'react';
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
 
 export default function PostCard({
   id,
@@ -18,11 +30,16 @@ export default function PostCard({
   discountedPrice,
   originalPrice,
 }) {
+  const history = useHistory();
+
   const { user } = useUser();
   const [deletedRowId, setDeletedRowId] = useState(null);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
@@ -54,6 +71,23 @@ export default function PostCard({
     }
   };
 
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    await handleDelete();
+    handleCloseDialog();
+  };
+
+  const handleEditPost = () => {
+    history.push(`/admin/${id}`);
+  };
+
   return (
     <Box
       className={`post ${id === deletedRowId ? 'grayed-out' : ''}`}
@@ -81,7 +115,6 @@ export default function PostCard({
           )
         )}
       </Link>
-
       <Box className="grid-s2" style={{ display: 'grid', gridTemplateRows: '30px' }}>
         <Typography className="grid-s2 grid-e3 mobile-title">
           {post.title.length > 14 ? post.title.slice(0, 14) + '...' : post.title}
@@ -118,13 +151,61 @@ export default function PostCard({
       <Typography className="cat-desk">{post.category}</Typography>
       <Typography className="desc-desk">{post.description}</Typography>
       <Box className="admin-prod-btn-cont grid-7">
-        <Link className="buttons btn-align" to={`/admin/${id}`}>
-          <img src="/edit.png" className="edit-button" alt="edit" />
-        </Link>
-        <Link className="buttons red-border" to={`/admin`} onClick={handleDelete}>
-          <img className="delete-button" src="/delete.png" name="delete" alt="delete" />
-        </Link>
-      </Box>
+        <Button
+          onClick={handleEditPost}
+          sx={{ fontSize: '1rem' }}
+          disabled={post.restricted ? post.restricted : false}
+        >
+          Edit
+        </Button>
+
+        <Button onClick={handleOpenDialog} sx={{ fontSize: '1rem' }}>
+          Delete
+        </Button>
+      </Box>{' '}
+      <Dialog
+        open={openDialog}
+        onClose={isDeleting ? undefined : handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Deleting this post will remove it permanently. This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          {!isDeleting ? (
+            <Box>
+              {' '}
+              <Button onClick={handleCloseDialog} color="primary" sx={{ fontSize: '1rem' }}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleConfirmDelete}
+                color="primary"
+                sx={{ fontSize: '1rem' }}
+                autoFocus
+              >
+                Confirm
+              </Button>
+            </Box>
+          ) : (
+            <Typography
+              color="primary"
+              sx={{
+                padding: '5px',
+                borderRadius: '5px',
+                width: '150px',
+                textAlign: 'center',
+              }}
+            >
+              Deleting...
+            </Typography>
+          )}
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
