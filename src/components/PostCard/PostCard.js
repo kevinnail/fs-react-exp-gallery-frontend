@@ -116,9 +116,11 @@ export default function PostCard({
         )}
       </Link>
       <Box className="grid-s2" style={{ display: 'grid', gridTemplateRows: '30px' }}>
-        <Typography className="grid-s2 grid-e3 mobile-title">
-          {post.title.length > 14 ? post.title.slice(0, 14) + '...' : post.title}
-        </Typography>
+        <Box sx={{ width: isMobile ? '100px' : '' }}>
+          <Typography className="grid-s2 grid-e3 mobile-title" sx={{ textAlign: 'left' }}>
+            {post.title.length > 14 ? post.title.slice(0, 14) + '...' : post.title}
+          </Typography>
+        </Box>
 
         <Typography className="grid-s2 grid-e3 mobile-title sold-highlight">
           {post.sold ? ' SOLD ' : ''}
