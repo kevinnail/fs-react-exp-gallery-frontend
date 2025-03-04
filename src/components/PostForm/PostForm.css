@@ -278,11 +278,12 @@ option {
   clip: rect(1px, 1px, 1px, 1px);
   white-space: nowrap; /* added line */
 }
+
 .file-upload-label {
   border: 2px solid white;
   padding: 1rem;
   border-radius: 0.5rem;
-  background-color: #ccc;
+  background-color: rgb(20, 20, 20);
 }
 .file-upload-label:hover {
   cursor: pointer;
@@ -323,7 +324,7 @@ option {
   border: solid 1px black;
   padding: 10px;
   border-radius: 10px;
-  /* background-color: white; */
+  background-color: white;
   min-width: 300px;
   color: black;
 }
@@ -386,18 +387,21 @@ mobile BELOW this point due to min-width parameter
     grid-row: 3;
     grid-column: 2;
   }
+
   .thumbnails-container {
-    grid-row: 7;
+    grid-row: 6;
     grid-column: 2;
     min-height: 250px;
     overflow-y: scroll;
     display: flex;
     align-items: start;
   }
+
   .dropzone {
     grid-row: 5;
     grid-column: 2;
   }
+
   .btn-container {
     grid-row: 9;
     grid-column: 1 / 3;

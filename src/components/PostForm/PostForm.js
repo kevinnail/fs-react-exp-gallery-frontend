@@ -322,7 +322,7 @@ export default function PostForm({
             />
           </Box>
 
-          <Box {...getRootProps()} className="dropzone">
+          <Box {...getRootProps()} className="dropzone" sx={{ marginTop: '60px' }}>
             <input {...getInputProps()} />
             <label className="file-upload-label">
               {files.length === 0
