@@ -165,7 +165,14 @@ export default function PostForm({
 
   return (
     <>
-      <Box className="form-wrapper">
+      <Box
+        className="form-wrapper"
+        sx={{
+          '&.MuiBox-root': {
+            padding: 0,
+          },
+        }}
+      >
         <aside className="form-admin-panel ">
           <section className="form-admin-panel-section ">
             <Box className="">

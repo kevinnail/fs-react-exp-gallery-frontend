@@ -92,7 +92,7 @@ export default function PostCard({
     <Box
       className={`post ${id === deletedRowId ? 'grayed-out' : ''}`}
       key={id}
-      sx={{ backgroundColor: post.hide ? '#ccc' : '' }}
+      sx={{ backgroundColor: post.hide ? 'rgb(20, 20, 20)' : '' }}
     >
       <Link to={`/main-gallery/${id}`}>
         {image_url ? (
@@ -163,13 +163,16 @@ export default function PostCard({
       <Box className="admin-prod-btn-cont grid-7">
         <Button
           onClick={handleEditPost}
-          sx={{ fontSize: '1rem' }}
+          sx={{ fontSize: '1rem', color: '#2f44ff', textShadow: '0 0 1px #444' }}
           disabled={post.restricted ? post.restricted : false}
         >
           Edit
         </Button>
 
-        <Button onClick={handleOpenDialog} sx={{ fontSize: '1rem' }}>
+        <Button
+          onClick={handleOpenDialog}
+          sx={{ fontSize: '1rem', color: '#2f44ff', textShadow: '0 0 1px #444' }}
+        >
           Delete
         </Button>
       </Box>{' '}

@@ -241,7 +241,7 @@ export default function Admin() {
                 Inventory/ Category Selector
               </AccordionSummary>
             )}
-            <AccordionDetails sx={{ padding: '0' }}>
+            <AccordionDetails sx={{ padding: '0', backgroundColor: 'black' }}>
               <Button
                 style={{ marginTop: '0px' }}
                 disabled={!selectedCategory}
@@ -250,7 +250,13 @@ export default function Admin() {
                   setCurrentPage(1);
                 }}
               >
-                <Typography variant="h5">
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: '#2f44ff',
+                    textShadow: '0 0 1px black',
+                  }}
+                >
                   {selectedCategory ? 'Show All Categories' : 'Select Category'}
                 </Typography>
               </Button>
