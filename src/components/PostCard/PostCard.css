@@ -31,10 +31,9 @@ body {
 .list-container {
   display: flex;
   flex-direction: column;
-  grid-template-rows: repeat(auto-fill, minmax(50px, auto));
   justify-items: flex-start;
   align-items: flex-start;
-  margin: 0px auto;
+  margin: 1px auto;
   padding: 50px 0 0 0rem;
   height: 90vh;
   background: linear-gradient(

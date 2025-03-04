@@ -30,7 +30,7 @@ export default function Admin() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isDesktop = useMediaQuery(theme.breakpoints.down('lg'));
 
-  const postsPerPage = isMobile ? 8 : 7;
+  const postsPerPage = isMobile ? 9 : 7;
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
   }

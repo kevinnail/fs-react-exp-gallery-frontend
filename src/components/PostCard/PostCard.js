@@ -92,7 +92,7 @@ export default function PostCard({
     <Box
       className={`post ${id === deletedRowId ? 'grayed-out' : ''}`}
       key={id}
-      sx={{ backgroundColor: post.hide ? 'rgb(20, 20, 20)' : '' }}
+      sx={{ backgroundColor: post.hide ? 'rgb(35, 35, 35)' : '', boxShadow: '0 0 2px #ccc' }}
     >
       <Link to={`/main-gallery/${id}`}>
         {image_url ? (
@@ -125,11 +125,14 @@ export default function PostCard({
       >
         <Box sx={{ width: isMobile ? '100px' : '' }}>
           <Typography className="grid-s1 grid-e3 mobile-title">
-            {post.title.length > 14 ? post.title.slice(0, 14) + '...' : post.title}
+            {post.title.length > 20 ? post.title.slice(0, 14) + '...' : post.title}
           </Typography>
         </Box>
 
-        <Typography className={isMobile ? ' sold-highlight' : ' mobile-title sold-highlight'}>
+        <Typography
+          className={isMobile ? ' sold-highlight' : ' mobile-title sold-highlight'}
+          sx={{ position: 'relative', bottom: '5px' }}
+        >
           {post.sold ? ' SOLD ' : ''}
         </Typography>
 
@@ -140,7 +143,7 @@ export default function PostCard({
           {post.sold ? 'SOLD' : ''}
         </Typography>
       </Box>
-      <Box>
+      <Box sx={{ position: 'relative', top: isMobile ? '10px' : '', left: isMobile ? '10px' : '' }}>
         {' '}
         <Typography className="grid-3" style={{ display: 'grid' }}>
           {isDiscounted ? (
