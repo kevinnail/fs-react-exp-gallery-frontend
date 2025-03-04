@@ -11,7 +11,7 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
     Cups: 0,
     'Dry Pieces': 0,
     Goblets: 0,
-    'Iso Station': 0,
+    'Iso Stations': 0,
     Marbles: 0,
     Pendants: 0,
     Recyclers: 0,
