@@ -314,13 +314,18 @@ option {
   justify-self: flex-end;
 }
 
+.radio-label {
+  color: black;
+}
+
 .sold-radio-group,
 .hide-radio-group {
   border: solid 1px black;
   padding: 10px;
   border-radius: 10px;
-  background-color: white;
+  /* background-color: white; */
   min-width: 300px;
+  color: black;
 }
 
 /*
