@@ -25,12 +25,12 @@ export default function Admin() {
   const { posts, loading, setPosts, error } = usePosts();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 10;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isDesktop = useMediaQuery(theme.breakpoints.down('lg'));
 
+  const postsPerPage = isMobile ? 8 : 7;
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
   }
@@ -89,9 +89,6 @@ export default function Admin() {
   }
 
   // Create pagination controls
-  // Replace your current PaginationControls function with this improved version
-  // Replace your current PaginationControls function with this improved version
-  // Replace your current PaginationControls function with this improved version
   const PaginationControls = () => {
     if (totalPages <= 1) return null;
 
