@@ -227,14 +227,14 @@ export default function Admin() {
           sx={{
             borderWidth: '1px',
             borderStyle: 'solid',
-            borderColor: (theme) => theme.palette.primary.dark,
+            // borderColor: (theme) => theme.palette.primary.dark,
           }}
           className="large-size-inventory"
         >
           <Accordion
             defaultExpanded={isDesktop ? false : true}
             // disabled={!isMobile} // This will disable the accordion when not on mobile
-            sx={{ backgroundColor: 'rgb(40, 40, 40)' }}
+            sx={{ backgroundColor: 'rgb(40, 40, 40)', border: 'none' }}
           >
             {(isMobile || isDesktop) && (
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>

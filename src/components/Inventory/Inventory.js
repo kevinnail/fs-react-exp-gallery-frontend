@@ -65,8 +65,6 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
     <Box
       sx={{
         borderWidth: '1px',
-        borderStyle: 'solid',
-        borderColor: (theme) => theme.palette.primary.dark,
         paddingX: (theme) => theme.spacing(2),
         paddingY: (theme) => theme.spacing(2),
         borderRadius: (theme) => theme.spacing(1),
