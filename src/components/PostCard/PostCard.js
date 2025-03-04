@@ -92,7 +92,7 @@ export default function PostCard({
     <Box
       className={`post ${id === deletedRowId ? 'grayed-out' : ''}`}
       key={id}
-      sx={{ backgroundColor: post.hide ? 'orange' : '' }}
+      sx={{ backgroundColor: post.hide ? '#ccc' : '' }}
     >
       <Link to={`/main-gallery/${id}`}>
         {image_url ? (
@@ -115,12 +115,21 @@ export default function PostCard({
           )
         )}
       </Link>
-      <Box className="grid-s2" style={{ display: 'grid', gridTemplateRows: '30px' }}>
-        <Typography className="grid-s2 grid-e3 mobile-title">
-          {post.title.length > 14 ? post.title.slice(0, 14) + '...' : post.title}
-        </Typography>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateRows: '30px 30px',
+          gridTemplateColumns: '1fr',
+          paddingTop: '8px',
+        }}
+      >
+        <Box sx={{ width: isMobile ? '100px' : '' }}>
+          <Typography className="grid-s1 grid-e3 mobile-title">
+            {post.title.length > 14 ? post.title.slice(0, 14) + '...' : post.title}
+          </Typography>
+        </Box>
 
-        <Typography className="grid-s2 grid-e3 mobile-title sold-highlight">
+        <Typography className={isMobile ? ' sold-highlight' : ' mobile-title sold-highlight'}>
           {post.sold ? ' SOLD ' : ''}
         </Typography>
 
@@ -137,14 +146,15 @@ export default function PostCard({
           {isDiscounted ? (
             <>
               <Typography
+                variant="span"
                 style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
               >
                 ${originalPrice}
               </Typography>
-              <Typography>${post.discountedPrice}</Typography>
+              <Typography variant="span">${post.discountedPrice}</Typography>
             </>
           ) : (
-            <Typography>${post.price}</Typography>
+            <Typography variant="span">${post.price}</Typography>
           )}
         </Typography>
       </Box>

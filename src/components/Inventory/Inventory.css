@@ -41,9 +41,10 @@
   
   */
 
-@media (min-width: 1024px) {
-  /* .large-size-inventory {
-  } */
+@media (min-width: 1200px) {
+  .large-size-inventory {
+    position: relative;
+  }
 }
 
 /*  END 1024px----------------------------------------------------------  
@@ -57,7 +58,7 @@
   .inventory-table th,
   .inventory-table td {
     border: 1px solid black;
-    padding: 8px;
+    padding: 2px;
     text-align: left;
   }
   .large-size-inventory {

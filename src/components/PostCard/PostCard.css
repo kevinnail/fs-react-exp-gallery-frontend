@@ -43,7 +43,6 @@ body {
     rgba(40, 40, 40, 0.532),
     rgba(21, 21, 21, 0.577)
   );
-
   background-color: rgba(0, 0, 0, 0.51);
   position: relative;
   width: 100%;
@@ -67,7 +66,8 @@ body {
   width: 100%;
   height: 55px;
   background-color: white;
-  display: grid;
+  display: flex;
+  justify-content: space-between;
   grid-template-columns: 60px 150px 100px 1fr 1fr;
   align-items: center;
   justify-items: self-start;
@@ -171,7 +171,7 @@ body {
 .sold-highlight {
   color: rgb(0, 153, 23);
   position: relative;
-  top: -10px;
+  /* top: -10px; */
 }
 
 .hide-highlight {
@@ -191,6 +191,10 @@ body {
 }
 
 @media (min-width: 768px) {
+  .sold-highlight {
+    display: none;
+  }
+
   .post {
     width: 100%;
     height: 100px;
@@ -225,6 +229,7 @@ body {
     margin: 0px auto;
     padding: 0 0rem;
     gap: 5px;
+    top: 50px;
   }
 
   .mobile-title-desk {
@@ -252,16 +257,15 @@ body {
 }
 
 @media (min-width: 1024px) {
-  .post {
-    grid-template-columns: 120px 300px 150px 150px auto;
-  }
   .admin-panel {
     display: block;
   }
+
   .admin-container {
-    grid-template-columns: 200px 1fr 350px;
+    grid-template-columns: 200px 1fr;
     grid-template-rows: 1fr;
   }
+
   .admin-panel-section {
     display: grid;
     justify-items: center;
@@ -273,6 +277,7 @@ body {
     padding: 10px;
     height: 100%;
     box-sizing: border-box;
+    margin-top: 50px;
   }
 
   .menu-icon {
@@ -308,6 +313,19 @@ body {
 }
 
 @media (min-width: 1200px) {
+  .admin-panel-section {
+    margin-top: 0px;
+  }
+
+  .admin-container {
+    grid-template-columns: 200px 1fr 350px;
+  }
+  .list-container {
+    top: 0px;
+  }
+}
+
+@media (min-width: 1800px) {
   .desc-desk {
     display: block;
     white-space: normal;
@@ -315,7 +333,7 @@ body {
     width: 250px;
     height: 65px;
   }
-  .post {
-    grid-template-columns: 120px 300px 75px 150px 250px;
-  }
+  /* .post {
+    grid-template-columns: 120px 100px 75px 150px 250px;
+  } */
 }
