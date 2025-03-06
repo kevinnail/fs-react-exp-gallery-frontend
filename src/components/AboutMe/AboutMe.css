@@ -53,18 +53,17 @@
 }
 .about-me-p {
   font-family: Arial, Helvetica, sans-serif;
-  /* letter-spacing: 2px; */
   font-size: 1rem;
   line-height: 1.5rem;
-  /* font-weight: bold; */
   text-align: left;
-  padding: 10px 40px;
+  padding: 15px 40px;
   color: #ffffff;
   background-color: black;
   box-shadow: 0 0 10px 0 grey;
   z-index: 1000;
   backdrop-filter: blur(5px) saturate(100%) contrast(100%) brightness(30%);
   width: 400px;
+  margin: 0.75rem;
 }
 .about-me-link {
   display: inline-block;
