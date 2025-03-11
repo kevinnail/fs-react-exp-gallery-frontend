@@ -212,17 +212,15 @@ export default function Admin() {
                   post={post}
                   setPosts={setPosts}
                   posts={posts}
+                  originalPrice={post.originalPrice}
+                  discountedPrice={post.discountedPrice}
                 />
               ))}
               <PaginationControls />
             </>
           )}
         </div>
-        {/* <Inventory
-          posts={posts}
-          onCategorySelect={setSelectedCategory}
-          selectedCategory={selectedCategory}
-        /> */}
+
         <Box
           sx={{
             borderWidth: '1px',
