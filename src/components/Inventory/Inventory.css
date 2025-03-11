@@ -1,6 +1,7 @@
 .inventory-container {
   margin-top: 20px;
   margin: 10px 10px 0 10px;
+  border: none;
 }
 .inventory-container {
   margin: 0;
@@ -28,10 +29,12 @@
   box-shadow: 0 0 0 2px #785eee inset;
   background-color: #2f00ff83;
 }
+
 .large-size-inventory {
-  background-color: #121212;
+  background-color: rgb(15, 15, 15);
   position: absolute;
   width: 100%;
+  border: 1px solid #2f44ff;
 }
 /*
   

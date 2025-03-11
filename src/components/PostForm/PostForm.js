@@ -165,7 +165,14 @@ export default function PostForm({
 
   return (
     <>
-      <Box className="form-wrapper">
+      <Box
+        className="form-wrapper"
+        sx={{
+          '&.MuiBox-root': {
+            padding: 0,
+          },
+        }}
+      >
         <aside className="form-admin-panel ">
           <section className="form-admin-panel-section ">
             <Box className="">
@@ -315,7 +322,7 @@ export default function PostForm({
             />
           </Box>
 
-          <Box {...getRootProps()} className="dropzone">
+          <Box {...getRootProps()} className="dropzone" sx={{ marginTop: '60px' }}>
             <input {...getInputProps()} />
             <label className="file-upload-label">
               {files.length === 0

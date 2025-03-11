@@ -27,26 +27,29 @@ export default function AboutMe() {
         </div>
       </div>
       <p className="about-me-p">
-        Welcome! I appreciate you checking out my page. I&apos;ve been blowing glass for about 27
-        years, and now I&apos;ve made a life pivot into web development making websites like this
-        one!
+        Welcome! I appreciate you checking out my page. I&apos;ve been blowing glass for about 28
+        years. In recent years, I&apos;ve been working on making a life pivot into web development
+        to work on websites like this one!
       </p>
       <p className="about-me-p">
         I fell in love with gold and silver fuming before I even know how to do it- once I saw my
-        teacher Ezra Z. do it the first time I was hooked! My other work is I&apos;m a full stack
-        developer currently using React, Node, and Express for web- hope you enjoyed the animations!
-        I&apos;m a big fan of CSS I&apos;ve been trying to incorporate them into my projects as much
-        as possible. This project with the cubes is definitely my coolest yet! That&apos;s just pure
-        CSS by the way, no libraries or frameworks! Recently I started working with C++ and Arduino/
-        Clearcore + 4D Systems HMI for automating a glass saw- another fun arena of solving puzzles.
+        teacher Ezra Z. do it the first time I was hooked! Watching the piece &apos;change
+        color&apos; with use was one of my favorite things as a young man, it was part of the magic
+        that glass promised. I&apos;ve been keeping that era alive for my entire glass career.
       </p>
-      <div className="about-me-p about-me-div-adjust">
+      <p className="about-me-p">
         Aside from that I&apos;m all over the place with my hobbies and interests. Musician at heart
         and can&apos;t play my drums enough- I also enjoy fretless bass and a little bit of keys.
         Astromony and astrophotography are another fun hobby, as well as I went down the mushroom
-        rabbithole and enjoy foraging and cultivating.I&apos;m always looking to sell some glass and
-        currently offering freelance work for fellow artists who need a website. If you&apos;re
-        interested in either, please reach out to me{' '}
+        rabbit hole and enjoy foraging and cultivating. Always wishing I was backpacking in the
+        Cascades, I at least get to go enjoy the Pacific Ocean on the Oregon Coast. In the mean time
+        I am working hard on pursuing starting to make a living from my new found skills in web
+        development.
+      </p>
+
+      <div className="about-me-p about-me-div-adjust">
+        I&apos;m always looking to sell some glass and currently looking for work in tech. If
+        you&apos;re interested in either, please reach out to me{' '}
         <a className="about-me-link" href="mailto:kevin@kevinnail.com">
           via email
         </a>{' '}
