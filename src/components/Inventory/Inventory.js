@@ -3,6 +3,7 @@ import './Inventory.css';
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 
 const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
+  // Categories with count tracking
   const categories = {
     Beads: 0,
     'Blunt Tips': 0,
@@ -23,25 +24,54 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
     Misc: 0,
   };
 
-  const categoryTotalPrices = { ...categories };
+  // Per-category totals for regular and discounted prices
+  const categoryRegularTotal = Object.keys(categories).reduce((acc, key) => {
+    acc[key] = 0;
+    return acc;
+  }, {});
+  const categoryDiscountedTotal = Object.keys(categories).reduce((acc, key) => {
+    acc[key] = 0;
+    return acc;
+  }, {});
 
+  // Overall totals for all items
+  let regularTotal = 0;
+  let discountedTotal = 0;
+
+  // Sold items totals
   let numSoldItems = 0;
-  let subTotalSoldItems = 0;
+  let soldRegularTotal = 0;
+  let soldDiscountedTotal = 0;
 
+  // Loop over posts to calculate totals
   posts.forEach((post) => {
+    // Get prices as numbers
+    const regularPrice = parseFloat(post.price);
+    const effectivePrice = post.discountedPrice ? parseFloat(post.discountedPrice) : regularPrice;
+
+    // Update overall totals
+    regularTotal += regularPrice;
+    discountedTotal += effectivePrice;
+
+    // Update per-category totals (if category exists)
     if (categories[post.category] !== undefined) {
       categories[post.category]++;
-      categoryTotalPrices[post.category] += parseFloat(post.price);
+      categoryRegularTotal[post.category] += regularPrice;
+      categoryDiscountedTotal[post.category] += effectivePrice;
     }
 
+    // Update sold items totals
     if (post.sold) {
-      numSoldItems += 1;
-      subTotalSoldItems += parseFloat(post.price);
+      numSoldItems++;
+      soldRegularTotal += regularPrice;
+      soldDiscountedTotal += effectivePrice;
     }
   });
 
+  // For sale items totals (unsold items)
+  const forSaleRegularTotal = regularTotal - soldRegularTotal;
+  const forSaleDiscountedTotal = discountedTotal - soldDiscountedTotal;
   const totalInventoryCount = Object.values(categories).reduce((a, b) => a + b, 0);
-  const totalInventoryPrice = Object.values(categoryTotalPrices).reduce((a, b) => a + b, 0);
 
   const getColor = (count) => {
     if (count >= 5) return 'rgb(156, 112, 214)';
@@ -72,7 +102,6 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
       }}
       className="inventory-container"
     >
-      {' '}
       <Typography variant="body1">Inventory Totals:</Typography>
       <Table
         className="inventory-table"
@@ -80,7 +109,7 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
           borderWidth: '1px',
           borderStyle: 'solid',
           borderColor: (theme) => theme.palette.primary.light,
-          backgroundColor: (theme) => theme.palette.background.default, // Background color based on theme
+          backgroundColor: (theme) => theme.palette.background.default,
         }}
       >
         <TableHead>
@@ -92,7 +121,7 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
               Total Items
             </TableCell>
             <TableCell component="th" style={{ width: '40%' }}>
-              Total Price
+              Total Price (Discounted)
             </TableCell>
           </TableRow>
         </TableHead>
@@ -101,9 +130,7 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
             <TableRow
               key={category}
               className={selectedCategory === category ? 'selectedRow' : ''}
-              onClick={() => {
-                onCategorySelect(category);
-              }}
+              onClick={() => onCategorySelect(category)}
             >
               <TableCell
                 style={{
@@ -111,9 +138,7 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
                   textAlign: 'left',
                   cursor: 'pointer',
                 }}
-                onClick={() => {
-                  onCategorySelect(category);
-                }}
+                onClick={() => onCategorySelect(category)}
               >
                 {category}
               </TableCell>
@@ -123,9 +148,7 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
                   textAlign: 'center',
                   cursor: 'pointer',
                 }}
-                onClick={() => {
-                  onCategorySelect(category);
-                }}
+                onClick={() => onCategorySelect(category)}
               >
                 {categories[category]}
               </TableCell>
@@ -135,33 +158,59 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
                   textAlign: 'right',
                   cursor: 'pointer',
                 }}
-                onClick={() => {
-                  onCategorySelect(category);
-                }}
+                onClick={() => onCategorySelect(category)}
               >
-                ${Number(categoryTotalPrices[category].toFixed(0)).toLocaleString()}
+                ${Number(categoryDiscountedTotal[category].toFixed(0)).toLocaleString()}
               </TableCell>
             </TableRow>
           ))}
+          {/* Overall totals */}
           <TableRow style={{ fontWeight: 'bold' }}>
             <TableCell style={{ textAlign: 'left' }}>Total Value</TableCell>
             <TableCell style={{ textAlign: 'center' }}>{totalInventoryCount}</TableCell>
             <TableCell style={{ textAlign: 'right' }}>
-              ${Number(totalInventoryPrice.toFixed(2)).toLocaleString()}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Regular</span>
+                <span>${Number(regularTotal.toFixed(2)).toLocaleString()}</span>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span> Discount</span>
+                <span>${Number(discountedTotal.toFixed(2)).toLocaleString()}</span>
+              </Box>
             </TableCell>
           </TableRow>
+
+          {/* Sold items totals */}
           <TableRow style={{ fontWeight: 'bold' }}>
             <TableCell style={{ textAlign: 'left' }}>Sold Items</TableCell>
             <TableCell style={{ textAlign: 'center' }}>{numSoldItems}</TableCell>
-            <TableCell style={{ textAlign: 'right' }}>${Number(subTotalSoldItems)}</TableCell>
+            <TableCell style={{ textAlign: 'right' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Regular</span>
+                <span>${Number(soldRegularTotal.toFixed(2)).toLocaleString()}</span>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span> Discount</span>
+                <span>${Number(soldDiscountedTotal.toFixed(2)).toLocaleString()}</span>
+              </Box>
+            </TableCell>
           </TableRow>
+
+          {/* For sale items totals */}
           <TableRow style={{ fontWeight: 'bold' }}>
-            <TableCell style={{ textAlign: 'left', fontWeight: 'bold' }}>Total For Sale</TableCell>
-            <TableCell style={{ textAlign: 'center', fontWeight: 'bold' }}>
+            <TableCell style={{ textAlign: 'left' }}>For Sale Items</TableCell>
+            <TableCell style={{ textAlign: 'center' }}>
               {totalInventoryCount - numSoldItems}
             </TableCell>
-            <TableCell style={{ textAlign: 'right', fontWeight: 'bold' }}>
-              ${Number(totalInventoryPrice - subTotalSoldItems)}
+            <TableCell style={{ textAlign: 'right' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Regular</span>
+                <span>${Number(forSaleRegularTotal.toFixed(2)).toLocaleString()}</span>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span> Discount</span>
+                <span>${Number(forSaleDiscountedTotal.toFixed(2)).toLocaleString()}</span>
+              </Box>
             </TableCell>
           </TableRow>
         </TableBody>
