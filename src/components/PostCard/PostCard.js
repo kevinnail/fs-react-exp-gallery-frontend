@@ -135,9 +135,8 @@ export default function PostCard({
         >
           {post.sold ? ' SOLD ' : ''}
         </Typography>
-
         <Typography className="grid-s2 grid-e3 mobile-title-desk">
-          {post.hide ? post.title + ' (HIDDEN) ' : post.title}
+          {post.hide ? post.title + ' (HIDDEN) ' : post.titlesdfsdf}
         </Typography>
         <Typography className="grid-s2 grid-e3 mobile-title-desk sold-highlight">
           {post.sold ? 'SOLD' : ''}
@@ -145,12 +144,21 @@ export default function PostCard({
       </Box>
       <Box sx={{ position: 'relative', top: isMobile ? '10px' : '', left: isMobile ? '10px' : '' }}>
         {' '}
-        <Typography className="grid-3" style={{ display: 'grid' }}>
+        <Typography
+          className="grid-3"
+          style={{ display: 'grid', position: 'relative', top: isMobile ? '-4px' : '0px' }}
+        >
           {isDiscounted ? (
             <>
               <Typography
                 variant="span"
-                style={{ textDecoration: 'line-through', marginRight: '10px', color: 'red' }}
+                style={{
+                  textDecoration: 'line-through',
+                  marginRight: '10px',
+                  color: 'red',
+                  position: 'relative',
+                  top: '8px',
+                }}
               >
                 ${originalPrice}
               </Typography>
