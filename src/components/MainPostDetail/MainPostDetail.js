@@ -144,7 +144,7 @@ export default function MainPostDetail() {
                         >
                           ${postDetail?.originalPrice}
                         </span>
-                        <span>${postDetail?.discountedPrice}</span>
+                        <span>${Number(postDetail?.discountedPrice).toFixed(2)}</span>
                       </>
                     ) : (
                       <span>${postDetail?.price}</span>
