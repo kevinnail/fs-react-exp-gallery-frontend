@@ -162,7 +162,7 @@ export default function PostCard({
               >
                 ${originalPrice}
               </Typography>
-              <Typography variant="span">${post.discountedPrice}</Typography>
+              <Typography variant="span">${Number(post.discountedPrice).toFixed(2)}</Typography>
             </>
           ) : (
             <Typography variant="span">${post.price}</Typography>
