@@ -1,5 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
 import { getUser } from '../services/fetch-utils.js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UserContext = createContext();
 
@@ -14,9 +16,16 @@ const UserProvider = ({ children }) => {
         const user = await getUser();
         setUser(user);
         setLoading(false);
-      } catch (error) {
-        setError(error.message);
+      } catch (e) {
+        setError(e.message);
         setLoading(false);
+        toast.error(`Error getting user: ${e.message}`, {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'postCard-1',
+          autoClose: false,
+        });
       }
     };
     fetchUser();

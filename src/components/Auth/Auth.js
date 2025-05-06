@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link, NavLink, Redirect, useParams } from 'react-router-dom';
+import { Link, Redirect, useParams } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 import './Auth.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
+import { toast } from 'react-toastify';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -29,7 +30,12 @@ export default function Auth() {
   const submitAuth = async () => {
     // Check if the email is allowed
     if (!isEmailAllowed(email)) {
-      alert('This email is not allowed to create an account.');
+      toast.error('Account creation not allowed.', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: true,
+      });
       return;
     }
 

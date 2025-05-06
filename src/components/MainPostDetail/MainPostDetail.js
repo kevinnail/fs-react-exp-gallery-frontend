@@ -35,6 +35,7 @@ export default function MainPostDetail() {
   } else if (platform?.includes('instagram')) {
     sellingLogoLink = instagramLogoLink;
     store = 'Instagram';
+    // eslint-disable-next-line
     isInstagram = true;
   }
 
@@ -144,7 +145,7 @@ export default function MainPostDetail() {
                         >
                           ${postDetail?.originalPrice}
                         </span>
-                        <span>${postDetail?.discountedPrice}</span>
+                        <span>${Number(postDetail?.discountedPrice).toFixed(2)}</span>
                       </>
                     ) : (
                       <span>${postDetail?.price}</span>

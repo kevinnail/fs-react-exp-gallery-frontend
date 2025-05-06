@@ -30,7 +30,7 @@ export default function Admin() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isDesktop = useMediaQuery(theme.breakpoints.down('lg'));
 
-  const postsPerPage = isMobile ? 8 : 7;
+  const postsPerPage = isMobile ? 9 : 7;
   if (!user) {
     return <Redirect to="/auth/sign-in" />;
   }
@@ -212,36 +212,34 @@ export default function Admin() {
                   post={post}
                   setPosts={setPosts}
                   posts={posts}
+                  originalPrice={post.originalPrice}
+                  discountedPrice={post.discountedPrice}
                 />
               ))}
               <PaginationControls />
             </>
           )}
         </div>
-        {/* <Inventory
-          posts={posts}
-          onCategorySelect={setSelectedCategory}
-          selectedCategory={selectedCategory}
-        /> */}
+
         <Box
           sx={{
             borderWidth: '1px',
             borderStyle: 'solid',
-            borderColor: (theme) => theme.palette.primary.dark,
+            // borderColor: (theme) => theme.palette.primary.dark,
           }}
           className="large-size-inventory"
         >
           <Accordion
             defaultExpanded={isDesktop ? false : true}
             // disabled={!isMobile} // This will disable the accordion when not on mobile
-            sx={{ backgroundColor: 'rgb(40, 40, 40)' }}
+            sx={{ backgroundColor: 'rgb(40, 40, 40)', border: 'none' }}
           >
             {(isMobile || isDesktop) && (
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 Inventory/ Category Selector
               </AccordionSummary>
             )}
-            <AccordionDetails sx={{ padding: '0' }}>
+            <AccordionDetails sx={{ padding: '0', backgroundColor: 'black' }}>
               <Button
                 style={{ marginTop: '0px' }}
                 disabled={!selectedCategory}
@@ -250,7 +248,13 @@ export default function Admin() {
                   setCurrentPage(1);
                 }}
               >
-                <Typography variant="h5">
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: '#2f44ff',
+                    textShadow: '0 0 1px black',
+                  }}
+                >
                   {selectedCategory ? 'Show All Categories' : 'Select Category'}
                 </Typography>
               </Button>

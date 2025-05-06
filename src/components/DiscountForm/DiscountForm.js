@@ -5,6 +5,8 @@ import { signOut } from '../../services/auth.js';
 import './DiscountForm.css';
 import { bulkPostEdit, postAdminMessage, getSiteMessage } from '../../services/fetch-utils.js';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function DiscountForm() {
   const [percentage, setPercentage] = useState('');
@@ -20,6 +22,13 @@ export default function DiscountForm() {
         setMessage(currentMessage.message);
       } catch (error) {
         console.error('An error occurred while fetching the message:', error);
+        toast.error('An error occurred while fetching the message', {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'discount-form-1',
+          autoClose: true,
+        });
       }
     };
 
@@ -48,6 +57,13 @@ export default function DiscountForm() {
       history.push('/admin');
     } catch (error) {
       console.error('An error occurred:', error);
+      toast.error('An error occurred , edit sales message failed', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'discount-form-2',
+        autoClose: true,
+      });
     }
   };
 

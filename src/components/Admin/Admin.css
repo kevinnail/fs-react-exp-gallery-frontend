@@ -103,8 +103,9 @@
 
 .pagination-button {
   padding: 8px 16px;
-  border: 1px solid #ccc;
-  background-color: white;
+  border: 1px solid #2f44ff;
+  background-color: rgba(0, 0, 0, 0.507);
+  color: white;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease-in-out;

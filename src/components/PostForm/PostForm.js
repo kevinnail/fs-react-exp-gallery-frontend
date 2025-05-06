@@ -7,6 +7,8 @@ import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
 import { useDropzone } from 'react-dropzone';
 import { Box } from '@mui/material';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function PostForm({
   title = '',
@@ -146,6 +148,16 @@ export default function PostForm({
       submitHandler(newPost, currentImages, deletedImages);
     } catch (error) {
       console.error(error);
+      toast.error(
+        `Error ${formFunctionMode === 'new' ? 'creating new ' : 'editing '}post: ${e.message}`,
+        {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'postForm-1',
+          autoClose: false,
+        }
+      );
     }
   };
 
@@ -165,7 +177,14 @@ export default function PostForm({
 
   return (
     <>
-      <Box className="form-wrapper">
+      <Box
+        className="form-wrapper"
+        sx={{
+          '&.MuiBox-root': {
+            padding: 0,
+          },
+        }}
+      >
         <aside className="form-admin-panel ">
           <section className="form-admin-panel-section ">
             <Box className="">
@@ -315,7 +334,7 @@ export default function PostForm({
             />
           </Box>
 
-          <Box {...getRootProps()} className="dropzone">
+          <Box {...getRootProps()} className="dropzone" sx={{ marginTop: '60px' }}>
             <input {...getInputProps()} />
             <label className="file-upload-label">
               {files.length === 0

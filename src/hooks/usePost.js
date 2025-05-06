@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getPostDetail, getAdditionalImageUrlsPublicIds } from '../services/fetch-utils.js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function usePost(id) {
   const [postDetail, setPostDetail] = useState({});
@@ -24,6 +26,13 @@ export function usePost(id) {
         setLoading(false);
       } catch (e) {
         setError(e.message);
+        toast.error(`Error fetching post details: ${e.message}`, {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'usePost-1',
+          autoClose: false,
+        });
         setLoading(false);
       }
     };
