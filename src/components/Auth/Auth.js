@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, NavLink, Redirect, useParams } from 'react-router-dom';
+import { Link, Redirect, useParams } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 import './Auth.css';
 import Menu from '../Menu/Menu.js';

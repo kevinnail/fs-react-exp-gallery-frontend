@@ -41,6 +41,7 @@ export default function PostCard({
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [openDialog, setOpenDialog] = useState(false);
+  //eslint-disable-next-line
   const [isDeleting, setIsDeleting] = useState(false);
 
   if (!user) {

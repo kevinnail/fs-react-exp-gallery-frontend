@@ -49,6 +49,7 @@ const mainTheme = createTheme({
   },
 });
 function App() {
+  // eslint-disable-next-line
   const [theme, setTheme] = useState(mainTheme);
 
   const { user } = useUser();

@@ -47,7 +47,7 @@ export function useGalleryPost(id) {
       }
     };
     fetchData();
-  }, [id]);
+  }, [id, history]);
 
   return {
     postDetail,
