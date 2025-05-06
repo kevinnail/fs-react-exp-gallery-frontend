@@ -8,7 +8,8 @@ import { useUser } from '../../hooks/useUser.js';
 import Loading from '../Loading/Loading.js';
 import { getSiteMessage } from '../../services/fetch-utils.js';
 import { Box } from '@mui/material';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 //
 //
 //
@@ -22,8 +23,15 @@ export default function MainGallery() {
       try {
         const currentMessage = await getSiteMessage();
         setMessage(currentMessage.message);
-      } catch (error) {
-        console.error('An error occurred while fetching the message:', error);
+      } catch (e) {
+        console.error('An error occurred while fetching the customer message:', e);
+        toast.error(`An error occurred while fetching the customer message: ${e.message}`, {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'edit-post-1',
+          autoClose: false,
+        });
       }
     };
 

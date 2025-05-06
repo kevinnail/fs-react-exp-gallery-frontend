@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { fetchPosts } from '../services/fetch-utils.js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function usePosts() {
   const [posts, setPosts] = useState([]);
@@ -18,6 +20,13 @@ export function usePosts() {
           console.error(e.response.data.message);
         }
         setError(e.message);
+        toast.error(`Error fetching posts: ${e.message}`, {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'usePosts-1',
+          autoClose: false,
+        });
         setLoading(false);
       }
     };

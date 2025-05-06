@@ -35,6 +35,7 @@ export default function MainPostDetail() {
   } else if (platform?.includes('instagram')) {
     sellingLogoLink = instagramLogoLink;
     store = 'Instagram';
+    // eslint-disable-next-line
     isInstagram = true;
   }
 
