@@ -1,16 +1,26 @@
 # Stress Less Glass
 
-An image gallery website for an artist- in this case me- to display work that collectors can browse/ contact me if interested.
+A professional artist portfolio website showcasing my glass artwork. This full-stack application provides visitors with an elegant platform to browse my work and initiate contact for potential acquisitions. Built with a focus on performance and user experience, the site features a responsive design and robust image management system.
 
 ![Logo](https://fs-react-exp-gallery-kn.netlify.app/logo-sq-180.png)
 
----
-
 ## Table of Contents
 
+- [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Lessons Learned](#lessons-learned)
+- [Technical Implementation](#technical-implementation)
 - [Preview](#preview)
+
+## Features
+
+- Dynamic image gallery with responsive grid layout
+- Secure image upload and management system with AWS S3 integration
+- Real-time image preview and editing capabilities
+- Advanced form handling with multi-image upload support
+- Responsive design with modern CSS animations
+- Secure authentication system for admin access
+- Order management and processing system
+- Business analytics and data export capabilities
 
 ## Tech Stack
 
@@ -20,34 +30,54 @@ An image gallery website for an artist- in this case me- to display work that co
 [![React Router](https://img.shields.io/badge/-React%20Router-CA4245?style=flat&logo=react-router&logoColor=white)](https://reactrouter.com/)
 [![Node.js](https://img.shields.io/badge/-Node.js-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/-Express-000000?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
+[![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![AWS S3](https://img.shields.io/badge/-AWS%20S3-232F3E?style=flat&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/s3/)
 
-## Lessons Learned
+## Technical Implementation
 
-### _What did I learn while building this project?_
+### Architecture
 
-- Excellent plans miss a huge amount of challenges
-- The complexity/ organization of an edit form with image upload
-- Auto deletion of foreign key relationships with "ON DELETE CASCADE" saving a fetch call
-- Cloudinary SDK and uploading images through my Node/ Express server
-- Using local vs remote storage with Cloudinary uploads
-- Limitations of Heroku
-- Much about the FormData object, using it to send files in requests
-- The multer npm package and how it works/ parses FormData objects
-- Responsive web design with @media(min-width:...) rules
-- Significantly complex 3D animation through CSS- NO LIBRARIES, only @keyframes, etc.
+- Full-stack application with React frontend and Express backend
+- RESTful API design for efficient data management
+- AWS S3 integration for optimized image storage and delivery
+- PostgreSQL database for reliable data persistence
+- JWT-based authentication system
+- Responsive design implementation using modern CSS techniques
 
-### _What challenges did I face and how did I overcome them?_
+### Key Technical Features
 
-For starters- I began this project just after my boot camp closed without warning just shy of 3/4 of the way through the program, so this entire project was me working on finishing my own training. My main challenge of this project was the edit form- it sounds so simple. But needing to first learn how to even use Cloudinary's SDK in conjuction with my Express server all through React to begin with was very challenging, and then what? The form needs to allow for a user to choose images for initial upload, which need to be displayed in the form with the ability to delete them if the user changes their mind. That list also needs to be displayed in the edit form allowing for additional images to be added to the list- again allowing for deletion.
+- **Advanced Image Management**
 
-The initial list is data urls- when editing the post, the display list is urls to the Cloudinary server. Adding to that list is adding more data urls to the http urls. Allowing for deletion means keeping track of all this so that once submit is pressed, the remaining images are parsed such that:
+  - Multi-image upload with real-time preview
+  - Dynamic image state management
+  - AWS S3 integration for cloud storage
+  - Automatic image optimization and delivery
 
-- Any initial images (remaining after any deletions on the form) are uploaded to Cloudinary and the return data (public_id and secure_url) are stored on my Express server
-- Any existing images on Cloudinary selected for deletion have their public_id sent in a request to Cloudinary for removal
-- All remaining images upon submit of the form have their collective urls inputted/ updated into the Express server for display in the gallery
+- **Form Handling**
 
-It's a mix of state; current images, new images, and deleted images- and mixing up data urls/ http urls in an array that needs to be parsed. It was the most challenging thing I've had to figure out logic-wise in my development journey but and thrilled with how it came out.
+  - Complex state management for mixed data types
+  - Real-time validation and error handling
+  - Efficient handling of FormData for file uploads
+  - Seamless integration between local and cloud storage
 
-# Preview
+- **Performance Optimization**
+  - Optimized image loading and caching
+  - Efficient database relationships with cascading operations
+  - Responsive design with CSS animations
+  - Cloud-based asset delivery through AWS S3
+
+### Database Design
+
+- PostgreSQL database with optimized schema
+- Proper foreign key relationships for data integrity
+- Efficient cascading operations
+- Secure data storage and retrieval patterns
+- Comprehensive test suite using Jest
+
+## Preview
 
 ![Preview](./public/preview.gif)
+
+## Contact
+
+For business inquiries, please visit [Stress Less Glass](http://stresslessglass.kevinnail.com) or contact me directly at [kevin@kevinnail.com](mailto:kevin@kevinnail.com).
