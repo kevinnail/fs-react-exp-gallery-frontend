@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { fetchGalleryPosts } from '../services/fetch-utils.js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function useGalleryPosts() {
   const [posts, setPosts] = useState([]);
@@ -15,8 +17,6 @@ export function useGalleryPosts() {
     return array;
   }
 
-  // Assuming your fetch result is stored in a variable called 'data'
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -26,6 +26,12 @@ export function useGalleryPosts() {
         setPosts(randomizedData);
         setLoading(false);
       } catch (e) {
+        toast.error(`Error fetching gallery posts: ${e.message}`, {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'useGalleryPosts-1',
+        });
         setError(e.message);
         setLoading(false);
       }

@@ -14,6 +14,7 @@ import DiscountForm from './components/DiscountForm/DiscountForm.js';
 import { createTheme } from '@mui/material';
 import { useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
+import { ToastContainer } from 'react-toastify';
 
 const mainTheme = createTheme({
   palette: {
@@ -56,6 +57,7 @@ function App() {
     <div className="App">
       <div className="app-wrapper">
         <Header />
+        <ToastContainer position="top-center" />
         <ThemeProvider theme={theme}>
           <Switch>
             <Route exact path="/auth/:type" component={Auth} />

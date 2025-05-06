@@ -7,6 +7,8 @@ import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
 import { useDropzone } from 'react-dropzone';
 import { Box } from '@mui/material';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function PostForm({
   title = '',
@@ -146,6 +148,16 @@ export default function PostForm({
       submitHandler(newPost, currentImages, deletedImages);
     } catch (error) {
       console.error(error);
+      toast.error(
+        `Error ${formFunctionMode === 'new' ? 'creating new ' : 'editing '}post: ${e.message}`,
+        {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'postForm-1',
+          autoClose: false,
+        }
+      );
     }
   };
 

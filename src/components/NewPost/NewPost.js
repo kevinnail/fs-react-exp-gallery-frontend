@@ -2,6 +2,8 @@ import { Redirect, useHistory } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 import { postAddImages, postPost } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function NewPost() {
   const history = useHistory();
@@ -47,6 +49,13 @@ export default function NewPost() {
       history.push('/admin');
     } catch (e) {
       console.error(e.message);
+      toast.error(`Failed to add post: ${e.message}`, {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'new-post-1',
+        autoClose: false,
+      });
     }
   };
   return <PostForm submitHandler={handleSubmit} />;

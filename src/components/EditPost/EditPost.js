@@ -11,6 +11,8 @@ import { useUser } from '../../hooks/useUser.js';
 import { usePost } from '../../hooks/usePost.js';
 import React, { useState } from 'react';
 import Loading from '../Loading/Loading.js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function EditPost() {
   const { id } = useParams();
@@ -71,6 +73,13 @@ export default function EditPost() {
       history.push('/admin');
     } catch (e) {
       setError(e.message);
+      toast.error(`Failed to edit post: ${e.message}`, {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'edit-post-1',
+        autoClose: false,
+      });
     }
   };
 

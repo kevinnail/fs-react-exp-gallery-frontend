@@ -20,6 +20,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function PostCard({
   id,
@@ -68,6 +70,13 @@ export default function PostCard({
       setPosts(updatedPosts);
     } catch (e) {
       console.error('Error deleting post:', e.message);
+      toast.error(`Error deleting post: ${e.message}`, {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'postCard-1',
+        autoClose: false,
+      });
     }
   };
 

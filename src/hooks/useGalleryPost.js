@@ -5,6 +5,9 @@ import {
   getGalleryPostDetail,
 } from '../services/fetch-utils.js';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export function useGalleryPost(id) {
   const [postDetail, setPostDetail] = useState({});
   const [imageUrls, setImageUrls] = useState([]);
@@ -32,6 +35,13 @@ export function useGalleryPost(id) {
         setImageUrls([...additionalImageUrlsPublicIds]);
         setLoading(false);
       } catch (e) {
+        toast.error(`Error fetching gallery post: ${e.message}`, {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'useGalleryPost-1',
+          onClose: () => history.push('/main-gallery'),
+        });
         setError(e.message);
         setLoading(false);
       }
