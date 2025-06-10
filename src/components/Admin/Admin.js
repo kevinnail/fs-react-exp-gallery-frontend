@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { usePosts } from '../../hooks/usePosts.js';
 import { useUser } from '../../hooks/useUser.js';
@@ -172,7 +172,7 @@ export default function Admin() {
     );
   };
 
-  //! fucking around with webhooks
+  //! investigating webhooks ideas
   // const handleFetch = async () => {
   //   try {
   //     const response = await fetch('https://www.atthefire.com/api/v1/stuff', {
@@ -190,7 +190,6 @@ export default function Admin() {
   return (
     <>
       <div className="admin-container">
-        {/* <button onClick={handleFetch}>Fetch Data</button> */}
         <aside className="admin-panel">
           <section className="admin-panel-section">
             <div>
@@ -225,13 +224,11 @@ export default function Admin() {
           sx={{
             borderWidth: '1px',
             borderStyle: 'solid',
-            // borderColor: (theme) => theme.palette.primary.dark,
           }}
           className="large-size-inventory"
         >
           <Accordion
             defaultExpanded={isDesktop ? false : true}
-            // disabled={!isMobile} // This will disable the accordion when not on mobile
             sx={{ backgroundColor: 'rgb(40, 40, 40)', border: 'none' }}
           >
             {(isMobile || isDesktop) && (
