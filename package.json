@@ -14,13 +14,13 @@
     "netlify-cli": "^11.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-dropzone": "^14.2.3",
-    "react-modal": "^3.16.1",
+    "react-dropzone": "^14.3.8",
+    "react-modal": "^3.16.3",
     "react-router-dom": "^6.8.1",
     "react-scripts": "^5.0.1",
-    "react-swipeable": "^7.0.0",
+    "react-swipeable": "^7.0.2",
     "react-toastify": "^10.0.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^5.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
