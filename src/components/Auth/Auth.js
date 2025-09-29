@@ -5,7 +5,6 @@ import './Auth.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
-import { toast } from 'react-toastify';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -21,24 +20,8 @@ export default function Auth() {
     console.error(error);
   }
 
-  const isEmailAllowed = (email) => {
-    const allowedEmails = process.env.REACT_APP_ALLOWED_EMAILS.split(',');
-    return allowedEmails.includes(email);
-  };
-
   // submit form to log in or sign up
   const submitAuth = async () => {
-    // Check if the email is allowed
-    if (!isEmailAllowed(email)) {
-      toast.error('Account creation not allowed.', {
-        theme: 'colored',
-        draggable: true,
-        draggablePercent: 60,
-        autoClose: true,
-      });
-      return;
-    }
-
     try {
       setLoading(true);
       await logInUser(email, password, type);
