@@ -172,21 +172,6 @@ export default function Admin() {
     );
   };
 
-  //! investigating webhooks ideas
-  // const handleFetch = async () => {
-  //   try {
-  //     const response = await fetch('https://www.atthefire.com/api/v1/stuff', {
-  //       method: 'POST',
-  //       // headers: { 'Content-Type': 'application/json' },
-  //       // body: JSON.stringify({}), // Include an empty body if your backend expects it
-  //     });
-  //     const data = await response.json();
-  //     console.log(data);
-  //   } catch (error) {
-  //     console.error('Error fetching:', error);
-  //   }
-  // };
-
   return (
     <>
       <div className="admin-container">
