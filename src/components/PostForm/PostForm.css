@@ -303,7 +303,7 @@ option {
   height: 250px;
   overflow-y: scroll;
   display: flex;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .dropzone {
@@ -394,7 +394,7 @@ mobile BELOW this point due to min-width parameter
     min-height: 250px;
     overflow-y: scroll;
     display: flex;
-    align-items: start;
+    align-items: flex-start;
   }
 
   .dropzone {
