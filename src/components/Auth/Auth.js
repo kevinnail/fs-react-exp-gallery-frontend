@@ -34,18 +34,7 @@ export default function Auth() {
   if (loading) {
     return <Loading />;
   }
-  if (error) {
-    return (
-      <div className="loading-div-wrapper">
-        <h2 className="error-state">
-          Something went wrong. Please refresh the page or try again later. Here{`'`}s the error
-          message if it helps:
-          <br />
-          <span className="error-span">{error}</span>
-        </h2>
-      </div>
-    );
-  }
+
   const handleClick = async () => {
     await signOut();
     setUser(null);
