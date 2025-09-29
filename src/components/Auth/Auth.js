@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Redirect, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 import './Auth.css';
 import Menu from '../Menu/Menu.js';
@@ -14,7 +14,7 @@ export default function Auth() {
   const [isFormRetracted, setIsFormRetracted] = useState(true);
 
   if (user) {
-    return <Redirect to="/admin" />;
+    return <Navigate to="/admin" replace />;
   } else if (error) {
     console.error(error);
   }

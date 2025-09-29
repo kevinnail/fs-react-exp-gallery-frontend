@@ -4,7 +4,7 @@ import {
   getAdditionalImageUrlsPublicIdsGallery,
   getGalleryPostDetail,
 } from '../services/fetch-utils.js';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -15,7 +15,7 @@ export function useGalleryPost(id) {
   const [loading, setLoading] = useState(true);
   const [isDeleted, setIsDeleted] = useState(false);
   const [additionalImagesGallery, setAdditionalImagesGallery] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
@@ -40,14 +40,14 @@ export function useGalleryPost(id) {
           draggable: true,
           draggablePercent: 60,
           toastId: 'useGalleryPost-1',
-          onClose: () => history.push('/main-gallery'),
+          onClose: () => navigate('/main-gallery'),
         });
         setError(e.message);
         setLoading(false);
       }
     };
     fetchData();
-  }, [id, history]);
+  }, [id, navigate]);
 
   return {
     postDetail,

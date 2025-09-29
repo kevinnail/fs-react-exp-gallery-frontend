@@ -1,4 +1,4 @@
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 import {
   deleteById,
@@ -19,7 +19,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -32,7 +32,7 @@ export default function PostCard({
   discountedPrice,
   originalPrice,
 }) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { user } = useUser();
   const [deletedRowId, setDeletedRowId] = useState(null);
@@ -45,7 +45,7 @@ export default function PostCard({
   const [isDeleting, setIsDeleting] = useState(false);
 
   if (!user) {
-    return <Redirect to="/auth/sign-in" />;
+    return <Navigate to="/auth/sign-in" replace />;
   }
 
   // Determine whether to show discounted price or not
@@ -95,7 +95,7 @@ export default function PostCard({
   };
 
   const handleEditPost = () => {
-    history.push(`/admin/${id}`);
+    navigate(`/admin/${id}`);
   };
 
   return (

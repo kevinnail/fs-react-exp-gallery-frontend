@@ -1,4 +1,4 @@
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { usePosts } from '../../hooks/usePosts.js';
 import { useUser } from '../../hooks/useUser.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
@@ -12,7 +12,7 @@ export default function Gallery() {
   const { user, error } = useUser();
 
   if (!user) {
-    return <Redirect to="/auth" />;
+    return <Navigate to="/auth" replace />;
   } else if (error) {
     console.error(error);
   }

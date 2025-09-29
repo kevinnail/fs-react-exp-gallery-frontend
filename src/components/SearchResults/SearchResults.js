@@ -5,12 +5,12 @@ import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
 import { useUser } from '../../hooks/useUser.js';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
+import { useNavigate } from 'react-router-dom';
 const SearchResults = () => {
   const [posts, setPosts] = useState([]);
   const location = useLocation();
   const { setUser } = useUser();
-  const history = useHistory();
+  const navigate = useNavigate();
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const searchTerm = searchParams.get('q');
@@ -36,7 +36,7 @@ const SearchResults = () => {
       </div>
       <button
         className="retract-button2 btn-adjust"
-        onClick={() => (history.length > 0 ? history.goBack() : history.push('/main-gallery'))}
+        onClick={() => navigate(-1)}
         title="Back to previous page"
       >
         <i className="fa fa-arrow-left" aria-hidden="true"></i>

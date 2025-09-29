@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Modal from 'react-modal';
 import { useSwipeable } from 'react-swipeable'; // Add this import
@@ -16,7 +16,7 @@ export default function MainPostDetail() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { setUser } = useUser();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const glasspassLogoLink =
     'https://stress-less-glass.s3.us-west-2.amazonaws.com/stress-less-glass-assets/glasspass_logo.PNG';
@@ -80,7 +80,7 @@ export default function MainPostDetail() {
   };
 
   const handleCategoryClick = () => {
-    history.push(`/search?q=${postDetail?.category}`);
+    navigate(`/search?q=${postDetail?.category}`);
   };
 
   return (
@@ -94,9 +94,7 @@ export default function MainPostDetail() {
             <section className="title-container">
               <button
                 className="retract-button2 btn-adjust"
-                onClick={() =>
-                  history.length > 0 ? history.goBack() : history.push('/main-gallery')
-                }
+                onClick={() => navigate(-1)}
                 title="Back to previous page"
               >
                 <i className="fa fa-arrow-left" aria-hidden="true"></i>

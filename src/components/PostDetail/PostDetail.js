@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Redirect, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import { usePost } from '../../hooks/usePost.js';
 import './PostDetail.css';
@@ -17,7 +17,7 @@ export default function PostDetail() {
   const { user } = useUser();
 
   if (!user) {
-    return <Redirect to="/auth" />;
+    return <Navigate to="/auth" replace />;
   } else if (error) {
     console.error(error);
   }
