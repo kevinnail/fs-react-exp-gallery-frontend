@@ -9,7 +9,6 @@ import Loading from '../Loading/Loading.js';
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [isSignIn, setIsSignIn] = useState(true);
   const { user, logInUser, error, loading, setLoading, setUser } = useUser();
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
