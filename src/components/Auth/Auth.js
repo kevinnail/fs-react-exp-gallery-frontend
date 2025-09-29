@@ -5,12 +5,10 @@ import './Auth.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
-import { toast } from 'react-toastify';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [isSignIn, setIsSignIn] = useState(true);
   const { user, logInUser, error, loading, setLoading, setUser } = useUser();
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
@@ -21,24 +19,8 @@ export default function Auth() {
     console.error(error);
   }
 
-  const isEmailAllowed = (email) => {
-    const allowedEmails = process.env.REACT_APP_ALLOWED_EMAILS.split(',');
-    return allowedEmails.includes(email);
-  };
-
   // submit form to log in or sign up
   const submitAuth = async () => {
-    // Check if the email is allowed
-    if (!isEmailAllowed(email)) {
-      toast.error('Account creation not allowed.', {
-        theme: 'colored',
-        draggable: true,
-        draggablePercent: 60,
-        autoClose: true,
-      });
-      return;
-    }
-
     try {
       setLoading(true);
       await logInUser(email, password, type);
@@ -51,18 +33,7 @@ export default function Auth() {
   if (loading) {
     return <Loading />;
   }
-  if (error) {
-    return (
-      <div className="loading-div-wrapper">
-        <h2 className="error-state">
-          Something went wrong. Please refresh the page or try again later. Here{`'`}s the error
-          message if it helps:
-          <br />
-          <span className="error-span">{error}</span>
-        </h2>
-      </div>
-    );
-  }
+
   const handleClick = async () => {
     await signOut();
     setUser(null);

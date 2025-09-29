@@ -22,7 +22,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Admin() {
   const { user, setUser } = useUser();
-  const { posts, loading, setPosts, error } = usePosts();
+  const { posts, loading, setPosts } = usePosts();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -47,19 +47,6 @@ export default function Admin() {
 
   if (loading) {
     return <Loading />;
-  }
-
-  if (error) {
-    return (
-      <div className="loading-div-wrapper">
-        <h2 className="error-state">
-          Something went wrong. Please refresh the page or try again later. Here{"'"}s the error
-          message if it helps:
-          <br />
-          <span className="error-span">{error}</span>
-        </h2>
-      </div>
-    );
   }
 
   // Filter posts based on selected category
