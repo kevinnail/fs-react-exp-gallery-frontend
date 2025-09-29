@@ -1,4 +1,4 @@
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { useUser } from './hooks/useUser.js';
 import Auth from './components/Auth/Auth.js';
@@ -60,21 +60,18 @@ function App() {
         <Header />
         <ToastContainer position="top-center" />
         <ThemeProvider theme={theme}>
-          <Switch>
-            <Route exact path="/auth/:type" component={Auth} />
-            <Route path="/main-gallery/:id" component={MainPostDetail} />
-            <Route path="/main-gallery" component={MainGallery} />
-            <Route path="/search" component={SearchResults} />
-            <Route path="/about-me" component={AboutMe} />
-            <Route path="/admin/discounts" component={DiscountForm} />
-            <Route path="/admin/new" component={NewPost} />
-            <Route exact path="/admin/:id" component={EditPost} />
-
-            <Route path="/admin" component={Admin} />
-            <Route path="*">
-              <Redirect to={user ? '/admin' : '/auth/sign-in'} />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path="/auth/:type" element={<Auth />} />
+            <Route path="/main-gallery/:id" element={<MainPostDetail />} />
+            <Route path="/main-gallery" element={<MainGallery />} />
+            <Route path="/search" element={<SearchResults />} />
+            <Route path="/about-me" element={<AboutMe />} />
+            <Route path="/admin/discounts" element={<DiscountForm />} />
+            <Route path="/admin/new" element={<NewPost />} />
+            <Route path="/admin/:id" element={<EditPost />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="*" element={<Navigate to={user ? '/admin' : '/auth/sign-in'} replace />} />
+          </Routes>
         </ThemeProvider>
       </div>
     </div>
