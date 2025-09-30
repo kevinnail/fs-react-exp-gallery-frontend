@@ -156,9 +156,9 @@ export default function Auth() {
 
       <button className="retract-button" onClick={() => setIsFormRetracted(!isFormRetracted)}>
         {isFormRetracted ? (
-          <i className="fa fa-arrow-right" aria-hidden="true"></i>
+          <span className="arrow-icon">→</span>
         ) : (
-          <i className="fa fa-arrow-left" aria-hidden="true"></i>
+          <span className="arrow-icon">←</span>
         )}
       </button>
     </>

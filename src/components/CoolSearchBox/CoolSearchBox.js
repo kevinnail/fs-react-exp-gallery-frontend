@@ -22,7 +22,7 @@ const CoolSearchBox = ({ onSearch }) => {
           onChange={(event) => setSearchValue(event.target.value)}
         />
         <button type="submit" className="cool-search-button">
-          <i className="fa fa-search cool-search-icon"></i>
+          <span className="search-icon">🔍</span>
         </button>
       </form>
     </div>

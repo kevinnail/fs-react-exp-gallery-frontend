@@ -39,7 +39,7 @@ const SearchResults = () => {
         onClick={() => navigate(-1)}
         title="Back to previous page"
       >
-        <i className="fa fa-arrow-left" aria-hidden="true"></i>
+        <span className="arrow-icon">←</span>
       </button>
       <div className="gallery-list-container">
         {posts.map((post) => (

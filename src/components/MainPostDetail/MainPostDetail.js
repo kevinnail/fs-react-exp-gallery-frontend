@@ -97,7 +97,7 @@ export default function MainPostDetail() {
                 onClick={() => navigate(-1)}
                 title="Back to previous page"
               >
-                <i className="fa fa-arrow-left" aria-hidden="true"></i>
+                <span className="arrow-icon">←</span>
               </button>
               <h1 className="detail-title">{postDetail?.title}</h1>
             </section>
