@@ -67,16 +67,13 @@ export async function signInUser(email, password) {
 
     const data = await resp.json();
 
-    if (resp.ok) {
-      location.replace('/admin ');
-
-      return resp;
-    } else {
-      // eslint-disable-next-line no-console
-      console.error(data.message);
+    if (!resp.ok) {
+      throw new Error(data.message);
     }
+    location.replace('/admin ');
+    return resp;
   } catch (error) {
-    console.error(error);
+    console.error('Problem signing in');
     throw error;
   }
 }
