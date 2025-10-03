@@ -11,7 +11,7 @@ export function useUser() {
       const user = await authUser(email, password, type);
       setUser(user);
     } catch (e) {
-      toast.error(`Error logging in`, {
+      toast.error(`Error logging in: ${e.message}`, {
         position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
@@ -21,6 +21,8 @@ export function useUser() {
         progress: undefined,
         theme: 'dark',
       });
+      setError(null);
+      setLoading(false);
     }
   };
 
