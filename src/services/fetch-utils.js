@@ -73,7 +73,7 @@ export async function signInUser(email, password) {
     location.replace('/admin ');
     return resp;
   } catch (error) {
-    console.error('Problem signing in');
+    console.error('Problem signing in: ', error.message);
     throw error;
   }
 }
