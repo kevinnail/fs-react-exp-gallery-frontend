@@ -42,12 +42,18 @@ export const useUserStore = create((set) => ({
       set({ loading: true });
 
       let finalImageUrl = existingImageUrl || null;
+      const previousImageUrl = existingImageUrl || null;
       if (file) {
         const uploadResult = await uploadImageToS3(file);
         finalImageUrl = uploadResult.secure_url;
       }
 
-      const updatedProfile = await updateProfileWithImage(finalImageUrl, firstName, lastName);
+      const updatedProfile = await updateProfileWithImage(
+        finalImageUrl,
+        firstName,
+        lastName,
+        file ? existingImageUrl : null
+      );
       set({ profile: updatedProfile, loading: false });
 
       toast.success('Profile updated successfully!', {
