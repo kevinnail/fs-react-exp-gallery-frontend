@@ -4,11 +4,11 @@ import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import { useUserStore } from '../../stores/userStore.js';
 export default function AboutMe() {
-  const { setUser } = useUserStore();
+  const { signout } = useUserStore();
 
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
   return (
     <div className="about-me-div">

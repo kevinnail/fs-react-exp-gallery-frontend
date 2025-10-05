@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function DiscountForm() {
   const [percentage, setPercentage] = useState('');
   const [message, setMessage] = useState('');
-  const { setUser } = useUserStore();
+  const { signout } = useUserStore();
   const [action, setAction] = useState('apply');
   const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ export default function DiscountForm() {
 
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   const handleSubmit = async (e) => {

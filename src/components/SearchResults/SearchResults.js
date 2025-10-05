@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const SearchResults = () => {
   const [posts, setPosts] = useState([]);
   const location = useLocation();
-  const { setUser } = useUserStore();
+  const { signout } = useUserStore();
   const navigate = useNavigate();
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -25,7 +25,7 @@ const SearchResults = () => {
 
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   // Render your search results (e.g., using a list, grid, or other layout)

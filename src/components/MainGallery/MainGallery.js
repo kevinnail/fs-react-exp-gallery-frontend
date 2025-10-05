@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 //
 export default function MainGallery() {
   const { posts, loading } = useGalleryPosts();
-  const { setUser } = useUserStore();
+  const { signout } = useUserStore();
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function MainGallery() {
 
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   return (

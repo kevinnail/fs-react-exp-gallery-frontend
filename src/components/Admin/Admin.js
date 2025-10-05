@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
 import { usePosts } from '../../hooks/usePosts.js';
 import { useUserStore } from '../../stores/userStore.js';
 import PostCard from '../PostCard/PostCard.js';
@@ -21,7 +20,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Admin() {
-  const { user, setUser } = useUserStore();
+  const { user, signout } = useUserStore();
   const { posts, loading, setPosts, error } = usePosts();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,7 +38,7 @@ export default function Admin() {
 
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   if (loading) {

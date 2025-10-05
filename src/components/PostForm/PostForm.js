@@ -26,7 +26,7 @@ export default function PostForm({
   const [descriptionInput, setDescriptionInput] = useState(description);
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
-  const { user, setUser } = useUserStore();
+  const { user, signout } = useUserStore();
   const [loading, setLoading] = useState(false);
   const [currentImages, setCurrentImages] = useState(imageUrls || []); // Added state for images currently in the post for display in the form
   const [deletedImages, setDeletedImages] = useState([]);
@@ -172,7 +172,7 @@ export default function PostForm({
   }
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   return (

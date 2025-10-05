@@ -15,7 +15,7 @@ export default function MainPostDetail() {
   const { postDetail, imageUrls, loading, error } = useGalleryPost(id);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const { setUser } = useUserStore();
+  const { signout } = useUserStore();
   const navigate = useNavigate();
 
   const glasspassLogoLink =
@@ -76,7 +76,7 @@ export default function MainPostDetail() {
   }
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   const handleCategoryClick = () => {

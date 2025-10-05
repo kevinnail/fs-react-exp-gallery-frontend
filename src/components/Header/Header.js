@@ -8,13 +8,13 @@ import Menu from '../Menu/Menu.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import { useNavigate } from 'react-router-dom';
 export default function Header() {
-  const { user, setUser } = useUserStore();
+  const { user, signout } = useUserStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   const handleMenuClick = () => {
