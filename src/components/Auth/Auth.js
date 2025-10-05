@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, NavLink, Navigate, useParams } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser.js';
 import './Auth.css';
 import Menu from '../Menu/Menu.js';
@@ -9,12 +9,13 @@ import Loading from '../Loading/Loading.js';
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isSignIn, setIsSignIn] = useState(true);
   const { user, logInUser, error, loading, setLoading, setUser } = useUser();
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
 
   if (user) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to="/main-gallery" replace />;
   } else if (error) {
     console.error(error);
   }
@@ -33,7 +34,18 @@ export default function Auth() {
   if (loading) {
     return <Loading />;
   }
-
+  // if (error) {
+  //   return (
+  //     <div className="loading-div-wrapper">
+  //       <h2 className="error-state">
+  //         Something went wrong. Please refresh the page or try again later. Here{`'`}s the error
+  //         message if it helps:
+  //         <br />
+  //         <span className="error-span">{error}</span>
+  //       </h2>
+  //     </div>
+  //   );
+  // }
   const handleClick = async () => {
     await signOut();
     setUser(null);
@@ -131,6 +143,15 @@ export default function Auth() {
         {}
         {}
         <div className={`auth-section-container ${isFormRetracted ? 'retracted' : ''}`}>
+          <div className="sign-in-sign-out">
+            <NavLink className="auth-link" to="/auth/sign-in" onClick={() => setIsSignIn(true)}>
+              Sign-in
+            </NavLink>
+            <NavLink className="auth-link" to="/auth/sign-up" onClick={() => setIsSignIn(false)}>
+              Sign-up
+            </NavLink>
+          </div>
+
           <div className="email-container">
             <input
               className="input-auth"
@@ -149,16 +170,16 @@ export default function Auth() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button className="button-auth" onClick={submitAuth}>
-            Admin Login
+            {isSignIn ? 'Sign In' : 'Sign Up'}
           </button>
         </div>
       </div>
 
       <button className="retract-button" onClick={() => setIsFormRetracted(!isFormRetracted)}>
         {isFormRetracted ? (
-          <span className="arrow-icon">→</span>
+          <i className="fa fa-arrow-right" aria-hidden="true"></i>
         ) : (
-          <span className="arrow-icon">←</span>
+          <i className="fa fa-arrow-left" aria-hidden="true"></i>
         )}
       </button>
     </>
