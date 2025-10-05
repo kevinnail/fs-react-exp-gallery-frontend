@@ -5,6 +5,7 @@ import './Auth.css';
 import Menu from '../Menu/Menu.js';
 import { signOut, authUser } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
+import { toast } from 'react-toastify';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -15,7 +16,6 @@ export default function Auth() {
   const [isFormRetracted, setIsFormRetracted] = useState(true);
 
   if (user) {
-    console.log('user', user);
     return <Navigate to={user.isAdmin ? '/admin' : '/profile'} replace />;
   } else if (error) {
     console.error(error);
@@ -29,6 +29,12 @@ export default function Auth() {
       setUser(user);
     } catch (e) {
       console.error(e);
+      toast.error(e.message, {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 5000,
+      });
       setLoading(false);
     }
   };
