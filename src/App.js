@@ -12,6 +12,7 @@ import MainPostDetail from './components/MainPostDetail/MainPostDetail.js';
 import AboutMe from './components/AboutMe/AboutMe.js';
 import SearchResults from './components/SearchResults/SearchResults.js';
 import DiscountForm from './components/DiscountForm/DiscountForm.js';
+import Profile from './components/Profile/Profile.js';
 import { createTheme } from '@mui/material';
 import { useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
@@ -71,7 +72,16 @@ function App() {
             <Route path="/admin/new" element={<NewPost />} />
             <Route path="/admin/:id" element={<EditPost />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="*" element={<Navigate to={user ? '/admin' : '/auth/sign-in'} replace />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route
+              path="*"
+              element={
+                <Navigate
+                  to={user ? (user.isAdmin ? '/admin' : '/profile') : '/auth/sign-in'}
+                  replace
+                />
+              }
+            />
           </Routes>
         </ThemeProvider>
       </div>
