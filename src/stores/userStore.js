@@ -1,6 +1,11 @@
 // stores/userStore.js (or wherever you want to place it)
 import { create } from 'zustand';
-import { getUser, updateUser, fetchUserProfile } from '../services/fetch-utils.js';
+import {
+  getUser,
+  fetchUserProfile,
+  uploadImageToS3,
+  updateProfileWithImage,
+} from '../services/fetch-utils.js';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -31,11 +36,20 @@ export const useUserStore = create((set) => ({
     }
   },
 
-  updateUserProfile: async (userData) => {
+  // Single profile update method: optionally upload image, then update full profile
+  updateUserProfile: async ({ firstName, lastName, file, existingImageUrl }) => {
     try {
       set({ loading: true });
-      const updatedProfile = await updateUser(userData);
+
+      let finalImageUrl = existingImageUrl || null;
+      if (file) {
+        const uploadResult = await uploadImageToS3(file);
+        finalImageUrl = uploadResult.secure_url;
+      }
+
+      const updatedProfile = await updateProfileWithImage(finalImageUrl, firstName, lastName);
       set({ profile: updatedProfile, loading: false });
+
       toast.success('Profile updated successfully!', {
         theme: 'colored',
         draggable: true,

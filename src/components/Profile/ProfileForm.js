@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import './ProfileForm.css';
 
-export default function ProfileForm({ onClose }) {
-  const { profile, updateUserProfile, loading } = useUserStore();
+export default function ProfileForm({ handleCloseForm }) {
+  const { profile, loading, updateUserProfile } = useUserStore();
   const [formData, setFormData] = useState({
     firstName: profile?.firstName || '',
     lastName: profile?.lastName || '',
-    profilePicture: null,
+    imageUrl: null,
   });
-  const [previewImage, setPreviewImage] = useState(profile?.profilePicture || null);
+  const [previewImage, setPreviewImage] = useState(profile?.imageUrl || null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,7 +24,7 @@ export default function ProfileForm({ onClose }) {
     if (file) {
       setFormData((prev) => ({
         ...prev,
-        profilePicture: file,
+        imageUrl: file,
       }));
 
       // Create preview
@@ -39,18 +39,19 @@ export default function ProfileForm({ onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const submitData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-    };
+    try {
+      await updateUserProfile({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        file: formData.imageUrl,
+        existingImageUrl: profile?.imageUrl || null,
+      });
 
-    // Add profile picture if selected
-    if (formData.profilePicture) {
-      submitData.profilePicture = formData.profilePicture;
+      handleCloseForm();
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      // toast shown by store
     }
-
-    await updateUserProfile(submitData);
-    onClose();
   };
 
   return (
@@ -58,7 +59,7 @@ export default function ProfileForm({ onClose }) {
       <div className="profile-form-container">
         <div className="profile-form-header">
           <h2>Edit Profile</h2>
-          <button className="close-btn" onClick={onClose}>
+          <button className="close-btn" onClick={handleCloseForm}>
             ×
           </button>
         </div>
@@ -89,7 +90,7 @@ export default function ProfileForm({ onClose }) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="profilePicture">Profile Picture</label>
+            <label htmlFor="imageUrl">Profile Picture</label>
             <div className="image-upload-container">
               {previewImage && (
                 <div className="image-preview">
@@ -98,20 +99,20 @@ export default function ProfileForm({ onClose }) {
               )}
               <input
                 type="file"
-                id="profilePicture"
-                name="profilePicture"
+                id="imageUrl"
+                name="imageUrl"
                 accept="image/*"
                 onChange={handleImageChange}
                 className="file-input"
               />
-              <label htmlFor="profilePicture" className="file-input-label">
-                {formData.profilePicture ? 'Change Image' : 'Choose Image'}
+              <label htmlFor="imageUrl" className="file-input-label">
+                {formData.imageUrl ? 'Change Image' : 'Choose Image'}
               </label>
             </div>
           </div>
 
           <div className="form-actions">
-            <button type="button" onClick={onClose} className="cancel-btn">
+            <button type="button" onClick={handleCloseForm} className="cancel-btn">
               Cancel
             </button>
             <button type="submit" className="submit-btn" disabled={loading}>

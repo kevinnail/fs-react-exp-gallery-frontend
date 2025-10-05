@@ -40,7 +40,7 @@ export default function Profile() {
   const handleCloseForm = () => {
     setShowEditForm(false);
   };
-
+  console.log('profile', profile);
   return (
     <div className="profile-container">
       <div className="menu-search-container">
@@ -50,8 +50,8 @@ export default function Profile() {
       <div className="profile-content">
         <div className="profile-header">
           <div className="profile-picture-section">
-            {profile?.profilePicture ? (
-              <img src={profile.profilePicture} alt="Profile" className="profile-picture" />
+            {profile?.imageUrl ? (
+              <img src={profile.imageUrl} alt="Profile" className="profile-picture" />
             ) : (
               <div className="profile-picture-placeholder">
                 {profile?.firstName?.charAt(0) || user?.user?.email?.charAt(0) || 'U'}
@@ -83,7 +83,7 @@ export default function Profile() {
         </div>
       </div>
 
-      {showEditForm && <ProfileForm onClose={handleCloseForm} />}
+      {showEditForm && <ProfileForm handleCloseForm={handleCloseForm} />}
     </div>
   );
 }

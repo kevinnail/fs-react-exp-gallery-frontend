@@ -97,30 +97,7 @@ export async function signOutUser() {
   }
 }
 
-export async function updateUser(userData) {
-  try {
-    const resp = await fetch(`${BASE_URL}/api/v1/profile`, {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-      credentials: 'include',
-    });
-
-    if (resp.ok) {
-      const updatedUser = await resp.json();
-      return updatedUser;
-    } else {
-      const data = await resp.json();
-      throw new Error(data.message || 'Failed to update user');
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
+// Deprecated: profile updates are handled by updateProfileWithImage
 
 export async function fetchUserProfile() {
   try {
@@ -604,5 +581,86 @@ export async function postAdminMessage(message) {
   } catch (e) {
     console.error('An error occurred:', e);
     throw e;
+  }
+}
+
+/* Image API functions */
+
+// Upload single image to S3 and return URL
+export async function uploadImageToS3(imageFile) {
+  try {
+    const formData = new FormData();
+    formData.append('imageFiles', imageFile);
+
+    const response = await fetch(`${BASE_URL}/api/v1/profile/upload`, {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to upload image');
+    }
+
+    const result = await response.json();
+    // Return the first (and only) uploaded image result
+    return result[0];
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error;
+  }
+}
+
+// Update profile with image URL
+export async function updateProfileWithImage(imageUrl, firstName = null, lastName = null) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/profile/images`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        image_url: imageUrl,
+        firstName: firstName,
+        lastName: lastName,
+      }),
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update profile with image');
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Error updating profile with image:', error);
+    throw error;
+  }
+}
+
+// Delete image from S3
+export async function deleteImageFromS3(publicId) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/profile/delete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        public_id: publicId,
+      }),
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete image');
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Error deleting image:', error);
+    throw error;
   }
 }
