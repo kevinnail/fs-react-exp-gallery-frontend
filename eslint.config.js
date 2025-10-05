@@ -16,6 +16,11 @@ export default [
         fetch: 'readonly',
         FormData: 'readonly',
         history: 'readonly',
+        location: 'readonly',
+        URL: 'readonly',
+        URLSearchParams: 'readonly',
+        FileReader: 'readonly',
+        IntersectionObserver: 'readonly',
         test: 'readonly',
         expect: 'readonly',
         describe: 'readonly',
@@ -38,6 +43,8 @@ export default [
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       'no-unused-vars': 'warn',
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
     },
     settings: {
       react: {
