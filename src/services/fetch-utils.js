@@ -638,29 +638,3 @@ export async function updateProfileWithImage(imageUrl, firstName = null, lastNam
     throw error;
   }
 }
-
-// Delete image from S3
-export async function deleteImageFromS3(publicId) {
-  try {
-    const response = await fetch(`${BASE_URL}/api/v1/profile/delete`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        public_id: publicId,
-      }),
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to delete image');
-    }
-
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error('Error deleting image:', error);
-    throw error;
-  }
-}
