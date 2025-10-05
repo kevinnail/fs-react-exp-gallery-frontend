@@ -23,7 +23,6 @@ export const useProfileStore = create((set) => ({
       set({ loading: true });
 
       let finalImageUrl = existingImageUrl || null;
-      const previousImageUrl = existingImageUrl || null;
       if (file) {
         const uploadResult = await uploadImageToS3(file);
         finalImageUrl = uploadResult.secure_url;
