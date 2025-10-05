@@ -16,7 +16,7 @@ export default function Auth() {
 
   if (user) {
     console.log('user', user);
-    return <Navigate to="/admin" replace />;
+    return <Navigate to={user.isAdmin ? '/admin' : '/profile'} replace />;
   } else if (error) {
     console.error(error);
   }
