@@ -97,6 +97,56 @@ export async function signOutUser() {
   }
 }
 
+export async function updateUser(userData) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/profile`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+      credentials: 'include',
+    });
+
+    if (resp.ok) {
+      const updatedUser = await resp.json();
+      return updatedUser;
+    } else {
+      const data = await resp.json();
+      throw new Error(data.message || 'Failed to update user');
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function fetchUserProfile() {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/profile`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (resp.ok) {
+      const profile = await resp.json();
+      return profile;
+    } else if (resp.status === 401 || resp.status === 403) {
+      return null;
+    } else {
+      throw new Error('An error occurred while fetching user profile');
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 /* Data functions */
 
 // get all posts from database and display on admin page
