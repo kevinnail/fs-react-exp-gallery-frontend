@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Menu from '../Menu/Menu.js';
-import { useUser } from '../../hooks/useUser.js';
+import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import './DiscountForm.css';
 import { bulkPostEdit, postAdminMessage, getSiteMessage } from '../../services/fetch-utils.js';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function DiscountForm() {
   const [percentage, setPercentage] = useState('');
   const [message, setMessage] = useState('');
-  const { setUser } = useUser();
+  const { signout } = useUserStore();
   const [action, setAction] = useState('apply');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMessage = async () => {
@@ -37,7 +37,7 @@ export default function DiscountForm() {
 
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   const handleSubmit = async (e) => {
@@ -54,7 +54,7 @@ export default function DiscountForm() {
         await postAdminMessage(message);
       }
 
-      history.push('/admin');
+      navigate('/admin');
     } catch (error) {
       console.error('An error occurred:', error);
       toast.error('An error occurred , edit sales message failed', {

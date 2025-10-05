@@ -1,11 +1,10 @@
 import React from 'react';
-import { NavLink, useParams } from 'react-router-dom';
-import { useUser } from '../../hooks/useUser.js';
+import { NavLink } from 'react-router-dom';
+import { useUserStore } from '../../stores/userStore.js';
 import { downloadInventoryCSV } from '../../services/fetch-utils.js';
 
 export default function Menu({ handleClick }) {
-  const { user } = useUser();
-  const { id } = useParams();
+  const { user, isAdmin } = useUserStore();
 
   const handleDownloadCSV = () => {
     downloadInventoryCSV();
@@ -22,13 +21,10 @@ export default function Menu({ handleClick }) {
           </NavLink>
           <NavLink className="new-link" to="/about-me">
             About
+          </NavLink>{' '}
+          <NavLink className="new-link" to="/auth/sign-in">
+            Sign In
           </NavLink>
-          {/* <a href="mailto:kevin@kevinnail.com">
-            <img className="site-msg-link-ig" width="48px" src="/email.png" alt="Email" />
-          </a>
-          <a href="https://www.instagram.com/stresslessglass">
-            <img width="48px" src="/IG.png" alt="Instagram" />
-          </a> */}
         </>
       )}
 
@@ -41,26 +37,27 @@ export default function Menu({ handleClick }) {
           <NavLink className="new-link" to="/about-me">
             About
           </NavLink>
-          <NavLink className="new-link" to="/admin/new" title="Make new post">
-            New
-          </NavLink>
-          <NavLink className="new-link" to="/admin/discounts" title="Make new post">
-            Sale!
-          </NavLink>
-          <button
-            className="new-link download-button"
-            title="Download Inventory CSV"
-            onClick={handleDownloadCSV}
-          >
-            Inventory
-          </button>
+          {isAdmin && (
+            <>
+              {' '}
+              <NavLink className="new-link" to="/admin/new" title="Make new post">
+                New
+              </NavLink>
+              <NavLink className="new-link" to="/admin/discounts" title="Make new post">
+                Sale!
+              </NavLink>
+              <button
+                className="new-link download-button"
+                title="Download Inventory CSV"
+                onClick={handleDownloadCSV}
+              >
+                Inventory
+              </button>
+            </>
+          )}
           <button
             title="Sign Out"
-            className={`signout-button 
-            ${location.pathname === '/admin' ? ' signout-button-adapt' : ''}
-            ${location.pathname === '/admin/new' ? ' signout-button-adapt' : ''}
-            ${location.pathname === `/admin/${id}` ? ' signout-button-adapt' : ''}
-            `}
+            className="signout-button signout-button-adapt"
             onClick={handleClick}
           >
             Sign Out

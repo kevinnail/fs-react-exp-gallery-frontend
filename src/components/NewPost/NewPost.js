@@ -1,17 +1,11 @@
-import { Redirect, useHistory } from 'react-router-dom';
-import { useUser } from '../../hooks/useUser.js';
+import { useNavigate } from 'react-router-dom';
 import { postAddImages, postPost } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function NewPost() {
-  const history = useHistory();
-  const { user } = useUser();
-
-  if (!user) {
-    return <Redirect to="/auth/sign-in" />;
-  }
+  const navigate = useNavigate();
 
   const handleSubmit = async (newPost) => {
     try {
@@ -46,7 +40,7 @@ export default function NewPost() {
 
       // send image urls and public ids to db
       await postAddImages(newPost.additionalImages, post.id);
-      history.push('/admin');
+      navigate('/admin');
     } catch (e) {
       console.error(e.message);
       toast.error(`Failed to add post: ${e.message}`, {

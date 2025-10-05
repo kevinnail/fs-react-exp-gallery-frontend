@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
-import { Link, Redirect, useParams } from 'react-router-dom';
-import { useUser } from '../../hooks/useUser.js';
+import { Link, NavLink, useParams, useNavigate, Navigate } from 'react-router-dom';
+import { useUserStore } from '../../stores/userStore.js';
 import './Auth.css';
 import Menu from '../Menu/Menu.js';
-import { signOut } from '../../services/auth.js';
+import { signOut, authUser } from '../../services/auth.js';
+import { getUser } from '../../services/fetch-utils.js';
 import Loading from '../Loading/Loading.js';
+import { toast } from 'react-toastify';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { user, logInUser, error, loading, setLoading, setUser } = useUser();
+  const [isSignIn, setIsSignIn] = useState(true);
+  const { user, setUser, error, loading, setLoading, signout, setIsAdmin, isAdmin } =
+    useUserStore();
   const { type } = useParams();
-  const [isFormRetracted, setIsFormRetracted] = useState(true);
-
+  const [isFormRetracted, setIsFormRetracted] = useState(false);
+  const navigate = useNavigate();
   if (user) {
-    return <Redirect to="/admin" />;
+    return <Navigate to={isAdmin ? '/admin' : '/profile'} replace />;
   } else if (error) {
     console.error(error);
   }
@@ -23,20 +27,43 @@ export default function Auth() {
   const submitAuth = async () => {
     try {
       setLoading(true);
-      await logInUser(email, password, type);
+      await authUser(email, password, type);
+      const data = await getUser();
+      if (data) {
+        // Handle different possible data structures
+        const user = data.user?.user || data.user || data;
+        const isAdmin = data.isAdmin || false;
+        setUser(user);
+        setIsAdmin(isAdmin);
+        setLoading(false);
+        navigate('/admin');
+      }
     } catch (e) {
       console.error(e);
+      toast.error(e.message, {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 5000,
+      });
+      setLoading(false);
     }
   };
 
-  // show loading spinner while waiting for posts to load1
+  // show loading spinner while waiting
   if (loading) {
     return <Loading />;
   }
 
   const handleClick = async () => {
-    await signOut();
-    setUser(null);
+    try {
+      await signOut();
+      signout();
+    } catch (error) {
+      console.error('Error signing out:', error);
+      // Still clear state even if sign out fails
+      signout();
+    }
   };
   return (
     <>
@@ -131,6 +158,15 @@ export default function Auth() {
         {}
         {}
         <div className={`auth-section-container ${isFormRetracted ? 'retracted' : ''}`}>
+          <div className="sign-in-sign-out">
+            <NavLink className="auth-link" to="/auth/sign-in" onClick={() => setIsSignIn(true)}>
+              Sign-in
+            </NavLink>
+            <NavLink className="auth-link" to="/auth/sign-up" onClick={() => setIsSignIn(false)}>
+              Sign-up
+            </NavLink>
+          </div>
+
           <div className="email-container">
             <input
               className="input-auth"
@@ -149,7 +185,7 @@ export default function Auth() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button className="button-auth" onClick={submitAuth}>
-            Admin Login
+            {isSignIn ? 'Sign In' : 'Sign Up'}
           </button>
         </div>
       </div>

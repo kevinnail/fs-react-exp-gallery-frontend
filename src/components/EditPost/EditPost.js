@@ -1,4 +1,4 @@
-import { Redirect, useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   deleteImage,
   deleteImageData,
@@ -7,7 +7,6 @@ import {
   updatePost,
 } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
-import { useUser } from '../../hooks/useUser.js';
 import { usePost } from '../../hooks/usePost.js';
 import React, { useState } from 'react';
 import Loading from '../Loading/Loading.js';
@@ -16,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function EditPost() {
   const { id } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const {
     postDetail,
     loading,
@@ -29,12 +28,7 @@ export default function EditPost() {
     additionalImages,
   } = usePost(id);
 
-  const { user } = useUser();
   const [deletedImagePublicIds, setDeletedImagePublicIds] = useState([]);
-
-  if (!user) {
-    return <Redirect to="/auth/sign-in" />;
-  }
 
   // show loading spinner while waiting for posts to load1
   if (loading) {
@@ -70,7 +64,7 @@ export default function EditPost() {
           await deleteImageData(id, removedImage.public_id);
         }
       }
-      history.push('/admin');
+      navigate('/admin');
     } catch (e) {
       setError(e.message);
       toast.error(`Failed to edit post: ${e.message}`, {

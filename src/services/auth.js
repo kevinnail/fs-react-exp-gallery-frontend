@@ -10,7 +10,7 @@ export async function authUser(email, password, type) {
   if (response.error) {
     throw response.error;
   }
-  return response.user;
+  return response;
 }
 
 export async function signOut() {

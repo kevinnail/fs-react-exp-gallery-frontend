@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Redirect, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import { usePost } from '../../hooks/usePost.js';
 import './PostDetail.css';
-import { useUser } from '../../hooks/useUser.js';
+import { useUserStore } from '../../stores/userStore.js';
 import Loading from '../Loading/Loading.js';
 
 Modal.setAppElement('#root'); // If your app is using #root as the main container
@@ -14,11 +14,9 @@ export default function PostDetail() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const { user } = useUser();
+  const { user } = useUserStore();
 
-  if (!user) {
-    return <Redirect to="/auth" />;
-  } else if (error) {
+  if (error) {
     console.error(error);
   }
 

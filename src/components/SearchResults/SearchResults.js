@@ -4,13 +4,13 @@ import { searchGalleryPosts } from '../../services/fetch-utils';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
-import { useUser } from '../../hooks/useUser.js';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min.js';
+import { useUserStore } from '../../stores/userStore.js';
+import { useNavigate } from 'react-router-dom';
 const SearchResults = () => {
   const [posts, setPosts] = useState([]);
   const location = useLocation();
-  const { setUser } = useUser();
-  const history = useHistory();
+  const { signout } = useUserStore();
+  const navigate = useNavigate();
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const searchTerm = searchParams.get('q');
@@ -25,7 +25,7 @@ const SearchResults = () => {
 
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   // Render your search results (e.g., using a list, grid, or other layout)
@@ -36,10 +36,10 @@ const SearchResults = () => {
       </div>
       <button
         className="retract-button2 btn-adjust"
-        onClick={() => (history.length > 0 ? history.goBack() : history.push('/main-gallery'))}
+        onClick={() => navigate(-1)}
         title="Back to previous page"
       >
-        <i className="fa fa-arrow-left" aria-hidden="true"></i>
+        <span className="arrow-icon">←</span>
       </button>
       <div className="gallery-list-container">
         {posts.map((post) => (

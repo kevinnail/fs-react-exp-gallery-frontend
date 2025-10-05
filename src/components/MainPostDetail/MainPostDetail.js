@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Modal from 'react-modal';
 import { useSwipeable } from 'react-swipeable'; // Add this import
@@ -7,7 +7,7 @@ Modal.setAppElement('#root'); // If your app is using #root as the main containe
 import '../PostDetail/PostDetail.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
-import { useUser } from '../../hooks/useUser.js';
+import { useUserStore } from '../../stores/userStore.js';
 import Loading from '../Loading/Loading.js';
 
 export default function MainPostDetail() {
@@ -15,8 +15,8 @@ export default function MainPostDetail() {
   const { postDetail, imageUrls, loading, error } = useGalleryPost(id);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const { setUser } = useUser();
-  const history = useHistory();
+  const { signout } = useUserStore();
+  const navigate = useNavigate();
 
   const glasspassLogoLink =
     'https://stress-less-glass.s3.us-west-2.amazonaws.com/stress-less-glass-assets/glasspass_logo.PNG';
@@ -76,11 +76,11 @@ export default function MainPostDetail() {
   }
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   const handleCategoryClick = () => {
-    history.push(`/search?q=${postDetail?.category}`);
+    navigate(`/search?q=${postDetail?.category}`);
   };
 
   return (
@@ -94,12 +94,10 @@ export default function MainPostDetail() {
             <section className="title-container">
               <button
                 className="retract-button2 btn-adjust"
-                onClick={() =>
-                  history.length > 0 ? history.goBack() : history.push('/main-gallery')
-                }
+                onClick={() => navigate(-1)}
                 title="Back to previous page"
               >
-                <i className="fa fa-arrow-left" aria-hidden="true"></i>
+                <span className="arrow-icon">←</span>
               </button>
               <h1 className="detail-title">{postDetail?.title}</h1>
             </section>

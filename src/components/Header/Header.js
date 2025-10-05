@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useUser } from '../../hooks/useUser.js';
+import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import './Header.css';
 import '../CoolSearchBox/CoolSearchBox.css';
 import Menu from '../Menu/Menu.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 export default function Header() {
-  const { user, setUser } = useUser();
+  const { user, signout } = useUserStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   const handleMenuClick = () => {
@@ -26,7 +26,7 @@ export default function Header() {
   };
 
   const handleSearch = async (searchTerm) => {
-    history.push(`/search?q=${encodeURIComponent(searchTerm)}`);
+    navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
   };
 
   return (

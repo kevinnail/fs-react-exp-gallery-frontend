@@ -1,6 +1,6 @@
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
-import { useUser } from './hooks/useUser.js';
+import { useUserStore } from './stores/userStore.js';
 import Auth from './components/Auth/Auth.js';
 import Admin from './components/Admin/Admin.js';
 import Header from './components/Header/Header.js';
@@ -11,6 +11,9 @@ import MainPostDetail from './components/MainPostDetail/MainPostDetail.js';
 import AboutMe from './components/AboutMe/AboutMe.js';
 import SearchResults from './components/SearchResults/SearchResults.js';
 import DiscountForm from './components/DiscountForm/DiscountForm.js';
+import Profile from './components/Profile/Profile.js';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.js';
+import UserRoute from './components/UserRoute/UserRoute.js';
 import { createTheme } from '@mui/material';
 import { useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
@@ -52,7 +55,7 @@ function App() {
   // eslint-disable-next-line
   const [theme, setTheme] = useState(mainTheme);
 
-  const { user } = useUser();
+  const user = useUserStore((state) => state.user);
 
   return (
     <div className="App">
@@ -60,21 +63,62 @@ function App() {
         <Header />
         <ToastContainer position="top-center" />
         <ThemeProvider theme={theme}>
-          <Switch>
-            <Route exact path="/auth/:type" component={Auth} />
-            <Route path="/main-gallery/:id" component={MainPostDetail} />
-            <Route path="/main-gallery" component={MainGallery} />
-            <Route path="/search" component={SearchResults} />
-            <Route path="/about-me" component={AboutMe} />
-            <Route path="/admin/discounts" component={DiscountForm} />
-            <Route path="/admin/new" component={NewPost} />
-            <Route exact path="/admin/:id" component={EditPost} />
-
-            <Route path="/admin" component={Admin} />
-            <Route path="*">
-              <Redirect to={user ? '/admin' : '/auth/sign-in'} />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path="/auth/:type" element={<Auth />} />
+            <Route path="/main-gallery/:id" element={<MainPostDetail />} />
+            <Route path="/main-gallery" element={<MainGallery />} />
+            <Route path="/search" element={<SearchResults />} />
+            <Route path="/about-me" element={<AboutMe />} />
+            <Route
+              path="/admin/discounts"
+              element={
+                <ProtectedRoute>
+                  <DiscountForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/new"
+              element={
+                <ProtectedRoute>
+                  <NewPost />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/:id"
+              element={
+                <ProtectedRoute>
+                  <EditPost />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <UserRoute>
+                  <Profile />
+                </UserRoute>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <Navigate
+                  to={user ? (user.isAdmin ? '/admin' : '/profile') : '/auth/sign-in'}
+                  replace
+                />
+              }
+            />
+          </Routes>
         </ThemeProvider>
       </div>
     </div>

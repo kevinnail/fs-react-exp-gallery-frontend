@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Redirect } from 'react-router-dom';
 import { usePosts } from '../../hooks/usePosts.js';
-import { useUser } from '../../hooks/useUser.js';
+import { useUserStore } from '../../stores/userStore.js';
 import PostCard from '../PostCard/PostCard.js';
 import './Admin.css';
 import { signOut } from '../../services/auth.js';
@@ -21,7 +20,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Admin() {
-  const { user, setUser } = useUser();
+  const { signout } = useUserStore();
   const { posts, loading, setPosts } = usePosts();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,9 +30,6 @@ export default function Admin() {
   const isDesktop = useMediaQuery(theme.breakpoints.down('lg'));
 
   const postsPerPage = isMobile ? 9 : 7;
-  if (!user) {
-    return <Redirect to="/auth/sign-in" />;
-  }
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
@@ -42,7 +38,7 @@ export default function Admin() {
 
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   if (loading) {

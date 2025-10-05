@@ -48,6 +48,9 @@
   bottom: 10px;
   z-index: 10;
   left: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transform: translateX(-50%);
   transition: 500ms;
   background-color: #5b36ff83;
@@ -205,7 +208,9 @@
 }
 
 .front {
-  animation: openSesame 40s infinite, changeOpacity 40s infinite;
+  animation:
+    openSesame 40s infinite,
+    changeOpacity 40s infinite;
   background-image: url('/public/bubbler.jpeg');
   z-index: 1000;
 }
@@ -483,4 +488,10 @@
   .scene2 {
     display: unset;
   }
-} ;
+}
+
+.arrow-icon {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+}

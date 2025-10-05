@@ -4,7 +4,7 @@ import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
 import '../Gallery/Gallery.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
-import { useUser } from '../../hooks/useUser.js';
+import { useUserStore } from '../../stores/userStore.js';
 import Loading from '../Loading/Loading.js';
 import { getSiteMessage } from '../../services/fetch-utils.js';
 import { Box } from '@mui/material';
@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 //
 export default function MainGallery() {
   const { posts, loading } = useGalleryPosts();
-  const { setUser } = useUser();
+  const { signout } = useUserStore();
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function MainGallery() {
 
   const handleClick = async () => {
     await signOut();
-    setUser(null);
+    signout();
   };
 
   return (
