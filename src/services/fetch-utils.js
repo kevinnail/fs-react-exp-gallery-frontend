@@ -72,8 +72,7 @@ export async function signInUser(email, password) {
     if (!resp.ok) {
       throw new Error(data.message);
     }
-    location.replace('/admin ');
-    return resp;
+    return data;
   } catch (error) {
     console.error('Problem signing in: ', error.message);
     throw error;
@@ -88,7 +87,9 @@ export async function signOutUser() {
     });
 
     if (resp.ok) {
-      location.replace('/auth');
+      return { success: true };
+    } else {
+      throw new Error('Failed to sign out');
     }
   } catch (error) {
     console.error(error);
