@@ -1,9 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { Link, NavLink, Navigate, useParams } from 'react-router-dom';
+import { Link, NavLink, Navigate, useParams, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext.js';
 import './Auth.css';
 import Menu from '../Menu/Menu.js';
 import { signOut, authUser } from '../../services/auth.js';
+import { getUser } from '../../services/fetch-utils.js';
 import Loading from '../Loading/Loading.js';
 import { toast } from 'react-toastify';
 
@@ -14,7 +15,7 @@ export default function Auth() {
   const { user, setUser, error, loading, setLoading } = useContext(UserContext);
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
-
+  const navigate = useNavigate();
   if (user) {
     return <Navigate to={user.isAdmin ? '/admin' : '/profile'} replace />;
   } else if (error) {
@@ -25,9 +26,11 @@ export default function Auth() {
   const submitAuth = async () => {
     try {
       setLoading(true);
-      const user = await authUser(email, password, type);
+      await authUser(email, password, type);
+      const user = await getUser();
       setUser(user);
       setLoading(false);
+      navigate('/admin');
     } catch (e) {
       console.error(e);
       toast.error(e.message, {
