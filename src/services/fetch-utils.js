@@ -47,6 +47,7 @@ export async function signUpUser(email, password) {
     } else {
       // eslint-disable-next-line no-console
       console.error(data.message);
+      throw new Error(data.message);
     }
   } catch (error) {
     console.error(error);
