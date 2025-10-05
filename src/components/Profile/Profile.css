@@ -26,6 +26,7 @@
   max-width: 600px;
   width: 100%;
   backdrop-filter: blur(5px);
+  position: relative;
 }
 
 .profile-content h1 {
@@ -39,8 +40,8 @@
 .profile-content p {
   color: rgba(255, 255, 255, 0.9);
   font-size: 1.2rem;
-  line-height: 1.6;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  text-align: left;
 }
 
 .profile-header {
@@ -88,6 +89,7 @@
   margin: 0 0 0.5rem 0;
   font-size: 2.5rem;
   font-weight: 300;
+  text-align: left;
 }
 
 .user-email {
@@ -107,6 +109,32 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+/* Subtle top-right icon button for editing */
+.edit-profile-icon-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.edit-profile-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
 .edit-profile-btn:hover {
@@ -140,6 +168,8 @@
 .detail-value {
   color: white;
   font-size: 1rem;
+  margin: 0;
+  text-align: left;
 }
 
 @media (max-width: 768px) {

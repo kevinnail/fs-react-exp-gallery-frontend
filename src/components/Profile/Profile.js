@@ -5,10 +5,17 @@ import { fetchUserProfile } from '../../services/fetch-utils.js';
 import Menu from '../Menu/Menu.js';
 import ProfileForm from './ProfileForm.js';
 import './Profile.css';
+import { useProfileStore } from '../../stores/profileStore.js';
 
 export default function Profile() {
-  const { user, profile, setUser, setProfile } = useUserStore();
+  const { user, signout } = useUserStore();
+  const { profile, setProfile } = useProfileStore();
   const [showEditForm, setShowEditForm] = useState(false);
+
+  const customerMessage = `
+  Thanks for setting up an account- I'll be adding features asap: auctions, messages, and we'll see what 
+  else!  Stay tuned, thanks for being here. 
+  `;
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -25,11 +32,11 @@ export default function Profile() {
   const handleClick = async () => {
     try {
       await signOut();
-      setUser(null);
+      signout();
     } catch (error) {
       console.error('Error signing out:', error);
-      // Still set user to null even if sign out fails
-      setUser(null);
+      // Still clear state even if sign out fails
+      signout();
     }
   };
 
@@ -40,7 +47,7 @@ export default function Profile() {
   const handleCloseForm = () => {
     setShowEditForm(false);
   };
-  console.log('profile', profile);
+
   return (
     <div className="profile-container">
       <div className="menu-search-container">
@@ -48,13 +55,20 @@ export default function Profile() {
       </div>
 
       <div className="profile-content">
+        <button
+          onClick={handleEditProfile}
+          className="edit-profile-icon-btn"
+          aria-label="Edit Profile"
+        >
+          ✎
+        </button>
         <div className="profile-header">
           <div className="profile-picture-section">
             {profile?.imageUrl ? (
               <img src={profile.imageUrl} alt="Profile" className="profile-picture" />
             ) : (
               <div className="profile-picture-placeholder">
-                {profile?.firstName?.charAt(0) || user?.user?.email?.charAt(0) || 'U'}
+                {profile?.firstName?.charAt(0) || user?.email?.charAt(0) || 'U'}
               </div>
             )}
           </div>
@@ -65,21 +79,15 @@ export default function Profile() {
                 : user?.user?.email}
             </h1>
             <p className="user-email">{user?.user?.email}</p>
-            <button onClick={handleEditProfile} className="edit-profile-btn">
-              Edit Profile
-            </button>
           </div>
         </div>
 
         <div className="profile-details">
-          <div className="detail-item">
-            <span className="detail-label">First Name:</span>
-            <span className="detail-value">{profile?.firstName || 'Not set'}</span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">Last Name:</span>
-            <span className="detail-value">{profile?.lastName || 'Not set'}</span>
-          </div>
+          <h1 className="detail-value">
+            {' '}
+            {`Hey what's up${profile?.firstName ? ' ' + profile.firstName : ''}`}?!
+          </h1>
+          <p>{`${customerMessage}`}</p>
         </div>
       </div>
 
