@@ -22,7 +22,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Admin() {
   const { user, setUser } = useUser();
-  const { posts, loading, setPosts } = usePosts();
+  const { posts, loading, setPosts, error } = usePosts();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -31,7 +31,7 @@ export default function Admin() {
   const isDesktop = useMediaQuery(theme.breakpoints.down('lg'));
 
   const postsPerPage = isMobile ? 9 : 7;
-  if (!user) {
+  if (!user || (error && error.status === 403)) {
     return <Navigate to="/auth/sign-in" replace />;
   }
 
