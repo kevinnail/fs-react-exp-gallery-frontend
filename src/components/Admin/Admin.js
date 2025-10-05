@@ -1,7 +1,7 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { usePosts } from '../../hooks/usePosts.js';
-import { UserContext } from '../../context/UserContext.js';
+import { useUserStore } from '../../stores/userStore.js';
 import PostCard from '../PostCard/PostCard.js';
 import './Admin.css';
 import { signOut } from '../../services/auth.js';
@@ -21,7 +21,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Admin() {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useUserStore();
   const { posts, loading, setPosts, error } = usePosts();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);

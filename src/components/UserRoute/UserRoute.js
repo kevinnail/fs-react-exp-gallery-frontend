@@ -1,9 +1,8 @@
-import { useContext } from 'react';
+import { useUserStore } from '../../stores/userStore.js';
 import { Navigate } from 'react-router-dom';
-import { UserContext } from '../../context/UserContext.js';
 
 export default function UserRoute({ children }) {
-  const { user, loading } = useContext(UserContext);
+  const { user, loading } = useUserStore();
 
   if (loading) {
     return <div>Loading...</div>;

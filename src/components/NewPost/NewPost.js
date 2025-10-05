@@ -1,6 +1,5 @@
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.js';
+import { useUserStore } from '../../stores/userStore.js';
 import { postAddImages, postPost } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
 import { toast } from 'react-toastify';
@@ -8,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function NewPost() {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
+  const { user } = useUserStore();
 
   const handleSubmit = async (newPost) => {
     try {

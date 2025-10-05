@@ -1,6 +1,5 @@
 import { Link, Navigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.js';
+import { useUserStore } from '../../stores/userStore.js';
 import {
   deleteById,
   deleteImage,
@@ -35,7 +34,7 @@ export default function PostCard({
 }) {
   const navigate = useNavigate();
 
-  const { user } = useContext(UserContext);
+  const { user } = useUserStore();
   const [deletedRowId, setDeletedRowId] = useState(null);
 
   const theme = useTheme();

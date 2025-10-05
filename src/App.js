@@ -1,7 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
-import { useContext } from 'react';
-import { UserContext } from './context/UserContext.js';
+import { useUserStore } from './stores/userStore.js';
 import Auth from './components/Auth/Auth.js';
 import Admin from './components/Admin/Admin.js';
 import Header from './components/Header/Header.js';
@@ -56,7 +55,7 @@ function App() {
   // eslint-disable-next-line
   const [theme, setTheme] = useState(mainTheme);
 
-  const { user } = useContext(UserContext);
+  const user = useUserStore((state) => state.user);
 
   return (
     <div className="App">

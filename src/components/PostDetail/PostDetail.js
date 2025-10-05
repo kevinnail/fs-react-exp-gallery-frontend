@@ -3,8 +3,7 @@ import { Navigate, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import { usePost } from '../../hooks/usePost.js';
 import './PostDetail.css';
-import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.js';
+import { useUserStore } from '../../stores/userStore.js';
 import Loading from '../Loading/Loading.js';
 
 Modal.setAppElement('#root'); // If your app is using #root as the main container
@@ -15,7 +14,7 @@ export default function PostDetail() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const { user } = useContext(UserContext);
+  const { user } = useUserStore();
 
   if (error) {
     console.error(error);

@@ -3,21 +3,22 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
-import { UserProvider } from './context/UserContext.js';
+import { useUserStore } from './stores/userStore.js';
 import { BrowserRouter } from 'react-router-dom';
+
+// Initialize user store
+useUserStore.getState().fetchUser();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <UserProvider>
-    <BrowserRouter
-      future={{
-        v7_startTransition: true,
-        v7_relativeSplatPath: true,
-      }}
-    >
-      <App />
-    </BrowserRouter>
-  </UserProvider>
+  <BrowserRouter
+    future={{
+      v7_startTransition: true,
+      v7_relativeSplatPath: true,
+    }}
+  >
+    <App />
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function

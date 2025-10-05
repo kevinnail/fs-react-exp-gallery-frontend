@@ -1,6 +1,6 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../../context/UserContext.js';
+import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import './Header.css';
 import '../CoolSearchBox/CoolSearchBox.css';
@@ -8,7 +8,7 @@ import Menu from '../Menu/Menu.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import { useNavigate } from 'react-router-dom';
 export default function Header() {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useUserStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 

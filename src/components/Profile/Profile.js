@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.js';
+import React from 'react';
+import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import Menu from '../Menu/Menu.js';
 import './Profile.css';
 
 export default function Profile() {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useUserStore();
   const handleClick = async () => {
     try {
       await signOut();

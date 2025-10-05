@@ -4,13 +4,12 @@ import { searchGalleryPosts } from '../../services/fetch-utils';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
-import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.js';
+import { useUserStore } from '../../stores/userStore.js';
 import { useNavigate } from 'react-router-dom';
 const SearchResults = () => {
   const [posts, setPosts] = useState([]);
   const location = useLocation();
-  const { setUser } = useContext(UserContext);
+  const { setUser } = useUserStore();
   const navigate = useNavigate();
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);

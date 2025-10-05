@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink, Navigate, useParams, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../context/UserContext.js';
+import { useUserStore } from '../../stores/userStore.js';
 import './Auth.css';
 import Menu from '../Menu/Menu.js';
 import { signOut, authUser } from '../../services/auth.js';
@@ -12,7 +12,7 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignIn, setIsSignIn] = useState(true);
-  const { user, setUser, error, loading, setLoading } = useContext(UserContext);
+  const { user, setUser, error, loading, setLoading } = useUserStore();
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
   const navigate = useNavigate();

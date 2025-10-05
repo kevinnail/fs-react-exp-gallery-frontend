@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.js';
+import { useUserStore } from '../../stores/userStore.js';
 import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
 import Menu from '../Menu/Menu.js';
@@ -27,7 +26,7 @@ export default function PostForm({
   const [descriptionInput, setDescriptionInput] = useState(description);
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useUserStore();
   const [loading, setLoading] = useState(false);
   const [currentImages, setCurrentImages] = useState(imageUrls || []); // Added state for images currently in the post for display in the form
   const [deletedImages, setDeletedImages] = useState([]);

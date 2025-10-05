@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { NavLink, useParams } from 'react-router-dom';
-import { UserContext } from '../../context/UserContext.js';
+import { useUserStore } from '../../stores/userStore.js';
 import { downloadInventoryCSV } from '../../services/fetch-utils.js';
 
 export default function Menu({ handleClick }) {
-  const { user } = useContext(UserContext);
+  const { user } = useUserStore();
   const { id } = useParams();
 
   const handleDownloadCSV = () => {

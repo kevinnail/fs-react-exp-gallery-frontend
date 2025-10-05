@@ -7,8 +7,7 @@ import {
   updatePost,
 } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
-import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.js';
+import { useUserStore } from '../../stores/userStore.js';
 import { usePost } from '../../hooks/usePost.js';
 import React, { useState } from 'react';
 import Loading from '../Loading/Loading.js';
@@ -30,7 +29,7 @@ export default function EditPost() {
     additionalImages,
   } = usePost(id);
 
-  const { user } = useContext(UserContext);
+  const { user } = useUserStore();
   const [deletedImagePublicIds, setDeletedImagePublicIds] = useState([]);
 
   // show loading spinner while waiting for posts to load1
