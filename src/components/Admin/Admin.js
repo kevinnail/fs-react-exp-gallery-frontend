@@ -20,8 +20,8 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Admin() {
-  const { user, signout } = useUserStore();
-  const { posts, loading, setPosts, error } = usePosts();
+  const { signout } = useUserStore();
+  const { posts, loading, setPosts } = usePosts();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 

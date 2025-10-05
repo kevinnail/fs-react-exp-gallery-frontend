@@ -1,5 +1,4 @@
-import { Link, Navigate } from 'react-router-dom';
-import { useUserStore } from '../../stores/userStore.js';
+import { Link } from 'react-router-dom';
 import {
   deleteById,
   deleteImage,
@@ -34,7 +33,6 @@ export default function PostCard({
 }) {
   const navigate = useNavigate();
 
-  const { user } = useUserStore();
   const [deletedRowId, setDeletedRowId] = useState(null);
 
   const theme = useTheme();
