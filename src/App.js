@@ -13,6 +13,8 @@ import AboutMe from './components/AboutMe/AboutMe.js';
 import SearchResults from './components/SearchResults/SearchResults.js';
 import DiscountForm from './components/DiscountForm/DiscountForm.js';
 import Profile from './components/Profile/Profile.js';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.js';
+import UserRoute from './components/UserRoute/UserRoute.js';
 import { createTheme } from '@mui/material';
 import { useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
@@ -68,11 +70,46 @@ function App() {
             <Route path="/main-gallery" element={<MainGallery />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/about-me" element={<AboutMe />} />
-            <Route path="/admin/discounts" element={<DiscountForm />} />
-            <Route path="/admin/new" element={<NewPost />} />
-            <Route path="/admin/:id" element={<EditPost />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route
+              path="/admin/discounts"
+              element={
+                <ProtectedRoute>
+                  <DiscountForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/new"
+              element={
+                <ProtectedRoute>
+                  <NewPost />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/:id"
+              element={
+                <ProtectedRoute>
+                  <EditPost />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <UserRoute>
+                  <Profile />
+                </UserRoute>
+              }
+            />
             <Route
               path="*"
               element={

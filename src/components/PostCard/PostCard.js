@@ -45,10 +45,6 @@ export default function PostCard({
   //eslint-disable-next-line
   const [isDeleting, setIsDeleting] = useState(false);
 
-  if (!user) {
-    return <Navigate to="/auth/sign-in" replace />;
-  }
-
   // Determine whether to show discounted price or not
   const isDiscounted = discountedPrice && parseFloat(discountedPrice) < parseFloat(originalPrice);
 

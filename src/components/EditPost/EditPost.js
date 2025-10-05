@@ -33,10 +33,6 @@ export default function EditPost() {
   const { user } = useContext(UserContext);
   const [deletedImagePublicIds, setDeletedImagePublicIds] = useState([]);
 
-  if (!user) {
-    return <Navigate to="/auth/sign-in" replace />;
-  }
-
   // show loading spinner while waiting for posts to load1
   if (loading) {
     return <Loading />;

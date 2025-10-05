@@ -12,9 +12,7 @@ export default function Gallery() {
   const { posts, loading } = usePosts();
   const { user, error } = useContext(UserContext);
 
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  } else if (error) {
+  if (error) {
     console.error(error);
   }
   const handleSearch = (e) => {

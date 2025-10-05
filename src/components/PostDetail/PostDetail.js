@@ -17,9 +17,7 @@ export default function PostDetail() {
 
   const { user } = useContext(UserContext);
 
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  } else if (error) {
+  if (error) {
     console.error(error);
   }
 

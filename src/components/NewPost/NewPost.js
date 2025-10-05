@@ -10,10 +10,6 @@ export default function NewPost() {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
 
-  if (!user) {
-    return <Navigate to="/auth/sign-in" replace />;
-  }
-
   const handleSubmit = async (newPost) => {
     try {
       const {

@@ -31,9 +31,6 @@ export default function Admin() {
   const isDesktop = useMediaQuery(theme.breakpoints.down('lg'));
 
   const postsPerPage = isMobile ? 9 : 7;
-  if (!user || (error && error.status === 403)) {
-    return <Navigate to="/auth/sign-in" replace />;
-  }
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
