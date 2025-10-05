@@ -3,13 +3,13 @@ import { useUserStore } from '../../stores/userStore.js';
 import './ProfileForm.css';
 
 export default function ProfileForm({ onClose }) {
-  const { user, updateUserProfile, loading } = useUserStore();
+  const { profile, updateUserProfile, loading } = useUserStore();
   const [formData, setFormData] = useState({
-    firstName: user?.user?.firstName || '',
-    lastName: user?.user?.lastName || '',
+    firstName: profile?.firstName || '',
+    lastName: profile?.lastName || '',
     profilePicture: null,
   });
-  const [previewImage, setPreviewImage] = useState(user?.user?.profilePicture || null);
+  const [previewImage, setPreviewImage] = useState(profile?.profilePicture || null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
