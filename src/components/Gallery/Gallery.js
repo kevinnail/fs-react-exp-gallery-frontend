@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { usePosts } from '../../hooks/usePosts.js';
-import { useUser } from '../../hooks/useUser.js';
+import { useContext } from 'react';
+import { UserContext } from '../../context/UserContext.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import GalleryPostCard from '../GalleryPostCard/GalleryPostCard.js';
 import './Gallery.css';
@@ -9,7 +10,7 @@ import '../PostDetail/PostDetail.css';
 
 export default function Gallery() {
   const { posts, loading } = usePosts();
-  const { user, error } = useUser();
+  const { user, error } = useContext(UserContext);
 
   if (!user) {
     return <Navigate to="/auth" replace />;

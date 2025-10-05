@@ -2,9 +2,10 @@ import React from 'react';
 import './AboutMe.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
-import { useUser } from '../../hooks/useUser.js';
+import { useContext } from 'react';
+import { UserContext } from '../../context/UserContext.js';
 export default function AboutMe() {
-  const { setUser } = useUser();
+  const { setUser } = useContext(UserContext);
 
   const handleClick = async () => {
     await signOut();

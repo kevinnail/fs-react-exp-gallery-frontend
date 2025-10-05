@@ -7,7 +7,8 @@ Modal.setAppElement('#root'); // If your app is using #root as the main containe
 import '../PostDetail/PostDetail.css';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
-import { useUser } from '../../hooks/useUser.js';
+import { useContext } from 'react';
+import { UserContext } from '../../context/UserContext.js';
 import Loading from '../Loading/Loading.js';
 
 export default function MainPostDetail() {
@@ -15,7 +16,7 @@ export default function MainPostDetail() {
   const { postDetail, imageUrls, loading, error } = useGalleryPost(id);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const { setUser } = useUser();
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const glasspassLogoLink =

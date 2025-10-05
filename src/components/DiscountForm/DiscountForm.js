@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Menu from '../Menu/Menu.js';
-import { useUser } from '../../hooks/useUser.js';
+import { useContext } from 'react';
+import { UserContext } from '../../context/UserContext.js';
 import { signOut } from '../../services/auth.js';
 import './DiscountForm.css';
 import { bulkPostEdit, postAdminMessage, getSiteMessage } from '../../services/fetch-utils.js';
@@ -11,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function DiscountForm() {
   const [percentage, setPercentage] = useState('');
   const [message, setMessage] = useState('');
-  const { setUser } = useUser();
+  const { setUser } = useContext(UserContext);
   const [action, setAction] = useState('apply');
   const navigate = useNavigate();
 

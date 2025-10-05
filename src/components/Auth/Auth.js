@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, NavLink, Navigate, useParams } from 'react-router-dom';
-import { useUser } from '../../hooks/useUser.js';
+import { UserContext } from '../../context/UserContext.js';
 import './Auth.css';
 import Menu from '../Menu/Menu.js';
-import { signOut } from '../../services/auth.js';
+import { signOut, authUser } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignIn, setIsSignIn] = useState(true);
-  const { user, logInUser, error, loading, setLoading, setUser } = useUser();
+  const { user, setUser, error, loading, setLoading } = useContext(UserContext);
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(true);
 
   if (user) {
-    return <Navigate to="/main-gallery" replace />;
+    console.log('user', user);
+    return <Navigate to="/admin" replace />;
   } else if (error) {
     console.error(error);
   }
@@ -24,9 +25,11 @@ export default function Auth() {
   const submitAuth = async () => {
     try {
       setLoading(true);
-      await logInUser(email, password, type);
+      const user = await authUser(email, password, type);
+      setUser(user);
     } catch (e) {
       console.error(e);
+      setLoading(false);
     }
   };
 
@@ -34,18 +37,7 @@ export default function Auth() {
   if (loading) {
     return <Loading />;
   }
-  // if (error) {
-  //   return (
-  //     <div className="loading-div-wrapper">
-  //       <h2 className="error-state">
-  //         Something went wrong. Please refresh the page or try again later. Here{`'`}s the error
-  //         message if it helps:
-  //         <br />
-  //         <span className="error-span">{error}</span>
-  //       </h2>
-  //     </div>
-  //   );
-  // }
+
   const handleClick = async () => {
     await signOut();
     setUser(null);

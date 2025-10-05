@@ -7,7 +7,8 @@ import {
   updatePost,
 } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
-import { useUser } from '../../hooks/useUser.js';
+import { useContext } from 'react';
+import { UserContext } from '../../context/UserContext.js';
 import { usePost } from '../../hooks/usePost.js';
 import React, { useState } from 'react';
 import Loading from '../Loading/Loading.js';
@@ -29,7 +30,7 @@ export default function EditPost() {
     additionalImages,
   } = usePost(id);
 
-  const { user } = useUser();
+  const { user } = useContext(UserContext);
   const [deletedImagePublicIds, setDeletedImagePublicIds] = useState([]);
 
   if (!user) {

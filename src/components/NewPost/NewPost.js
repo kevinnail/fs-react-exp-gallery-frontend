@@ -1,5 +1,6 @@
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useUser } from '../../hooks/useUser.js';
+import { useContext } from 'react';
+import { UserContext } from '../../context/UserContext.js';
 import { postAddImages, postPost } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
 import { toast } from 'react-toastify';
@@ -7,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function NewPost() {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user } = useContext(UserContext);
 
   if (!user) {
     return <Navigate to="/auth/sign-in" replace />;
