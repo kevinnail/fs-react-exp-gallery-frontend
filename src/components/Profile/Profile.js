@@ -6,10 +6,15 @@ import './Profile.css';
 
 export default function Profile() {
   const { user, setUser } = useContext(UserContext);
-
   const handleClick = async () => {
-    await signOut();
-    setUser(null);
+    try {
+      await signOut();
+      setUser(null);
+    } catch (error) {
+      console.error('Error signing out:', error);
+      // Still set user to null even if sign out fails
+      setUser(null);
+    }
   };
 
   return (
@@ -19,7 +24,7 @@ export default function Profile() {
       </div>
 
       <div className="profile-content">
-        <h1>Welcome, {user?.email}!</h1>
+        <h1>Welcome, {user?.user.email}!</h1>
         <p>This is your profile page. More functionality coming soon!</p>
       </div>
     </div>
