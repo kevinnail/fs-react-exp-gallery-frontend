@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
+import { fetchUserProfile } from '../../services/fetch-utils.js';
 import Menu from '../Menu/Menu.js';
 import ProfileForm from './ProfileForm.js';
 import './Profile.css';
 
 export default function Profile() {
-  const { user, setUser } = useUserStore();
+  const { user, profile, setUser, setProfile } = useUserStore();
   const [showEditForm, setShowEditForm] = useState(false);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const profileData = await fetchUserProfile();
+        setProfile(profileData);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+    loadProfile();
+  }, []);
 
   const handleClick = async () => {
     try {
@@ -37,18 +50,18 @@ export default function Profile() {
       <div className="profile-content">
         <div className="profile-header">
           <div className="profile-picture-section">
-            {user?.user?.profilePicture ? (
-              <img src={user.user.profilePicture} alt="Profile" className="profile-picture" />
+            {profile?.profilePicture ? (
+              <img src={profile.profilePicture} alt="Profile" className="profile-picture" />
             ) : (
               <div className="profile-picture-placeholder">
-                {user?.user?.firstName?.charAt(0) || user?.user?.email?.charAt(0) || 'U'}
+                {profile?.firstName?.charAt(0) || user?.user?.email?.charAt(0) || 'U'}
               </div>
             )}
           </div>
           <div className="profile-info">
             <h1>
-              {user?.user?.firstName && user?.user?.lastName
-                ? `${user.user.firstName} ${user.user.lastName}`
+              {profile?.firstName && profile?.lastName
+                ? `${profile.firstName} ${profile.lastName}`
                 : user?.user?.email}
             </h1>
             <p className="user-email">{user?.user?.email}</p>
@@ -61,11 +74,11 @@ export default function Profile() {
         <div className="profile-details">
           <div className="detail-item">
             <span className="detail-label">First Name:</span>
-            <span className="detail-value">{user?.user?.firstName || 'Not set'}</span>
+            <span className="detail-value">{profile?.firstName || 'Not set'}</span>
           </div>
           <div className="detail-item">
             <span className="detail-label">Last Name:</span>
-            <span className="detail-value">{user?.user?.lastName || 'Not set'}</span>
+            <span className="detail-value">{profile?.lastName || 'Not set'}</span>
           </div>
         </div>
       </div>
