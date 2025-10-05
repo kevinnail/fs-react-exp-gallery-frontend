@@ -22,7 +22,6 @@ export const useUserStore = create((set) => ({
   fetchUser: async () => {
     try {
       const data = await getUser();
-      console.log('data', data);
       if (data) {
         // Handle different possible data structures
         const user = data.user?.user || data.user || data;
