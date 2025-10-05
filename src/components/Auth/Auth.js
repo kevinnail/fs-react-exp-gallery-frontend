@@ -12,12 +12,15 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignIn, setIsSignIn] = useState(true);
-  const { user, setUser, error, loading, setLoading } = useUserStore();
+  const { user, setUser, error, loading, setLoading, signout, setIsAdmin, isAdmin } =
+    useUserStore();
   const { type } = useParams();
-  const [isFormRetracted, setIsFormRetracted] = useState(true);
+  const [isFormRetracted, setIsFormRetracted] = useState(false);
   const navigate = useNavigate();
   if (user) {
-    return <Navigate to={user.isAdmin ? '/admin' : '/profile'} replace />;
+    console.log('======== there is a user: ', user);
+    console.log('======== isAdmin is: ', isAdmin);
+    // return <Navigate to={isAdmin ? '/admin' : '/profile'} replace />;
   } else if (error) {
     console.error(error);
   }
@@ -27,10 +30,16 @@ export default function Auth() {
     try {
       setLoading(true);
       await authUser(email, password, type);
-      const user = await getUser();
-      setUser(user);
-      setLoading(false);
-      navigate('/admin');
+      const data = await getUser();
+      if (data) {
+        // Handle different possible data structures
+        const user = data.user?.user || data.user || data;
+        const isAdmin = data.isAdmin || false;
+        setUser(user);
+        setIsAdmin(isAdmin);
+        setLoading(false);
+        navigate('/admin');
+      }
     } catch (e) {
       console.error(e);
       toast.error(e.message, {
@@ -43,7 +52,7 @@ export default function Auth() {
     }
   };
 
-  // show loading spinner while waiting for posts to load1
+  // show loading spinner while waiting
   if (loading) {
     return <Loading />;
   }
@@ -51,11 +60,11 @@ export default function Auth() {
   const handleClick = async () => {
     try {
       await signOut();
-      setUser(null);
+      signout();
     } catch (error) {
       console.error('Error signing out:', error);
-      // Still set user to null even if sign out fails
-      setUser(null);
+      // Still clear state even if sign out fails
+      signout();
     }
   };
   return (
