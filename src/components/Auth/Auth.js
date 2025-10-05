@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, NavLink, Navigate, useParams, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import './Auth.css';
 import Menu from '../Menu/Menu.js';
@@ -18,9 +18,7 @@ export default function Auth() {
   const [isFormRetracted, setIsFormRetracted] = useState(false);
   const navigate = useNavigate();
   if (user) {
-    console.log('======== there is a user: ', user);
-    console.log('======== isAdmin is: ', isAdmin);
-    // return <Navigate to={isAdmin ? '/admin' : '/profile'} replace />;
+    return <Navigate to={isAdmin ? '/admin' : '/profile'} replace />;
   } else if (error) {
     console.error(error);
   }

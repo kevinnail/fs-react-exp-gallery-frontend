@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import './ProfileForm.css';
+import { useProfileStore } from '../../stores/profileStore.js';
 
 export default function ProfileForm({ handleCloseForm }) {
-  const { profile, loading, updateUserProfile } = useUserStore();
+  const { profile, loading } = useUserStore();
+  const { updateUserProfile } = useProfileStore();
   const [formData, setFormData] = useState({
     firstName: profile?.firstName || '',
     lastName: profile?.lastName || '',
