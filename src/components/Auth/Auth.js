@@ -27,6 +27,7 @@ export default function Auth() {
       setLoading(true);
       const user = await authUser(email, password, type);
       setUser(user);
+      setLoading(false);
     } catch (e) {
       console.error(e);
       toast.error(e.message, {
@@ -45,8 +46,14 @@ export default function Auth() {
   }
 
   const handleClick = async () => {
-    await signOut();
-    setUser(null);
+    try {
+      await signOut();
+      setUser(null);
+    } catch (error) {
+      console.error('Error signing out:', error);
+      // Still set user to null even if sign out fails
+      setUser(null);
+    }
   };
   return (
     <>
