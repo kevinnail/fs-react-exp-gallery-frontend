@@ -16,7 +16,6 @@ export default function Profile() {
       setUser(null);
     }
   };
-
   return (
     <div className="profile-container">
       <div className="menu-search-container">
@@ -24,7 +23,7 @@ export default function Profile() {
       </div>
 
       <div className="profile-content">
-        <h1>Welcome, {user?.user.email}!</h1>
+        <h1>Welcome, {user?.user?.email}!</h1>
         <p>This is your profile page. More functionality coming soon!</p>
       </div>
     </div>
