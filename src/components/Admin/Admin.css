@@ -130,3 +130,27 @@
   cursor: not-allowed;
   opacity: 0.5;
 }
+
+.admin-inbox-button {
+  margin-top: 1rem;
+}
+
+.inbox-link {
+  display: inline-block;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.inbox-link:hover {
+  background: linear-gradient(135deg, #0056b3, #004085);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+  color: white;
+  text-decoration: none;
+}

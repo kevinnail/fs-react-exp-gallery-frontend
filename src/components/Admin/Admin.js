@@ -7,6 +7,7 @@ import { signOut } from '../../services/auth.js';
 import Menu from '../Menu/Menu.js';
 import Loading from '../Loading/Loading.js';
 import Inventory from '../Inventory/Inventory.js';
+import { Link } from 'react-router-dom';
 import {
   Accordion,
   AccordionDetails,
@@ -162,6 +163,11 @@ export default function Admin() {
           <section className="admin-panel-section">
             <div>
               <Menu handleClick={handleClick} />
+            </div>
+            <div className="admin-inbox-button">
+              <Link to="/admin/inbox" className="inbox-link">
+                📧 Message Inbox
+              </Link>
             </div>
           </section>
         </aside>

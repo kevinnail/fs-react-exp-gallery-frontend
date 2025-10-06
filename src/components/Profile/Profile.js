@@ -110,6 +110,13 @@ export default function Profile() {
           </h1>
           {customerMessage}
         </div>
+
+        <div className="new-work-section">
+          <h2 className="new-work-title">New Work</h2>
+          <div className="new-work-placeholder">
+            <p>Coming soon! Check back for the latest pieces.</p>
+          </div>
+        </div>
       </div>
 
       {showEditForm && <ProfileForm handleCloseForm={handleCloseForm} />}

@@ -197,41 +197,70 @@ export default function Auth() {
         {}
         {}
         <div className={`auth-section-container ${isFormRetracted ? 'retracted' : ''}`}>
-          <div className="sign-in-sign-out">
-            <NavLink className="auth-link" to="/auth/sign-in" onClick={() => setIsSignIn(true)}>
-              Sign-in
-            </NavLink>
-            <NavLink className="auth-link" to="/auth/sign-up" onClick={() => setIsSignIn(false)}>
-              Sign-up
-            </NavLink>
-          </div>
+          <div className="auth-content-wrapper">
+            <div className="welcome-section">
+              <h2 className="welcome-title">Welcome to Stress Less Glass</h2>
+              <p className="welcome-message">
+                Create your free account! I&apos;m actively working on this site adding new features
+                which will (soon!) give you:
+              </p>
+              <div className="welcome-features">
+                <ul>
+                  <li>Exclusive early access to new work</li>
+                  <li>Auctions</li>
+                  <li>Messages - secure & private</li>
+                </ul>
+              </div>
+            </div>
 
-          <div className="email-container">
-            <input
-              className="input-auth"
-              type="email"
-              placeholder="email@email.com"
-              value={email}
-              onChange={handleEmailChange}
-              maxLength={101}
-            />
-          </div>
+            <div className="form-section">
+              <div className="sign-in-sign-out">
+                <NavLink className="auth-link" to="/auth/sign-in" onClick={() => setIsSignIn(true)}>
+                  Sign-in
+                </NavLink>
+                <NavLink
+                  className="auth-link"
+                  to="/auth/sign-up"
+                  onClick={() => setIsSignIn(false)}
+                >
+                  Sign-up
+                </NavLink>
+              </div>
 
-          <input
-            className="input-auth"
-            type="password"
-            placeholder="password"
-            value={password}
-            onChange={handlePasswordChange}
-            maxLength={51}
-          />
-          <button className="button-auth" onClick={submitAuth}>
-            {isSignIn ? 'Sign In' : 'Sign Up'}
-          </button>
+              <div className="form-inputs">
+                <div className="email-container">
+                  <input
+                    className="input-auth"
+                    type="email"
+                    placeholder="email@email.com"
+                    value={email}
+                    onChange={handleEmailChange}
+                    maxLength={101}
+                  />
+                </div>
+
+                <input
+                  className="input-auth"
+                  type="password"
+                  placeholder="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  maxLength={51}
+                />
+                <button className="button-auth" onClick={submitAuth}>
+                  {isSignIn ? 'Sign In' : 'Sign Up'}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <button className="retract-button" onClick={() => setIsFormRetracted(!isFormRetracted)}>
+      <button
+        className="retract-button"
+        title="Hide form if you feel like spacing out and watching the animation"
+        onClick={() => setIsFormRetracted(!isFormRetracted)}
+      >
         {isFormRetracted ? (
           <i className="fa fa-arrow-right" aria-hidden="true"></i>
         ) : (

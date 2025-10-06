@@ -7,6 +7,7 @@
   letter-spacing: 1.5px;
   position: relative;
   height: calc(100vh - 90px);
+  overflow: hidden;
 }
 
 @keyframes ocean {
@@ -28,15 +29,93 @@
   align-items: center;
   width: 100%;
   position: relative;
-  top: 150px;
-  padding: 10px 0;
-  background: linear-gradient(270deg, #7777f3bd, #5b36ff83);
-  border-top: 1px solid #2f00ff83;
-  border-bottom: 1px solid #2f00ff83;
+  top: 100px;
+  padding: 1rem 0;
+  background: linear-gradient(270deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.9));
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(5px);
   transition: transform 0.6s ease;
   will-change: transform;
   z-index: 2000;
+}
+
+.auth-content-wrapper {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome-section {
+  flex: 1;
+  padding: 0 0 20px 0;
+  text-align: left;
+  color: white;
+}
+
+.welcome-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0px;
+  font-family: 'Shadows Into Light', cursive;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-message {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  opacity: 0.95;
+  text-align: left;
+}
+
+.welcome-features {
+  margin-top: 20px;
+}
+
+.welcome-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.welcome-features li {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+  padding-left: 20px;
+  position: relative;
+  opacity: 0.9;
+  text-align: left;
+}
+
+.welcome-features li::before {
+  content: '•';
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1.2rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.form-section {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-inputs {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
 }
 
 .auth-section-container.retracted {
@@ -53,7 +132,9 @@
   justify-content: center;
   transform: translateX(-50%);
   transition: 500ms;
-  background-color: #5b36ff83;
+  /* background-color: #5b36ff83; */
+  background: linear-gradient(270deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.9));
+
   color: white;
   padding: 3px 10px;
   border: 1px solid white;
@@ -100,33 +181,50 @@
 }
 
 .input-auth {
-  padding: 0.5rem;
-  font-size: 1.2rem;
-  border: none;
-  border-radius: 5px;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
   outline: none;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   margin-bottom: 1rem;
-  width: 100px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
 }
 
 .input-auth:focus {
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  border-color: #ffffff;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.input-auth::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .button-auth {
-  padding: 0.5rem 1.5rem;
+  padding: 0.75rem 2rem;
   font-size: 1.2rem;
   font-weight: bold;
   color: white;
-  border: none;
-  border-radius: 5px;
-  background-color: rgba(86, 86, 253, 0.54);
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Shadows Into Light', cursive;
   letter-spacing: 2px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.button-auth:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .active {
@@ -494,4 +592,61 @@
   font-size: 1.2rem;
   font-weight: bold;
   color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-content-wrapper {
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px;
+  }
+
+  .welcome-section {
+    text-align: center;
+    padding: 10px;
+  }
+
+  .welcome-title {
+    font-size: 2rem;
+  }
+
+  .welcome-message {
+    font-size: 1rem;
+  }
+
+  .form-section {
+    padding: 10px;
+  }
+
+  .form-inputs {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-title {
+    font-size: 1.8rem;
+  }
+
+  .welcome-message {
+    font-size: 0.9rem;
+  }
+
+  .welcome-features li {
+    font-size: 1rem;
+  }
+
+  .input-auth {
+    padding: 0.6rem;
+    font-size: 1rem;
+  }
+
+  .button-auth {
+    padding: 0.6rem 1.5rem;
+    font-size: 1.1rem;
+  }
+  .auth-section-container {
+    top: 0;
+  }
 }
