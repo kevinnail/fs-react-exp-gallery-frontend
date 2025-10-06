@@ -134,3 +134,25 @@
 .admin-inbox-button {
   margin-top: 1rem;
 }
+
+/* Floating inbox button for small screens */
+.floating-inbox-btn {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1000;
+  text-decoration: none;
+  color: white;
+  background-image: linear-gradient(315deg, black, grey);
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  border: 1px solid #2f44ff;
+  font-size: 0.95rem;
+}
+
+@media (min-width: 1024px) {
+  .floating-inbox-btn {
+    display: none;
+  }
+}
