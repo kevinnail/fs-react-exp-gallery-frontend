@@ -1,5 +1,4 @@
 .messages-container {
-  min-height: 100vh;
   background-image: url(../../../public/ocean.jpg);
   background-size: cover;
   background-position: center;
@@ -42,7 +41,7 @@
 }
 
 .conversation-container {
-  margin-top: 2rem;
+  margin-top: 0.75rem;
   display: flex;
   flex-direction: column;
   height: 500px;
@@ -62,14 +61,15 @@
 .message-item {
   margin-bottom: 1rem;
   display: flex;
+  flex-direction: column;
 }
 
 .messages-user-message {
-  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .messages-admin-message {
-  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .message-content {
@@ -102,6 +102,23 @@
   font-size: 0.8rem;
   opacity: 0.7;
   display: block;
+  margin-top: 0.25rem;
+  color: white;
+}
+
+/* align the timestamp text with its bubble side */
+.messages-user-message .message-time {
+  display: block;
+  width: 25%;
+  text-align: left;
+  margin-bottom: 0.25rem;
+}
+
+.messages-admin-message .message-time {
+  display: block;
+  width: 30%;
+  text-align: right;
+  margin-bottom: 0.25rem;
 }
 
 .loading-messages,
@@ -172,8 +189,8 @@
 
 @media (max-width: 768px) {
   .messages-content {
-    padding: 2rem;
-    margin: 1rem;
+    padding: 0 0.75rem 0.75rem 0.75rem;
+    margin: 0 1rem;
   }
 
   .messages-header h1 {
