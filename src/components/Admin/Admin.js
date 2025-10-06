@@ -165,8 +165,8 @@ export default function Admin() {
               <Menu handleClick={handleClick} />
             </div>
             <div className="admin-inbox-button">
-              <Link to="/admin/inbox" className="inbox-link">
-                📧 Message Inbox
+              <Link to="/admin/inbox" className="new-link">
+                Inbox
               </Link>
             </div>
           </section>
