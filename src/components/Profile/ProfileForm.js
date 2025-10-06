@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { useUserStore } from '../../stores/userStore.js';
+import React, { useState, useEffect } from 'react';
 import './ProfileForm.css';
 import { useProfileStore } from '../../stores/profileStore.js';
 import { toast } from 'react-toastify';
 
 export default function ProfileForm({ handleCloseForm }) {
-  const { profile, loading } = useUserStore();
+  const { profile, loading } = useProfileStore();
   const { updateUserProfile } = useProfileStore();
   const [formData, setFormData] = useState({
     firstName: profile?.firstName || '',
@@ -13,6 +12,18 @@ export default function ProfileForm({ handleCloseForm }) {
     imageUrl: null,
   });
   const [previewImage, setPreviewImage] = useState(profile?.imageUrl || null);
+
+  // Update form data when profile changes
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        firstName: profile.firstName || '',
+        lastName: profile.lastName || '',
+        imageUrl: null,
+      });
+      setPreviewImage(profile.imageUrl || null);
+    }
+  }, [profile]);
 
   // Validation functions
   const validateName = (name, fieldName) => {
@@ -108,7 +119,7 @@ export default function ProfileForm({ handleCloseForm }) {
               type="text"
               id="firstName"
               name="firstName"
-              value={formData.firstName}
+              value={formData.firstName || profile?.firstName}
               onChange={handleInputChange}
               placeholder="Enter your first name"
               maxLength={51}
@@ -121,7 +132,7 @@ export default function ProfileForm({ handleCloseForm }) {
               type="text"
               id="lastName"
               name="lastName"
-              value={formData.lastName}
+              value={formData.lastName || profile?.lastName || ''}
               onChange={handleInputChange}
               placeholder="Enter your last name"
               maxLength={51}
