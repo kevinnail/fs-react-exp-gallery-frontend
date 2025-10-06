@@ -17,6 +17,45 @@ export default function Auth() {
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(false);
   const navigate = useNavigate();
+
+  // Validation functions
+  const validateEmail = (email) => {
+    if (email.length > 100) {
+      toast.warn('Email must be 100 characters or less', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const validatePassword = (password) => {
+    if (password.length > 50) {
+      toast.warn('Password must be 50 characters or less', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    validateEmail(value);
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    validatePassword(value);
+  };
   if (user) {
     return <Navigate to={isAdmin ? '/admin' : '/profile'} replace />;
   } else if (error) {
@@ -173,7 +212,8 @@ export default function Auth() {
               type="email"
               placeholder="email@email.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
+              maxLength={101}
             />
           </div>
 
@@ -182,7 +222,8 @@ export default function Auth() {
             type="password"
             placeholder="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
+            maxLength={51}
           />
           <button className="button-auth" onClick={submitAuth}>
             {isSignIn ? 'Sign In' : 'Sign Up'}

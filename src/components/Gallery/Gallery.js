@@ -1,4 +1,3 @@
-import { Navigate } from 'react-router-dom';
 import { usePosts } from '../../hooks/usePosts.js';
 import { useUserStore } from '../../stores/userStore.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
@@ -9,7 +8,7 @@ import '../PostDetail/PostDetail.css';
 
 export default function Gallery() {
   const { posts, loading } = usePosts();
-  const { user, error } = useUserStore();
+  const { error } = useUserStore();
 
   if (error) {
     console.error(error);
