@@ -58,7 +58,7 @@ export async function replyToConversation(conversationId, messageContent) {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ messageContent }),
+      body: JSON.stringify({ messageContent, isFromAdmin: false }),
       credentials: 'include',
     });
 
@@ -179,7 +179,7 @@ export async function addAdminReply(conversationId, messageContent) {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ messageContent }),
+      body: JSON.stringify({ messageContent, isFromAdmin: true }),
       credentials: 'include',
     });
 
