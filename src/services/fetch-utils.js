@@ -44,7 +44,6 @@ export async function signUpUser(email, password) {
       await signInUser(email, password);
       return resp;
     } else {
-      // eslint-disable-next-line no-console
       console.error(data.message);
       throw new Error(data.message);
     }
@@ -141,8 +140,6 @@ export async function fetchPosts() {
     if (resp.ok) {
       return data;
     } else {
-      // eslint-disable-next-line no-console
-      // console.error(data.message);
       throw new Error(data.message);
     }
   } catch (error) {
@@ -192,7 +189,6 @@ export async function postPost(
     if (resp.ok) {
       return msg;
     } else {
-      // eslint-disable-next-line no-console
       console.error(msg.message);
       throw new Error(msg.message);
     }
