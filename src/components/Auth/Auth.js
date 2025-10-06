@@ -19,9 +19,23 @@ export default function Auth() {
   const navigate = useNavigate();
 
   // Validation functions
-  const validateEmail = (email) => {
+  const validateEmailLength = (email) => {
     if (email.length > 100) {
       toast.warn('Email must be 100 characters or less', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const validateEmailFormat = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      toast.warn('Enter a valid email address', {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
@@ -48,7 +62,7 @@ export default function Auth() {
   const handleEmailChange = (e) => {
     const value = e.target.value;
     setEmail(value);
-    validateEmail(value);
+    validateEmailLength(value);
   };
 
   const handlePasswordChange = (e) => {
@@ -66,7 +80,14 @@ export default function Auth() {
   const submitAuth = async () => {
     try {
       setLoading(true);
-      await authUser(email, password, type);
+      const normalizedEmail = email.trim();
+      const isLengthOk = validateEmailLength(normalizedEmail);
+      const isFormatOk = validateEmailFormat(normalizedEmail);
+      if (!isLengthOk || !isFormatOk) {
+        setLoading(false);
+        return;
+      }
+      await authUser(normalizedEmail, password, type);
       const data = await getUser();
       if (data) {
         // Handle different possible data structures
@@ -236,6 +257,10 @@ export default function Auth() {
                     value={email}
                     onChange={handleEmailChange}
                     maxLength={101}
+                    required
+                    inputMode="email"
+                    autoComplete="email"
+                    pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                   />
                 </div>
 

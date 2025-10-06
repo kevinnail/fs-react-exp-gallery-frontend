@@ -165,12 +165,16 @@ export default function Admin() {
               <Menu handleClick={handleClick} />
             </div>
             <div className="admin-inbox-button">
-              <Link to="/admin/inbox" className="inbox-link">
-                📧 Message Inbox
+              <Link to="/admin/inbox" className="new-link">
+                Inbox
               </Link>
             </div>
           </section>
         </aside>
+        {/* Mobile-only quick access to Inbox */}
+        <Link to="/admin/inbox" className="floating-inbox-btn">
+          Inbox
+        </Link>
         <div className="list-container">
           {posts.length === 0 ? (
             <div className="loading">
