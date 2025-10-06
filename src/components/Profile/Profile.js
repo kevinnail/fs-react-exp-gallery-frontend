@@ -37,7 +37,7 @@ export default function Profile() {
   const existingUserMessage = (
     <p>
       Thanks for setting up an account- I&apos;ll be adding features asap: early access to new work,
-      auctions, messages, and we&apos;ll see what else! Stay tuned, thanks for being here.
+      comments on posts, auctions, and we&apos;ll see what else! Stay tuned, thanks for being here.
     </p>
   );
 
