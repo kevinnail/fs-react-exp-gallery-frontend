@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export const useProfileStore = create((set) => ({
   profile: null,
   error: '',
-  loading: true,
+  loading: false,
 
   setProfile: (profile) => set({ profile }),
   setError: (error) => set({ error }),
