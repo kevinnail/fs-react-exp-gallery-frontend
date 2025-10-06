@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import {
@@ -17,6 +17,7 @@ export default function AdminInbox() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [newReply, setNewReply] = useState('');
+  const messagesEndRef = useRef(null);
 
   const handleClick = async () => {
     try {
@@ -99,6 +100,14 @@ export default function AdminInbox() {
     }
   };
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
   };
@@ -178,6 +187,7 @@ export default function AdminInbox() {
                       </div>
                     );
                   })}
+                  <div ref={messagesEndRef} />
                 </div>
 
                 <form onSubmit={handleSendReply} className="reply-form">

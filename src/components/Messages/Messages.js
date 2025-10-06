@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import { getMyMessages, sendMessage, replyToConversation } from '../../services/fetch-messages.js';
@@ -12,6 +12,7 @@ export default function Messages() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [conversationId, setConversationId] = useState(null);
+  const messagesEndRef = useRef(null);
 
   const handleClick = async () => {
     try {
@@ -40,9 +41,17 @@ export default function Messages() {
     }
   };
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   useEffect(() => {
     loadMessages();
   }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -112,6 +121,7 @@ export default function Messages() {
                   </div>
                 );
               })}
+              <div ref={messagesEndRef} />
             </div>
           )}
 
