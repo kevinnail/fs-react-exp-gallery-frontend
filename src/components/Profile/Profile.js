@@ -118,9 +118,9 @@ export default function Profile() {
         </div>
 
         <div className="new-work-section">
-          <h2 className="new-work-title">New Work</h2>
+          <h2 className="new-work-title">New Work/ Specials</h2>
           <div className="new-work-placeholder">
-            <p>Coming soon! Check back for the latest pieces.</p>
+            <p>Coming soon! Check back for special deals on the latest pieces.</p>
           </div>
         </div>
       </div>
