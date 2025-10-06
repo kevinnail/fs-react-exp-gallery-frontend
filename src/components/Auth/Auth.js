@@ -29,6 +29,16 @@ export default function Auth() {
       });
       return false;
     }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      toast.warn('Enter a valid email address', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+      return false;
+    }
     return true;
   };
 
@@ -66,7 +76,12 @@ export default function Auth() {
   const submitAuth = async () => {
     try {
       setLoading(true);
-      await authUser(email, password, type);
+      const normalizedEmail = email.trim();
+      if (!validateEmail(normalizedEmail)) {
+        setLoading(false);
+        return;
+      }
+      await authUser(normalizedEmail, password, type);
       const data = await getUser();
       if (data) {
         // Handle different possible data structures
@@ -236,6 +251,10 @@ export default function Auth() {
                     value={email}
                     onChange={handleEmailChange}
                     maxLength={101}
+                    required
+                    inputMode="email"
+                    autoComplete="email"
+                    pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                   />
                 </div>
 
