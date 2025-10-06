@@ -19,7 +19,7 @@ export default function Auth() {
   const navigate = useNavigate();
 
   // Validation functions
-  const validateEmail = (email) => {
+  const validateEmailLength = (email) => {
     if (email.length > 100) {
       toast.warn('Email must be 100 characters or less', {
         theme: 'dark',
@@ -29,6 +29,10 @@ export default function Auth() {
       });
       return false;
     }
+    return true;
+  };
+
+  const validateEmailFormat = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
       toast.warn('Enter a valid email address', {
@@ -58,7 +62,7 @@ export default function Auth() {
   const handleEmailChange = (e) => {
     const value = e.target.value;
     setEmail(value);
-    validateEmail(value);
+    validateEmailLength(value);
   };
 
   const handlePasswordChange = (e) => {
@@ -77,7 +81,9 @@ export default function Auth() {
     try {
       setLoading(true);
       const normalizedEmail = email.trim();
-      if (!validateEmail(normalizedEmail)) {
+      const isLengthOk = validateEmailLength(normalizedEmail);
+      const isFormatOk = validateEmailFormat(normalizedEmail);
+      if (!isLengthOk || !isFormatOk) {
         setLoading(false);
         return;
       }
