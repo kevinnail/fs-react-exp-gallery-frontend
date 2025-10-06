@@ -5,6 +5,7 @@ import {
   uploadImageToS3,
   updateProfileWithImage,
 } from '../services/fetch-utils.js';
+import { compressImageToJpeg } from '../services/image-compress.js';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -24,7 +25,14 @@ export const useProfileStore = create((set) => ({
 
       let finalImageUrl = existingImageUrl || null;
       if (file) {
-        const uploadResult = await uploadImageToS3(file);
+        let fileToUpload = file;
+        try {
+          fileToUpload = await compressImageToJpeg(file, { maxWidth: 256, quality: 0.68 });
+        } catch (compressionError) {
+          console.error('Avatar compression failed, using original file:', compressionError);
+        }
+
+        const uploadResult = await uploadImageToS3(fileToUpload);
         finalImageUrl = uploadResult.secure_url;
       }
 

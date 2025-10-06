@@ -6,6 +6,7 @@ import Menu from '../Menu/Menu.js';
 import ProfileForm from './ProfileForm.js';
 import './Profile.css';
 import { useProfileStore } from '../../stores/profileStore.js';
+import { Link } from 'react-router-dom';
 
 export default function Profile() {
   const { user, signout } = useUserStore();
@@ -19,11 +20,16 @@ export default function Profile() {
     <>
       <p>
         Welcome to your profile page! (You can add your name and an avatar image using the edit
-        button above.)
+        button above.) If you have questions about work or a problem with your order, feel free to
+        use the secure/ encrypted in house{' '}
+        <Link className="message-link" to="/messages">
+          messaging
+        </Link>
+        !
       </p>
       <p>
-        I&apos;ll be adding features asap: early access to new work, auctions, messages, and
-        we&apos;ll see what else! Stay tuned, thanks for being here.
+        I&apos;ll be adding features asap: early access to new work, comments on posts, auctions,
+        and we&apos;ll see what else! Stay tuned, thanks for being here.
       </p>
     </>
   );
@@ -31,7 +37,7 @@ export default function Profile() {
   const existingUserMessage = (
     <p>
       Thanks for setting up an account- I&apos;ll be adding features asap: early access to new work,
-      auctions, messages, and we&apos;ll see what else! Stay tuned, thanks for being here.
+      comments on posts, auctions, and we&apos;ll see what else! Stay tuned, thanks for being here.
     </p>
   );
 
@@ -112,9 +118,9 @@ export default function Profile() {
         </div>
 
         <div className="new-work-section">
-          <h2 className="new-work-title">New Work</h2>
+          <h2 className="new-work-title">New Work/ Specials</h2>
           <div className="new-work-placeholder">
-            <p>Coming soon! Check back for the latest pieces.</p>
+            <p>Coming soon! Check back for special deals on the latest pieces.</p>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Modal from 'react-modal';
@@ -12,9 +12,12 @@ import Loading from '../Loading/Loading.js';
 
 export default function MainPostDetail() {
   const { id } = useParams();
-  const { postDetail, imageUrls, loading, error } = useGalleryPost(id);
+  const { postDetail, imageUrls, loading } = useGalleryPost(id);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef(null);
   const { signout } = useUserStore();
   const navigate = useNavigate();
 
@@ -69,11 +72,6 @@ export default function MainPostDetail() {
     onSwipedRight: handlePrevious,
   });
 
-  if (error) return <h1>{error}</h1>;
-  // show loading spinner while waiting for posts to load
-  if (loading) {
-    return <Loading />;
-  }
   const handleClick = async () => {
     await signOut();
     signout();
@@ -82,6 +80,43 @@ export default function MainPostDetail() {
   const handleCategoryClick = () => {
     navigate(`/search?q=${postDetail?.category}`);
   };
+
+  // reset image loaded state when index or list changes
+  useEffect(() => {
+    setIsLoaded(false);
+  }, [currentIndex, imageUrls]);
+
+  // IntersectionObserver to optionally lazy-load on detail view
+  useEffect(() => {
+    const refEl = containerRef.current;
+    if (!refEl) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '100px', threshold: 0.1 }
+    );
+    observer.observe(refEl);
+    return () => {
+      if (refEl) {
+        observer.unobserve(refEl);
+      }
+      observer.disconnect();
+    };
+  }, []);
+
+  const getImageSource = (src) => {
+    if (!src) return '';
+    return src.endsWith('.mp4') ? src.replace('.mp4', '.jpg') : src;
+  };
+
+  // show loading spinner while waiting for posts to load
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -167,12 +202,39 @@ export default function MainPostDetail() {
                 </video>
               ) : (
                 <>
-                  <img
-                    className="gallery-image"
-                    src={imageUrls[currentIndex]?.replace('.mp4', '.jpg')}
-                    alt={`post-${currentIndex}`}
-                    onClick={openModal}
-                  />
+                  <div
+                    ref={containerRef}
+                    className="lazy-image-container"
+                    style={{ position: 'relative', width: '100%' }}
+                  >
+                    <div
+                      className="image-placeholder"
+                      style={{
+                        width: '100%',
+                        paddingBottom: '100%',
+                        backgroundColor: '#333',
+                        borderRadius: '5px',
+                        display: isLoaded ? 'none' : 'block',
+                      }}
+                    ></div>
+                    {imageUrls[currentIndex] && (
+                      <img
+                        className="gallery-image"
+                        src={isVisible ? getImageSource(imageUrls[currentIndex]) : ''}
+                        alt={`post-${currentIndex}`}
+                        onClick={openModal}
+                        onLoad={() => setIsLoaded(true)}
+                        style={{
+                          display: 'block',
+                          opacity: isLoaded ? 1 : 0,
+                          transition: 'opacity 0.3s ease-in-out',
+                          position: isLoaded ? 'relative' : 'absolute',
+                          top: 0,
+                          left: 0,
+                        }}
+                      />
+                    )}
+                  </div>
                 </>
               )}
               <Modal

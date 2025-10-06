@@ -12,7 +12,7 @@ export default function Messages() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [conversationId, setConversationId] = useState(null);
-  const messagesEndRef = useRef(null);
+  const messagesListRef = useRef(null);
 
   const handleClick = async () => {
     try {
@@ -42,7 +42,9 @@ export default function Messages() {
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const list = messagesListRef.current;
+    if (!list) return;
+    list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -80,7 +82,14 @@ export default function Messages() {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString();
+    const newDateString = new Date(dateString).toLocaleString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      month: 'short',
+      year: '2-digit',
+    });
+    const finalDateString = newDateString.replace(',', ' at  ');
+    return finalDateString;
   };
 
   return (
@@ -91,8 +100,7 @@ export default function Messages() {
 
       <div className="messages-content">
         <div className="messages-header">
-          <h1>Messages</h1>
-          <p>Contact me directly - I&apos;ll get back to you as soon as possible!</p>
+          <h1>Contact Kevin</h1>
         </div>
 
         <div className="conversation-container">
@@ -105,7 +113,7 @@ export default function Messages() {
               <p>No messages yet. Start a conversation below!</p>
             </div>
           ) : (
-            <div className="messages-list">
+            <div className="messages-list" ref={messagesListRef}>
               {messages.map((message) => {
                 // In user view: user messages go right, admin messages go left
                 const isUserMessage = !message.isFromAdmin && !isAdmin;
@@ -114,14 +122,13 @@ export default function Messages() {
                     key={message.id}
                     className={`message-item ${isUserMessage ? 'messages-user-message' : 'messages-admin-message'}`}
                   >
+                    <span className="message-time">{formatDate(message.sentAt)}</span>
                     <div className="message-content">
                       <p>{message.messageContent}</p>
-                      <span className="message-time">{formatDate(message.sentAt)}</span>
                     </div>
                   </div>
                 );
               })}
-              <div ref={messagesEndRef} />
             </div>
           )}
 

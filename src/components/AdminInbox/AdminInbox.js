@@ -17,7 +17,7 @@ export default function AdminInbox() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [newReply, setNewReply] = useState('');
-  const messagesEndRef = useRef(null);
+  const messagesListRef = useRef(null);
 
   const handleClick = async () => {
     try {
@@ -101,7 +101,9 @@ export default function AdminInbox() {
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const list = messagesListRef.current;
+    if (!list) return;
+    list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -151,7 +153,7 @@ export default function AdminInbox() {
                     onClick={() => loadConversationMessages(conversation.conversation_id)}
                   >
                     <div className="conversation-header">
-                      <span className="user-email">{conversation.email}</span>
+                      <span className="sender-email">{conversation.email}</span>
                       <span className="message-count">{conversation.message_count} messages</span>
                     </div>
                     <div className="conversation-meta">
@@ -171,7 +173,7 @@ export default function AdminInbox() {
           <div className="messages-panel">
             {selectedConversation ? (
               <>
-                <div className="messages-list">
+                <div className="messages-list" ref={messagesListRef}>
                   {messages.map((message) => {
                     // In admin view: customer messages go left, admin messages go right
                     const isCustomerMessage = !message.isFromAdmin && isAdmin;
@@ -187,7 +189,6 @@ export default function AdminInbox() {
                       </div>
                     );
                   })}
-                  <div ref={messagesEndRef} />
                 </div>
 
                 <form onSubmit={handleSendReply} className="reply-form">
