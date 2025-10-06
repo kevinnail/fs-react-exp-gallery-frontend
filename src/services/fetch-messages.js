@@ -3,7 +3,7 @@ const BASE_URL = process.env.REACT_APP_HOME_URL;
 // Customer sends a new message (creates new conversation)
 export async function sendMessage(messageContent) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/messages`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/messages`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -28,7 +28,7 @@ export async function sendMessage(messageContent) {
 // Customer gets their own messages
 export async function getMyMessages() {
   try {
-    const resp = await fetch(`${BASE_URL}/api/messages/my-messages`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/messages/my-messages`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -52,7 +52,7 @@ export async function getMyMessages() {
 // Customer replies to existing conversation
 export async function replyToConversation(conversationId, messageContent) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/messages/conversations/${conversationId}/reply`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/messages/conversations/${conversationId}/reply`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -77,7 +77,7 @@ export async function replyToConversation(conversationId, messageContent) {
 // Admin gets all conversations (for admin panel)
 export async function getConversations() {
   try {
-    const resp = await fetch(`${BASE_URL}/api/messages/conversations`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/messages/conversations`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -101,7 +101,7 @@ export async function getConversations() {
 // Admin gets specific conversation
 export async function getConversationById(conversationId) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/messages/conversations/${conversationId}`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/messages/conversations/${conversationId}`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -125,7 +125,7 @@ export async function getConversationById(conversationId) {
 // Admin gets all messages (legacy endpoint)
 export async function getAllMessages() {
   try {
-    const resp = await fetch(`${BASE_URL}/api/messages`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/messages`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -149,7 +149,7 @@ export async function getAllMessages() {
 // Admin marks message as read
 export async function markMessageAsRead(messageId) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/messages/${messageId}/read`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/messages/${messageId}/read`, {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
@@ -173,7 +173,7 @@ export async function markMessageAsRead(messageId) {
 // Admin replies to conversation
 export async function addAdminReply(conversationId, messageContent) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/messages/conversations/${conversationId}/reply`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/messages/conversations/${conversationId}/reply`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -198,7 +198,7 @@ export async function addAdminReply(conversationId, messageContent) {
 // Admin deletes a message
 export async function deleteMessage(messageId) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/messages/${messageId}`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/messages/${messageId}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
