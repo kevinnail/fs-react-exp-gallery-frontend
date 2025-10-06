@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import './ProfileForm.css';
 import { useProfileStore } from '../../stores/profileStore.js';
+import { toast } from 'react-toastify';
 
 export default function ProfileForm({ handleCloseForm }) {
   const { profile, loading } = useUserStore();
@@ -13,28 +14,62 @@ export default function ProfileForm({ handleCloseForm }) {
   });
   const [previewImage, setPreviewImage] = useState(profile?.imageUrl || null);
 
+  // Validation functions
+  const validateName = (name, fieldName) => {
+    if (name.length > 50) {
+      toast.warn(`${fieldName} must be 50 characters or less`, {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const validateImageSize = (file) => {
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    if (file.size > maxSize) {
+      toast.warn('Image must be 5MB or less', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+      return false;
+    }
+    return true;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    if (name === 'firstName') {
+      validateName(value, 'First name');
+    } else if (name === 'lastName') {
+      validateName(value, 'Last name');
+    }
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData((prev) => ({
-        ...prev,
-        imageUrl: file,
-      }));
+      if (validateImageSize(file)) {
+        setFormData((prev) => ({
+          ...prev,
+          imageUrl: file,
+        }));
 
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreviewImage(e.target.result);
-      };
-      reader.readAsDataURL(file);
+        // Create preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setPreviewImage(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -76,6 +111,7 @@ export default function ProfileForm({ handleCloseForm }) {
               value={formData.firstName}
               onChange={handleInputChange}
               placeholder="Enter your first name"
+              maxLength={51}
             />
           </div>
 
@@ -88,6 +124,7 @@ export default function ProfileForm({ handleCloseForm }) {
               value={formData.lastName}
               onChange={handleInputChange}
               placeholder="Enter your last name"
+              maxLength={51}
             />
           </div>
 
