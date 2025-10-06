@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import {
-  getConversations,
   getConversationById,
   addAdminReply,
+  getAllMessages,
 } from '../../services/fetch-messages.js';
 import Menu from '../Menu/Menu.js';
 import './AdminInbox.css';
 
 export default function AdminInbox() {
-  const { signout } = useUserStore();
+  const { signout, isAdmin } = useUserStore();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -31,23 +31,39 @@ export default function AdminInbox() {
   const loadConversations = async () => {
     try {
       setLoading(true);
-      const conversationData = await getConversations();
+      const allMessages = await getAllMessages();
 
-      // Group conversations by conversation_id - show only one entry per conversation
-      // For admin inbox, show the customer's info, not admin's
-      const groupedConversations = conversationData.reduce((acc, current) => {
-        const existing = acc.find((item) => item.conversation_id === current.conversation_id);
-        if (!existing) {
-          // If this is the admin's entry, skip it and wait for the customer's entry
-          if (current.email === 'admin') {
-            return acc;
-          }
-          acc.push(current);
+      // Group messages by conversation_id and get customer email
+      const conversationMap = new Map();
+      allMessages.forEach((message) => {
+        const convId = message.conversationId;
+        if (!conversationMap.has(convId)) {
+          // Look for any message in this conversation that has a non-admin email
+          const customerMessage = allMessages.find(
+            (m) => m.conversationId === convId && m.userEmail && isAdmin
+          );
+          const customerEmail = customerMessage?.userEmail || 'Unknown Customer';
+
+          conversationMap.set(convId, {
+            conversation_id: convId,
+            email: customerEmail,
+            message_count: 0,
+            last_message_at: message.sentAt,
+            unread_count: 0,
+          });
         }
-        return acc;
-      }, []);
+        const conv = conversationMap.get(convId);
+        conv.message_count++;
+        if (new Date(message.sentAt) > new Date(conv.last_message_at)) {
+          conv.last_message_at = message.sentAt;
+        }
+        if (!message.isRead && !message.isFromAdmin) {
+          conv.unread_count++;
+        }
+      });
 
-      setConversations(groupedConversations);
+      const conversations = Array.from(conversationMap.values());
+      setConversations(conversations);
     } catch (error) {
       console.error('Error loading conversations:', error);
     } finally {
@@ -89,6 +105,7 @@ export default function AdminInbox() {
 
   useEffect(() => {
     loadConversations();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -146,17 +163,21 @@ export default function AdminInbox() {
             {selectedConversation ? (
               <>
                 <div className="messages-list">
-                  {messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={`message-item ${message.isFromAdmin ? 'admin-message' : 'customer-message'}`}
-                    >
-                      <div className="message-content">
-                        <p>{message.messageContent}</p>
-                        <span className="message-time">{formatDate(message.sentAt)}</span>
+                  {messages.map((message) => {
+                    // In admin view: customer messages go left, admin messages go right
+                    const isCustomerMessage = !message.isFromAdmin && isAdmin;
+                    return (
+                      <div
+                        key={message.id}
+                        className={`message-item ${isCustomerMessage ? 'customer-message' : 'admin-message'}`}
+                      >
+                        <div className="message-content">
+                          <p>{message.messageContent}</p>
+                          <span className="message-time">{formatDate(message.sentAt)}</span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 <form onSubmit={handleSendReply} className="reply-form">
