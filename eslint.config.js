@@ -28,6 +28,7 @@ export default [
         beforeEach: 'readonly',
         afterEach: 'readonly',
         jest: 'readonly',
+        process: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {
