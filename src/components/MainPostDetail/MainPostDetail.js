@@ -12,7 +12,7 @@ import Loading from '../Loading/Loading.js';
 
 export default function MainPostDetail() {
   const { id } = useParams();
-  const { postDetail, imageUrls, loading, error } = useGalleryPost(id);
+  const { postDetail, imageUrls, loading } = useGalleryPost(id);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
