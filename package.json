@@ -2,6 +2,7 @@
   "name": "stress-less-glass",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@ampproject/remapping": "^2.3.0",
     "@emotion/react": "^11.14.0",
