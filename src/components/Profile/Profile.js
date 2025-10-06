@@ -12,10 +12,30 @@ export default function Profile() {
   const { profile, setProfile } = useProfileStore();
   const [showEditForm, setShowEditForm] = useState(false);
 
-  const customerMessage = `
-  Thanks for setting up an account- I'll be adding features asap: auctions, messages, and we'll see what 
-  else!  Stay tuned, thanks for being here. 
-  `;
+  // Check if user has added name or image
+  const hasNameOrImage = profile?.firstName || profile?.lastName || profile?.imageUrl;
+
+  const newUserMessage = (
+    <>
+      <p>
+        Welcome to your profile page! (You can add your name and an avatar image using the edit
+        button above.)
+      </p>
+      <p>
+        I&apos;ll be adding features asap: auctions, messages, and we&apos;ll see what else! Stay
+        tuned, thanks for being here.
+      </p>
+    </>
+  );
+
+  const existingUserMessage = (
+    <p>
+      Thanks for setting up an account- I&apos;ll be adding features asap: auctions, messages, and
+      we&apos;ll see what else! Stay tuned, thanks for being here.
+    </p>
+  );
+
+  const customerMessage = hasNameOrImage ? existingUserMessage : newUserMessage;
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -75,8 +95,8 @@ export default function Profile() {
           </div>
           <div className="profile-info">
             <h1>
-              {profile?.firstName && profile?.lastName
-                ? `${profile.firstName} ${profile.lastName}`
+              {profile?.firstName || profile?.lastName
+                ? `${profile.firstName || ''} ${profile.lastName || ''}`
                 : user?.user?.email}
             </h1>
             <p className="user-email">{user?.user?.email}</p>
@@ -88,7 +108,7 @@ export default function Profile() {
             {' '}
             {`Hey what's up${profile?.firstName ? ' ' + profile.firstName : ''}`}?!
           </h1>
-          <p>{`${customerMessage}`}</p>
+          {customerMessage}
         </div>
       </div>
 
