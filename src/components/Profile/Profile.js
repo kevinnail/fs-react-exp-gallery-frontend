@@ -6,6 +6,7 @@ import Menu from '../Menu/Menu.js';
 import ProfileForm from './ProfileForm.js';
 import './Profile.css';
 import { useProfileStore } from '../../stores/profileStore.js';
+import { Link } from 'react-router-dom';
 
 export default function Profile() {
   const { user, signout } = useUserStore();
@@ -19,11 +20,16 @@ export default function Profile() {
     <>
       <p>
         Welcome to your profile page! (You can add your name and an avatar image using the edit
-        button above.)
+        button above.) If you have questions about work or a problem with your order, feel free to
+        use the secure/ encrypted in house{' '}
+        <Link className="message-link" to="/messages">
+          messaging
+        </Link>
+        !
       </p>
       <p>
-        I&apos;ll be adding features asap: early access to new work, auctions, messages, and
-        we&apos;ll see what else! Stay tuned, thanks for being here.
+        I&apos;ll be adding features asap: early access to new work, comments on posts, auctions,
+        and we&apos;ll see what else! Stay tuned, thanks for being here.
       </p>
     </>
   );
