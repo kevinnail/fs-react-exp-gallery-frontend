@@ -12,7 +12,7 @@ export default function Messages() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [conversationId, setConversationId] = useState(null);
-  const messagesEndRef = useRef(null);
+  const messagesListRef = useRef(null);
 
   const handleClick = async () => {
     try {
@@ -42,7 +42,9 @@ export default function Messages() {
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const list = messagesListRef.current;
+    if (!list) return;
+    list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -105,7 +107,7 @@ export default function Messages() {
               <p>No messages yet. Start a conversation below!</p>
             </div>
           ) : (
-            <div className="messages-list">
+            <div className="messages-list" ref={messagesListRef}>
               {messages.map((message) => {
                 // In user view: user messages go right, admin messages go left
                 const isUserMessage = !message.isFromAdmin && !isAdmin;
@@ -121,7 +123,6 @@ export default function Messages() {
                   </div>
                 );
               })}
-              <div ref={messagesEndRef} />
             </div>
           )}
 
