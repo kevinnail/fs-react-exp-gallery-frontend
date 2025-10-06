@@ -1,11 +1,11 @@
-/* eslint-env browser */
+/* eslint-env browser, es2021 */
 // Simple client-side image compression using canvas
 // Resizes to maxWidth while preserving aspect ratio and outputs JPEG at given quality
 
 export async function compressImageToJpeg(file, options = {}) {
   const { maxWidth = 256, quality = 0.68 } = options;
 
-  if (!(file instanceof Blob)) {
+  if (!(typeof globalThis.Blob !== 'undefined' && file instanceof globalThis.Blob)) {
     throw new Error('compressImageToJpeg expects a File or Blob');
   }
 
@@ -24,7 +24,7 @@ export async function compressImageToJpeg(file, options = {}) {
 
   // Return a File to preserve filename semantics if input was a File
   const outputName = getOutputName(file, 'jpeg');
-  return new File([blob], outputName, { type: 'image/jpeg' });
+  return new globalThis.File([blob], outputName, { type: 'image/jpeg' });
 }
 
 function readFileAsDataURL(file) {
@@ -38,7 +38,7 @@ function readFileAsDataURL(file) {
 
 function loadImage(src) {
   return new Promise((resolve, reject) => {
-    const img = new Image();
+    const img = new globalThis.Image();
     img.onload = () => resolve(img);
     img.onerror = (e) => reject(e);
     img.src = src;
