@@ -13,6 +13,7 @@ import SearchResults from './components/SearchResults/SearchResults.js';
 import DiscountForm from './components/DiscountForm/DiscountForm.js';
 import Profile from './components/Profile/Profile.js';
 import Messages from './components/Messages/Messages.js';
+import AdminInbox from './components/AdminInbox/AdminInbox.js';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.js';
 import UserRoute from './components/UserRoute/UserRoute.js';
 import { createTheme } from '@mui/material';
@@ -99,6 +100,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Admin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/inbox"
+              element={
+                <ProtectedRoute>
+                  <AdminInbox />
                 </ProtectedRoute>
               }
             />
