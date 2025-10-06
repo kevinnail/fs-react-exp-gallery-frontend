@@ -34,9 +34,13 @@ export default function Menu({ handleClick }) {
           <NavLink className="new-link" to="/main-gallery" title="Gallery">
             Gallery
           </NavLink>
-          <NavLink className="new-link" to="/profile">
-            Profile
-          </NavLink>
+
+          {!isAdmin && (
+            <NavLink className="new-link" to="/profile">
+              Profile
+            </NavLink>
+          )}
+
           <NavLink className="new-link" to="/about-me">
             About
           </NavLink>
