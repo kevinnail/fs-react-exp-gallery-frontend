@@ -6,7 +6,7 @@ import Menu from '../Menu/Menu.js';
 import './Messages.css';
 
 export default function Messages() {
-  const { signout } = useUserStore();
+  const { signout, isAdmin } = useUserStore();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -97,17 +97,21 @@ export default function Messages() {
             </div>
           ) : (
             <div className="messages-list">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`message-item ${message.isFromAdmin ? 'admin-message' : 'user-message'}`}
-                >
-                  <div className="message-content">
-                    <p>{message.messageContent}</p>
-                    <span className="message-time">{formatDate(message.sentAt)}</span>
+              {messages.map((message) => {
+                // In user view: user messages go right, admin messages go left
+                const isUserMessage = !message.isFromAdmin && !isAdmin;
+                return (
+                  <div
+                    key={message.id}
+                    className={`message-item ${isUserMessage ? 'messages-user-message' : 'messages-admin-message'}`}
+                  >
+                    <div className="message-content">
+                      <p>{message.messageContent}</p>
+                      <span className="message-time">{formatDate(message.sentAt)}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 

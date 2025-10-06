@@ -64,11 +64,11 @@
   display: flex;
 }
 
-.user-message {
+.messages-user-message {
   justify-content: flex-end;
 }
 
-.admin-message {
+.messages-admin-message {
   justify-content: flex-start;
 }
 
@@ -79,13 +79,13 @@
   position: relative;
 }
 
-.user-message .message-content {
+.messages-user-message .message-content {
   background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
   border-bottom-right-radius: 4px;
 }
 
-.admin-message .message-content {
+.messages-admin-message .message-content {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
