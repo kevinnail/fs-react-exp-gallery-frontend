@@ -1,3 +1,4 @@
+/* eslint-env browser */
 // Simple client-side image compression using canvas
 // Resizes to maxWidth while preserving aspect ratio and outputs JPEG at given quality
 
