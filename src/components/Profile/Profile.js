@@ -22,16 +22,16 @@ export default function Profile() {
         button above.)
       </p>
       <p>
-        I&apos;ll be adding features asap: auctions, messages, and we&apos;ll see what else! Stay
-        tuned, thanks for being here.
+        I&apos;ll be adding features asap: early access to new work, auctions, messages, and
+        we&apos;ll see what else! Stay tuned, thanks for being here.
       </p>
     </>
   );
 
   const existingUserMessage = (
     <p>
-      Thanks for setting up an account- I&apos;ll be adding features asap: auctions, messages, and
-      we&apos;ll see what else! Stay tuned, thanks for being here.
+      Thanks for setting up an account- I&apos;ll be adding features asap: early access to new work,
+      auctions, messages, and we&apos;ll see what else! Stay tuned, thanks for being here.
     </p>
   );
 
