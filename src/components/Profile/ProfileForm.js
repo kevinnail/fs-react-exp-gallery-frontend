@@ -4,8 +4,7 @@ import { useProfileStore } from '../../stores/profileStore.js';
 import { toast } from 'react-toastify';
 
 export default function ProfileForm({ handleCloseForm }) {
-  const { profile, loading } = useProfileStore();
-  const { updateUserProfile } = useProfileStore();
+  const { updateUserProfile, profile, loading } = useProfileStore();
   const [formData, setFormData] = useState({
     firstName: profile?.firstName || '',
     lastName: profile?.lastName || '',
