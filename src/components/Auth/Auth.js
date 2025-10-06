@@ -260,7 +260,6 @@ export default function Auth() {
                     required
                     inputMode="email"
                     autoComplete="email"
-                    pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                   />
                 </div>
 
