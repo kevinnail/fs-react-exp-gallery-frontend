@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { searchGalleryPosts } from '../../services/fetch-utils';
+import { searchGalleryPosts } from '../../services/fetch-utils.js';
 import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
