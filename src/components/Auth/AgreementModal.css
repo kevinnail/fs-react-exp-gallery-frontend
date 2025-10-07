@@ -1,0 +1,79 @@
+.agreement-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.agreement-modal {
+  background: #12161d;
+  color: #e0e0e0;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0, 255, 127, 0.2);
+}
+
+.agreement-title {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #7c5cff;
+}
+
+.agreement-content {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #333;
+  padding: 10px 15px;
+  background: #0e141b;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.agreement-content h3 {
+  color: #00d1ff;
+  margin-top: 12px;
+}
+
+.agreement-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.agree-btn,
+.decline-btn {
+  border: none;
+  padding: 10px 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.decline-btn {
+  background: #222;
+  color: #bbb;
+}
+
+.agree-btn {
+  background: #00d1ff;
+  color: #000;
+  transition: background 0.3s;
+}
+
+.agree-btn:disabled {
+  background: #555;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.agree-btn:hover:not(:disabled) {
+  background: #17ff9e;
+}
