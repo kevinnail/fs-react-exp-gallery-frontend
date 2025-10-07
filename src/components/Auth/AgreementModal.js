@@ -36,8 +36,8 @@ export default function AgreementModal({ isOpen, onAgree, onDecline }) {
           <h3>1. Age Requirement</h3>
           <p>
             You must be at least <strong>21 years old</strong> to access or use this site. By
-            proceeding, you affirm that you meet this requirement. If we have reason to believe you
-            are under 21, we may suspend or delete your account without notice.
+            proceeding, you affirm that you meet this requirement. If I have reason to believe you
+            are under 21, I may suspend or delete your account without notice.
           </p>
 
           <h3>2. Lawful Use</h3>
@@ -54,6 +54,13 @@ export default function AgreementModal({ isOpen, onAgree, onDecline }) {
             obscene, threatening, or otherwise unlawful. You are solely responsible for your
             content, messages, and activity on the site.
           </p>
+          <p>
+            This platform has a zero-tolerance policy for hate speech, discrimination, or harassment
+            of any kind. This includes, but is not limited to, content or behavior that targets
+            individuals or groups based on race, ethnicity, religion, gender, sexual orientation,
+            gender identity, or disability. Any such actions will result in immediate suspension or
+            termination of your account.
+          </p>
 
           <h3>4. Limitation of Liability</h3>
           <p>
@@ -64,20 +71,20 @@ export default function AgreementModal({ isOpen, onAgree, onDecline }) {
 
           <h3>5. Indemnification</h3>
           <p>
-            You agree to indemnify and hold harmless Stress Less Glass and its owners, employees,
-            and affiliates from any claims, damages, or losses arising from your violation of these
-            Terms or any applicable law.
+            You agree to indemnify and hold harmless Stress Less Glass and its owner, Kevin Nail,
+            from any claims, damages, or losses arising from your violation of these Terms or any
+            applicable law.
           </p>
 
           <h3>6. Termination</h3>
           <p>
-            We reserve the right to suspend or terminate your account at any time if you violate
+            I reserve the right to suspend or terminate your account at any time if you violate
             these Terms or engage in unlawful or abusive behavior on the platform.
           </p>
 
           <h3>7. Changes to Terms</h3>
           <p>
-            We may modify these Terms at any time by posting an updated version on this site.
+            I may modify these Terms at any time by posting an updated version on this site.
             Continued use constitutes acceptance of the modified Terms.
           </p>
 
@@ -87,11 +94,16 @@ export default function AgreementModal({ isOpen, onAgree, onDecline }) {
             conflict of law provisions. You agree to submit to the exclusive jurisdiction of the
             courts located in Oregon for resolution of any disputes.
           </p>
+          <p>
+            And while these rules are important, let&apos;s not forget the wisdom of The Dude: “This
+            aggression will not stand, man.” So, let&apos;s keep things chill, abide by the rules,
+            and enjoy the ride. After all, life&apos;s more enjoyable when we all just take it easy.
+          </p>
 
           <h3>9. Contact</h3>
           <p>
-            For questions or concerns regarding these Terms, contact us at{' '}
-            <a href="mailto:info@stresslessglass.com">info@stresslessglass.com</a>.
+            For questions or concerns regarding these Terms, contact me at{' '}
+            <a href="mailto:kevin@kevinnail.com">kevin@kevinnail.com</a>.
           </p>
         </div>
 
