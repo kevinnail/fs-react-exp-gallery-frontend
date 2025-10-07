@@ -149,15 +149,6 @@ export default function AdminInbox() {
       setSending(true);
       const response = await addAdminReply(selectedConversation, newReply);
 
-      // Send via WebSocket for real-time updates
-      if (isConnected) {
-        sendWebSocketMessage({
-          conversationId: selectedConversation,
-          messageContent: newReply,
-          isFromAdmin: true,
-        });
-      }
-
       setMessages((prev) => [...prev, response]);
       setNewReply('');
 

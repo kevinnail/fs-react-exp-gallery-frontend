@@ -179,16 +179,6 @@ export default function Messages() {
         }
       }
 
-      // Send via WebSocket for real-time updates
-      if (isConnected) {
-        sendWebSocketMessage({
-          conversationId: response.conversationId,
-          messageContent: messageToSend,
-          isFromAdmin: false,
-        });
-      }
-
-      setMessages((prev) => [...prev, response]);
       setNewMessage('');
       // Clear piece metadata after sending
       setPieceMetadata(null);
