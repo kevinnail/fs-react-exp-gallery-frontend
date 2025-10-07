@@ -145,9 +145,8 @@ export default function AdminInbox() {
 
     try {
       setSending(true);
-      const response = await addAdminReply(selectedConversation, newReply);
+      await addAdminReply(selectedConversation, newReply);
 
-      setMessages((prev) => [...prev, response]);
       setNewReply('');
 
       // Stop typing indicator

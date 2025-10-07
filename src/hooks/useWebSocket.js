@@ -18,6 +18,11 @@ export const useWebSocket = () => {
 
     websocketService.on('connection', handleConnection);
 
+    // Check initial connection status
+    const initialStatus = websocketService.getConnectionStatus();
+    setIsConnected(initialStatus.connected);
+    setSocketId(initialStatus.socketId);
+
     // Capture the current listeners map for cleanup
     const currentListeners = listenersRef.current;
 

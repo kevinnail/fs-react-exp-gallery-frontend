@@ -20,6 +20,10 @@ class WebSocketService {
         withCredentials: true,
         transports: ['websocket', 'polling'],
         autoConnect: true,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        timeout: 20000,
       });
 
       this.socket.on('connect', () => {
@@ -36,6 +40,19 @@ class WebSocketService {
 
       this.socket.on('connect_error', (error) => {
         console.error('WebSocket connection error:', error);
+        this.isConnected = false;
+        this.emit('connection', { connected: false, error });
+      });
+
+      this.socket.on('reconnect', (attemptNumber) => {
+        console.info('WebSocket reconnected after', attemptNumber, 'attempts');
+        this.isConnected = true;
+        this.emit('connection', { connected: true });
+      });
+
+      this.socket.on('reconnect_error', (error) => {
+        console.error('WebSocket reconnection error:', error);
+        this.isConnected = false;
         this.emit('connection', { connected: false, error });
       });
 
