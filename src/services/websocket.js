@@ -58,17 +58,18 @@ class WebSocketService {
 
       // Message events
       this.socket.on('new_message', (message) => {
-        console.info('Received new message:', message);
         this.emit('new_message', message);
       });
 
+      this.socket.on('new_customer_message', (data) => {
+        this.emit('new_customer_message', data);
+      });
+
       this.socket.on('message_read', (data) => {
-        console.info('Message marked as read:', data);
         this.emit('message_read', data);
       });
 
       this.socket.on('conversation_updated', (conversation) => {
-        console.info('Conversation updated:', conversation);
         this.emit('conversation_updated', conversation);
       });
 
