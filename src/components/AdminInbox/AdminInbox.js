@@ -132,7 +132,14 @@ export default function AdminInbox() {
   }, [messages]);
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString();
+    const newDateString = new Date(dateString).toLocaleString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      month: 'short',
+      year: '2-digit',
+    });
+    const finalDateString = newDateString.replace(',', ' at  ');
+    return finalDateString;
   };
 
   const renderMessageWithPieceMetadata = (messageContent) => {
@@ -259,24 +266,18 @@ export default function AdminInbox() {
                         key={message.id}
                         className={`admin-message-item ${isCustomerMessage ? 'admin-customer-message' : 'admin-admin-message'}`}
                       >
-                        {isCustomerMessage &&
-                          (selectedConversationData?.image_url ? (
-                            <img
-                              src={selectedConversationData.image_url}
-                              alt="Customer avatar"
-                              className="message-avatar"
-                            />
-                          ) : (
-                            <div className="message-avatar-fallback">
-                              {selectedConversationData?.email
-                                ? selectedConversationData.email.charAt(0).toUpperCase()
-                                : '?'}
+                        <span className="admin-message-time">{formatDate(message.sentAt)}</span>
+                        {isCustomerMessage ? (
+                          <div className="admin-message-content">
+                            {renderMessageWithPieceMetadata(message.messageContent)}
+                          </div>
+                        ) : (
+                          <div className="admin-message-content-wrapper">
+                            <div className="admin-message-content">
+                              {renderMessageWithPieceMetadata(message.messageContent)}
                             </div>
-                          ))}
-                        <div className="admin-message-content">
-                          {renderMessageWithPieceMetadata(message.messageContent)}
-                          <span className="admin-message-time">{formatDate(message.sentAt)}</span>
-                        </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}

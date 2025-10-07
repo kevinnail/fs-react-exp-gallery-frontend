@@ -167,7 +167,7 @@
 .admin-message-item {
   margin-bottom: 1rem;
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
 }
 
 .message-avatar {
@@ -205,11 +205,18 @@
 }
 
 .admin-customer-message {
-  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .admin-admin-message {
-  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.admin-message-content-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 65%;
 }
 
 .admin-message-content {
@@ -217,6 +224,7 @@
   padding: 0.75rem 1rem;
   border-radius: 12px;
   position: relative;
+  text-align: left;
 }
 
 .admin-customer-message .admin-message-content {
@@ -232,12 +240,15 @@
   color: white;
   border-bottom-right-radius: 4px;
   border: 1px solid rgba(40, 167, 69, 0.3);
+  white-space: pre-wrap;
+  min-width: 100%;
 }
 
 .admin-message-content p {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.25rem 0.25rem;
   font-size: 1rem;
   line-height: 1.4;
+  white-space: pre-wrap;
 }
 
 /* Enhanced styles for piece metadata in messages */
@@ -281,6 +292,24 @@
   font-size: 0.8rem;
   opacity: 0.7;
   display: block;
+  margin-top: 0.25rem;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+/* align the timestamp text with its bubble side */
+.admin-customer-message .admin-message-time {
+  display: block;
+  width: 30%;
+  text-align: right;
+  margin-bottom: 0.25rem;
+}
+
+.admin-admin-message .admin-message-time {
+  display: block;
+  width: 25%;
+  text-align: left;
+  margin-bottom: 0.25rem;
 }
 
 .reply-form {
