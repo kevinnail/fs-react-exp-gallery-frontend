@@ -136,7 +136,7 @@
   font-size: 0.8rem;
 }
 
-.unread-badge {
+.conversation-meta .unread-badge {
   background: #ff4444;
   color: white;
   border-radius: 50%;
@@ -147,6 +147,11 @@
   justify-content: center;
   font-size: 0.8rem;
   font-weight: bold;
+  position: static;
+  top: auto;
+  right: auto;
+  z-index: auto;
+  box-shadow: none;
 }
 
 .messages-panel {
