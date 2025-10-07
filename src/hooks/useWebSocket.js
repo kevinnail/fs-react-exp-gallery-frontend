@@ -75,14 +75,7 @@ export const useMessaging = () => {
   useEffect(() => {
     // Listen for new messages
     const handleNewMessage = (message) => {
-      setMessages((prev) => {
-        // Check if message already exists to avoid duplicates
-        const exists = prev.some((m) => m.id === message.id);
-        if (!exists) {
-          return [...prev, message];
-        }
-        return prev;
-      });
+      setMessages((prev) => [...prev, message]);
     };
 
     // Listen for message read events
