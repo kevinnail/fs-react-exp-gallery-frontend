@@ -105,14 +105,14 @@ class WebSocketService {
   // Mark message as read
   markMessageAsRead(messageId) {
     if (this.socket && this.isConnected) {
-      this.socket.emit('mark_message_read', { messageId });
+      this.socket.emit('mark_message_read', messageId);
     }
   }
 
   // Send typing indicator
   sendTyping(conversationId, isTyping) {
     if (this.socket && this.isConnected) {
-      this.socket.emit('typing', { conversationId, isTyping });
+      this.socket.emit('typing', conversationId, isTyping);
     }
   }
 
