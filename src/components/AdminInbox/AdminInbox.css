@@ -164,7 +164,7 @@
 
 .messages-list {
   flex: 1;
-  padding: 1rem;
+  padding: 0.5rem;
   overflow-y: auto;
   max-height: 400px;
 }
