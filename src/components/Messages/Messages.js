@@ -2,7 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
-import { getMyMessages, sendMessage, replyToConversation } from '../../services/fetch-messages.js';
+import {
+  getMyMessages,
+  sendMessage,
+  replyToConversation,
+  markMessageAsRead,
+} from '../../services/fetch-messages.js';
 import { getAdminProfile } from '../../services/fetch-utils.js';
 import Menu from '../Menu/Menu.js';
 import './Messages.css';
@@ -39,6 +44,19 @@ export default function Messages() {
       if (messageData.length > 0) {
         setConversationId(messageData[0].conversationId);
       }
+
+      // Mark all unread admin messages as read when messages are loaded
+      const unreadAdminMessages = messageData.filter(
+        (message) => !message.isRead && message.isFromAdmin
+      );
+
+      for (const message of unreadAdminMessages) {
+        try {
+          await markMessageAsRead(message.id);
+        } catch (error) {
+          console.error('Error marking message as read:', error);
+        }
+      }
     } catch (error) {
       console.error('Error loading messages:', error);
     } finally {
@@ -70,6 +88,15 @@ export default function Messages() {
       setPieceMetadata(location.state.pieceMetadata);
     }
   }, [location.state]);
+
+  // Scroll to bottom when component mounts and messages are loaded
+  useEffect(() => {
+    if (messages.length > 0 && !loading) {
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+    }
+  }, [messages, loading]);
 
   useEffect(() => {
     scrollToBottom();
