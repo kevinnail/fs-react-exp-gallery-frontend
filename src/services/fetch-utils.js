@@ -27,6 +27,32 @@ export async function getUser() {
   }
 }
 
+export async function getAdminProfile() {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/profile/admin-profile`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (resp.ok) {
+      const adminProfile = await resp.json();
+      console.log('adminProfile', adminProfile);
+      return adminProfile;
+    } else if (resp.status === 401 || resp.status === 403) {
+      return null;
+    } else {
+      throw new Error('An error occurred while fetching admin profile');
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function signUpUser(email, password) {
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/users`, {

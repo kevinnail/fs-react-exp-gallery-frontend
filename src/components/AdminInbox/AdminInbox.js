@@ -4,7 +4,8 @@ import { signOut } from '../../services/auth.js';
 import {
   getConversationById,
   addAdminReply,
-  getAllMessages,
+  getConversations,
+  markMessageAsRead,
 } from '../../services/fetch-messages.js';
 import Menu from '../Menu/Menu.js';
 import './AdminInbox.css';
@@ -32,39 +33,51 @@ export default function AdminInbox() {
   const loadConversations = async () => {
     try {
       setLoading(true);
-      const allMessages = await getAllMessages();
+      const conversationsData = await getConversations();
 
-      // Group messages by conversation_id and get customer email
-      const conversationMap = new Map();
-      allMessages.forEach((message) => {
-        const convId = message.conversationId;
-        if (!conversationMap.has(convId)) {
-          // Look for any message in this conversation that has a non-admin email
-          const customerMessage = allMessages.find(
-            (m) => m.conversationId === convId && m.userEmail && isAdmin
-          );
-          const customerEmail = customerMessage?.userEmail || 'Unknown Customer';
-
-          conversationMap.set(convId, {
-            conversation_id: convId,
-            email: customerEmail,
-            message_count: 0,
-            last_message_at: message.sentAt,
-            unread_count: 0,
+      // If getConversations returns conversation summaries, use them directly
+      if (conversationsData && conversationsData.length > 0) {
+        // Check if the data structure is already conversation summaries
+        const firstItem = conversationsData[0];
+        if (firstItem.conversation_id && firstItem.email) {
+          // Data is already in conversation format
+          setConversations(conversationsData);
+        } else {
+          // Data is in message format, need to group by conversation
+          const conversationMap = new Map();
+          conversationsData.forEach((message) => {
+            const convId = Number(message.conversation_id);
+            if (!conversationMap.has(convId)) {
+              // Look for any message in this conversation that has a non-admin email
+              const customerMessage = conversationsData.find(
+                (m) => Number(m.conversation_id) === convId && m.email && !m.isFromAdmin
+              );
+              const customerEmail = customerMessage?.email || 'Unknown Customer';
+              conversationMap.set(convId, {
+                conversation_id: convId,
+                email: customerEmail,
+                image_url: message.image_url,
+                message_count: 0,
+                last_message_at: message.sentAt,
+                unread_count: 0,
+              });
+            }
+            const conv = conversationMap.get(convId);
+            conv.message_count++;
+            if (new Date(message.sentAt) > new Date(conv.last_message_at)) {
+              conv.last_message_at = message.sentAt;
+            }
+            if (!message.isRead && !message.isFromAdmin) {
+              conv.unread_count++;
+            }
           });
-        }
-        const conv = conversationMap.get(convId);
-        conv.message_count++;
-        if (new Date(message.sentAt) > new Date(conv.last_message_at)) {
-          conv.last_message_at = message.sentAt;
-        }
-        if (!message.isRead && !message.isFromAdmin) {
-          conv.unread_count++;
-        }
-      });
 
-      const conversations = Array.from(conversationMap.values());
-      setConversations(conversations);
+          const conversations = Array.from(conversationMap.values());
+          setConversations(conversations);
+        }
+      } else {
+        setConversations([]);
+      }
     } catch (error) {
       console.error('Error loading conversations:', error);
     } finally {
@@ -77,6 +90,27 @@ export default function AdminInbox() {
       const messageData = await getConversationById(conversationId);
       setMessages(messageData);
       setSelectedConversation(conversationId);
+
+      // Mark all unread customer messages as read when conversation is opened
+      const unreadCustomerMessages = messageData.filter(
+        (message) => !message.isRead && !message.isFromAdmin
+      );
+
+      for (const message of unreadCustomerMessages) {
+        try {
+          await markMessageAsRead(message.id);
+        } catch (error) {
+          console.error('Error marking message as read:', error);
+        }
+      }
+
+      // Refresh conversations to update unread counts
+      await loadConversations();
+
+      // Scroll to bottom when conversation is opened
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
     } catch (error) {
       console.error('Error loading conversation messages:', error);
     }
@@ -111,12 +145,61 @@ export default function AdminInbox() {
   }, [messages]);
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString();
+    const newDateString = new Date(dateString).toLocaleString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      month: 'short',
+      year: '2-digit',
+    });
+    const finalDateString = newDateString.replace(',', ' at  ');
+    return finalDateString;
+  };
+
+  const renderMessageWithPieceMetadata = (messageContent) => {
+    // Check if message contains piece metadata
+    const pieceMetadataMatch = messageContent.match(
+      /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
+    );
+    if (pieceMetadataMatch) {
+      const [, title, category, price, url] = pieceMetadataMatch;
+
+      // Extract imageUrl from message content
+      const imageMatch = messageContent.match(/Image: (.+)/);
+      const imageUrl = imageMatch ? imageMatch[1] : null;
+
+      const mainMessage = messageContent.split('\n\n---\n')[0];
+
+      return (
+        <>
+          <p>{mainMessage}</p>
+          <div className="piece-metadata-highlight">
+            <div className="piece-metadata-highlight-content">
+              {' '}
+              <p>
+                <img width="50px" src={imageUrl} alt={title} />
+              </p>
+              <h3>{title}</h3>
+            </div>
+
+            <p>
+              <span>Category:</span> {category}
+            </p>
+            <p>
+              <span>Price:</span> ${price}
+            </p>
+            <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
+              View piece
+            </a>
+          </div>
+        </>
+      );
+    }
+
+    return <p>{messageContent}</p>;
   };
 
   useEffect(() => {
     loadConversations();
-    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -153,7 +236,20 @@ export default function AdminInbox() {
                     onClick={() => loadConversationMessages(conversation.conversation_id)}
                   >
                     <div className="conversation-header">
-                      <span className="sender-email">{conversation.email}</span>
+                      <div className="conversation-header-content">
+                        {conversation.image_url ? (
+                          <img
+                            src={conversation.image_url}
+                            alt="Customer avatar"
+                            className="conversation-avatar"
+                          />
+                        ) : (
+                          <div className="conversation-avatar-fallback">
+                            {conversation.email ? conversation.email.charAt(0).toUpperCase() : '?'}
+                          </div>
+                        )}
+                        <span className="sender-email">{conversation.email}</span>
+                      </div>
                       <span className="message-count">{conversation.message_count} messages</span>
                     </div>
                     <div className="conversation-meta">
@@ -180,12 +276,20 @@ export default function AdminInbox() {
                     return (
                       <div
                         key={message.id}
-                        className={`message-item ${isCustomerMessage ? 'customer-message' : 'admin-message'}`}
+                        className={`admin-message-item ${isCustomerMessage ? 'admin-customer-message' : 'admin-admin-message'}`}
                       >
-                        <div className="message-content">
-                          <p>{message.messageContent}</p>
-                          <span className="message-time">{formatDate(message.sentAt)}</span>
-                        </div>
+                        <span className="admin-message-time">{formatDate(message.sentAt)}</span>
+                        {isCustomerMessage ? (
+                          <div className="admin-message-content">
+                            {renderMessageWithPieceMetadata(message.messageContent)}
+                          </div>
+                        ) : (
+                          <div className="admin-message-content-wrapper">
+                            <div className="admin-message-content">
+                              {renderMessageWithPieceMetadata(message.messageContent)}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}

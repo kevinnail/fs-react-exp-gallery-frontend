@@ -1,17 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
-import { getMyMessages, sendMessage, replyToConversation } from '../../services/fetch-messages.js';
+import {
+  getMyMessages,
+  sendMessage,
+  replyToConversation,
+  markMessageAsRead,
+} from '../../services/fetch-messages.js';
+import { getAdminProfile } from '../../services/fetch-utils.js';
 import Menu from '../Menu/Menu.js';
+import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
 import './Messages.css';
 
 export default function Messages() {
   const { signout, isAdmin } = useUserStore();
+  const location = useLocation();
+  const { refreshUnreadCount } = useUnreadMessages();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [conversationId, setConversationId] = useState(null);
+  const [adminProfile, setAdminProfile] = useState(null);
+  const [pieceMetadata, setPieceMetadata] = useState(null);
   const messagesListRef = useRef(null);
 
   const handleClick = async () => {
@@ -34,10 +46,34 @@ export default function Messages() {
       if (messageData.length > 0) {
         setConversationId(messageData[0].conversationId);
       }
+
+      // Mark all unread admin messages as read when messages are loaded
+      const unreadAdminMessages = messageData.filter(
+        (message) => !message.isRead && message.isFromAdmin
+      );
+
+      for (const message of unreadAdminMessages) {
+        try {
+          await markMessageAsRead(message.id);
+        } catch (error) {
+          console.error('Error marking message as read:', error);
+        }
+      }
+
+      refreshUnreadCount();
     } catch (error) {
       console.error('Error loading messages:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadAdminProfile = async () => {
+    try {
+      const adminData = await getAdminProfile();
+      setAdminProfile(adminData);
+    } catch (error) {
+      console.error('Error loading admin profile:', error);
     }
   };
 
@@ -49,7 +85,28 @@ export default function Messages() {
 
   useEffect(() => {
     loadMessages();
-  }, []);
+    loadAdminProfile();
+
+    // Check if we have piece metadata from navigation
+    if (location.state?.pieceMetadata) {
+      setPieceMetadata(location.state.pieceMetadata);
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
+
+  // Refresh unread count when component mounts
+  useEffect(() => {
+    refreshUnreadCount();
+  }, [refreshUnreadCount]);
+
+  // Scroll to bottom when component mounts and messages are loaded
+  useEffect(() => {
+    if (messages.length > 0 && !loading) {
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+    }
+  }, [messages, loading]);
 
   useEffect(() => {
     scrollToBottom();
@@ -63,17 +120,26 @@ export default function Messages() {
       setSending(true);
 
       let response;
+      let messageToSend = newMessage;
+
+      // Always include piece metadata if available (for both new conversations and replies)
+      if (pieceMetadata) {
+        messageToSend = `${newMessage}\n\n---\nAbout this piece: ${pieceMetadata.title} (${pieceMetadata.category}) - $${pieceMetadata.price}\nView: ${pieceMetadata.url}\nImage: ${pieceMetadata.imageUrl}`;
+      }
+
       if (conversationId) {
         // Reply to existing conversation
-        response = await replyToConversation(conversationId, newMessage);
+        response = await replyToConversation(conversationId, messageToSend);
       } else {
         // Start new conversation
-        response = await sendMessage(newMessage);
+        response = await sendMessage(messageToSend);
         setConversationId(response.conversationId);
       }
 
       setMessages((prev) => [...prev, response]);
       setNewMessage('');
+      // Clear piece metadata after sending
+      setPieceMetadata(null);
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
@@ -90,6 +156,49 @@ export default function Messages() {
     });
     const finalDateString = newDateString.replace(',', ' at  ');
     return finalDateString;
+  };
+
+  const renderMessageWithPieceMetadata = (messageContent) => {
+    // Check if message contains piece metadata
+    const pieceMetadataMatch = messageContent.match(
+      /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
+    );
+    if (pieceMetadataMatch) {
+      const [, title, category, price, url] = pieceMetadataMatch;
+
+      // Extract imageUrl from message content
+      const imageMatch = messageContent.match(/Image: (.+)/);
+      const imageUrl = imageMatch ? imageMatch[1] : null;
+
+      const mainMessage = messageContent.split('\n\n---\n')[0];
+
+      return (
+        <>
+          <p>{mainMessage}</p>
+          <div className="piece-metadata-highlight">
+            <div className="piece-metadata-highlight-content">
+              {' '}
+              <p>
+                <img width="50px" src={imageUrl} alt={title} />
+              </p>
+              <h3>{title}</h3>
+            </div>
+
+            <p>
+              <span>Category:</span> {category}
+            </p>
+            <p>
+              <span>Price:</span> ${price}
+            </p>
+            <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
+              View piece
+            </a>
+          </div>
+        </>
+      );
+    }
+
+    return <p>{messageContent}</p>;
   };
 
   return (
@@ -123,12 +232,54 @@ export default function Messages() {
                     className={`message-item ${isUserMessage ? 'messages-user-message' : 'messages-admin-message'}`}
                   >
                     <span className="message-time">{formatDate(message.sentAt)}</span>
-                    <div className="message-content">
-                      <p>{message.messageContent}</p>
-                    </div>
+                    {isUserMessage ? (
+                      <div className="message-content">
+                        {renderMessageWithPieceMetadata(message.messageContent)}
+                      </div>
+                    ) : (
+                      <div className="message-content-wrapper">
+                        {adminProfile?.imageUrl ? (
+                          <img
+                            src={adminProfile.imageUrl}
+                            alt="Admin avatar"
+                            className="admin-avatar"
+                          />
+                        ) : (
+                          <div className="admin-avatar-fallback">
+                            {adminProfile?.firstName
+                              ? adminProfile.firstName.charAt(0).toUpperCase()
+                              : 'K'}
+                          </div>
+                        )}
+                        <div className="message-content">
+                          {renderMessageWithPieceMetadata(message.messageContent)}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {pieceMetadata && (
+            <div className="piece-metadata-display">
+              <h3>Message about: {pieceMetadata.title}</h3>
+
+              <div className="piece-info">
+                <p>
+                  <img width="50px" src={pieceMetadata.imageUrl} />
+                </p>
+                <p>
+                  <strong>Category:</strong> {pieceMetadata.category}
+                </p>
+                <p>
+                  <strong>Price:</strong> ${pieceMetadata.price}
+                </p>
+                <a href={pieceMetadata.url} target="_blank" rel="noopener noreferrer">
+                  View piece details →
+                </a>
+              </div>
             </div>
           )}
 
@@ -137,7 +288,11 @@ export default function Messages() {
               <textarea
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type your message here..."
+                placeholder={
+                  pieceMetadata
+                    ? `Ask about ${pieceMetadata.title}...`
+                    : 'Type your message here...'
+                }
                 className="message-input"
                 rows="3"
                 disabled={sending}

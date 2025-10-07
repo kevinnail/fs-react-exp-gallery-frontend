@@ -83,6 +83,37 @@
   margin-bottom: 0.5rem;
 }
 
+.conversation-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.conversation-avatar-fallback {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.conversation-header-content {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
 .sender-email {
   color: white;
   font-weight: 500;
@@ -105,7 +136,7 @@
   font-size: 0.8rem;
 }
 
-.unread-badge {
+.conversation-meta .unread-badge {
   background: #ff4444;
   color: white;
   border-radius: 50%;
@@ -116,6 +147,11 @@
   justify-content: center;
   font-size: 0.8rem;
   font-weight: bold;
+  position: static;
+  top: auto;
+  right: auto;
+  z-index: auto;
+  box-shadow: none;
 }
 
 .messages-panel {
@@ -133,50 +169,152 @@
   max-height: 400px;
 }
 
-.message-item {
+.admin-message-item {
   margin-bottom: 1rem;
   display: flex;
+  flex-direction: column;
 }
 
-.customer-message {
-  justify-content: flex-start;
+.message-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.admin-message {
-  justify-content: flex-end;
+.message-avatar-fallback {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
 }
 
-.message-content {
+.admin-admin-message .message-avatar,
+.admin-admin-message .message-avatar-fallback {
+  order: 2;
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+.admin-customer-message {
+  align-items: flex-start;
+}
+
+.admin-admin-message {
+  align-items: flex-end;
+}
+
+.admin-message-content-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 65%;
+}
+
+.admin-message-content {
   max-width: 70%;
-  padding: 0.75rem 1rem;
+  padding: 0.25rem 1rem;
   border-radius: 12px;
   position: relative;
+  text-align: left;
 }
 
-.customer-message .message-content {
+.admin-customer-message .admin-message-content {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-bottom-left-radius: 4px;
+  width: 70%;
 }
 
-.admin-message .message-content {
-  background: linear-gradient(135deg, #28a745, #20c997);
+.admin-admin-message .admin-message-content {
+  background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
   border-bottom-right-radius: 4px;
   border: 1px solid rgba(40, 167, 69, 0.3);
+  white-space: pre-wrap;
+  min-width: 100%;
 }
 
-.message-content p {
-  margin: 0 0 0.5rem 0;
+.admin-message-content p {
+  margin: 0 0 0.25rem 0.25rem;
   font-size: 1rem;
   line-height: 1.4;
+  white-space: pre-wrap;
 }
 
-.message-time {
+/* Enhanced styles for piece metadata in messages */
+.admin-message-content p:has-text('About this piece:') {
+  background: rgba(255, 215, 0, 0.1);
+  border-left: 3px solid #ffd700;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+}
+
+/* Alternative approach using CSS for piece metadata highlighting */
+.piece-metadata-highlight {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid black;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+  font-weight: 600;
+}
+
+.piece-metadata-highlight p {
+  display: flex;
+  justify-content: space-between;
+}
+.piece-metadata-highlight a {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.piece-metadata-highlight-content {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 0.25rem;
+}
+
+.admin-message-time {
   font-size: 0.8rem;
   opacity: 0.7;
   display: block;
+  margin-top: 0.25rem;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+/* align the timestamp text with its bubble side */
+.admin-customer-message .admin-message-time {
+  display: block;
+  width: 30%;
+  text-align: right;
+  margin-bottom: 0.25rem;
+}
+
+.admin-admin-message .admin-message-time {
+  display: block;
+  width: 25%;
+  text-align: left;
+  margin-bottom: 0.25rem;
 }
 
 .reply-form {

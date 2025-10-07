@@ -16,7 +16,7 @@ export default function MainPostDetail() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  // Always render the image src in detail view; placeholder only for initial load
   const containerRef = useRef(null);
   const { signout } = useUserStore();
   const navigate = useNavigate();
@@ -81,32 +81,10 @@ export default function MainPostDetail() {
     navigate(`/search?q=${postDetail?.category}`);
   };
 
-  // reset image loaded state when index or list changes
+  // reset image loaded state when index changes
   useEffect(() => {
     setIsLoaded(false);
-  }, [currentIndex, imageUrls]);
-
-  // IntersectionObserver to optionally lazy-load on detail view
-  useEffect(() => {
-    const refEl = containerRef.current;
-    if (!refEl) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '100px', threshold: 0.1 }
-    );
-    observer.observe(refEl);
-    return () => {
-      if (refEl) {
-        observer.unobserve(refEl);
-      }
-      observer.disconnect();
-    };
-  }, []);
+  }, [currentIndex]);
 
   const getImageSource = (src) => {
     if (!src) return '';
@@ -220,7 +198,7 @@ export default function MainPostDetail() {
                     {imageUrls[currentIndex] && (
                       <img
                         className="gallery-image"
-                        src={isVisible ? getImageSource(imageUrls[currentIndex]) : ''}
+                        src={getImageSource(imageUrls[currentIndex])}
                         alt={`post-${currentIndex}`}
                         onClick={openModal}
                         onLoad={() => setIsLoaded(true)}
@@ -304,6 +282,27 @@ export default function MainPostDetail() {
                   )}
                 </div>
               </a>
+            </section>
+            <section className="message-button-wrapper">
+              <button
+                className="message-about-piece-button"
+                onClick={() =>
+                  navigate('/messages', {
+                    state: {
+                      pieceMetadata: {
+                        id: postDetail?.id,
+                        title: postDetail?.title,
+                        category: postDetail?.category,
+                        price: postDetail?.price,
+                        imageUrl: imageUrls?.[0],
+                        url: window.location.href,
+                      },
+                    },
+                  })
+                }
+              >
+                💬 Message Kevin about this piece
+              </button>
             </section>
             <section className="detail-contact-wrapper">
               <span className="detail-contact-text">Contact: </span>
