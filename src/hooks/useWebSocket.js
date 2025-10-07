@@ -87,6 +87,11 @@ export const useMessaging = () => {
 
     // Listen for conversation updates
     const handleConversationUpdate = (conversation) => {
+      // Only process valid conversations with required data
+      if (!conversation || !conversation.conversation_id || !conversation.email) {
+        return;
+      }
+
       setConversations((prev) => {
         const index = prev.findIndex(
           (conv) => conv.conversation_id === conversation.conversation_id
