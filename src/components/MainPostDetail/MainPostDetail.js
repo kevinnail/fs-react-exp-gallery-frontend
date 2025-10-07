@@ -81,12 +81,10 @@ export default function MainPostDetail() {
     navigate(`/search?q=${postDetail?.category}`);
   };
 
-  // reset image loaded state when index or list changes
+  // reset image loaded state when index changes
   useEffect(() => {
     setIsLoaded(false);
-  }, [currentIndex, imageUrls]);
-
-  // No lazy visibility gating here; detail view should load image immediately
+  }, [currentIndex]);
 
   const getImageSource = (src) => {
     if (!src) return '';
@@ -284,6 +282,27 @@ export default function MainPostDetail() {
                   )}
                 </div>
               </a>
+            </section>
+            <section className="message-button-wrapper">
+              <button
+                className="message-about-piece-button"
+                onClick={() =>
+                  navigate('/messages', {
+                    state: {
+                      pieceMetadata: {
+                        id: postDetail?.id,
+                        title: postDetail?.title,
+                        category: postDetail?.category,
+                        price: postDetail?.price,
+                        imageUrl: imageUrls?.[0],
+                        url: window.location.href,
+                      },
+                    },
+                  })
+                }
+              >
+                💬 Message Kevin about this piece
+              </button>
             </section>
             <section className="detail-contact-wrapper">
               <span className="detail-contact-text">Contact: </span>
