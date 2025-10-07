@@ -224,6 +224,7 @@
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-bottom-left-radius: 4px;
+  width: 70%;
 }
 
 .admin-admin-message .admin-message-content {
@@ -256,6 +257,24 @@
   border-radius: 4px;
   margin: 0.5rem 0;
   font-weight: 600;
+}
+
+.piece-metadata-highlight p {
+  display: flex;
+  justify-content: space-between;
+}
+.piece-metadata-highlight a {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.piece-metadata-highlight-content {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 0.25rem;
 }
 
 .admin-message-time {

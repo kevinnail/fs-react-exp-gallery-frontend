@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import {
@@ -11,6 +12,7 @@ import './AdminInbox.css';
 
 export default function AdminInbox() {
   const { signout, isAdmin } = useUserStore();
+  const location = useLocation();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [selectedConversationData, setSelectedConversationData] = useState(null);
@@ -138,27 +140,36 @@ export default function AdminInbox() {
     const pieceMetadataMatch = messageContent.match(
       /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
     );
-
     if (pieceMetadataMatch) {
       const [, title, category, price, url] = pieceMetadataMatch;
+
+      // Extract imageUrl from message content
+      const imageMatch = messageContent.match(/Image: (.+)/);
+      const imageUrl = imageMatch ? imageMatch[1] : null;
+
       const mainMessage = messageContent.split('\n\n---\n')[0];
 
       return (
         <>
           <p>{mainMessage}</p>
           <div className="piece-metadata-highlight">
+            <div className="piece-metadata-highlight-content">
+              {' '}
+              <p>
+                <img width="50px" src={imageUrl} alt={title} />
+              </p>
+              <h3>{title}</h3>
+            </div>
+
             <p>
-              <strong>About this piece:</strong> {title}
+              <span>Category:</span> {category}
             </p>
             <p>
-              <strong>Category:</strong> {category} | <strong>Price:</strong> ${price}
+              <span>Price:</span> ${price}
             </p>
-            <p>
-              <strong>View piece:</strong>{' '}
-              <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
-                Click here →
-              </a>
-            </p>
+            <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
+              View piece
+            </a>
           </div>
         </>
       );
