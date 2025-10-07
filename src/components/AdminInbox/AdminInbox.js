@@ -19,11 +19,9 @@ export default function AdminInbox() {
     setMessages,
     conversations,
     setConversations,
-    isTyping,
     typingUsers,
     joinConversation,
     leaveConversation,
-    sendMessage: sendWebSocketMessage,
     markMessageAsRead: markWebSocketMessageAsRead,
     startTyping,
     stopTyping,
@@ -188,16 +186,23 @@ export default function AdminInbox() {
   }, [isConnected, selectedConversation, joinConversation, leaveConversation]);
 
   const handleTyping = (e) => {
-    setNewReply(e.target.value);
+    const value = e.target.value;
+    setNewReply(value);
 
     if (selectedConversation && isConnected) {
-      // Start typing indicator
-      startTyping(selectedConversation);
-
       // Clear existing timeout
       if (typingTimeout) {
         clearTimeout(typingTimeout);
       }
+
+      // If textarea is empty, stop typing immediately
+      if (!value.trim()) {
+        stopTyping(selectedConversation);
+        return;
+      }
+
+      // Start typing indicator
+      startTyping(selectedConversation);
 
       // Set new timeout to stop typing indicator
       const timeout = setTimeout(() => {
@@ -264,6 +269,7 @@ export default function AdminInbox() {
 
   useEffect(() => {
     loadConversations();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

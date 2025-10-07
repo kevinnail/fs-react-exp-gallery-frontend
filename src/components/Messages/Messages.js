@@ -22,11 +22,9 @@ export default function Messages() {
     isConnected,
     messages,
     setMessages,
-    isTyping,
     typingUsers,
     joinConversation,
     leaveConversation,
-    sendMessage: sendWebSocketMessage,
     markMessageAsRead: markWebSocketMessageAsRead,
     startTyping,
     stopTyping,
@@ -206,16 +204,23 @@ export default function Messages() {
   };
 
   const handleTyping = (e) => {
-    setNewMessage(e.target.value);
+    const value = e.target.value;
+    setNewMessage(value);
 
     if (conversationId && isConnected) {
-      // Start typing indicator
-      startTyping(conversationId);
-
       // Clear existing timeout
       if (typingTimeout) {
         clearTimeout(typingTimeout);
       }
+
+      // If textarea is empty, stop typing immediately
+      if (!value.trim()) {
+        stopTyping(conversationId);
+        return;
+      }
+
+      // Start typing indicator
+      startTyping(conversationId);
 
       // Set new timeout to stop typing indicator
       const timeout = setTimeout(() => {

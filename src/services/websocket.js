@@ -23,13 +23,13 @@ class WebSocketService {
       });
 
       this.socket.on('connect', () => {
-        console.log('WebSocket connected:', this.socket.id);
+        console.info('WebSocket connected:', this.socket.id);
         this.isConnected = true;
         this.emit('connection', { connected: true });
       });
 
       this.socket.on('disconnect', (reason) => {
-        console.log('WebSocket disconnected:', reason);
+        console.info('WebSocket disconnected:', reason);
         this.isConnected = false;
         this.emit('connection', { connected: false });
       });
@@ -41,26 +41,26 @@ class WebSocketService {
 
       // Message events
       this.socket.on('new_message', (message) => {
-        console.log('Received new message:', message);
+        console.info('Received new message:', message);
         this.emit('new_message', message);
       });
 
       this.socket.on('message_read', (data) => {
-        console.log('Message marked as read:', data);
+        console.info('Message marked as read:', data);
         this.emit('message_read', data);
       });
 
       this.socket.on('conversation_updated', (conversation) => {
-        console.log('Conversation updated:', conversation);
+        console.info('Conversation updated:', conversation);
         this.emit('conversation_updated', conversation);
       });
 
-      this.socket.on('typing_start', (data) => {
-        this.emit('typing_start', data);
-      });
-
-      this.socket.on('typing_stop', (data) => {
-        this.emit('typing_stop', data);
+      this.socket.on('user_typing', (data) => {
+        if (data.isTyping) {
+          this.emit('typing_start', data);
+        } else {
+          this.emit('typing_stop', data);
+        }
       });
     } catch (error) {
       console.error('Error initializing WebSocket:', error);
@@ -98,6 +98,7 @@ class WebSocketService {
     if (this.socket && this.isConnected) {
       this.socket.emit('send_message', messageData);
     } else {
+      //eslint-disable-next-line no-console
       console.warn('Socket not connected, cannot send message');
     }
   }
@@ -112,7 +113,7 @@ class WebSocketService {
   // Send typing indicator
   sendTyping(conversationId, isTyping) {
     if (this.socket && this.isConnected) {
-      this.socket.emit('typing', conversationId, isTyping);
+      this.socket.emit('typing', { conversationId, isTyping });
     }
   }
 
