@@ -5,6 +5,7 @@ import {
   getConversationById,
   addAdminReply,
   getConversations,
+  markMessageAsRead,
 } from '../../services/fetch-messages.js';
 import Menu from '../Menu/Menu.js';
 import './AdminInbox.css';
@@ -13,7 +14,6 @@ export default function AdminInbox() {
   const { signout, isAdmin } = useUserStore();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
-  const [selectedConversationData, setSelectedConversationData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -91,11 +91,26 @@ export default function AdminInbox() {
       setMessages(messageData);
       setSelectedConversation(conversationId);
 
-      // Find the conversation data to get customer avatar
-      const conversationData = conversations.find(
-        (conv) => conv.conversation_id === conversationId
+      // Mark all unread customer messages as read when conversation is opened
+      const unreadCustomerMessages = messageData.filter(
+        (message) => !message.isRead && !message.isFromAdmin
       );
-      setSelectedConversationData(conversationData);
+
+      for (const message of unreadCustomerMessages) {
+        try {
+          await markMessageAsRead(message.id);
+        } catch (error) {
+          console.error('Error marking message as read:', error);
+        }
+      }
+
+      // Refresh conversations to update unread counts
+      await loadConversations();
+
+      // Scroll to bottom when conversation is opened
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
     } catch (error) {
       console.error('Error loading conversation messages:', error);
     }
