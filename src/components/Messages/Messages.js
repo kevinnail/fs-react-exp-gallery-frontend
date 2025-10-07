@@ -10,11 +10,13 @@ import {
 } from '../../services/fetch-messages.js';
 import { getAdminProfile } from '../../services/fetch-utils.js';
 import Menu from '../Menu/Menu.js';
+import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
 import './Messages.css';
 
 export default function Messages() {
   const { signout, isAdmin } = useUserStore();
   const location = useLocation();
+  const { refreshUnreadCount } = useUnreadMessages();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -57,6 +59,8 @@ export default function Messages() {
           console.error('Error marking message as read:', error);
         }
       }
+
+      refreshUnreadCount();
     } catch (error) {
       console.error('Error loading messages:', error);
     } finally {
@@ -87,7 +91,13 @@ export default function Messages() {
     if (location.state?.pieceMetadata) {
       setPieceMetadata(location.state.pieceMetadata);
     }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
+
+  // Refresh unread count when component mounts
+  useEffect(() => {
+    refreshUnreadCount();
+  }, [refreshUnreadCount]);
 
   // Scroll to bottom when component mounts and messages are loaded
   useEffect(() => {
