@@ -1,11 +1,6 @@
 // stores/userStore.js (or wherever you want to place it)
 import { create } from 'zustand';
-import {
-  getUser,
-  // fetchUserProfile,
-  // uploadImageToS3,
-  // updateProfileWithImage,
-} from '../services/fetch-utils.js';
+import { getUser } from '../services/fetch-utils.js';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,11 +9,14 @@ export const useUserStore = create((set) => ({
   error: '',
   loading: false,
   isAdmin: false,
+  unreadMessageCount: 0,
   setUser: (user) => set({ user }),
   setError: (error) => set({ error }),
   setLoading: (loading) => set({ loading }),
   setIsAdmin: (isAdmin) => set({ isAdmin }),
-  signout: () => set({ user: null, isAdmin: undefined, error: '', loading: false }),
+  setUnreadMessageCount: (count) => set({ unreadMessageCount: count }),
+  signout: () =>
+    set({ user: null, isAdmin: undefined, error: '', loading: false, unreadMessageCount: 0 }),
   fetchUser: async () => {
     try {
       const data = await getUser();
