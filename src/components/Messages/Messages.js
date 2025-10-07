@@ -121,6 +121,49 @@ export default function Messages() {
     return finalDateString;
   };
 
+  const renderMessageWithPieceMetadata = (messageContent) => {
+    // Check if message contains piece metadata
+    const pieceMetadataMatch = messageContent.match(
+      /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
+    );
+    if (pieceMetadataMatch) {
+      const [, title, category, price, url] = pieceMetadataMatch;
+
+      // Extract imageUrl from message content
+      const imageMatch = messageContent.match(/Image: (.+)/);
+      const imageUrl = imageMatch ? imageMatch[1] : null;
+
+      const mainMessage = messageContent.split('\n\n---\n')[0];
+
+      return (
+        <>
+          <p>{mainMessage}</p>
+          <div className="piece-metadata-highlight">
+            <div className="piece-metadata-highlight-content">
+              {' '}
+              <p>
+                <img width="50px" src={imageUrl} alt={title} />
+              </p>
+              <h3>{title}</h3>
+            </div>
+
+            <p>
+              <span>Category:</span> {category}
+            </p>
+            <p>
+              <span>Price:</span> ${price}
+            </p>
+            <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
+              View piece
+            </a>
+          </div>
+        </>
+      );
+    }
+
+    return <p>{messageContent}</p>;
+  };
+
   return (
     <div className="messages-container">
       <div className="menu-search-container">
@@ -154,7 +197,7 @@ export default function Messages() {
                     <span className="message-time">{formatDate(message.sentAt)}</span>
                     {isUserMessage ? (
                       <div className="message-content">
-                        <p>{message.messageContent}</p>
+                        {renderMessageWithPieceMetadata(message.messageContent)}
                       </div>
                     ) : (
                       <div className="message-content-wrapper">
@@ -172,7 +215,7 @@ export default function Messages() {
                           </div>
                         )}
                         <div className="message-content">
-                          <p>{message.messageContent}</p>
+                          {renderMessageWithPieceMetadata(message.messageContent)}
                         </div>
                       </div>
                     )}
