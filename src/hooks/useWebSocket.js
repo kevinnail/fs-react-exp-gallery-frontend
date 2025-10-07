@@ -18,14 +18,17 @@ export const useWebSocket = () => {
 
     websocketService.on('connection', handleConnection);
 
+    // Capture the current listeners map for cleanup
+    const currentListeners = listenersRef.current;
+
     // Cleanup on unmount
     return () => {
       websocketService.off('connection', handleConnection);
       // Remove all listeners for this hook instance
-      listenersRef.current.forEach((callback, event) => {
+      currentListeners.forEach((callback, event) => {
         websocketService.off(event, callback);
       });
-      listenersRef.current.clear();
+      currentListeners.clear();
     };
   }, []);
 
