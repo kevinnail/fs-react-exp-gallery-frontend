@@ -4,7 +4,7 @@ import { signOut } from '../../services/auth.js';
 import {
   getConversationById,
   addAdminReply,
-  getAllMessages,
+  getConversations,
 } from '../../services/fetch-messages.js';
 import Menu from '../Menu/Menu.js';
 import './AdminInbox.css';
@@ -13,6 +13,7 @@ export default function AdminInbox() {
   const { signout, isAdmin } = useUserStore();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const [selectedConversationData, setSelectedConversationData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -32,39 +33,51 @@ export default function AdminInbox() {
   const loadConversations = async () => {
     try {
       setLoading(true);
-      const allMessages = await getAllMessages();
+      const conversationsData = await getConversations();
 
-      // Group messages by conversation_id and get customer email
-      const conversationMap = new Map();
-      allMessages.forEach((message) => {
-        const convId = message.conversationId;
-        if (!conversationMap.has(convId)) {
-          // Look for any message in this conversation that has a non-admin email
-          const customerMessage = allMessages.find(
-            (m) => m.conversationId === convId && m.userEmail && isAdmin
-          );
-          const customerEmail = customerMessage?.userEmail || 'Unknown Customer';
-
-          conversationMap.set(convId, {
-            conversation_id: convId,
-            email: customerEmail,
-            message_count: 0,
-            last_message_at: message.sentAt,
-            unread_count: 0,
+      // If getConversations returns conversation summaries, use them directly
+      if (conversationsData && conversationsData.length > 0) {
+        // Check if the data structure is already conversation summaries
+        const firstItem = conversationsData[0];
+        if (firstItem.conversation_id && firstItem.email) {
+          // Data is already in conversation format
+          setConversations(conversationsData);
+        } else {
+          // Data is in message format, need to group by conversation
+          const conversationMap = new Map();
+          conversationsData.forEach((message) => {
+            const convId = Number(message.conversation_id);
+            if (!conversationMap.has(convId)) {
+              // Look for any message in this conversation that has a non-admin email
+              const customerMessage = conversationsData.find(
+                (m) => Number(m.conversation_id) === convId && m.email && !m.isFromAdmin
+              );
+              const customerEmail = customerMessage?.email || 'Unknown Customer';
+              conversationMap.set(convId, {
+                conversation_id: convId,
+                email: customerEmail,
+                image_url: message.image_url,
+                message_count: 0,
+                last_message_at: message.sentAt,
+                unread_count: 0,
+              });
+            }
+            const conv = conversationMap.get(convId);
+            conv.message_count++;
+            if (new Date(message.sentAt) > new Date(conv.last_message_at)) {
+              conv.last_message_at = message.sentAt;
+            }
+            if (!message.isRead && !message.isFromAdmin) {
+              conv.unread_count++;
+            }
           });
-        }
-        const conv = conversationMap.get(convId);
-        conv.message_count++;
-        if (new Date(message.sentAt) > new Date(conv.last_message_at)) {
-          conv.last_message_at = message.sentAt;
-        }
-        if (!message.isRead && !message.isFromAdmin) {
-          conv.unread_count++;
-        }
-      });
 
-      const conversations = Array.from(conversationMap.values());
-      setConversations(conversations);
+          const conversations = Array.from(conversationMap.values());
+          setConversations(conversations);
+        }
+      } else {
+        setConversations([]);
+      }
     } catch (error) {
       console.error('Error loading conversations:', error);
     } finally {
@@ -77,6 +90,12 @@ export default function AdminInbox() {
       const messageData = await getConversationById(conversationId);
       setMessages(messageData);
       setSelectedConversation(conversationId);
+
+      // Find the conversation data to get customer avatar
+      const conversationData = conversations.find(
+        (conv) => conv.conversation_id === conversationId
+      );
+      setSelectedConversationData(conversationData);
     } catch (error) {
       console.error('Error loading conversation messages:', error);
     }
@@ -112,6 +131,40 @@ export default function AdminInbox() {
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
+  };
+
+  const renderMessageWithPieceMetadata = (messageContent) => {
+    // Check if message contains piece metadata
+    const pieceMetadataMatch = messageContent.match(
+      /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
+    );
+
+    if (pieceMetadataMatch) {
+      const [, title, category, price, url] = pieceMetadataMatch;
+      const mainMessage = messageContent.split('\n\n---\n')[0];
+
+      return (
+        <>
+          <p>{mainMessage}</p>
+          <div className="piece-metadata-highlight">
+            <p>
+              <strong>About this piece:</strong> {title}
+            </p>
+            <p>
+              <strong>Category:</strong> {category} | <strong>Price:</strong> ${price}
+            </p>
+            <p>
+              <strong>View piece:</strong>{' '}
+              <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
+                Click here →
+              </a>
+            </p>
+          </div>
+        </>
+      );
+    }
+
+    return <p>{messageContent}</p>;
   };
 
   useEffect(() => {
@@ -153,7 +206,20 @@ export default function AdminInbox() {
                     onClick={() => loadConversationMessages(conversation.conversation_id)}
                   >
                     <div className="conversation-header">
-                      <span className="sender-email">{conversation.email}</span>
+                      <div className="conversation-header-content">
+                        {conversation.image_url ? (
+                          <img
+                            src={conversation.image_url}
+                            alt="Customer avatar"
+                            className="conversation-avatar"
+                          />
+                        ) : (
+                          <div className="conversation-avatar-fallback">
+                            {conversation.email ? conversation.email.charAt(0).toUpperCase() : '?'}
+                          </div>
+                        )}
+                        <span className="sender-email">{conversation.email}</span>
+                      </div>
                       <span className="message-count">{conversation.message_count} messages</span>
                     </div>
                     <div className="conversation-meta">
@@ -180,11 +246,25 @@ export default function AdminInbox() {
                     return (
                       <div
                         key={message.id}
-                        className={`message-item ${isCustomerMessage ? 'customer-message' : 'admin-message'}`}
+                        className={`admin-message-item ${isCustomerMessage ? 'admin-customer-message' : 'admin-admin-message'}`}
                       >
-                        <div className="message-content">
-                          <p>{message.messageContent}</p>
-                          <span className="message-time">{formatDate(message.sentAt)}</span>
+                        {isCustomerMessage &&
+                          (selectedConversationData?.image_url ? (
+                            <img
+                              src={selectedConversationData.image_url}
+                              alt="Customer avatar"
+                              className="message-avatar"
+                            />
+                          ) : (
+                            <div className="message-avatar-fallback">
+                              {selectedConversationData?.email
+                                ? selectedConversationData.email.charAt(0).toUpperCase()
+                                : '?'}
+                            </div>
+                          ))}
+                        <div className="admin-message-content">
+                          {renderMessageWithPieceMetadata(message.messageContent)}
+                          <span className="admin-message-time">{formatDate(message.sentAt)}</span>
                         </div>
                       </div>
                     );
