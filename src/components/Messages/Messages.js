@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
@@ -134,7 +134,8 @@ export default function Messages() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (!isConnected) {
-        console.warn('WebSocket connection taking longer than expected');
+        // eslint-disalble-next-line no-console
+        console.error('WebSocket connection taking longer than expected');
       }
     }, 5000);
 
