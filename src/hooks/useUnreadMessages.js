@@ -39,11 +39,13 @@ export const useUnreadMessages = () => {
     };
 
     websocketService.on('new_message', handleAnyMessage);
+    websocketService.on('new_customer_message', handleAnyMessage);
     websocketService.on('message_read', handleAnyMessage);
     websocketService.on('conversation_updated', handleAnyMessage);
 
     return () => {
       websocketService.off('new_message', handleAnyMessage);
+      websocketService.off('new_customer_message', handleAnyMessage);
       websocketService.off('message_read', handleAnyMessage);
       websocketService.off('conversation_updated', handleAnyMessage);
     };
