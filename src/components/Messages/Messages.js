@@ -87,7 +87,7 @@ export default function Messages() {
 
       // Always include piece metadata if available (for both new conversations and replies)
       if (pieceMetadata) {
-        messageToSend = `${newMessage}\n\n---\nAbout this piece: ${pieceMetadata.title} (${pieceMetadata.category}) - $${pieceMetadata.price}\nView: ${pieceMetadata.url}`;
+        messageToSend = `${newMessage}\n\n---\nAbout this piece: ${pieceMetadata.title} (${pieceMetadata.category}) - $${pieceMetadata.price}\nView: ${pieceMetadata.url}\nImage: ${pieceMetadata.imageUrl}`;
       }
 
       if (conversationId) {
@@ -185,7 +185,11 @@ export default function Messages() {
           {pieceMetadata && (
             <div className="piece-metadata-display">
               <h3>Message about: {pieceMetadata.title}</h3>
+
               <div className="piece-info">
+                <p>
+                  <img width="50px" src={pieceMetadata.imageUrl} />
+                </p>
                 <p>
                   <strong>Category:</strong> {pieceMetadata.category}
                 </p>
