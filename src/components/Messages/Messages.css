@@ -126,12 +126,14 @@
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-bottom-left-radius: 4px;
+  min-width: 100%;
 }
 
 .message-content p {
   margin: 0 0 0.25rem 0.25rem;
   font-size: 1rem;
   line-height: 1.4;
+  white-space: pre-wrap;
 }
 
 .message-time {
