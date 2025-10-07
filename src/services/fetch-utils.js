@@ -40,7 +40,6 @@ export async function getAdminProfile() {
 
     if (resp.ok) {
       const adminProfile = await resp.json();
-      console.log('adminProfile', adminProfile);
       return adminProfile;
     } else if (resp.status === 401 || resp.status === 403) {
       return null;
