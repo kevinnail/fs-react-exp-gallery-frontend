@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import { downloadInventoryCSV } from '../../services/fetch-utils.js';
