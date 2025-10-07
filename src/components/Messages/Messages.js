@@ -11,19 +11,34 @@ import {
 import { getAdminProfile } from '../../services/fetch-utils.js';
 import Menu from '../Menu/Menu.js';
 import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
+import { useMessaging } from '../../hooks/useWebSocket.js';
 import './Messages.css';
 
 export default function Messages() {
   const { signout, isAdmin } = useUserStore();
   const location = useLocation();
   const { refreshUnreadCount } = useUnreadMessages();
-  const [messages, setMessages] = useState([]);
+  const {
+    isConnected,
+    messages,
+    setMessages,
+    isTyping,
+    typingUsers,
+    joinConversation,
+    leaveConversation,
+    sendMessage: sendWebSocketMessage,
+    markMessageAsRead: markWebSocketMessageAsRead,
+    startTyping,
+    stopTyping,
+  } = useMessaging();
+
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [conversationId, setConversationId] = useState(null);
   const [adminProfile, setAdminProfile] = useState(null);
   const [pieceMetadata, setPieceMetadata] = useState(null);
+  const [typingTimeout, setTypingTimeout] = useState(null);
   const messagesListRef = useRef(null);
 
   const handleClick = async () => {
@@ -44,7 +59,13 @@ export default function Messages() {
 
       // Get conversation ID from first message if available
       if (messageData.length > 0) {
-        setConversationId(messageData[0].conversationId);
+        const convId = messageData[0].conversationId;
+        setConversationId(convId);
+
+        // Join the conversation room for real-time updates
+        if (isConnected && convId) {
+          joinConversation(convId);
+        }
       }
 
       // Mark all unread admin messages as read when messages are loaded
@@ -55,6 +76,10 @@ export default function Messages() {
       for (const message of unreadAdminMessages) {
         try {
           await markMessageAsRead(message.id);
+          // Also mark via WebSocket for real-time updates
+          if (isConnected) {
+            markWebSocketMessageAsRead(message.id);
+          }
         } catch (error) {
           console.error('Error marking message as read:', error);
         }
@@ -93,6 +118,19 @@ export default function Messages() {
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
+
+  // Join conversation when connected and conversationId is available
+  useEffect(() => {
+    if (isConnected && conversationId) {
+      joinConversation(conversationId);
+    }
+
+    return () => {
+      if (conversationId) {
+        leaveConversation(conversationId);
+      }
+    };
+  }, [isConnected, conversationId, joinConversation, leaveConversation]);
 
   // Refresh unread count when component mounts
   useEffect(() => {
@@ -134,12 +172,31 @@ export default function Messages() {
         // Start new conversation
         response = await sendMessage(messageToSend);
         setConversationId(response.conversationId);
+
+        // Join the new conversation room
+        if (isConnected) {
+          joinConversation(response.conversationId);
+        }
+      }
+
+      // Send via WebSocket for real-time updates
+      if (isConnected) {
+        sendWebSocketMessage({
+          conversationId: response.conversationId,
+          messageContent: messageToSend,
+          isFromAdmin: false,
+        });
       }
 
       setMessages((prev) => [...prev, response]);
       setNewMessage('');
       // Clear piece metadata after sending
       setPieceMetadata(null);
+
+      // Stop typing indicator
+      if (conversationId) {
+        stopTyping(conversationId);
+      }
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
@@ -156,6 +213,27 @@ export default function Messages() {
     });
     const finalDateString = newDateString.replace(',', ' at  ');
     return finalDateString;
+  };
+
+  const handleTyping = (e) => {
+    setNewMessage(e.target.value);
+
+    if (conversationId && isConnected) {
+      // Start typing indicator
+      startTyping(conversationId);
+
+      // Clear existing timeout
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+      }
+
+      // Set new timeout to stop typing indicator
+      const timeout = setTimeout(() => {
+        stopTyping(conversationId);
+      }, 1000);
+
+      setTypingTimeout(timeout);
+    }
   };
 
   const renderMessageWithPieceMetadata = (messageContent) => {
@@ -283,11 +361,25 @@ export default function Messages() {
             </div>
           )}
 
+          {/* Typing indicator */}
+          {typingUsers.length > 0 && (
+            <div className="typing-indicator">
+              <p>Admin is typing...</p>
+            </div>
+          )}
+
+          {/* Connection status indicator */}
+          {!isConnected && (
+            <div className="connection-status">
+              <p>Connecting to real-time messaging...</p>
+            </div>
+          )}
+
           <form onSubmit={handleSendMessage} className="message-form">
             <div className="input-container">
               <textarea
                 value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
+                onChange={handleTyping}
                 placeholder={
                   pieceMetadata
                     ? `Ask about ${pieceMetadata.title}...`
