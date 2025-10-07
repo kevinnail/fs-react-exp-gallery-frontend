@@ -44,7 +44,7 @@ export default function AdminInbox() {
     }
   };
 
-  const loadConversations = async () => {
+  const loadConversations = async (forceReload = false) => {
     try {
       setLoading(true);
       const conversationsData = await getConversations();
@@ -55,7 +55,9 @@ export default function AdminInbox() {
         const firstItem = conversationsData[0];
         if (firstItem.conversation_id && firstItem.email) {
           // Data is already in conversation format
-          setConversations(conversationsData);
+          if (forceReload || conversations.length === 0) {
+            setConversations(conversationsData);
+          }
         } else {
           // Data is in message format, need to group by conversation
           const conversationMap = new Map();
@@ -87,10 +89,14 @@ export default function AdminInbox() {
           });
 
           const conversations = Array.from(conversationMap.values());
-          setConversations(conversations);
+          if (forceReload || conversations.length === 0) {
+            setConversations(conversations);
+          }
         }
       } else {
-        setConversations([]);
+        if (forceReload || conversations.length === 0) {
+          setConversations([]);
+        }
       }
     } catch (error) {
       console.error('Error loading conversations:', error);
@@ -128,7 +134,7 @@ export default function AdminInbox() {
       }
 
       // Refresh conversations to update unread counts
-      await loadConversations();
+      await loadConversations(true);
 
       // Scroll to bottom when conversation is opened
       setTimeout(() => {
@@ -153,7 +159,7 @@ export default function AdminInbox() {
       stopTyping(selectedConversation);
 
       // Refresh conversations to update unread counts and last message time
-      await loadConversations();
+      await loadConversations(true);
     } catch (error) {
       console.error('Error sending reply:', error);
     } finally {
@@ -270,6 +276,19 @@ export default function AdminInbox() {
     loadConversations();
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Refresh conversations when new messages arrive via WebSocket
+  useEffect(() => {
+    if (messages.length > 0) {
+      // Check if the latest message is from a customer and not from admin
+      const latestMessage = messages[messages.length - 1];
+      if (latestMessage && !latestMessage.isFromAdmin) {
+        // Refresh conversations to pick up new conversations
+        loadConversations(true);
+      }
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
 
   return (
     <div className="admin-inbox-container">
