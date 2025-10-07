@@ -8,16 +8,30 @@ import {
   markMessageAsRead,
 } from '../../services/fetch-messages.js';
 import Menu from '../Menu/Menu.js';
+import { useMessaging } from '../../hooks/useWebSocket.js';
 import './AdminInbox.css';
 
 export default function AdminInbox() {
   const { signout, isAdmin } = useUserStore();
-  const [conversations, setConversations] = useState([]);
+  const {
+    isConnected,
+    messages,
+    setMessages,
+    conversations,
+    setConversations,
+    typingUsers,
+    joinConversation,
+    leaveConversation,
+    markMessageAsRead: markWebSocketMessageAsRead,
+    startTyping,
+    stopTyping,
+  } = useMessaging();
+
   const [selectedConversation, setSelectedConversation] = useState(null);
-  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [newReply, setNewReply] = useState('');
+  const [typingTimeout, setTypingTimeout] = useState(null);
   const messagesListRef = useRef(null);
 
   const handleClick = async () => {
@@ -91,6 +105,11 @@ export default function AdminInbox() {
       setMessages(messageData);
       setSelectedConversation(conversationId);
 
+      // Join the conversation room for real-time updates
+      if (isConnected) {
+        joinConversation(conversationId);
+      }
+
       // Mark all unread customer messages as read when conversation is opened
       const unreadCustomerMessages = messageData.filter(
         (message) => !message.isRead && !message.isFromAdmin
@@ -99,6 +118,10 @@ export default function AdminInbox() {
       for (const message of unreadCustomerMessages) {
         try {
           await markMessageAsRead(message.id);
+          // Also mark via WebSocket for real-time updates
+          if (isConnected) {
+            markWebSocketMessageAsRead(message.id);
+          }
         } catch (error) {
           console.error('Error marking message as read:', error);
         }
@@ -123,8 +146,13 @@ export default function AdminInbox() {
     try {
       setSending(true);
       const response = await addAdminReply(selectedConversation, newReply);
+
       setMessages((prev) => [...prev, response]);
       setNewReply('');
+
+      // Stop typing indicator
+      stopTyping(selectedConversation);
+
       // Refresh conversations to update unread counts and last message time
       await loadConversations();
     } catch (error) {
@@ -143,6 +171,47 @@ export default function AdminInbox() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Join conversation when connected and selectedConversation is available
+  useEffect(() => {
+    if (isConnected && selectedConversation) {
+      joinConversation(selectedConversation);
+    }
+
+    return () => {
+      if (selectedConversation) {
+        leaveConversation(selectedConversation);
+      }
+    };
+  }, [isConnected, selectedConversation, joinConversation, leaveConversation]);
+
+  const handleTyping = (e) => {
+    const value = e.target.value;
+    setNewReply(value);
+
+    if (selectedConversation && isConnected) {
+      // Clear existing timeout
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+      }
+
+      // If textarea is empty, stop typing immediately
+      if (!value.trim()) {
+        stopTyping(selectedConversation);
+        return;
+      }
+
+      // Start typing indicator
+      startTyping(selectedConversation);
+
+      // Set new timeout to stop typing indicator
+      const timeout = setTimeout(() => {
+        stopTyping(selectedConversation);
+      }, 1000);
+
+      setTypingTimeout(timeout);
+    }
+  };
 
   const formatDate = (dateString) => {
     const newDateString = new Date(dateString).toLocaleString([], {
@@ -200,6 +269,7 @@ export default function AdminInbox() {
 
   useEffect(() => {
     loadConversations();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -295,11 +365,25 @@ export default function AdminInbox() {
                   })}
                 </div>
 
+                {/* Typing indicator */}
+                {typingUsers.length > 0 && (
+                  <div className="typing-indicator">
+                    <p>Customer is typing...</p>
+                  </div>
+                )}
+
+                {/* Connection status indicator */}
+                {!isConnected && (
+                  <div className="connection-status">
+                    <p>Connecting to real-time messaging...</p>
+                  </div>
+                )}
+
                 <form onSubmit={handleSendReply} className="reply-form">
                   <div className="input-container">
                     <textarea
                       value={newReply}
-                      onChange={(e) => setNewReply(e.target.value)}
+                      onChange={handleTyping}
                       placeholder="Type your reply..."
                       className="reply-input"
                       rows="3"

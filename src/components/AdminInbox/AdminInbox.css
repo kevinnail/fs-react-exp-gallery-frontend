@@ -164,7 +164,7 @@
 
 .messages-list {
   flex: 1;
-  padding: 1rem;
+  padding: 0.5rem;
   overflow-y: auto;
   max-height: 400px;
 }
@@ -383,6 +383,48 @@
   padding: 2rem;
   color: rgba(255, 255, 255, 0.8);
   font-style: italic;
+}
+
+/* Typing indicator styles */
+.typing-indicator {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  color: #ffd700;
+  font-style: italic;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.typing-indicator p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Connection status styles */
+.connection-status {
+  background: rgba(255, 193, 7, 0.2);
+  border: 1px solid rgba(255, 193, 7, 0.4);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  color: #ffc107;
+}
+
+.connection-status p {
+  margin: 0;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 768px) {
