@@ -181,7 +181,7 @@ export default function Auth() {
             {['front', 'back', 'right', 'left', 'top', 'bottom'].map((pos, idx) => {
               const post = recentImages[idx];
               const img = post?.image_url || post?.imageUrl || post?.image;
-              const href = post?.id ? `/post/${post.id}` : '/';
+              const href = post?.id ? `/${post.id}` : '/';
               return (
                 <div
                   key={post?.id ?? pos}
