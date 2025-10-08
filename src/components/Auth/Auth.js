@@ -221,7 +221,6 @@ export default function Auth() {
                       backgroundColor: '#333',
                       borderRadius: '5px',
                       display: 'block',
-                      backgroundImage: 'url(/logo.png)',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       boxSizing: 'border-box',
