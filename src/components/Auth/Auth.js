@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import './Auth.css';
@@ -8,7 +8,7 @@ import { getUser } from '../../services/fetch-utils.js';
 import Loading from '../Loading/Loading.js';
 import { toast } from 'react-toastify';
 import AgreementModal from './AgreementModal.js';
-import { fetchGalleryPosts } from '../../services/fetch-utils.js';
+import { useGalleryPosts } from '../../hooks/useGalleryPosts.js';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -21,12 +21,14 @@ export default function Auth() {
   const navigate = useNavigate();
   const [isAgreementOpen, setAgreementOpen] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+
+  const [currentStart, setCurrentStart] = useState(0);
+  const { posts, galleryLoading, setGalleryLoading } = useGalleryPosts();
   const [recentImages, setRecentImages] = useState([]);
 
   useEffect(() => {
     const loadRecentPosts = async () => {
       try {
-        const posts = await fetchGalleryPosts();
         if (Array.isArray(posts)) {
           const sorted = posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
           setRecentImages(sorted);
@@ -37,6 +39,32 @@ export default function Auth() {
     };
     loadRecentPosts();
   }, []);
+  const sortedPosts = useMemo(() => {
+    if (!Array.isArray(posts)) return [];
+    return [...posts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }, [posts]);
+
+  useEffect(() => {
+    if (sortedPosts.length <= 6) return;
+    const id = setInterval(() => {
+      setCurrentStart((prev) => (prev + 6) % sortedPosts.length);
+    }, 8000);
+    return () => clearInterval(id);
+  }, [sortedPosts.length]);
+
+  useEffect(() => {
+    const loadRecentPosts = async () => {
+      try {
+        if (Array.isArray(posts)) {
+          const sorted = posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          setRecentImages(sorted);
+        }
+      } catch (err) {
+        console.error('Error loading posts:', err);
+      }
+    };
+    loadRecentPosts();
+  }, [posts]);
 
   // Validation functions
   const validateEmailLength = (email) => {
@@ -167,7 +195,6 @@ export default function Auth() {
   if (loading) {
     return <Loading />;
   }
-  console.log('recentImages', recentImages);
 
   return (
     <>
@@ -181,7 +208,36 @@ export default function Auth() {
             {['front', 'back', 'right', 'left', 'top', 'bottom'].map((pos, idx) => {
               const post = recentImages[idx];
               const img = post?.image_url || post?.imageUrl || post?.image;
-              const href = post?.id ? `/${post.id}` : '/';
+              const href = galleryLoading ? '#' : post?.id ? `/${post.id}` : '/';
+
+              if (galleryLoading) {
+                return (
+                  <div
+                    key={post?.id ?? pos}
+                    className={`face ${pos} placeholder`}
+                    style={{
+                      width: '100%',
+                      paddingBottom: '100%',
+                      backgroundColor: '#333',
+                      borderRadius: '5px',
+                      display: 'block',
+                      backgroundImage: 'url(/logo.png)',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      boxSizing: 'border-box',
+                      border: 'none',
+                    }}
+                  >
+                    {' '}
+                    <Link className="hidden-text-link" to={href}>
+                      {
+                        'This is a link to the gallery page if you are clever enough you might find it! '
+                      }
+                    </Link>
+                  </div>
+                );
+              }
+
               return (
                 <div
                   key={post?.id ?? pos}

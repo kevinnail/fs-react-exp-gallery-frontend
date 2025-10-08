@@ -518,6 +518,11 @@
   z-index: 1500;
 }
 
+.placeholder {
+  background-image: url('/public/logo-sq.png');
+  box-sizing: border-box;
+}
+
 @keyframes rotate2 {
   0% {
     transform: rotateX(90deg) rotateY(-100deg) rotateZ(-120deg) translateX(0px) translateY(0px)
