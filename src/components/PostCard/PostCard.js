@@ -98,7 +98,7 @@ export default function PostCard({
       key={id}
       sx={{ backgroundColor: post.hide ? 'rgb(35, 35, 35)' : '', boxShadow: '0 0 2px #ccc' }}
     >
-      <Link to={`/main-gallery/${id}`}>
+      <Link to={`/${id}`}>
         {image_url ? (
           <img
             className="admin-prod-img"
