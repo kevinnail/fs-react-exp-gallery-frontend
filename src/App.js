@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import { useUserStore } from './stores/userStore.js';
 import Auth from './components/Auth/Auth.js';
@@ -137,15 +137,7 @@ function App() {
                 </UserRoute>
               }
             />
-            {/* <Route
-              path="*"
-              element={
-                <Navigate
-                  to={user ? (user.isAdmin ? '/admin' : '/profile') : '/auth/sign-in'}
-                  replace
-                />
-              }
-            /> */}
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>
