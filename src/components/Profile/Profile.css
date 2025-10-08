@@ -18,7 +18,7 @@
 .profile-content {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 15px;
-  padding: 3rem;
+  padding: 2rem 1rem;
   text-align: center;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   border: 2px solid rgba(255, 255, 255, 0.1);
@@ -131,13 +131,11 @@
 
 .edit-profile-icon-btn:hover {
   background: rgba(255, 255, 255, 0.16);
-  transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
 .edit-profile-btn:hover {
   background: linear-gradient(315deg, grey, black);
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
@@ -169,19 +167,17 @@
   text-align: left;
 }
 
+.new-work-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+}
+
 .new-work-section {
   margin-top: 0.75rem;
   padding-top: 0.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.new-work-title {
-  color: white;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  font-weight: 300;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  margin: 0 0 1rem 0;
 }
 
 .new-work-placeholder {
@@ -190,6 +186,19 @@
   padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
+}
+
+.new-work-msg {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  color: white;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+  border: 1px solid white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
 }
 
 .new-work-placeholder p {
@@ -203,6 +212,83 @@
   color: #fff;
 }
 
+.recent-post-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 200px;
+  text-align: left;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.recent-post-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.recent-post-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.recent-post-image-title-wrapper {
+  width: 100%;
+  display: flex;
+  gap: 30px;
+}
+
+.recent-post-image-title-wrapper h3 {
+  color: white;
+  margin: 0;
+}
+
+.recent-post-details {
+  padding: 0.5rem 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.recent-post-details p {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: white;
+  width: 100%;
+}
+
+.recent-post-details h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: white;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.recent-post-details p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-post-details .description {
+  display: none;
+}
+
+/* 
+
+* responsive css below =============================================
+
+*/
 @media (max-width: 768px) {
   .profile-header {
     flex-direction: column;
@@ -219,5 +305,15 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+
+  .recent-post-card {
+    max-width: 160px;
+  }
+
+  .new-work-msg {
+    width: 85%;
+    text-align: left;
+    margin: auto;
   }
 }
