@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import { fetchUserProfile, fetchGalleryPosts } from '../../services/fetch-utils.js';
@@ -6,13 +6,14 @@ import Menu from '../Menu/Menu.js';
 import ProfileForm from './ProfileForm.js';
 import './Profile.css';
 import { useProfileStore } from '../../stores/profileStore.js';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Profile() {
   const { user, signout } = useUserStore();
   const { profile, setProfile } = useProfileStore();
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
+  const navigate = useNavigate();
 
   // Check if user has added name or image
   const hasNameOrImage = profile?.firstName || profile?.lastName || profile?.image_url;
@@ -47,8 +48,8 @@ export default function Profile() {
         </ul>
       </p>
       <p>
-        I&apos;ll be adding features asap: early access to new work, comments on posts, auctions,
-        and we&apos;ll see what else! Stay tuned, thanks for being here.
+        I&apos;ll be adding features asap: comments on posts, auctions, and we&apos;ll see what
+        else! Stay tuned, thanks for being here.
       </p>
     </>
   );
@@ -72,9 +73,15 @@ export default function Profile() {
     const loadRecentPosts = async () => {
       try {
         const posts = await fetchGalleryPosts();
-        console.log('posts', posts);
 
-        setRecentPosts(posts);
+        const twoWeeksAgo = new Date();
+        twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+        const recentWork = posts
+          .filter((post) => new Date(post.created_at) >= twoWeeksAgo)
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        setRecentPosts(recentWork);
       } catch (error) {
         console.error('Error fetching recent posts:', error);
       }
@@ -100,6 +107,10 @@ export default function Profile() {
 
   const handleCloseForm = () => {
     setShowEditForm(false);
+  };
+
+  const handleClickNewWork = (postId) => {
+    navigate(`/main-gallery/${postId}`);
   };
 
   return (
@@ -145,22 +156,46 @@ export default function Profile() {
         </div>
 
         <div className="new-work-section">
-          <h2 className="new-work-title">New Work /asd </h2>
+          <span className="new-work-msg">
+            <strong>Current Special: </strong>30% off of the new work here!{' '}
+          </span>
           <div className="new-work-content">
             {recentPosts.length > 0 ? (
               recentPosts.map((post) => (
-                <div key={post.id} className="recent-post-card">
-                  <img
-                    width="50"
-                    src={post.image_url}
-                    alt={post.title}
-                    className="recent-post-image"
-                  />
+                <div
+                  key={post.id}
+                  className="recent-post-card"
+                  onClick={() => handleClickNewWork(post.id)}
+                >
+                  {' '}
+                  <div className="recent-post-image-title-wrapper">
+                    {' '}
+                    <img src={post.image_url} alt={post.title} className="recent-post-image" />
+                  </div>
                   <div className="recent-post-details">
-                    <h3>{post.title}</h3>
-                    <p>{post.description}</p>
-                    <p>Category: {post.category}</p>
-                    <p>Price: {post.price ? `$${post.price}` : 'N/A'}</p>
+                    <p>
+                      <span>Category: </span>
+                      <span>{post.category}</span>
+                    </p>
+                    <p>
+                      <span>Price:</span>{' '}
+                      <span style={{ fontWeight: '600' }}>
+                        {' '}
+                        <span
+                          style={{
+                            color: 'red',
+                            textDecoration: 'line-through',
+                            marginRight: '1rem',
+                          }}
+                        >
+                          {post.price ? `$${post.price}` : 'N/A'}
+                        </span>
+                        <i className="fa fa-arrow-right" aria-hidden="true"></i>
+                        <span style={{ marginLeft: '.25rem' }}>
+                          ${(post.price * 0.7).toFixed(0)}
+                        </span>
+                      </span>
+                    </p>
                   </div>
                 </div>
               ))
