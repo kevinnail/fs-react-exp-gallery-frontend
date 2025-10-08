@@ -118,7 +118,7 @@ export default function ProfileForm({ handleCloseForm }) {
               type="text"
               id="firstName"
               name="firstName"
-              value={formData.firstName || profile?.firstName}
+              value={formData.firstName || ''}
               onChange={handleInputChange}
               placeholder="Enter your first name"
               maxLength={51}
@@ -131,7 +131,7 @@ export default function ProfileForm({ handleCloseForm }) {
               type="text"
               id="lastName"
               name="lastName"
-              value={formData.lastName || profile?.lastName || ''}
+              value={formData.lastName || ''}
               onChange={handleInputChange}
               placeholder="Enter your last name"
               maxLength={51}
