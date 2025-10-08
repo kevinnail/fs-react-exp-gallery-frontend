@@ -32,11 +32,7 @@ export default function Header() {
   return (
     <>
       <header>
-        <Link
-          className="link"
-          to={user && isAdmin ? '/admin' : '/main-gallery'}
-          onClick={handleHomeClick}
-        >
+        <Link className="link" to={user && isAdmin ? '/admin' : '/'} onClick={handleHomeClick}>
           <img className="logo" src="../logo-sq.png" />
         </Link>
         <h1 className="title">Stress Less Glass</h1>
