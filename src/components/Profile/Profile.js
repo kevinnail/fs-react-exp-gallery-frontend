@@ -35,10 +35,21 @@ export default function Profile() {
   );
 
   const existingUserMessage = (
-    <p>
-      Thanks for setting up an account- I&apos;ll be adding features asap: early access to new work,
-      comments on posts, auctions, and we&apos;ll see what else! Stay tuned, thanks for being here.
-    </p>
+    <>
+      <p>
+        Thanks for setting up an account! You can now message me directly via Messages in 2 ways:
+        <ul>
+          <li>Message me directly via Messages up in menu</li>
+          <li>
+            Message me from the details page of a piece and Messages will automatically link it.
+          </li>
+        </ul>
+      </p>
+      <p>
+        I&apos;ll be adding features asap: early access to new work, comments on posts, auctions,
+        and we&apos;ll see what else! Stay tuned, thanks for being here.
+      </p>
+    </>
   );
 
   const customerMessage = hasNameOrImage ? existingUserMessage : newUserMessage;
@@ -110,10 +121,10 @@ export default function Profile() {
         </div>
 
         <div className="profile-details">
-          <h1 className="detail-value">
+          <h2 className="detail-value">
             {' '}
-            {`Hey what's up${profile?.firstName ? ' ' + profile.firstName : ''}`}?!
-          </h1>
+            {`${profile?.firstName ? 'Welcome,  ' + profile.firstName + '!' : 'Welcome!'}`}
+          </h2>
           {customerMessage}
         </div>
 
