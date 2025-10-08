@@ -22,7 +22,7 @@ export function useGalleryPost(id) {
       try {
         const data = await getGalleryPostDetail(id);
         if (!data) {
-          history.push('/main-gallery');
+          history.push('/');
         }
         const additionalImagesGallery = await getAdditionalImageUrlsPublicIdsGallery(id);
         const additionalImageUrlsPublicIds = additionalImagesGallery.map(
@@ -40,7 +40,7 @@ export function useGalleryPost(id) {
           draggable: true,
           draggablePercent: 60,
           toastId: 'useGalleryPost-1',
-          onClose: () => navigate('/main-gallery'),
+          onClose: () => navigate('/'),
         });
         setError(e.message);
         setLoading(false);
