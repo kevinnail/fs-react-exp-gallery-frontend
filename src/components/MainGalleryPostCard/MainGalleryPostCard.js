@@ -71,7 +71,7 @@ export default function MainGalleryPostCard({
 
   return (
     <div className="gallery-display-container" key={id}>
-      <Link className="gallery-display a-gallery" to={`/main-gallery/${id}`} title={`${title}`}>
+      <Link className="gallery-display a-gallery" to={`/${id}`} title={`${title}`}>
         <div
           style={{
             position: 'absolute',
