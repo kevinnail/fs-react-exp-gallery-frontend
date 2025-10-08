@@ -19,7 +19,7 @@ export default function Menu({ handleClick }) {
       {!user && (
         <>
           {' '}
-          <NavLink className="new-link" to="/main-gallery" title="Gallery">
+          <NavLink className="new-link" to="/" title="Gallery">
             Gallery
           </NavLink>
           <NavLink className="new-link" to="/about-me">
@@ -34,7 +34,7 @@ export default function Menu({ handleClick }) {
       {/* Display these links when the user is signed in */}
       {user && (
         <>
-          <NavLink className="new-link" to="/main-gallery" title="Gallery">
+          <NavLink className="new-link" to="/" title="Gallery">
             Gallery
           </NavLink>
 

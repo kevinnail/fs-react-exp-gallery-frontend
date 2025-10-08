@@ -162,38 +162,38 @@ export default function Auth() {
         <div className="scene">
           <div className="cube">
             <div className="face front">
-              <Link className="hidden-text-link" to="/main-gallery">
+              <Link className="hidden-text-link" to="/">
                 {' '}
                 {'This is a link to the gallery page if you are clever enough you might find it! '}
               </Link>
             </div>
             <div className="face back">
               {' '}
-              <Link className="hidden-text-link" to="/main-gallery">
+              <Link className="hidden-text-link" to="/">
                 {'This is a link to the gallery page if you are clever enough you might find it! '}
               </Link>
             </div>
             <div className="face right">
               {' '}
-              <Link className="hidden-text-link" to="/main-gallery">
+              <Link className="hidden-text-link" to="/">
                 {'This is a link to the gallery page if you are clever enough you might find it! '}
               </Link>
             </div>
             <div className="face left">
               {' '}
-              <Link className="hidden-text-link" to="/main-gallery">
+              <Link className="hidden-text-link" to="/">
                 {'This is a link to the gallery page if you are clever enough you might find it! '}
               </Link>
             </div>
             <div className="face top">
               {' '}
-              <Link className="hidden-text-link" to="/main-gallery">
+              <Link className="hidden-text-link" to="/">
                 {'This is a link to the gallery page if you are clever enough you might find it! '}
               </Link>
             </div>
             <div className="face bottom">
               {' '}
-              <Link className="hidden-text-link" to="/main-gallery">
+              <Link className="hidden-text-link" to="/">
                 {'This is a link to the gallery page if you are clever enough you might find it! '}
               </Link>
             </div>

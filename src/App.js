@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import { ToastContainer } from 'react-toastify';
 import websocketService from './services/websocket.js';
+import NotFound from './components/NotFound/NotFound.js';
 
 const mainTheme = createTheme({
   palette: {
@@ -76,10 +77,10 @@ function App() {
         <ThemeProvider theme={theme}>
           <Routes>
             <Route path="/auth/:type" element={<Auth />} />
-            <Route path="/main-gallery/:id" element={<MainPostDetail />} />
-            <Route path="/main-gallery" element={<MainGallery />} />
+            <Route path="/" element={<MainGallery />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/about-me" element={<AboutMe />} />
+            <Route path="/:id" element={<MainPostDetail />} />
             <Route
               path="/admin/discounts"
               element={
@@ -105,18 +106,18 @@ function App() {
               }
             />
             <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <Admin />
-                </ProtectedRoute>
-              }
-            />
-            <Route
               path="/admin/inbox"
               element={
                 <ProtectedRoute>
                   <AdminInbox />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
                 </ProtectedRoute>
               }
             />
@@ -136,7 +137,7 @@ function App() {
                 </UserRoute>
               }
             />
-            <Route
+            {/* <Route
               path="*"
               element={
                 <Navigate
@@ -144,7 +145,8 @@ function App() {
                   replace
                 />
               }
-            />
+            /> */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>
       </div>
