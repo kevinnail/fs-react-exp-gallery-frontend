@@ -16,7 +16,7 @@ export default function Profile() {
   const navigate = useNavigate();
 
   // Check if user has added name or image
-  const hasNameOrImage = profile?.firstName || profile?.lastName || profile?.image_url;
+  const hasNameOrImage = profile?.firstName || profile?.lastName || profile?.imageUrl;
 
   const newUserMessage = (
     <>
@@ -127,10 +127,11 @@ export default function Profile() {
         >
           ✎
         </button>
+
         <div className="profile-header">
           <div className="profile-picture-section">
-            {profile?.image_url ? (
-              <img src={profile.image_url} alt="Profile" className="profile-picture" />
+            {profile?.imageUrl ? (
+              <img src={profile.imageUrl} alt="Profile" className="profile-picture" />
             ) : (
               <div className="profile-picture-placeholder">
                 {profile?.firstName?.charAt(0) || user?.email?.charAt(0) || 'U'}
