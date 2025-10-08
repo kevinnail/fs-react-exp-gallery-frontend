@@ -503,6 +503,22 @@
   }
 }
 
+.message-button-wrapper {
+  text-align: center;
+  margin: 0 auto 0.5rem auto;
+  width: 100%;
+  max-width: 750px;
+  background-color: black;
+  padding: 5px 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px #ccc;
+  font-size: 1.2rem;
+  color: white;
+  letter-spacing: 2px;
+  min-width: 200px;
+}
+
 @media (min-width: 768px) {
   /*
   */
@@ -560,22 +576,6 @@
   .thumbnail-gallery {
     width: 100px;
   }
-
-  .message-button-wrapper {
-    text-align: center;
-    margin: 0 auto 0.5rem auto;
-    width: 100%;
-    max-width: 750px;
-    background-color: black;
-    padding: 5px 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 0 10px #ccc;
-    font-size: 1.2rem;
-    color: white;
-    letter-spacing: 2px;
-    min-width: 200px;
-  }
 }
 
 .message-about-piece-button {
@@ -611,6 +611,13 @@
   .message-about-piece-button {
     font-size: 1rem;
     padding: 10px 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .message-button-wrapper {
+    width: 100%;
+    margin: auto;
   }
 }
 
