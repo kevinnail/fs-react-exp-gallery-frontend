@@ -110,7 +110,7 @@ export default function Profile() {
   };
 
   const handleClickNewWork = (postId) => {
-    navigate(`/main-gallery/${postId}`);
+    navigate(`/${postId}`);
   };
 
   return (
