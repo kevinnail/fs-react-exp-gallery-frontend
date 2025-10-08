@@ -8,7 +8,7 @@ import Menu from '../Menu/Menu.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import { useNavigate } from 'react-router-dom';
 export default function Header() {
-  const { user, signout } = useUserStore();
+  const { user, signout, isAdmin } = useUserStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -32,7 +32,11 @@ export default function Header() {
   return (
     <>
       <header>
-        <Link className="link" to={user ? '/admin' : '/main-gallery'} onClick={handleHomeClick}>
+        <Link
+          className="link"
+          to={user && isAdmin ? '/admin' : '/main-gallery'}
+          onClick={handleHomeClick}
+        >
           <img className="logo" src="../logo-sq.png" />
         </Link>
         <h1 className="title">Stress Less Glass</h1>
