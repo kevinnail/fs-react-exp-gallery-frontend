@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export function useGalleryPosts() {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [galleryLoading, setGalleryLoading] = useState(true);
   const [error, setError] = useState(null);
 
   function shuffleArray(array) {
@@ -24,7 +24,7 @@ export function useGalleryPosts() {
         const randomizedData = shuffleArray(data);
 
         setPosts(randomizedData);
-        setLoading(false);
+        setGalleryLoading(false);
       } catch (e) {
         toast.error(`Error fetching gallery posts: ${e.message}`, {
           theme: 'colored',
@@ -33,10 +33,10 @@ export function useGalleryPosts() {
           toastId: 'useGalleryPosts-1',
         });
         setError(e.message);
-        setLoading(false);
+        setGalleryLoading(false);
       }
     };
     fetchData();
   }, []);
-  return { posts, setPosts, error, loading, setLoading, setError };
+  return { posts, setPosts, error, galleryLoading, setGalleryLoading, setError };
 }

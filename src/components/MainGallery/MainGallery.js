@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 //
 //
 export default function MainGallery() {
-  const { posts, loading } = useGalleryPosts();
+  const { posts, galleryLoading } = useGalleryPosts();
   const { signout } = useUserStore();
   const [message, setMessage] = useState('');
 
@@ -37,16 +37,15 @@ export default function MainGallery() {
 
     fetchMessage();
   }, []);
-  if (loading) {
-    return <Loading />;
-  }
 
   const handleClick = async () => {
     await signOut();
     signout();
   };
 
-  return (
+  return galleryLoading ? (
+    <Loading />
+  ) : (
     <>
       <Box className="menu-search-container">
         <Menu handleClick={handleClick} />
