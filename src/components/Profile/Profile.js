@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
-import { fetchUserProfile } from '../../services/fetch-utils.js';
+import { fetchUserProfile, fetchGalleryPosts } from '../../services/fetch-utils.js';
 import Menu from '../Menu/Menu.js';
 import ProfileForm from './ProfileForm.js';
 import './Profile.css';
@@ -12,9 +12,10 @@ export default function Profile() {
   const { user, signout } = useUserStore();
   const { profile, setProfile } = useProfileStore();
   const [showEditForm, setShowEditForm] = useState(false);
+  const [recentPosts, setRecentPosts] = useState([]);
 
   // Check if user has added name or image
-  const hasNameOrImage = profile?.firstName || profile?.lastName || profile?.imageUrl;
+  const hasNameOrImage = profile?.firstName || profile?.lastName || profile?.image_url;
 
   const newUserMessage = (
     <>
@@ -67,6 +68,21 @@ export default function Profile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const loadRecentPosts = async () => {
+      try {
+        const posts = await fetchGalleryPosts();
+        console.log('posts', posts);
+
+        setRecentPosts(posts);
+      } catch (error) {
+        console.error('Error fetching recent posts:', error);
+      }
+    };
+
+    loadRecentPosts();
+  }, []);
+
   const handleClick = async () => {
     try {
       await signOut();
@@ -102,8 +118,8 @@ export default function Profile() {
         </button>
         <div className="profile-header">
           <div className="profile-picture-section">
-            {profile?.imageUrl ? (
-              <img src={profile.imageUrl} alt="Profile" className="profile-picture" />
+            {profile?.image_url ? (
+              <img src={profile.image_url} alt="Profile" className="profile-picture" />
             ) : (
               <div className="profile-picture-placeholder">
                 {profile?.firstName?.charAt(0) || user?.email?.charAt(0) || 'U'}
@@ -129,9 +145,28 @@ export default function Profile() {
         </div>
 
         <div className="new-work-section">
-          <h2 className="new-work-title">New Work/ Specials</h2>
-          <div className="new-work-placeholder">
-            <p>Coming soon! Check back for special deals on the latest pieces.</p>
+          <h2 className="new-work-title">New Work /asd </h2>
+          <div className="new-work-content">
+            {recentPosts.length > 0 ? (
+              recentPosts.map((post) => (
+                <div key={post.id} className="recent-post-card">
+                  <img
+                    width="50"
+                    src={post.image_url}
+                    alt={post.title}
+                    className="recent-post-image"
+                  />
+                  <div className="recent-post-details">
+                    <h3>{post.title}</h3>
+                    <p>{post.description}</p>
+                    <p>Category: {post.category}</p>
+                    <p>Price: {post.price ? `$${post.price}` : 'N/A'}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>Coming soon! Check back for special deals on the latest pieces.</p>
+            )}
           </div>
         </div>
       </div>
