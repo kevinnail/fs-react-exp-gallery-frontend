@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useUserStore } from '../stores/userStore.js';
 import { getMyMessages } from '../services/fetch-messages.js';
+import websocketService from '../services/websocket.js';
 
 export const useUnreadMessages = () => {
   const { unreadMessageCount, setUnreadMessageCount, user } = useUserStore();
@@ -27,6 +28,27 @@ export const useUnreadMessages = () => {
 
   useEffect(() => {
     checkUnreadMessages();
+  }, [user, checkUnreadMessages]);
+
+  // WebSocket event handlers for real-time updates
+  useEffect(() => {
+    if (!user) return;
+
+    const handleAnyMessage = () => {
+      checkUnreadMessages();
+    };
+
+    websocketService.on('new_message', handleAnyMessage);
+    websocketService.on('new_customer_message', handleAnyMessage);
+    websocketService.on('message_read', handleAnyMessage);
+    websocketService.on('conversation_updated', handleAnyMessage);
+
+    return () => {
+      websocketService.off('new_message', handleAnyMessage);
+      websocketService.off('new_customer_message', handleAnyMessage);
+      websocketService.off('message_read', handleAnyMessage);
+      websocketService.off('conversation_updated', handleAnyMessage);
+    };
   }, [user, checkUnreadMessages]);
 
   return {

@@ -1,12 +1,13 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import { downloadInventoryCSV } from '../../services/fetch-utils.js';
 import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
+import { useLocation } from 'react-router-dom';
 
 export default function Menu({ handleClick }) {
   const { user, isAdmin } = useUserStore();
   const { unreadMessageCount } = useUnreadMessages();
+  const location = useLocation();
 
   const handleDownloadCSV = () => {
     downloadInventoryCSV();
@@ -44,7 +45,7 @@ export default function Menu({ handleClick }) {
               </NavLink>
               <NavLink className="new-link" to="/messages">
                 Messages
-                {unreadMessageCount > 0 && (
+                {unreadMessageCount > 0 && location.pathname !== '/messages' && (
                   <span className="unread-badge">{unreadMessageCount}</span>
                 )}
               </NavLink>

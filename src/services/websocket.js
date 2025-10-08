@@ -20,6 +20,10 @@ class WebSocketService {
         withCredentials: true,
         transports: ['websocket', 'polling'],
         autoConnect: true,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        timeout: 20000,
       });
 
       this.socket.on('connect', () => {
@@ -36,22 +40,36 @@ class WebSocketService {
 
       this.socket.on('connect_error', (error) => {
         console.error('WebSocket connection error:', error);
+        this.isConnected = false;
+        this.emit('connection', { connected: false, error });
+      });
+
+      this.socket.on('reconnect', (attemptNumber) => {
+        console.info('WebSocket reconnected after', attemptNumber, 'attempts');
+        this.isConnected = true;
+        this.emit('connection', { connected: true });
+      });
+
+      this.socket.on('reconnect_error', (error) => {
+        console.error('WebSocket reconnection error:', error);
+        this.isConnected = false;
         this.emit('connection', { connected: false, error });
       });
 
       // Message events
       this.socket.on('new_message', (message) => {
-        console.info('Received new message:', message);
         this.emit('new_message', message);
       });
 
+      this.socket.on('new_customer_message', (data) => {
+        this.emit('new_customer_message', data);
+      });
+
       this.socket.on('message_read', (data) => {
-        console.info('Message marked as read:', data);
         this.emit('message_read', data);
       });
 
       this.socket.on('conversation_updated', (conversation) => {
-        console.info('Conversation updated:', conversation);
         this.emit('conversation_updated', conversation);
       });
 

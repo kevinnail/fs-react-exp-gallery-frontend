@@ -18,6 +18,11 @@ export const useWebSocket = () => {
 
     websocketService.on('connection', handleConnection);
 
+    // Check initial connection status
+    const initialStatus = websocketService.getConnectionStatus();
+    setIsConnected(initialStatus.connected);
+    setSocketId(initialStatus.socketId);
+
     // Capture the current listeners map for cleanup
     const currentListeners = listenersRef.current;
 
@@ -77,7 +82,9 @@ export const useMessaging = () => {
 
   useEffect(() => {
     // Listen for new messages
-    const handleNewMessage = (message) => {
+    const handleNewMessage = (data) => {
+      const message = data.message || data;
+
       setMessages((prev) => [...prev, message]);
     };
 
@@ -124,6 +131,7 @@ export const useMessaging = () => {
 
     // Add event listeners
     addEventListener('new_message', handleNewMessage);
+    addEventListener('new_customer_message', handleNewMessage);
     addEventListener('message_read', handleMessageRead);
     addEventListener('conversation_updated', handleConversationUpdate);
     addEventListener('typing_start', handleTypingStart);
@@ -132,6 +140,7 @@ export const useMessaging = () => {
     // Cleanup
     return () => {
       removeEventListener('new_message', handleNewMessage);
+      removeEventListener('new_customer_message', handleNewMessage);
       removeEventListener('message_read', handleMessageRead);
       removeEventListener('conversation_updated', handleConversationUpdate);
       removeEventListener('typing_start', handleTypingStart);

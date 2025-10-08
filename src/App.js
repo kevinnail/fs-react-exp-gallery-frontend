@@ -17,9 +17,10 @@ import AdminInbox from './components/AdminInbox/AdminInbox.js';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.js';
 import UserRoute from './components/UserRoute/UserRoute.js';
 import { createTheme } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import { ToastContainer } from 'react-toastify';
+import websocketService from './services/websocket.js';
 
 const mainTheme = createTheme({
   palette: {
@@ -58,6 +59,14 @@ function App() {
   const [theme, setTheme] = useState(mainTheme);
 
   const user = useUserStore((state) => state.user);
+
+  useEffect(() => {
+    websocketService.connect();
+
+    return () => {
+      websocketService.disconnect();
+    };
+  }, []);
 
   return (
     <div className="App">

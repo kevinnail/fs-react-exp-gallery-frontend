@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
@@ -130,6 +130,18 @@ export default function Messages() {
     };
   }, [isConnected, conversationId, joinConversation, leaveConversation]);
 
+  // Add a timeout to show connection status after a delay
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!isConnected) {
+        // eslint-disalble-next-line no-console
+        console.error('WebSocket connection taking longer than expected');
+      }
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [isConnected]);
+
   // Refresh unread count when component mounts
   useEffect(() => {
     refreshUnreadCount();
@@ -152,6 +164,8 @@ export default function Messages() {
     e.preventDefault();
     if (!newMessage.trim() || sending) return;
 
+    let optimisticMessage = null;
+
     try {
       setSending(true);
 
@@ -162,6 +176,19 @@ export default function Messages() {
       if (pieceMetadata) {
         messageToSend = `${newMessage}\n\n---\nAbout this piece: ${pieceMetadata.title} (${pieceMetadata.category}) - $${pieceMetadata.price}\nView: ${pieceMetadata.url}\nImage: ${pieceMetadata.imageUrl}`;
       }
+
+      // Create optimistic message for immediate display
+      optimisticMessage = {
+        id: `temp-${Date.now()}`, // Temporary ID
+        messageContent: messageToSend,
+        sentAt: new Date().toISOString(),
+        isFromAdmin: false,
+        isRead: true,
+        conversationId: conversationId || 'temp-conversation',
+      };
+
+      // Add optimistic message to local state immediately
+      setMessages((prev) => [...prev, optimisticMessage]);
 
       if (conversationId) {
         // Reply to existing conversation
@@ -177,6 +204,15 @@ export default function Messages() {
         }
       }
 
+      // Replace optimistic message with real message from server
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === optimisticMessage.id
+            ? { ...response, conversationId: response.conversationId }
+            : msg
+        )
+      );
+
       setNewMessage('');
       // Clear piece metadata after sending
       setPieceMetadata(null);
@@ -187,6 +223,10 @@ export default function Messages() {
       }
     } catch (error) {
       console.error('Error sending message:', error);
+      // Remove optimistic message on error
+      if (optimisticMessage) {
+        setMessages((prev) => prev.filter((msg) => msg.id !== optimisticMessage.id));
+      }
     } finally {
       setSending(false);
     }
@@ -359,7 +399,7 @@ export default function Messages() {
           {/* Typing indicator */}
           {typingUsers.length > 0 && (
             <div className="typing-indicator">
-              <p>Admin is typing...</p>
+              <p>Kevin is typing...</p>
             </div>
           )}
 

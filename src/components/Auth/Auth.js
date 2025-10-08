@@ -7,6 +7,7 @@ import { signOut, authUser } from '../../services/auth.js';
 import { getUser } from '../../services/fetch-utils.js';
 import Loading from '../Loading/Loading.js';
 import { toast } from 'react-toastify';
+import AgreementModal from './AgreementModal.js';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -17,6 +18,8 @@ export default function Auth() {
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(false);
   const navigate = useNavigate();
+  const [isAgreementOpen, setAgreementOpen] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   // Validation functions
   const validateEmailLength = (email) => {
@@ -110,11 +113,6 @@ export default function Auth() {
     }
   };
 
-  // show loading spinner while waiting
-  if (loading) {
-    return <Loading />;
-  }
-
   const handleClick = async () => {
     try {
       await signOut();
@@ -125,6 +123,34 @@ export default function Auth() {
       signout();
     }
   };
+
+  const handleSignupClick = () => {
+    if (!agreedToTerms) {
+      setAgreementOpen(true);
+    } else {
+      submitAuth();
+    }
+  };
+
+  const handleAgree = () => {
+    setAgreementOpen(false);
+    setAgreedToTerms(true);
+    submitAuth();
+  };
+
+  const handleDecline = () => {
+    setAgreementOpen(false);
+    toast.info('You must agree to the terms to create an account.', {
+      theme: 'dark',
+      autoClose: 4000,
+    });
+  };
+
+  // show loading spinner while waiting
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <div className="auth-container">
@@ -271,9 +297,14 @@ export default function Auth() {
                   onChange={handlePasswordChange}
                   maxLength={51}
                 />
-                <button className="button-auth" onClick={submitAuth}>
+                <button className="button-auth" onClick={isSignIn ? submitAuth : handleSignupClick}>
                   {isSignIn ? 'Sign In' : 'Sign Up'}
                 </button>
+                <AgreementModal
+                  isOpen={isAgreementOpen}
+                  onAgree={handleAgree}
+                  onDecline={handleDecline}
+                />
               </div>
             </div>
           </div>
