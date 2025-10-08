@@ -209,7 +209,7 @@ export default function MainPostDetail() {
                     style={{ position: 'relative', width: '100%' }}
                   >
                     <div
-                      className="image-placeholder"
+                      className="place-holder"
                       style={{
                         width: '100%',
                         paddingBottom: '100%',
