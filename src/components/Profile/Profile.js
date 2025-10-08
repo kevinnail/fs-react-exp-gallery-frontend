@@ -78,7 +78,7 @@ export default function Profile() {
         twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
 
         const recentWork = posts
-          .filter((post) => new Date(post.created_at) >= twoWeeksAgo)
+          .filter((post) => new Date(post.created_at) >= twoWeeksAgo && post.sold === false)
           .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
         setRecentPosts(recentWork);
