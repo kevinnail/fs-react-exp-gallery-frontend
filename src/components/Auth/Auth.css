@@ -309,7 +309,7 @@
   animation:
     openSesame 40s infinite,
     changeOpacity 40s infinite;
-  background-image: url('/public/bubbler.jpeg');
+  /* background-image: url('/public/bubbler.jpeg'); */
   z-index: 1000;
 }
 
@@ -409,25 +409,25 @@
 
 .right {
   transform: rotateY(90deg) translateZ(75px);
-  background-image: url('/public/knaildriver.jpeg');
+  /* background-image: url('/public/knaildriver.jpeg'); */
   z-index: 1000;
 }
 
 .left {
   transform: rotateY(-90deg) translateZ(75px);
-  background-image: url('/public/7.jpg');
+  /* background-image: url('/public/7.jpg'); */
   z-index: 1000;
 }
 
 .top {
   transform: rotateX(90deg) translateZ(75px);
-  background-image: url('/public/6.jpg');
+  /* background-image: url('/public/6.jpg'); */
   z-index: 1000;
 }
 
 .bottom {
   transform: rotateX(-90deg) translateZ(75px);
-  background-image: url('/public/sherlock.jpeg');
+  /* background-image: url('/public/sherlock.jpeg'); */
   z-index: 1000;
 }
 

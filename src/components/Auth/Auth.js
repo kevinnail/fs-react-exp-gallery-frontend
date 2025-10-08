@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink, useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import './Auth.css';
@@ -8,6 +8,7 @@ import { getUser } from '../../services/fetch-utils.js';
 import Loading from '../Loading/Loading.js';
 import { toast } from 'react-toastify';
 import AgreementModal from './AgreementModal.js';
+import { fetchGalleryPosts } from '../../services/fetch-utils.js';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -20,6 +21,22 @@ export default function Auth() {
   const navigate = useNavigate();
   const [isAgreementOpen, setAgreementOpen] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [recentImages, setRecentImages] = useState([]);
+
+  useEffect(() => {
+    const loadRecentPosts = async () => {
+      try {
+        const posts = await fetchGalleryPosts();
+        if (Array.isArray(posts)) {
+          const sorted = posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          setRecentImages(sorted);
+        }
+      } catch (err) {
+        console.error('Error loading posts:', err);
+      }
+    };
+    loadRecentPosts();
+  }, []);
 
   // Validation functions
   const validateEmailLength = (email) => {
@@ -150,89 +167,70 @@ export default function Auth() {
   if (loading) {
     return <Loading />;
   }
+  console.log('recentImages', recentImages);
 
   return (
     <>
       <div className="auth-container">
-        {}
         <div className="menu-search-container">
           <Menu handleClick={handleClick} />
         </div>
-        {}
+
         <div className="scene">
           <div className="cube">
-            <div className="face front">
-              <Link className="hidden-text-link" to="/">
-                {' '}
-                {'This is a link to the gallery page if you are clever enough you might find it! '}
-              </Link>
-            </div>
-            <div className="face back">
-              {' '}
-              <Link className="hidden-text-link" to="/">
-                {'This is a link to the gallery page if you are clever enough you might find it! '}
-              </Link>
-            </div>
-            <div className="face right">
-              {' '}
-              <Link className="hidden-text-link" to="/">
-                {'This is a link to the gallery page if you are clever enough you might find it! '}
-              </Link>
-            </div>
-            <div className="face left">
-              {' '}
-              <Link className="hidden-text-link" to="/">
-                {'This is a link to the gallery page if you are clever enough you might find it! '}
-              </Link>
-            </div>
-            <div className="face top">
-              {' '}
-              <Link className="hidden-text-link" to="/">
-                {'This is a link to the gallery page if you are clever enough you might find it! '}
-              </Link>
-            </div>
-            <div className="face bottom">
-              {' '}
-              <Link className="hidden-text-link" to="/">
-                {'This is a link to the gallery page if you are clever enough you might find it! '}
-              </Link>
-            </div>
+            {['front', 'back', 'right', 'left', 'top', 'bottom'].map((pos, idx) => {
+              const post = recentImages[idx];
+              const img = post?.image_url || post?.imageUrl || post?.image;
+              const href = post?.id ? `/post/${post.id}` : '/';
+              return (
+                <div
+                  key={post?.id ?? pos}
+                  className={`face ${pos}`}
+                  style={{
+                    backgroundImage: `url(${img})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                >
+                  <Link className="hidden-text-link" to={href}>
+                    {
+                      'This is a link to the gallery page if you are clever enough you might find it! '
+                    }
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </div>
+
         <div className="scene2">
           <div className="cube2">
             <div className="face2 front2">
-              {' '}
               <Link className="hidden-text-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>
             <div className="face2 back2">
-              {' '}
               <Link className="hidden-text-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>
             <div className="face2 right2">
-              {' '}
               <Link className="hidden-text-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>
             <div className="face2 left2">
-              {' '}
               <Link className="hidden-text-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>
             <div className="face2 top2">
-              {' '}
               <Link className="hidden-text-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>
             <div className="face2 bottom2">
-              {' '}
               <Link className="hidden-text-link" to="/about-me">
                 {'About me '}
               </Link>
@@ -240,9 +238,6 @@ export default function Auth() {
           </div>
         </div>
 
-        {}
-        {}
-        {}
         <div className={`auth-section-container ${isFormRetracted ? 'retracted' : ''}`}>
           <div className="auth-content-wrapper">
             <div className="welcome-section">
