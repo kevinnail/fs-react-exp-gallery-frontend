@@ -145,6 +145,7 @@ export default function MainPostDetail() {
               <div className="price-details">
                 {postDetail?.sold ? (
                   <>
+                    <span style={{ marginRight: '1rem' }}>SOLD</span>
                     <span
                       style={{
                         textDecoration: 'line-through',
@@ -191,6 +192,7 @@ export default function MainPostDetail() {
                 style={{
                   position: 'absolute',
                   alignSelf: 'flex-start',
+                  zIndex: '5000',
                 }}
               >
                 {postDetail?.sold ? <img src="/sold.png" /> : ''}
