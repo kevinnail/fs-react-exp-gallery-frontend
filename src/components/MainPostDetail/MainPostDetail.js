@@ -102,6 +102,27 @@ export default function MainPostDetail() {
         <div className="menu-search-container">
           <Menu handleClick={handleClick} />
         </div>{' '}
+        <section className="message-button-wrapper">
+          <button
+            className="message-about-piece-button"
+            onClick={() =>
+              navigate('/messages', {
+                state: {
+                  pieceMetadata: {
+                    id: postDetail?.id,
+                    title: postDetail?.title,
+                    category: postDetail?.category,
+                    price: postDetail?.price,
+                    imageUrl: imageUrls?.[0],
+                    url: window.location.href,
+                  },
+                },
+              })
+            }
+          >
+            💬 Message Kevin about this piece
+          </button>
+        </section>
         <div className="detail-top-container">
           <div className="post-detail-div">
             <section className="title-container">
@@ -283,27 +304,7 @@ export default function MainPostDetail() {
                 </div>
               </a>
             </section>
-            <section className="message-button-wrapper">
-              <button
-                className="message-about-piece-button"
-                onClick={() =>
-                  navigate('/messages', {
-                    state: {
-                      pieceMetadata: {
-                        id: postDetail?.id,
-                        title: postDetail?.title,
-                        category: postDetail?.category,
-                        price: postDetail?.price,
-                        imageUrl: imageUrls?.[0],
-                        url: window.location.href,
-                      },
-                    },
-                  })
-                }
-              >
-                💬 Message Kevin about this piece
-              </button>
-            </section>
+
             <section className="detail-contact-wrapper">
               <span className="detail-contact-text">Contact: </span>
               <div className="detail-contact-img-link-wrapper">
