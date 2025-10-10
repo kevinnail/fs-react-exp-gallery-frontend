@@ -24,6 +24,9 @@ export default function Menu({ handleClick, closeMenu }) {
 
   return (
     <>
+      <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
+        Gallery
+      </NavLink>
       {!user && (
         <>
           <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
@@ -40,9 +43,16 @@ export default function Menu({ handleClick, closeMenu }) {
 
       {user && (
         <>
-          <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
-            Gallery
-          </NavLink>
+          {isAdmin && (
+            <NavLink
+              className="mobile-new-link"
+              to="/admin"
+              title="Dashboard"
+              onClick={handleLinkClick}
+            >
+              Dashboard
+            </NavLink>
+          )}
 
           {!isAdmin && (
             <>
@@ -57,18 +67,9 @@ export default function Menu({ handleClick, closeMenu }) {
               </NavLink>
             </>
           )}
-
           {isAdmin && (
             <>
               {' '}
-              {/* <NavLink
-                className="mobile-new-link"
-                to="/admin"
-                title="Dashboard"
-                onClick={handleLinkClick}
-              >
-                Dashboard
-              </NavLink> */}
               <NavLink
                 className="mobile-new-link"
                 to="/admin/inbox"
