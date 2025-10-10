@@ -31,8 +31,24 @@ header {
   font-size: 0.7rem;
 }
 
-/* style for Link component */
 .new-link {
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  padding: 5px 4px 5px 4px;
+  background-image: linear-gradient(315deg, black, grey);
+  font-size: 1rem;
+  transition: 2000ms;
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  position: relative;
+}
+
+.mobile-new-link {
   color: white;
   text-decoration: none;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
@@ -43,8 +59,6 @@ header {
   display: flex;
   transition: 2000ms;
   width: 120px;
-  justify-content: center;
-  display: flex;
   justify-content: center;
   align-items: center;
   height: 40px;
@@ -129,29 +143,27 @@ header {
 }
 
 .menu-div {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  padding: 0 0px;
-  background-color: #000000;
-  /* background-image: linear-gradient(315deg, #838383 0%, #2f00ffa1 74%); */
-  z-index: 10;
-  height: 0px;
-  overflow: hidden;
-  transition: 250ms ease-in-out;
+  z-index: 3000;
+  display: grid;
+  gap: 0.25rem;
   position: absolute;
   top: 90px;
-  z-index: 10;
-  min-width: 340px;
+  right: 0px;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1rem;
+  background-color: #000000;
+  transition: 250ms ease-in-out;
+  transform: opacity(0%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .menu-div.open {
-  height: 100px;
-  position: absolute;
-  transform: translateY(-100%);
-  border-bottom: 2px solid #2f00ff;
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+  border-bottom: 2px solid #474747;
 }
 
 .menu-icon,
@@ -164,6 +176,7 @@ header {
   transition: 200ms ease-in;
   box-shadow: 0 0 0 0.2rem rgba(50, 50, 50, 0.5);
 }
+
 .menu-no-user {
   display: block;
   width: 40px;
@@ -244,12 +257,9 @@ header {
     /* justify-content: center; */
     /* width: 118px; */
   }
-  .menu-div {
-    display: none;
-  }
 
   .menu-div-adapt {
-    display: none;
+    /* display: none; */
   }
 
   .new-link:active,

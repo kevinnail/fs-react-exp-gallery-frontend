@@ -47,9 +47,6 @@ export default function MainGallery() {
     <Loading />
   ) : (
     <>
-      <Box className="menu-search-container">
-        <Menu handleClick={handleClick} />
-      </Box>
       <Box className="up-top-msg" sx={{ width: '100%' }}>
         <span className="site-msg-span">{message}</span>
         <Box className="contact-wrapper">
