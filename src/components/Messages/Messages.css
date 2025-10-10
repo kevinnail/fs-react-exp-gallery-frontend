@@ -24,6 +24,7 @@
   max-width: 800px;
   width: 100%;
   backdrop-filter: blur(5px);
+  margin-top: 0.5rem;
 }
 
 .messages-header h1 {

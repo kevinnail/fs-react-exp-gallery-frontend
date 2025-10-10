@@ -4,7 +4,6 @@ import { useUserStore } from '../../stores/userStore.js';
 import PostCard from '../PostCard/PostCard.js';
 import './Admin.css';
 import { signOut } from '../../services/auth.js';
-import Menu from '../Menu/Menu.js';
 import Loading from '../Loading/Loading.js';
 import Inventory from '../Inventory/Inventory.js';
 import { Link } from 'react-router-dom';
@@ -160,27 +159,9 @@ export default function Admin() {
     <>
       <div className="admin-container">
         <aside className="admin-panel">
-          <section className="admin-panel-section">
-            <div>
-              <Menu handleClick={handleClick} />
-            </div>
-            <div className="admin-inbox-button">
-              <Link to="/admin/inbox" className="new-link">
-                Inbox
-              </Link>
-              <Link to="/admin/users" className="new-link">
-                Users
-              </Link>
-            </div>
-          </section>
+          <section className="admin-panel-section"></section>
         </aside>
-        {/* Mobile-only quick access to Inbox */}
-        <Link to="/admin/inbox" className="floating-inbox-btn">
-          Inbox
-        </Link>
-        <Link to="/admin/users" className="floating-users-btn">
-          Users
-        </Link>
+
         <div className="list-container">
           {posts.length === 0 ? (
             <div className="loading">

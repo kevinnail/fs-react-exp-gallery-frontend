@@ -316,10 +316,6 @@ export default function Messages() {
 
   return (
     <div className="messages-container">
-      <div className="menu-search-container">
-        <Menu handleClick={handleClick} />
-      </div>
-
       <div className="messages-content">
         <div className="messages-header">
           <h1>Contact Kevin</h1>

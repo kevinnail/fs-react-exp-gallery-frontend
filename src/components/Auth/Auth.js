@@ -200,10 +200,6 @@ export default function Auth() {
   return (
     <>
       <div className="auth-container">
-        <div className="menu-search-container">
-          <Menu handleClick={handleClick} />
-        </div>
-
         <div className="scene">
           <div className="cube">
             {['front', 'back', 'right', 'left', 'top', 'bottom'].map((pos, idx) => {

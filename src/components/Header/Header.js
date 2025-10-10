@@ -7,6 +7,7 @@ import '../CoolSearchBox/CoolSearchBox.css';
 import Menu from '../Menu/Menu.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import { useNavigate } from 'react-router-dom';
+
 export default function Header() {
   const { user, signout, isAdmin } = useUserStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,6 +30,10 @@ export default function Header() {
     navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <>
       <header>
@@ -44,16 +49,14 @@ export default function Header() {
             onClick={handleMenuClick}
           />
         </div>
-        {/* {!user && <img className="logo" src="../black-sq.jpg" />} */}
       </header>
 
       <div
         className={`menu-icon-adapt menu-div ${isMenuOpen ? ' open ' : ''}${
           location.pathname === '/admin' ? ' menu-div-adapt ' : ''
         }`}
-        onClick={handleMenuClick}
       >
-        <Menu handleClick={handleClick} />
+        <Menu handleClick={handleClick} closeMenu={closeMenu} />
       </div>
       <CoolSearchBox onSearch={handleSearch} />
     </>
