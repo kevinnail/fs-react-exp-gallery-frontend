@@ -22,7 +22,7 @@ import { ThemeProvider } from '@emotion/react';
 import { ToastContainer } from 'react-toastify';
 import websocketService from './services/websocket.js';
 import NotFound from './components/NotFound/NotFound.js';
-
+import UserDashboard from './components/Admin/Users/UsersDashboard.js';
 const mainTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -110,6 +110,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminInbox />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute>
+                  <UserDashboard />
                 </ProtectedRoute>
               }
             />
