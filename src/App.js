@@ -23,6 +23,7 @@ import { ToastContainer } from 'react-toastify';
 import websocketService from './services/websocket.js';
 import NotFound from './components/NotFound/NotFound.js';
 import UserDashboard from './components/Admin/Users/UsersDashboard.js';
+import AuctionList from './components/AuctionList/AuctionList.js';
 const mainTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -142,6 +143,14 @@ function App() {
               element={
                 <UserRoute>
                   <Messages />
+                </UserRoute>
+              }
+            />
+            <Route
+              path="/auctions"
+              element={
+                <UserRoute>
+                  <AuctionList />
                 </UserRoute>
               }
             />
