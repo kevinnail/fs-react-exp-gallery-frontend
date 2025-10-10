@@ -27,6 +27,34 @@ export async function getUser() {
   }
 }
 
+export async function getAllUsers() {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/users`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (resp.ok) {
+      const users = await resp.json();
+
+      return users;
+    } else if (resp.status === 401 || resp.status === 403) {
+      return null;
+    } else {
+      throw new Error('An error occurred while fetching user');
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+//TODO is this worth having/ using?
+
 export async function getAdminProfile() {
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/profile/admin-profile`, {

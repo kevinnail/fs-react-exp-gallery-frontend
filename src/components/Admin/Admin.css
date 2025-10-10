@@ -136,7 +136,8 @@
 }
 
 /* Floating inbox button for small screens */
-.floating-inbox-btn {
+.floating-inbox-btn,
+.floating-users-btn {
   position: fixed;
   right: 12px;
   bottom: 12px;
@@ -150,7 +151,10 @@
   border: 1px solid #2f44ff;
   font-size: 0.95rem;
 }
-
+.floating-users-btn {
+  right: 12px;
+  bottom: 60px;
+}
 @media (min-width: 1024px) {
   .floating-inbox-btn {
     display: none;

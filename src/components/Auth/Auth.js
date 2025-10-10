@@ -23,7 +23,7 @@ export default function Auth() {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const [currentStart, setCurrentStart] = useState(0);
-  const { posts, galleryLoading, setGalleryLoading } = useGalleryPosts();
+  const { posts, galleryLoading } = useGalleryPosts();
   const [recentImages, setRecentImages] = useState([]);
 
   useEffect(() => {
@@ -39,6 +39,7 @@ export default function Auth() {
     };
     loadRecentPosts();
   }, []);
+
   const sortedPosts = useMemo(() => {
     if (!Array.isArray(posts)) return [];
     return [...posts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));

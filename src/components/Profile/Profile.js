@@ -21,9 +21,13 @@ export default function Profile() {
   const newUserMessage = (
     <>
       <p>
-        Welcome to your profile page! (You can add your name and an avatar image using the edit
-        button above.) If you have questions about work or a problem with your order, feel free to
-        use the secure/ encrypted in house{' '}
+        You can add your name or whatever you want me to call you, and an avatar image, using the
+        edit button above.
+      </p>
+
+      <p>
+        If you have questions about work or a problem with your order, feel free to use the private/
+        secure/ encrypted in house{' '}
         <Link className="message-link" to="/messages">
           messaging
         </Link>
@@ -142,9 +146,9 @@ export default function Profile() {
             <h1>
               {profile?.firstName || profile?.lastName
                 ? `${profile.firstName || ''} ${profile.lastName || ''}`
-                : user?.user?.email}
+                : ''}
             </h1>
-            <p className="user-email">{user?.user?.email}</p>
+            <p className="user-email">{user?.email}</p>
           </div>
         </div>
 

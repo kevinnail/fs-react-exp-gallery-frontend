@@ -168,12 +168,18 @@ export default function Admin() {
               <Link to="/admin/inbox" className="new-link">
                 Inbox
               </Link>
+              <Link to="/admin/users" className="new-link">
+                Users
+              </Link>
             </div>
           </section>
         </aside>
         {/* Mobile-only quick access to Inbox */}
         <Link to="/admin/inbox" className="floating-inbox-btn">
           Inbox
+        </Link>
+        <Link to="/admin/users" className="floating-users-btn">
+          Users
         </Link>
         <div className="list-container">
           {posts.length === 0 ? (
