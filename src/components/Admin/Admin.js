@@ -161,13 +161,7 @@ export default function Admin() {
         <aside className="admin-panel">
           <section className="admin-panel-section"></section>
         </aside>
-        {/* Mobile-only quick access to Inbox */}
-        <Link to="/admin/inbox" className="floating-inbox-btn">
-          Inbox
-        </Link>
-        <Link to="/admin/users" className="floating-users-btn">
-          Users
-        </Link>
+
         <div className="list-container">
           {posts.length === 0 ? (
             <div className="loading">
