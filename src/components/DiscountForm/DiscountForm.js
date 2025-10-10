@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import Menu from '../Menu/Menu.js';
+import { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import './DiscountForm.css';
@@ -69,13 +68,6 @@ export default function DiscountForm() {
 
   return (
     <div className="form-wrapper">
-      <aside className="form-admin-panel">
-        <section className="form-admin-panel-section">
-          <div>
-            <Menu handleClick={handleClick} />
-          </div>
-        </section>
-      </aside>
       <form className="discount-form" onSubmit={handleSubmit}>
         <h2 className="form-title">
           {action === 'apply' ? 'Enter Discount Percentage' : 'Undo Discount'}

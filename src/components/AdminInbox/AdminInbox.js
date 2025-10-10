@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import {
@@ -292,10 +292,6 @@ export default function AdminInbox() {
 
   return (
     <div className="admin-inbox-container">
-      <div className="menu-search-container">
-        <Menu handleClick={handleClick} />
-      </div>
-
       <div className="admin-inbox-content">
         <div className="inbox-header">
           <h1>Message Inbox</h1>

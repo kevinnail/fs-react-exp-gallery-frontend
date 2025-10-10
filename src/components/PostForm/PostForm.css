@@ -126,7 +126,7 @@ option {
 }
 
 .loading {
-  animation: scaleAnimation 6s infinite; /* 1s duration and loop infinitely */
+  animation: scaleAnimation 6s infinite;
   width: 30%;
   min-width: 200px;
   margin: auto;
@@ -197,7 +197,7 @@ option {
 .thumbnails-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem; /* Add space between thumbnail wrappers */
+  gap: 1rem;
   margin-top: 30px;
 }
 
@@ -207,8 +207,8 @@ option {
 }
 
 .thumbnail {
-  width: 100px; /* Change this to the desired thumbnail size */
-  height: 100px; /* Change this to the desired thumbnail size  */
+  width: 100px;
+  height: 100px;
   object-fit: cover;
 }
 
@@ -227,14 +227,12 @@ option {
   min-height: 28px;
   border-radius: 50%;
   border: 3px solid rgb(165, 167, 197);
-  /* border: 3px solid rgb(245, 245, 220); */
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 14px;
   display: block;
-  /* padding-bottom: 1px; */
   padding: 0px;
   box-shadow: inset 0px 0px 0px 2px white;
   box-sizing: border-box;
@@ -274,9 +272,9 @@ option {
   height: 1px;
   width: 1px;
   overflow: hidden;
-  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px 1px 1px 1px);
   clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap; /* added line */
+  white-space: nowrap;
 }
 
 .file-upload-label {
@@ -355,6 +353,7 @@ mobile BELOW this point due to min-width parameter
     grid-template-columns: 1fr 1fr;
     padding: 20px;
     justify-items: center;
+    margin-top: 0.5rem;
   }
 
   #form-title-header {

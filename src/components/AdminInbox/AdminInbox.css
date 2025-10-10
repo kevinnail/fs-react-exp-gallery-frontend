@@ -18,6 +18,7 @@
   max-width: 1200px;
   width: 100%;
   backdrop-filter: blur(5px);
+  margin-top: 0.5rem;
 }
 
 .inbox-header h1 {
@@ -302,7 +303,6 @@
   margin-bottom: 0.25rem;
 }
 
-/* align the timestamp text with its bubble side */
 .admin-customer-message .admin-message-time {
   display: block;
   width: 30%;
@@ -412,7 +412,6 @@
   }
 }
 
-/* Connection status styles */
 .connection-status {
   background: rgba(255, 193, 7, 0.2);
   border: 1px solid rgba(255, 193, 7, 0.4);
