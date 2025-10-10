@@ -15,18 +15,29 @@ export default function UsersDashboard() {
   }, []);
 
   return (
-    <div className="list-container">
-      <div className="user-list-header">
-        <span>ID</span>
-        <span>Email</span>
-        <span>Name</span>
-        <span>Image</span>
+    <div className="users-page-container">
+      <div className="users-content">
+        <h1 className="users-title">Registered Users</h1>
+
+        <div className="users-list-wrapper">
+          <div className="user-list-header">
+            <span>Avatar</span>
+            <span>Email</span>
+            <span>First Name</span>
+            <span>Last Name</span>
+            <span>Joined</span>
+            <span>User Since</span>
+          </div>
+
+          <div className="user-list-body">
+            {users.length === 0 ? (
+              <div className="no-users">No users found</div>
+            ) : (
+              users.map((user) => <UserCard key={user.id} user={user} />)
+            )}
+          </div>
+        </div>
       </div>
-      {users.length === 0 ? (
-        <div className="no-users">No users found</div>
-      ) : (
-        users.map((user) => <UserCard key={user.id} user={user} />)
-      )}
     </div>
   );
 }

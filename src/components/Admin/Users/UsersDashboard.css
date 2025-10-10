@@ -1,0 +1,142 @@
+.users-page-container {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+}
+
+.users-content {
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 15px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  width: 95%;
+  max-width: 1200px;
+  margin-bottom: 3rem;
+}
+
+.users-title {
+  color: white;
+  text-align: center;
+  font-weight: 300;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.users-list-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-list-header {
+  display: grid;
+  grid-template-columns: 80px 2fr 1fr 1fr 1.2fr 1fr;
+  background: linear-gradient(90deg, rgba(15, 15, 15, 0.95), rgba(30, 30, 30, 0.95));
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 15px;
+}
+
+.user-list-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-card {
+  display: grid;
+  grid-template-columns: 80px 2fr 1fr 1fr 1.2fr 1fr;
+  align-items: center;
+  justify-items: start;
+  padding: 10px 20px;
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(20, 20, 20, 0.7);
+  transition:
+    background 0.2s ease-in-out,
+    transform 0.1s ease-in-out;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 15px;
+}
+
+.user-card:hover {
+  background: rgba(45, 45, 45, 0.9);
+  transform: translateY(-1px);
+}
+
+.user-image img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+}
+
+.user-image-placeholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+  background-size: 200% 100%;
+  animation: loading-pulse 1.5s infinite;
+}
+
+.user-name {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.user-email {
+  font-family: monospace;
+  color: rgba(220, 220, 220, 0.9);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-created,
+.user-time-since {
+  color: rgba(200, 200, 200, 0.85);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.no-users {
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  padding: 30px;
+  font-style: italic;
+}
+
+@keyframes loading-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-list-header,
+  .user-card {
+    grid-template-columns: 1fr;
+    grid-row-gap: 8px;
+    font-size: 0.9rem;
+    padding: 12px;
+  }
+}
