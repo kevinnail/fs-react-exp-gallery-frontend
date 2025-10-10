@@ -103,3 +103,104 @@
   background: linear-gradient(135deg, #0056b3, #004085);
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
+
+/* 
+
+^ Responsive design below ========================================
+
+*/
+
+/* --- Responsive adjustments --- */
+@media (max-width: 1024px) {
+  .auction-card {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .auction-image-section,
+  .auction-info-section {
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .main-image {
+    max-height: 400px;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 768px) {
+  .auction-card {
+    width: 100%;
+    margin: 0 auto;
+    flex-direction: column;
+  }
+
+  .auction-image-section,
+  .auction-info-section {
+    width: 100%;
+    padding: 0.75rem;
+  }
+
+  .thumbnail-row {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .thumbnail {
+    width: 40px;
+    height: 40px;
+  }
+
+  .auction-info-section h2 {
+    font-size: 1.25rem;
+  }
+
+  .auction-description {
+    font-size: 0.9rem;
+  }
+
+  .auction-details p {
+    font-size: 0.9rem;
+  }
+
+  .auction-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .bid-btn,
+  .buy-btn {
+    width: 100%;
+    padding: 0.6rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auction-card {
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .main-image {
+    width: 100%;
+    max-height: 300px;
+  }
+
+  .auction-info-section {
+    padding: 0.5rem;
+  }
+
+  .auction-info-section h2 {
+    font-size: 1rem;
+  }
+
+  .auction-description {
+    font-size: 0.85rem;
+  }
+}
+
+/* Allow scrolling if content overflows viewport */
+body {
+  overflow-x: auto;
+}
