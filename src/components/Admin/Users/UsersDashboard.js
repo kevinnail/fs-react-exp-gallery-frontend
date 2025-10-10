@@ -23,8 +23,7 @@ export default function UsersDashboard() {
           <div className="user-list-header">
             <span>Avatar</span>
             <span>Email</span>
-            <span>First Name</span>
-            <span>Last Name</span>
+            <span>Name</span>
             <span>Joined</span>
             <span>User Since</span>
           </div>
