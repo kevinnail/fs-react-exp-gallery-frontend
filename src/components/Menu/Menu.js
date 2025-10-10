@@ -29,9 +29,6 @@ export default function Menu({ handleClick, closeMenu }) {
       </NavLink>
       {!user && (
         <>
-          <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
-            Gallery
-          </NavLink>
           <NavLink className="mobile-new-link" to="/about-me" onClick={handleLinkClick}>
             About
           </NavLink>
