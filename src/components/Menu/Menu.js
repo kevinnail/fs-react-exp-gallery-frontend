@@ -4,7 +4,7 @@ import { downloadInventoryCSV } from '../../services/fetch-utils.js';
 import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
 import { useLocation } from 'react-router-dom';
 
-export default function Menu({ handleClick }) {
+export default function Menu({ handleClick, closeMenu }) {
   const { user, isAdmin } = useUserStore();
   const { unreadMessageCount } = useUnreadMessages();
   const location = useLocation();
@@ -13,37 +13,43 @@ export default function Menu({ handleClick }) {
     downloadInventoryCSV();
   };
 
+  const handleSignOut = async () => {
+    await handleClick();
+    closeMenu();
+  };
+
+  const handleLinkClick = () => {
+    closeMenu();
+  };
+
   return (
     <>
-      {/* Display these links when the user is not signed in */}
       {!user && (
         <>
-          {' '}
-          <NavLink className="new-link" to="/" title="Gallery">
+          <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
             Gallery
           </NavLink>
-          <NavLink className="new-link" to="/about-me">
+          <NavLink className="mobile-new-link" to="/about-me" onClick={handleLinkClick}>
             About
-          </NavLink>{' '}
-          <NavLink className="new-link" to="/auth/sign-in">
+          </NavLink>
+          <NavLink className="mobile-new-link" to="/auth/sign-in" onClick={handleLinkClick}>
             Sign In
           </NavLink>
         </>
       )}
 
-      {/* Display these links when the user is signed in */}
       {user && (
         <>
-          <NavLink className="new-link" to="/" title="Gallery">
+          <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
             Gallery
           </NavLink>
 
           {!isAdmin && (
             <>
-              <NavLink className="new-link" to="/profile">
+              <NavLink className="mobile-new-link" to="/profile" onClick={handleLinkClick}>
                 Profile
               </NavLink>
-              <NavLink className="new-link" to="/messages">
+              <NavLink className="mobile-new-link" to="/messages" onClick={handleLinkClick}>
                 Messages
                 {unreadMessageCount > 0 && location.pathname !== '/messages' && (
                   <span className="unread-badge">{unreadMessageCount}</span>
@@ -52,31 +58,73 @@ export default function Menu({ handleClick }) {
             </>
           )}
 
-          <NavLink className="new-link" to="/about-me">
-            About
-          </NavLink>
           {isAdmin && (
             <>
               {' '}
-              <NavLink className="new-link" to="/admin/new" title="Make new post">
+              {/* <NavLink
+                className="mobile-new-link"
+                to="/admin"
+                title="Dashboard"
+                onClick={handleLinkClick}
+              >
+                Dashboard
+              </NavLink> */}
+              <NavLink
+                className="mobile-new-link"
+                to="/admin/inbox"
+                title="Inbox"
+                onClick={handleLinkClick}
+              >
+                Inbox
+              </NavLink>
+              <NavLink
+                className="mobile-new-link"
+                to="/admin/new"
+                title="Make new post"
+                onClick={handleLinkClick}
+              >
                 New
               </NavLink>
-              <NavLink className="new-link" to="/admin/discounts" title="Make new post">
+              <NavLink
+                className="mobile-new-link"
+                to="/admin/discounts"
+                title="Post a new sale"
+                onClick={handleLinkClick}
+              >
                 Sale!
               </NavLink>
               <button
-                className="new-link download-button"
+                className="mobile-new-link download-button"
                 title="Download Inventory CSV"
-                onClick={handleDownloadCSV}
+                onClick={() => {
+                  handleDownloadCSV();
+                  closeMenu();
+                }}
               >
                 Inventory
               </button>
+              <NavLink
+                className="mobile-new-link"
+                to="/admin/users"
+                title="Users Dashboard"
+                onClick={handleLinkClick}
+              >
+                Users
+              </NavLink>
             </>
           )}
+          <NavLink
+            className="mobile-new-link"
+            to="/about-me"
+            title="About Kevin"
+            onClick={handleLinkClick}
+          >
+            About
+          </NavLink>
           <button
             title="Sign Out"
             className="signout-button signout-button-adapt"
-            onClick={handleClick}
+            onClick={handleSignOut}
           >
             Sign Out
           </button>
