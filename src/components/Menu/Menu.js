@@ -53,6 +53,9 @@ export default function Menu({ handleClick, closeMenu }) {
 
           {!isAdmin && (
             <>
+              <NavLink className="mobile-new-link" to="/auctions" onClick={handleLinkClick}>
+                Auctions
+              </NavLink>
               <NavLink className="mobile-new-link" to="/profile" onClick={handleLinkClick}>
                 Profile
               </NavLink>
