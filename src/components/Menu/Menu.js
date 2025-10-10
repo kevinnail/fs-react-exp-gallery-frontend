@@ -23,10 +23,15 @@ export default function Menu({ handleClick, closeMenu }) {
   };
 
   return (
-    <>
-      <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
-        Gallery
-      </NavLink>
+    <div>
+      <>
+        <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
+          Gallery
+        </NavLink>{' '}
+        <NavLink className="mobile-new-link" to="/auctions" onClick={handleLinkClick}>
+          Auctions
+        </NavLink>
+      </>
       {!user && (
         <>
           <NavLink className="mobile-new-link" to="/about-me" onClick={handleLinkClick}>
@@ -53,9 +58,6 @@ export default function Menu({ handleClick, closeMenu }) {
 
           {!isAdmin && (
             <>
-              <NavLink className="mobile-new-link" to="/auctions" onClick={handleLinkClick}>
-                Auctions
-              </NavLink>
               <NavLink className="mobile-new-link" to="/profile" onClick={handleLinkClick}>
                 Profile
               </NavLink>
@@ -114,6 +116,7 @@ export default function Menu({ handleClick, closeMenu }) {
               </NavLink>
             </>
           )}
+
           <NavLink
             className="mobile-new-link"
             to="/about-me"
@@ -131,6 +134,6 @@ export default function Menu({ handleClick, closeMenu }) {
           </button>
         </>
       )}
-    </>
+    </div>
   );
 }

@@ -6,7 +6,6 @@ import './Admin.css';
 import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
 import Inventory from '../Inventory/Inventory.js';
-import { Link } from 'react-router-dom';
 import {
   Accordion,
   AccordionDetails,
