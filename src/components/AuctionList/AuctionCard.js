@@ -1,8 +1,12 @@
+import { useMediaQuery, useTheme } from '@mui/material';
 import { useState } from 'react';
 
 export default function AuctionCard({ auction }) {
-  const [selectedImage, setSelectedImage] = useState(auction.image_urls[0]);
+  const [selectedImage, setSelectedImage] = useState(auction.imageUrls[0]);
   const handleImageClick = (url) => setSelectedImage(url);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <div className="auction-card">
@@ -11,10 +15,10 @@ export default function AuctionCard({ auction }) {
           className="main-image"
           src={selectedImage}
           alt={auction.title}
-          onClick={() => window.open(selectedImage, '_blank')}
+          onClick={() => (!isMobile ? window.open(selectedImage, '_blank') : '')}
         />
         <div className="thumbnail-row">
-          {auction.image_urls.map((url) => (
+          {auction.imageUrls.map((url) => (
             <img
               key={url}
               src={url}
@@ -32,11 +36,13 @@ export default function AuctionCard({ auction }) {
 
         <div className="auction-details">
           <p>
-            <strong>Current Bid:</strong> ${auction.current_bid}
+            <strong>Current Bid:</strong> ${auction.currentBid}
           </p>
+
           <p>
-            <strong>Buy Now:</strong> ${auction.buy_now_price || '—'}
+            <strong>Buy Now:</strong> ${auction.buyNowPrice || '—'}
           </p>
+
           <p>
             <strong>Ends:</strong> {new Date(auction.end_time).toLocaleString()}
           </p>
