@@ -1,25 +1,17 @@
 import { useEffect, useState } from 'react';
 import './AuctionList.css';
 import AuctionCard from './AuctionCard.js';
+import { getAuctions } from '../../services/fetch-auctions.js';
 
 export default function AuctionList() {
   const [auctions, setAuctions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const BASE_URL = process.env.REACT_APP_HOME_URL;
 
   useEffect(() => {
-    console.log('BASE_URL', BASE_URL);
     const fetchAuctions = async () => {
       try {
-        const res = await fetch(`${BASE_URL}/api/v1/auctions`, {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-        const data = await res.json();
+        setLoading(true);
+        const data = await getAuctions();
         console.log('data', data);
 
         setAuctions(data);
