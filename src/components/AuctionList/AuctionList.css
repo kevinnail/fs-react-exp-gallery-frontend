@@ -16,7 +16,7 @@
 }
 
 .auction-card:hover {
-  transform: translateY(-3px);
+  /* transform: translateY(-3px); */
 }
 
 .auction-image-section {
