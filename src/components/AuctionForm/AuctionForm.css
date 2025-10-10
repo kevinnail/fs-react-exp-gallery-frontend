@@ -1,0 +1,15 @@
+#form-title-header {
+  color: #ffd700;
+}
+
+.new-post-form {
+  border: 1px solid #ffd70080;
+}
+
+.file-upload-label {
+  border-color: #ffd700;
+}
+
+.submit-btn {
+  background-color: rgba(255, 215, 0, 0.5);
+}
