@@ -42,7 +42,7 @@ export default function Profile() {
 
   const existingUserMessage = (
     <>
-      <p>
+      <div>
         Thanks for setting up an account! You can now message me directly via Messages in 2 ways:
         <ul>
           <li>Message me directly via Messages up in menu</li>
@@ -50,7 +50,7 @@ export default function Profile() {
             Message me from the details page of a piece and Messages will automatically link it.
           </li>
         </ul>
-      </p>
+      </div>
       <p>
         I&apos;ll be adding features asap: comments on posts, auctions, and we&apos;ll see what
         else! Stay tuned, thanks for being here.

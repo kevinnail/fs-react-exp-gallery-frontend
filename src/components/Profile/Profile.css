@@ -37,7 +37,8 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.profile-content p {
+.profile-content p,
+div {
   color: rgba(255, 255, 255, 0.9);
   font-size: 1.2rem;
   margin: 0;
