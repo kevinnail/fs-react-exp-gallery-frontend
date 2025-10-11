@@ -134,6 +134,14 @@ function App() {
               }
             />
             <Route
+              path="/admin/auctions/:id"
+              element={
+                <ProtectedRoute>
+                  <AuctionForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/admin"
               element={
                 <ProtectedRoute>
