@@ -60,10 +60,6 @@ export default function AuctionForm() {
     },
   });
 
-  const handleImageDelete = (index) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -134,8 +130,11 @@ export default function AuctionForm() {
   return (
     <Box className="form-wrapper">
       <form className="new-post-form" onSubmit={handleSubmit}>
-        <h1 id="form-title-header">New Auction</h1>
-
+        {id ? (
+          <h1 id="form-title-header">Edit Auction</h1>
+        ) : (
+          <h1 id="form-title-header">New Auction</h1>
+        )}
         <Box className="desk-title-input">
           <span className="labels-form-inputs">Title</span>
           <input
@@ -148,7 +147,6 @@ export default function AuctionForm() {
             onChange={(e) => setTitle(e.target.value)}
           />
         </Box>
-
         <Box className="desk-desc-input">
           <span className="labels-form-inputs">Description</span>
           <textarea
@@ -160,7 +158,6 @@ export default function AuctionForm() {
             onChange={(e) => setDescription(e.target.value)}
           />
         </Box>
-
         <Box className="price-in-form">
           <span>Start Price</span>
           <input
@@ -173,7 +170,6 @@ export default function AuctionForm() {
             onChange={(e) => setStartPrice(e.target.value)}
           />
         </Box>
-
         <Box className="price-in-form">
           <span>Buy Now Price</span>
           <input
@@ -185,7 +181,6 @@ export default function AuctionForm() {
             onChange={(e) => setBuyNowPrice(e.target.value)}
           />
         </Box>
-
         <Box className="price-in-form">
           <span>End Time</span>
           <input
@@ -196,7 +191,6 @@ export default function AuctionForm() {
             onChange={(e) => setEndTime(e.target.value)}
           />
         </Box>
-
         {/* Dropzone */}
         <Box {...getRootProps()} className="dropzone" sx={{ marginTop: '40px' }}>
           <input {...getInputProps()} />
@@ -206,7 +200,6 @@ export default function AuctionForm() {
               : `${files.length} file${files.length > 1 ? 's' : ''} selected`}
           </label>
         </Box>
-
         {/* Unified thumbnails for both existing + new images */}
         {(existingImages.length > 0 || files.length > 0) && (
           <Box className="thumbnails-container">
@@ -238,7 +231,6 @@ export default function AuctionForm() {
             })}
           </Box>
         )}
-
         <Box className="btn-container">
           <button className="submit-btn" type="submit">
             <img className="upload-icon" src="/upload.png" alt="upload" />
