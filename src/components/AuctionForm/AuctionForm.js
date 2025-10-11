@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../Loading/Loading.js';
 import './AuctionForm.css';
-import { createAuction } from '../../services/fetch-auctions.js';
+import { createAuction, getAuctionDetail, updateAuction } from '../../services/fetch-auctions.js';
 import { uploadAuctionImagesToS3 } from '../../services/fetch-auctions.js';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function AuctionForm() {
   const [title, setTitle] = useState('');
@@ -16,11 +17,38 @@ export default function AuctionForm() {
   const [endTime, setEndTime] = useState('');
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { id } = useParams();
+  const [existingAuction, setExistingAuction] = useState({});
+
+  const [existingImages, setExistingImages] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (id) {
+      const auctionData = async () => {
+        const currentAuction = await getAuctionDetail(id);
+        setExistingAuction(currentAuction);
+
+        // Pre-fill controlled inputs
+        setTitle(currentAuction.title || '');
+        setDescription(currentAuction.description || '');
+        setExistingImages(currentAuction.imageUrls || []);
+        setStartPrice(currentAuction.startPrice || '');
+        setBuyNowPrice(currentAuction.buyNowPrice || '');
+        setEndTime(
+          currentAuction.endTime ? new Date(currentAuction.endTime).toISOString().slice(0, 16) : ''
+        );
+      };
+      auctionData();
+    }
+  }, [id]);
 
   const onDrop = (acceptedFiles) => {
-    setFiles(
-      acceptedFiles.map((file) => Object.assign(file, { preview: URL.createObjectURL(file) }))
+    const newFiles = acceptedFiles.map((file) =>
+      Object.assign(file, { preview: URL.createObjectURL(file) })
     );
+    setFiles((prev) => [...prev, ...newFiles]);
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -41,53 +69,60 @@ export default function AuctionForm() {
     setLoading(true);
 
     try {
-      // 1. Upload each selected file to S3
+      // 1. Upload new files to S3 (if any)
       let uploadedUrls = [];
       if (files.length > 0) {
         const uploaded = await uploadAuctionImagesToS3(files);
-        uploadedUrls = uploaded.map((img) => img.secure_url || img.url || img);
+        uploadedUrls = uploaded.map((img) => img.secure_url);
       }
 
-      // 2. Build payload with those URLs
+      // 2. Merge existing + newly uploaded images
+      const finalImageUrls = [...existingImages, ...uploadedUrls];
+
+      // 3. Build payload
       const payload = {
         title,
         description,
         startPrice: parseInt(startPrice),
         buyNowPrice: buyNowPrice ? parseInt(buyNowPrice) : null,
         endTime: new Date(endTime),
-        imageUrls: uploadedUrls,
-        currentBid: 0,
-        startTime: new Date(),
+        imageUrls: finalImageUrls,
+        currentBid: existingAuction?.currentBid || 0,
+        startTime: existingAuction?.startTime || new Date(),
       };
 
-      // 3. Send payload to your server
-      const result = await createAuction(payload);
+      // 4. Send payload — choose create vs. update based on id
+      const result = id ? await updateAuction(id, payload) : await createAuction(payload);
 
-      toast.success('Auction created successfully', {
+      toast.success(id ? 'Auction updated successfully' : 'Auction created successfully', {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
-        toastId: 'auction-create',
-        autoClose: false,
+        toastId: id ? 'auction-update' : 'auction-create',
+        autoClose: true,
       });
 
-      console.log('Auction created:', result);
+      console.log('Auction saved:', result);
 
-      // 4. Reset form after success
-      setTitle('');
-      setDescription('');
-      setStartPrice('');
-      setBuyNowPrice('');
-      setEndTime('');
-      setFiles([]);
+      // 5. Reset form after success (optional for editing)
+      if (!id) {
+        setTitle('');
+        setDescription('');
+        setStartPrice('');
+        setBuyNowPrice('');
+        setEndTime('');
+        setFiles([]);
+        setExistingImages([]);
+      }
+      navigate('/auctions');
     } catch (err) {
       console.error(err);
-      toast.error(`Error creating auction: ${err.message}`, {
+      toast.error(`Error saving auction: ${err.message}`, {
         theme: 'colored',
         draggable: true,
         draggablePercent: 60,
         toastId: 'auction-error',
-        autoClose: false,
+        autoClose: true,
       });
     } finally {
       setLoading(false);
@@ -109,7 +144,7 @@ export default function AuctionForm() {
             placeholder="Enter auction title"
             className="image-input"
             type="text"
-            value={title}
+            value={title || existingAuction.title || ''}
             onChange={(e) => setTitle(e.target.value)}
           />
         </Box>
@@ -172,24 +207,35 @@ export default function AuctionForm() {
           </label>
         </Box>
 
-        {/* Thumbnails */}
-        {files.length > 0 && (
+        {/* Unified thumbnails for both existing + new images */}
+        {(existingImages.length > 0 || files.length > 0) && (
           <Box className="thumbnails-container">
-            {files.map((file, index) => (
-              <Box key={file.name} className="thumbnail-wrapper">
-                <img src={file.preview} alt={`Image ${index + 1}`} className="thumbnail" />
-                <button
-                  type="button"
-                  className="delete-button-form"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleImageDelete(index);
-                  }}
-                >
-                  X
-                </button>
-              </Box>
-            ))}
+            {[...existingImages, ...files].map((item, index) => {
+              const isFile = typeof item !== 'string';
+              const src = isFile ? item.preview : item;
+
+              return (
+                <Box key={isFile ? item.name : src} className="thumbnail-wrapper">
+                  <img src={src} alt={`Image ${index + 1}`} className="thumbnail" />
+                  <button
+                    type="button"
+                    className="delete-button-form"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (isFile) {
+                        setFiles((prev) =>
+                          prev.filter((_, i) => i !== index - existingImages.length)
+                        );
+                      } else {
+                        setExistingImages((prev) => prev.filter((_, i) => i !== index));
+                      }
+                    }}
+                  >
+                    X
+                  </button>
+                </Box>
+              );
+            })}
           </Box>
         )}
 
