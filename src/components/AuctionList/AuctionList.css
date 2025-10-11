@@ -136,7 +136,8 @@
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
-.view-bids-btn {
+.view-bids-btn,
+.add-edit-auctions {
   margin-top: 1rem;
   background: rgba(255, 255, 255, 0.08);
   color: white;
@@ -153,14 +154,18 @@
     transform 0.1s ease;
 }
 
-.view-bids-btn:hover {
+.view-bids-btn:hover,
+.add-edit-auctions:hover,
+.edit-auction-icon-btn:hover {
   background: rgba(0, 0, 0, 0.15);
   color: #fff;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
-.view-bids-btn:active {
+.view-bids-btn:active,
+.add-edit-auctions:active,
+.edit-auction-icon-btn:active {
   transform: scale(0.98);
 }
 

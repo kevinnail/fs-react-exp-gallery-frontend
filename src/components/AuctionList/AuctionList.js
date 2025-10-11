@@ -46,7 +46,9 @@ export default function AuctionList() {
   return (
     <div className="messages-container">
       <div className="messages-content">
-        <button onClick={() => navigate('/admin/auctions')}>Add/ Edit Auctions</button>
+        <button className="add-edit-auctions" onClick={() => navigate('/admin/auctions')}>
+          Add/ Edit Auctions
+        </button>
         <div className="messages-header">
           <h1>Glass Art Auctions</h1>
           <p>Bid, watch, or buy instantly.</p>
