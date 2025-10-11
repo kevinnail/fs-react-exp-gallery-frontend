@@ -1,12 +1,20 @@
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function AuctionCard({ auction }) {
+  const id = auction.id;
+
   const [selectedImage, setSelectedImage] = useState(auction.imageUrls[0]);
   const handleImageClick = (url) => setSelectedImage(url);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate();
+
+  const handleEdit = async () => {
+    navigate(`/admin/auctions/${id}`);
+  };
 
   return (
     <div className="auction-card">
@@ -31,23 +39,35 @@ export default function AuctionCard({ auction }) {
       </div>
 
       <div className="auction-info-section">
+        <div
+          style={{
+            width: '110%',
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}
+        >
+          {' '}
+          <button className="edit-auction-icon-btn" onClick={handleEdit}>
+            ✎
+          </button>{' '}
+        </div>
         <h2>{auction.title}</h2>
         <p className="auction-description">{auction.description}</p>
-
         <div className="auction-details">
           <p>
             <strong>Current Bid:</strong> ${auction.currentBid}
           </p>
-
           <p>
             <strong>Buy Now:</strong> ${auction.buyNowPrice || '—'}
           </p>
-
           <p>
-            <strong>Ends:</strong> {new Date(auction.end_time).toLocaleString()}
+            <strong>Ends:</strong>{' '}
+            {new Date(auction.endTime).toLocaleTimeString('en-US', {
+              hour: 'numeric',
+              minute: 'numeric',
+            })}
           </p>
         </div>
-
         <div className="auction-actions">
           <button className="bid-btn">Place Bid</button>
           {auction.buy_now_price && <button className="buy-btn">Buy Now</button>}

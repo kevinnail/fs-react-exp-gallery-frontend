@@ -19,6 +19,38 @@
   /* transform: translateY(-3px); */
 }
 
+.edit-auction-icon-btn {
+  position: relative;
+  /* top: 12px; */
+  right: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Keep edit button visible and anchored properly */
+.auction-info-section {
+  position: relative; /* anchor for absolute children */
+}
+
+.edit-auction-icon-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5; /* ensure it's above the card content */
+}
+
 .auction-image-section {
   flex: 1;
   padding: 1rem;
