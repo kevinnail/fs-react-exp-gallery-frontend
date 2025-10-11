@@ -6,6 +6,7 @@ import ProfileForm from './ProfileForm.js';
 import './Profile.css';
 import { useProfileStore } from '../../stores/profileStore.js';
 import { Link, useNavigate } from 'react-router-dom';
+import UserAuctions from './UserAuctions.js';
 
 export default function Profile() {
   const { user, signout } = useUserStore();
@@ -154,54 +155,56 @@ export default function Profile() {
           </h2>
           {customerMessage}
         </div>
-
-        <div className="new-work-section">
-          <span className="new-work-msg">
-            <strong>Current Special: </strong>30% off of the new work here!{' '}
-          </span>
-          <div className="new-work-content">
-            {recentPosts.length > 0 ? (
-              recentPosts.map((post) => (
-                <div
-                  key={post.id}
-                  className="recent-post-card"
-                  onClick={() => handleClickNewWork(post.id)}
-                >
-                  {' '}
-                  <div className="recent-post-image-title-wrapper">
+        <div className="profile-dashboard-wide">
+          <UserAuctions userId={user?.id} />
+          <div className="new-work-section">
+            <span className="new-work-msg">
+              <strong>Current Special: </strong>30% off of the new work here!{' '}
+            </span>
+            <div className="new-work-content">
+              {recentPosts.length > 0 ? (
+                recentPosts.map((post) => (
+                  <div
+                    key={post.id}
+                    className="recent-post-card"
+                    onClick={() => handleClickNewWork(post.id)}
+                  >
                     {' '}
-                    <img src={post.image_url} alt={post.title} className="recent-post-image" />
-                  </div>
-                  <div className="recent-post-details">
-                    <p>
-                      <span>Category: </span>
-                      <span>{post.category}</span>
-                    </p>
-                    <p>
-                      <span>Price:</span>{' '}
-                      <span style={{ fontWeight: '600' }}>
-                        {' '}
-                        <span
-                          style={{
-                            color: 'red',
-                            textDecoration: 'line-through',
-                            marginRight: '1rem',
-                          }}
-                        >
-                          {post.price ? `$${post.price}` : 'N/A'}
+                    <div className="recent-post-image-title-wrapper">
+                      {' '}
+                      <img src={post.image_url} alt={post.title} className="recent-post-image" />
+                    </div>
+                    <div className="recent-post-details">
+                      <p>
+                        <span>Category: </span>
+                        <span>{post.category}</span>
+                      </p>
+                      <p>
+                        <span>Price:</span>{' '}
+                        <span style={{ fontWeight: '600' }}>
+                          {' '}
+                          <span
+                            style={{
+                              color: 'red',
+                              textDecoration: 'line-through',
+                              marginRight: '1rem',
+                            }}
+                          >
+                            {post.price ? `$${post.price}` : 'N/A'}
+                          </span>
+                          <i className="fa fa-arrow-right" aria-hidden="true"></i>
+                          <span style={{ marginLeft: '.25rem' }}>
+                            ${(post.price * 0.7).toFixed(0)}
+                          </span>
                         </span>
-                        <i className="fa fa-arrow-right" aria-hidden="true"></i>
-                        <span style={{ marginLeft: '.25rem' }}>
-                          ${(post.price * 0.7).toFixed(0)}
-                        </span>
-                      </span>
-                    </p>
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <p>Coming soon! Check back for special deals on the latest pieces.</p>
-            )}
+                ))
+              ) : (
+                <p>Coming soon! Check back for special deals on the latest pieces.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
