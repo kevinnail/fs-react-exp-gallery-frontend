@@ -136,6 +136,60 @@
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
+.view-bids-btn {
+  margin-top: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 0.25rem 1rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.1s ease;
+}
+
+.view-bids-btn:hover {
+  background: rgba(0, 0, 0, 0.15);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  transform: scale(1.02);
+}
+
+.view-bids-btn:active {
+  transform: scale(0.98);
+}
+
+.bids-list {
+  list-style: none;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+}
+
+.bid-entry {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bid-entry span {
+  font-weight: bold;
+}
+
+.bid-entry small {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+}
+
 /* 
 
 ^ Responsive design below ========================================
