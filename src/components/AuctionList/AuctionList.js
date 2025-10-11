@@ -15,7 +15,6 @@ export default function AuctionList() {
       try {
         setLoading(true);
         const data = await getAuctions();
-        console.log('data', data);
 
         setAuctions(data);
       } catch (err) {

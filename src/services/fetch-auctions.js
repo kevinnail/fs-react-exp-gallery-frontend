@@ -1,7 +1,6 @@
 /// urls for both local and deployed
 const BASE_URL = process.env.REACT_APP_HOME_URL;
 
-/* Auth related functions */
 export async function getAuctions() {
   try {
     const res = await fetch(`${BASE_URL}/api/v1/auctions`, {
