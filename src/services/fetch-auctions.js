@@ -25,6 +25,25 @@ export async function getAuctions() {
   }
 }
 
+export async function getAuctionDetail(id) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/auctions/${id}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const auctionDetail = await resp.json();
+    return auctionDetail;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function createAuction(auctionDetails) {
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/auctions`, {
@@ -84,5 +103,25 @@ export async function uploadAuctionImagesToS3(imageFiles) {
   }
 }
 
-export async function updateAuction(params) {}
+// edit post called from EditPost
+export async function updateAuction(id, auction) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/auctions/${id}`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, auction }),
+      credentials: 'include',
+    });
+    const msg = await resp.json();
+
+    return msg;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function deleteAuction(params) {}
