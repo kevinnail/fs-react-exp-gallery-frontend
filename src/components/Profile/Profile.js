@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import { fetchUserProfile, fetchGalleryPosts } from '../../services/fetch-utils.js';
-import Menu from '../Menu/Menu.js';
 import ProfileForm from './ProfileForm.js';
 import './Profile.css';
 import { useProfileStore } from '../../stores/profileStore.js';
