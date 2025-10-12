@@ -1,71 +1,140 @@
 import { useEffect, useState } from 'react';
 import './UserAuctions.css';
+import { getUserAuctions, getAuctionDetail } from '../../services/fetch-auctions.js';
 
 export default function UserAuctions({ userId }) {
-  const [biddingAuctions, setBiddingAuctions] = useState([]);
+  // active bids hydrated with their auction details
+  const [activeBids, setActiveBids] = useState([]); // [{ bid, auction }]
   const [wonAuctions, setWonAuctions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadUserAuctions = async () => {
       try {
-        // Replace with your API route once it's ready
-        const res = await fetch(`/api/v1/users/${userId}/auctions`, {
-          credentials: 'include',
-        });
-        const data = await res.json();
+        const data = await getUserAuctions(userId);
+        console.log('data', data);
 
-        const now = new Date();
-        const active = data.filter((a) => a.isActive && new Date(a.endTime) > now);
-        const won = data.filter((a) => !a.isActive || new Date(a.endTime) <= now);
+        const rawActive = Array.isArray(data?.activeAuctionBids) ? data.activeAuctionBids : [];
+        const rawWon = Array.isArray(data?.wonAuctions) ? data.wonAuctions : [];
 
-        setBiddingAuctions(active);
-        setWonAuctions(won);
+        // hydrate active bids with auction detail so we can show title/images/end time
+        const hydrated = await Promise.all(
+          rawActive.map(async (bid) => {
+            try {
+              const auction = await getAuctionDetail(bid.auctionId);
+              return { bid, auction };
+            } catch (e) {
+              console.error('getAuctionDetail failed for', bid.auctionId, e);
+              return { bid, auction: null };
+            }
+          })
+        );
+
+        setActiveBids(hydrated);
+        setWonAuctions(rawWon);
       } catch (err) {
         console.error('Error loading user auctions:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadUserAuctions();
   }, [userId]);
 
-  const renderAuctionCard = (auction) => (
-    <div key={auction.id} className="auction-mini-card">
-      <img src={auction.imageUrls?.[0]} alt={auction.title} className="auction-mini-img" />
-      <div className="auction-mini-info">
-        <h4>{auction.title}</h4>
-        <p className="auction-mini-desc">{auction.description}</p>
-        <p>
-          <span>Current Bid: </span>${auction.currentBid || auction.startPrice}
-        </p>
-        <p>
-          Ends: <span>{new Date(auction.endTime).toLocaleString()}</span>
-        </p>
+  const renderActiveBidCard = ({ bid, auction }) => {
+    const img = auction?.imageUrls?.[0];
+    const title = auction?.title || `Auction #${bid.auctionId}`;
+    const currentBid = auction?.currentBid ?? auction?.startPrice;
+    const endsAt = auction?.endTime ? new Date(auction.endTime).toLocaleString() : null;
+
+    return (
+      <div key={bid.id} className="auction-mini-card">
+        {img ? (
+          <img src={img} alt={title} className="auction-mini-img" />
+        ) : (
+          <div className="auction-mini-img placeholder" />
+        )}
+        <div className="auction-mini-info">
+          <h4>{title}</h4>
+          <p>
+            <span>Your bid: </span>${Number(bid.bidAmount).toLocaleString()}
+          </p>
+          {typeof currentBid !== 'undefined' && (
+            <p>
+              <span>Current bid: </span>${Number(currentBid).toLocaleString()}
+            </p>
+          )}
+          <p>
+            <span>Placed: </span>
+            {new Date(bid.createdAt).toLocaleString()}
+          </p>
+          {endsAt && (
+            <p>
+              <span>Ends: </span>
+              {endsAt}
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderWonCard = (a) => (
+    <div key={a.id} className="auction-mini-card won">
+      <div className="auction-mini-core">
+        {a.imageUrls?.[0] ? (
+          <img src={a.imageUrls[0]} alt={a.title} className="auction-mini-img" />
+        ) : (
+          <div className="auction-mini-img placeholder" />
+        )}
+        <div className="auction-mini-info">
+          <h4>{a.title || `Auction #${a.auctionId}`}</h4>
+          <p>
+            <span>Final bid: </span>${Number(a.finalBid).toLocaleString()}
+          </p>
+          {typeof a.buyNowPrice !== 'undefined' && (
+            <p>
+              <span>Buy now price: </span>${Number(a.buyNowPrice).toLocaleString()}
+            </p>
+          )}
+          <p>
+            <span>Closed: </span>
+            {new Date(a.closedAt).toLocaleString()}
+          </p>
+          <p>
+            <span>Reason: </span>
+            {a.closedReason === 'buy_now' ? 'Bought instantly' : 'Expired'}
+          </p>
+        </div>
+      </div>
+      <div className="auction-win-message">
+        <p>You won this auction.</p>
+        <p>Check messages to arrange payment and shipping.</p>
       </div>
     </div>
   );
 
+  if (loading) {
+    return (
+      <div className="user-auctions-widget">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="user-auctions-widget">
-      <h2>Current Auctions</h2>
-      {biddingAuctions.length > 0 ? (
-        <div className="auction-mini-grid">{biddingAuctions.map(renderAuctionCard)}</div>
+      <h2>Active bids</h2>
+      {activeBids.length > 0 ? (
+        <div className="auction-mini-grid">{activeBids.map(renderActiveBidCard)}</div>
       ) : (
-        <p className="empty-msg">You’re not bidding on anything right now.</p>
+        <p className="empty-msg">No active bids.</p>
       )}
 
-      <h2>You Won</h2>
+      <h2>Won</h2>
       {wonAuctions.length > 0 ? (
-        <div className="auction-mini-grid">
-          {wonAuctions.map((a) => (
-            <div key={a.id} className="auction-mini-card won">
-              {renderAuctionCard(a)}
-              <div className="auction-win-message">
-                <p>🎉 You won this auction!</p>
-                <p>Please check your messages to arrange payment and shipping.</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className="auction-mini-grid">{wonAuctions.map(renderWonCard)}</div>
       ) : (
         <p className="empty-msg">No completed wins yet.</p>
       )}
