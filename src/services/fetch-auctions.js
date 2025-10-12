@@ -23,6 +23,29 @@ export async function getAuctions() {
     throw new Error(e.message || 'Error in getAuctions');
   }
 }
+export async function getUserAuctions(userId) {
+  try {
+    const res = await fetch(`${BASE_URL}/api/v1/auctions/user-auctions/${userId}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!res.ok) {
+      throw new Error('Error fetching auctions');
+    }
+
+    const data = await res.json();
+
+    return data;
+  } catch (e) {
+    console.error('Error fetching auctions', e);
+    throw new Error(e.message || 'Error in getAuctions');
+  }
+}
 
 export async function getAuctionDetail(id) {
   try {
@@ -36,6 +59,7 @@ export async function getAuctionDetail(id) {
     });
 
     const auctionDetail = await resp.json();
+
     return auctionDetail;
   } catch (error) {
     console.error(error);
@@ -123,4 +147,4 @@ export async function updateAuction(id, auction) {
   }
 }
 
-export async function deleteAuction(params) {}
+// export async function deleteAuction(params) {}
