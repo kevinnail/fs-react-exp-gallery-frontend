@@ -155,6 +155,7 @@ export default function Profile() {
           </h2>
           {customerMessage}
         </div>
+
         <div className="profile-dashboard-wide">
           <UserAuctions userId={user?.id} />
           <div className="new-work-section">

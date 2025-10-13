@@ -1,9 +1,11 @@
 .user-auctions-widget {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
   text-align: left;
+  cursor: pointer;
+  background-color: black;
 }
 
 .user-auctions-widget h2 {
@@ -45,6 +47,9 @@
 .auction-mini-info {
   padding: 0.75rem;
   color: rgba(255, 255, 255, 0.9);
+}
+.auction-mini-info p {
+  font-size: 1rem;
 }
 
 .auction-mini-info h4 {

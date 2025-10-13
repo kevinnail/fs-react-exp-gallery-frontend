@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import './UserAuctions.css';
 import { getUserAuctions, getAuctionDetail } from '../../services/fetch-auctions.js';
+import { useNavigate } from 'react-router-dom';
 
 export default function UserAuctions({ userId }) {
   // active bids hydrated with their auction details
   const [activeBids, setActiveBids] = useState([]); // [{ bid, auction }]
   const [wonAuctions, setWonAuctions] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadUserAuctions = async () => {
@@ -122,17 +125,23 @@ export default function UserAuctions({ userId }) {
       </div>
     );
   }
+  const handleNavAuction = () => {
+    navigate('/auctions');
+  };
 
   return (
-    <div className="user-auctions-widget">
-      <h2>Active bids</h2>
+    <div onClick={handleNavAuction} className="user-auctions-widget">
+      <span className="new-work-msg">
+        <strong>Your Auction Bids & Wins</strong>
+      </span>
+      <h3>Active bids</h3>
       {activeBids.length > 0 ? (
         <div className="auction-mini-grid">{activeBids.map(renderActiveBidCard)}</div>
       ) : (
         <p className="empty-msg">No active bids.</p>
       )}
 
-      <h2>Won</h2>
+      <h3>Won</h3>
       {wonAuctions.length > 0 ? (
         <div className="auction-mini-grid">{wonAuctions.map(renderWonCard)}</div>
       ) : (
