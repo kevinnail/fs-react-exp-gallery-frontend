@@ -7,8 +7,8 @@ import { toast } from 'react-toastify';
 import { createPortal } from 'react-dom';
 
 export default function AuctionCard({ auction }) {
-  const id = auction.id;
-  const { user } = useUserStore();
+  const id = Number(auction.id);
+  const { user, isAdmin } = useUserStore();
 
   const [selectedImage, setSelectedImage] = useState(auction.imageUrls[0]);
   const [bids, setBids] = useState([]);
@@ -19,14 +19,25 @@ export default function AuctionCard({ auction }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
+  useEffect(() => {
+    setIsActive(auction.isActive);
+  }, [auction.isActive]);
+  const handleImageClick = (url) => {
+    setSelectedImage(url);
+  };
 
-  const handleImageClick = (url) => setSelectedImage(url);
-  const handleEdit = () => navigate(`/admin/auctions/${id}`);
+  const handleEdit = () => {
+    navigate(`/admin/auctions/${id}`);
+  };
 
   const [showBidModal, setShowBidModal] = useState(false);
   const [bidAmount, setBidAmount] = useState('');
 
   const [showConfirmBIN, setShowConfirmBIN] = useState(false);
+
+  const handleNavAuth = () => {
+    navigate('/auth/sign-in');
+  };
 
   useEffect(() => {
     const fetchBids = async () => {
@@ -97,9 +108,11 @@ export default function AuctionCard({ auction }) {
               justifyContent: 'flex-end',
             }}
           >
-            <button className="edit-auction-icon-btn" onClick={handleEdit}>
-              ✎
-            </button>
+            {user && isAdmin && (
+              <button className="edit-auction-icon-btn" onClick={handleEdit}>
+                ✎
+              </button>
+            )}
           </div>
 
           <h2>{auction.title}</h2>
@@ -137,11 +150,17 @@ export default function AuctionCard({ auction }) {
           <div className="auction-actions">
             {isActive ? (
               <>
-                <button onClick={() => setShowBidModal(true)} className="bid-btn">
+                <button
+                  onClick={user ? () => setShowBidModal(true) : handleNavAuth}
+                  className="bid-btn"
+                >
                   Place Bid
                 </button>
                 {auction.buyNowPrice && (
-                  <button onClick={() => setShowConfirmBIN(true)} className="buy-btn">
+                  <button
+                    onClick={user ? () => setShowConfirmBIN(true) : handleNavAuth}
+                    className="buy-btn"
+                  >
                     Buy Now
                   </button>
                 )}
@@ -186,12 +205,10 @@ export default function AuctionCard({ auction }) {
               <h3>Place a Bid</h3>
               <input
                 type="number"
-                min={
-                  (highestBid >= (auction.startPrice || 0) ? highestBid : auction.startPrice) + 1
-                }
+                min={highestBid >= (auction.startPrice || 0) ? highestBid : auction.startPrice}
                 value={bidAmount}
                 onChange={(e) => setBidAmount(e.target.value)}
-                placeholder={`Enter amount greater than $${highestBid >= (auction.startPrice || 0) ? highestBid : auction.startPrice}`}
+                placeholder={`Enter amount equal to or greater than $${highestBid >= (auction.startPrice || 0) ? highestBid : auction.startPrice}`}
                 className="bid-input"
               />
               <div className="modal-actions">
@@ -202,8 +219,8 @@ export default function AuctionCard({ auction }) {
                       const startPriceMet = highestBid >= startPrice;
                       const minAllowedBid = startPriceMet ? highestBid : startPrice;
 
-                      if (Number(bidAmount) <= minAllowedBid) {
-                        toast(`Bid must be greater than $${minAllowedBid}`, { theme: 'dark' });
+                      if (Number(bidAmount) < minAllowedBid) {
+                        toast(`Bid must be $${minAllowedBid} or greater`, { theme: 'dark' });
                         return;
                       }
 
