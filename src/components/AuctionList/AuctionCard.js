@@ -28,8 +28,6 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
   // buy now change (via websockets)
   useEffect(() => {
     if (lastBuyNowId === id) {
-      console.log('they match');
-
       setIsActive(false);
     }
   }, [lastBuyNowId, id]);

@@ -42,8 +42,6 @@ export default function AuctionList() {
   // set up listener for websocket auction end event
   useEffect(() => {
     const handleAuctionStart = ({ auction }) => {
-      console.log('auction', auction);
-
       setAuctions((prev) => [...prev, auction]);
     };
 
@@ -89,8 +87,6 @@ export default function AuctionList() {
   // set up listener for websocket auction BIN event
   useEffect(() => {
     const handleBuyItNow = (auctionId) => {
-      console.log('running handleBuyItNow setting setLastBuyNowId to this auction id:', auctionId);
-
       setLastBuyNowId(auctionId);
       // optionally also update list state:
       setAuctions((prev) => prev.map((a) => (a.id === auctionId ? { ...a, isActive: false } : a)));
