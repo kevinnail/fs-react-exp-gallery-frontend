@@ -80,6 +80,10 @@ class WebSocketService {
           this.emit('typing_stop', data);
         }
       });
+
+      this.socket.on('auction-ended', (data) => {
+        this.emit('auction-ended', data);
+      });
     } catch (error) {
       console.error('Error initializing WebSocket:', error);
       this.emit('connection', { connected: false, error });
@@ -116,7 +120,6 @@ class WebSocketService {
     if (this.socket && this.isConnected) {
       this.socket.emit('send_message', messageData);
     } else {
-      //eslint-disable-next-line no-console
       console.warn('Socket not connected, cannot send message');
     }
   }
