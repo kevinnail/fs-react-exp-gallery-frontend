@@ -4,12 +4,16 @@ import AuctionCard from './AuctionCard.js';
 import { getAuctions } from '../../services/fetch-auctions.js';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import websocketService from '../../services/websocket.js';
+import { useUserStore } from '../../stores/userStore.js';
 
 export default function AuctionList() {
   const [auctions, setAuctions] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { user, isAdmin } = useUserStore();
 
+  // fetch auctions
   useEffect(() => {
     const fetchAuctions = async () => {
       try {
@@ -33,6 +37,26 @@ export default function AuctionList() {
     fetchAuctions();
   }, []);
 
+  // set up listener for websocket
+  useEffect(() => {
+    const handleAuctionEnd = ({ auctionId }) => {
+      setAuctions((prev) => {
+        const updated = prev.map((a) => {
+          return a.id === auctionId ? { ...a, isActive: false } : a;
+        });
+
+        return updated;
+      });
+    };
+
+    websocketService.on('auction-ended', handleAuctionEnd);
+    websocketService.connect();
+
+    return () => {
+      websocketService.off('auction-ended', handleAuctionEnd);
+    };
+  }, []);
+
   if (loading) {
     return (
       <div className="messages-container">
@@ -46,9 +70,11 @@ export default function AuctionList() {
   return (
     <div className="messages-container">
       <div className="messages-content">
-        <button className="add-edit-auctions" onClick={() => navigate('/admin/auctions')}>
-          Add/ Edit Auctions
-        </button>
+        {user && isAdmin && (
+          <button className="add-edit-auctions" onClick={() => navigate('/admin/auctions')}>
+            Add/ Edit Auctions
+          </button>
+        )}
         <div className="messages-header">
           <h1>Glass Art Auctions</h1>
           <p>Bid, watch, or buy instantly.</p>
