@@ -12,6 +12,8 @@ export default function AuctionList() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { user, isAdmin } = useUserStore();
+  const [lastBidUpdate, setLastBidUpdate] = useState(null);
+  const [lastBuyNowId, setLastBuyNowId] = useState(null);
 
   // fetch auctions
   useEffect(() => {
@@ -37,7 +39,22 @@ export default function AuctionList() {
     fetchAuctions();
   }, []);
 
-  // set up listener for websocket
+  // set up listener for websocket auction end event
+  useEffect(() => {
+    const handleAuctionStart = ({ auction }) => {
+      console.log('auction', auction);
+
+      setAuctions((prev) => [...prev, auction]);
+    };
+
+    websocketService.on('auction-created', handleAuctionStart);
+
+    return () => {
+      websocketService.off('auction-created', handleAuctionStart);
+    };
+  }, []);
+
+  // set up listener for websocket auction end event
   useEffect(() => {
     const handleAuctionEnd = ({ auctionId }) => {
       setAuctions((prev) => {
@@ -50,11 +67,38 @@ export default function AuctionList() {
     };
 
     websocketService.on('auction-ended', handleAuctionEnd);
-    websocketService.connect();
 
     return () => {
       websocketService.off('auction-ended', handleAuctionEnd);
     };
+  }, []);
+
+  // set up listener for websocket auction new bid event
+  useEffect(() => {
+    const handleBidPlaced = ({ auctionId }) => {
+      setLastBidUpdate(auctionId);
+    };
+
+    websocketService.on('bid-placed', handleBidPlaced);
+
+    return () => {
+      websocketService.off('bid-placed', handleBidPlaced);
+    };
+  }, []);
+
+  // set up listener for websocket auction BIN event
+  useEffect(() => {
+    const handleBuyItNow = (auctionId) => {
+      console.log('running handleBuyItNow setting setLastBuyNowId to this auction id:', auctionId);
+
+      setLastBuyNowId(auctionId);
+      // optionally also update list state:
+      setAuctions((prev) => prev.map((a) => (a.id === auctionId ? { ...a, isActive: false } : a)));
+    };
+
+    websocketService.on('auction-BIN', handleBuyItNow);
+
+    return () => websocketService.off('auction-BIN', handleBuyItNow);
   }, []);
 
   if (loading) {
@@ -83,7 +127,14 @@ export default function AuctionList() {
           {auctions.length === 0 ? (
             <p>No active auctions right now.</p>
           ) : (
-            auctions.map((auction) => <AuctionCard key={auction.id} auction={auction} />)
+            auctions.map((auction) => (
+              <AuctionCard
+                key={auction.id}
+                auction={auction}
+                lastBidUpdate={lastBidUpdate}
+                lastBuyNowId={lastBuyNowId}
+              />
+            ))
           )}
         </div>
       </div>
