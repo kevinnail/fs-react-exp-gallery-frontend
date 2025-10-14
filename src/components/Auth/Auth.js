@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import './Auth.css';
-import Menu from '../Menu/Menu.js';
 import { signOut, authUser } from '../../services/auth.js';
 import { getUser } from '../../services/fetch-utils.js';
 import Loading from '../Loading/Loading.js';
@@ -294,15 +293,12 @@ export default function Auth() {
           <div className="auth-content-wrapper">
             <div className="welcome-section">
               <h2 className="welcome-title">Welcome to Stress Less Glass</h2>
-              <p className="welcome-message">
-                Create your free account! I&apos;m actively working on this site adding new features
-                which will (soon!) give you:
-              </p>
+              <p className="welcome-message">Create your free account!</p>
               <div className="welcome-features">
                 <ul>
-                  <li>Exclusive early access to new work</li>
-                  <li>Auctions</li>
-                  <li>Messages - secure & private</li>
+                  <li>Exclusive discounts & early access to new work</li>
+                  <li>Bid on in house Auctions</li>
+                  <li>Message me - private & encrypted</li>
                 </ul>
               </div>
             </div>
@@ -360,7 +356,7 @@ export default function Auth() {
 
       <button
         className="retract-button"
-        title="Hide form if you feel like spacing out and watching the animation"
+        title="Hide form if you feel like spacing out and watching the animation.  For the nerds:  this is 100% raw CSS, nothing else, no frameworks!"
         onClick={() => setIsFormRetracted(!isFormRetracted)}
       >
         {isFormRetracted ? (

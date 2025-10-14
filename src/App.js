@@ -23,6 +23,8 @@ import { ToastContainer } from 'react-toastify';
 import websocketService from './services/websocket.js';
 import NotFound from './components/NotFound/NotFound.js';
 import UserDashboard from './components/Admin/Users/UsersDashboard.js';
+import AuctionList from './components/AuctionList/AuctionList.js';
+import AuctionForm from './components/AuctionForm/AuctionForm.js';
 const mainTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -80,7 +82,9 @@ function App() {
             <Route path="/" element={<MainGallery />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/about-me" element={<AboutMe />} />
+            <Route path="/auctions" element={<AuctionList />} />
             <Route path="/:id" element={<MainPostDetail />} />
+
             <Route
               path="/admin/discounts"
               element={
@@ -118,6 +122,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <UserDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/auctions"
+              element={
+                <ProtectedRoute>
+                  <AuctionForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/auctions/:id"
+              element={
+                <ProtectedRoute>
+                  <AuctionForm />
                 </ProtectedRoute>
               }
             />

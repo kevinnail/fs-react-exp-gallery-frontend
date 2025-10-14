@@ -288,9 +288,6 @@
 }
 
 .post-detail-div-wrapper {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(auto-fill, minmax(50px, auto));
   flex-wrap: wrap;
   justify-items: flex-start;
   align-items: flex-start;
@@ -579,7 +576,7 @@
 }
 
 .message-about-piece-button {
-  background: #474747;
+  background-image: linear-gradient(315deg, black, grey);
   color: white;
   border: none;
   border-radius: 8px;
@@ -593,6 +590,9 @@
   width: 100%;
   max-width: 400px;
   border: 1px solid black;
+  margin: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-shadow: 1px 1px 4px #0d00ff;
 }
 
 .message-about-piece-button:hover {

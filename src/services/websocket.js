@@ -80,6 +80,22 @@ class WebSocketService {
           this.emit('typing_stop', data);
         }
       });
+
+      this.socket.on('auction-created', (data) => {
+        this.emit('auction-created', data);
+      });
+
+      this.socket.on('auction-ended', (data) => {
+        this.emit('auction-ended', data);
+      });
+
+      this.socket.on('bid-placed', (data) => {
+        this.emit('bid-placed', data);
+      });
+
+      this.socket.on('auction-BIN', (data) => {
+        this.emit('auction-BIN', data);
+      });
     } catch (error) {
       console.error('Error initializing WebSocket:', error);
       this.emit('connection', { connected: false, error });
@@ -116,7 +132,6 @@ class WebSocketService {
     if (this.socket && this.isConnected) {
       this.socket.emit('send_message', messageData);
     } else {
-      //eslint-disable-next-line no-console
       console.warn('Socket not connected, cannot send message');
     }
   }

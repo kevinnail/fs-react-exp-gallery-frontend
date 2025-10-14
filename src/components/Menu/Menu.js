@@ -23,12 +23,17 @@ export default function Menu({ handleClick, closeMenu }) {
   };
 
   return (
-    <>
+    <div>
+      <>
+        <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
+          Gallery
+        </NavLink>{' '}
+        <NavLink className="mobile-new-link" to="/auctions" onClick={handleLinkClick}>
+          Auctions
+        </NavLink>
+      </>
       {!user && (
         <>
-          <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
-            Gallery
-          </NavLink>
           <NavLink className="mobile-new-link" to="/about-me" onClick={handleLinkClick}>
             About
           </NavLink>
@@ -40,9 +45,16 @@ export default function Menu({ handleClick, closeMenu }) {
 
       {user && (
         <>
-          <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
-            Gallery
-          </NavLink>
+          {isAdmin && (
+            <NavLink
+              className="mobile-new-link"
+              to="/admin"
+              title="Dashboard"
+              onClick={handleLinkClick}
+            >
+              Dashboard
+            </NavLink>
+          )}
 
           {!isAdmin && (
             <>
@@ -57,18 +69,9 @@ export default function Menu({ handleClick, closeMenu }) {
               </NavLink>
             </>
           )}
-
           {isAdmin && (
             <>
               {' '}
-              {/* <NavLink
-                className="mobile-new-link"
-                to="/admin"
-                title="Dashboard"
-                onClick={handleLinkClick}
-              >
-                Dashboard
-              </NavLink> */}
               <NavLink
                 className="mobile-new-link"
                 to="/admin/inbox"
@@ -113,6 +116,7 @@ export default function Menu({ handleClick, closeMenu }) {
               </NavLink>
             </>
           )}
+
           <NavLink
             className="mobile-new-link"
             to="/about-me"
@@ -130,6 +134,6 @@ export default function Menu({ handleClick, closeMenu }) {
           </button>
         </>
       )}
-    </>
+    </div>
   );
 }

@@ -18,15 +18,15 @@
 .profile-content {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 15px;
-  padding: 2rem 1rem;
-  text-align: center;
+  padding: 2rem;
+  text-align: left;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   border: 2px solid rgba(255, 255, 255, 0.1);
-  max-width: 600px;
   width: 100%;
+  max-width: 1200px;
   backdrop-filter: blur(5px);
   position: relative;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 }
 
 .profile-content h1 {
@@ -37,11 +37,24 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.profile-content p {
+.profile-content p,
+div {
   color: rgba(255, 255, 255, 0.9);
   font-size: 1.2rem;
   margin: 0;
   text-align: left;
+}
+.profile-dashboard-wide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .profile-dashboard-wide {
+    grid-template-columns: 1fr;
+  }
 }
 
 .profile-header {
@@ -316,5 +329,30 @@
     width: 85%;
     text-align: left;
     margin: auto;
+  }
+  .new-work-content {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+    gap: 0.75rem;
+    padding: 0;
+  }
+
+  .recent-post-card {
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+  }
+
+  .new-work-section {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  .profile-content {
+    margin: 0;
+    padding: 0;
+  }
+  .profile-details {
+    padding: 1rem;
   }
 }

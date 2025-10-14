@@ -9,7 +9,6 @@ import {
   markMessageAsRead,
 } from '../../services/fetch-messages.js';
 import { getAdminProfile } from '../../services/fetch-utils.js';
-import Menu from '../Menu/Menu.js';
 import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
 import { useMessaging } from '../../hooks/useWebSocket.js';
 import './Messages.css';

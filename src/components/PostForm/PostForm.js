@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
-import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
 import { useDropzone } from 'react-dropzone';
@@ -185,14 +184,6 @@ export default function PostForm({
           },
         }}
       >
-        <aside className="form-admin-panel ">
-          <section className="form-admin-panel-section ">
-            <Box className="">
-              <Menu handleClick={handleClick} />
-            </Box>
-          </section>
-        </aside>
-
         <form className="new-post-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
           <h1 id="form-title-header">{newOrEdit}</h1>
           <Box className="desk-cat-input">

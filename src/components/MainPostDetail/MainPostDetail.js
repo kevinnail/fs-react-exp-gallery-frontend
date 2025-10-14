@@ -5,7 +5,6 @@ import Modal from 'react-modal';
 import { useSwipeable } from 'react-swipeable'; // Add this import
 Modal.setAppElement('#root'); // If your app is using #root as the main container
 import '../PostDetail/PostDetail.css';
-import Menu from '../Menu/Menu.js';
 import { signOut } from '../../services/auth.js';
 import { useUserStore } from '../../stores/userStore.js';
 import Loading from '../Loading/Loading.js';
@@ -99,9 +98,6 @@ export default function MainPostDetail() {
   return (
     <>
       <div className="post-detail-div-wrapper">
-        <div className="menu-search-container">
-          <Menu handleClick={handleClick} />
-        </div>{' '}
         <section className="message-button-wrapper">
           <button
             className="message-about-piece-button"
