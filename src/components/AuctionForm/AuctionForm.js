@@ -36,9 +36,19 @@ export default function AuctionForm() {
         setExistingImages(currentAuction.imageUrls || []);
         setStartPrice(currentAuction.startPrice || '');
         setBuyNowPrice(currentAuction.buyNowPrice || '');
-        setEndTime(
-          currentAuction.endTime ? new Date(currentAuction.endTime).toISOString().slice(0, 16) : ''
-        );
+
+        if (currentAuction.endTime) {
+          let formattedEndTime = '';
+          if (currentAuction.endTime) {
+            formattedEndTime = new Date(currentAuction.endTime)
+              .toLocaleString('sv-SE', { timeZone: 'local' })
+              .replace(' ', 'T')
+              .slice(0, 16);
+          }
+          setEndTime(formattedEndTime);
+        } else {
+          setEndTime('');
+        }
       };
       auctionData();
     }
@@ -81,14 +91,16 @@ export default function AuctionForm() {
         description,
         startPrice: parseInt(startPrice),
         buyNowPrice: buyNowPrice ? parseInt(buyNowPrice) : null,
-        endTime: new Date(endTime),
+        endTime: new Date(endTime).toISOString(),
+        startTime: existingAuction?.startTime
+          ? new Date(existingAuction.startTime).toISOString()
+          : new Date().toISOString(),
         imageUrls: finalImageUrls,
         currentBid: existingAuction?.currentBid || 0,
-        startTime: existingAuction?.startTime || new Date(),
       };
 
       // 4. Send payload — choose create vs. update based on id
-      const result = id ? await updateAuction(id, payload) : await createAuction(payload);
+      id ? await updateAuction(id, payload) : await createAuction(payload);
 
       toast.success(id ? 'Auction updated successfully' : 'Auction created successfully', {
         theme: 'dark',
@@ -97,8 +109,6 @@ export default function AuctionForm() {
         toastId: id ? 'auction-update' : 'auction-create',
         autoClose: true,
       });
-
-      console.log('Auction saved:', result);
 
       // 5. Reset form after success (optional for editing)
       if (!id) {
@@ -143,7 +153,7 @@ export default function AuctionForm() {
             placeholder="Enter auction title"
             className="image-input"
             type="text"
-            value={title || existingAuction.title || ''}
+            value={title || ''}
             onChange={(e) => setTitle(e.target.value)}
           />
         </Box>
@@ -154,7 +164,7 @@ export default function AuctionForm() {
             maxLength={400}
             placeholder="Enter auction description"
             className="image-input description shadow-border"
-            value={description}
+            value={description || ''}
             onChange={(e) => setDescription(e.target.value)}
           />
         </Box>
@@ -166,7 +176,7 @@ export default function AuctionForm() {
             className="image-input price-input"
             type="number"
             step="1"
-            value={startPrice}
+            value={startPrice || ''}
             onChange={(e) => setStartPrice(e.target.value)}
           />
         </Box>
@@ -177,7 +187,7 @@ export default function AuctionForm() {
             className="image-input price-input"
             type="number"
             step="1"
-            value={buyNowPrice}
+            value={buyNowPrice || ''}
             onChange={(e) => setBuyNowPrice(e.target.value)}
           />
         </Box>
@@ -187,7 +197,7 @@ export default function AuctionForm() {
             required
             className="image-input"
             type="datetime-local"
-            value={endTime}
+            value={endTime || ''}
             onChange={(e) => setEndTime(e.target.value)}
           />
         </Box>
