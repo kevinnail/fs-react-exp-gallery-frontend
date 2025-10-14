@@ -81,8 +81,20 @@ class WebSocketService {
         }
       });
 
+      this.socket.on('auction-created', (data) => {
+        this.emit('auction-created', data);
+      });
+
       this.socket.on('auction-ended', (data) => {
         this.emit('auction-ended', data);
+      });
+
+      this.socket.on('bid-placed', (data) => {
+        this.emit('bid-placed', data);
+      });
+
+      this.socket.on('auction-BIN', (data) => {
+        this.emit('auction-BIN', data);
       });
     } catch (error) {
       console.error('Error initializing WebSocket:', error);
