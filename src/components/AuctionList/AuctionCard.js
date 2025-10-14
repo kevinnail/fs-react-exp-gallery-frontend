@@ -6,7 +6,7 @@ import { useUserStore } from '../../stores/userStore.js';
 import { toast } from 'react-toastify';
 import { createPortal } from 'react-dom';
 
-export default function AuctionCard({ auction }) {
+export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
   const id = Number(auction.id);
   const { user, isAdmin } = useUserStore();
 
@@ -19,9 +19,39 @@ export default function AuctionCard({ auction }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
+
+  // initialize/ set isActive
   useEffect(() => {
     setIsActive(auction.isActive);
   }, [auction.isActive]);
+
+  // buy now change (via websockets)
+  useEffect(() => {
+    if (lastBuyNowId === id) {
+      console.log('they match');
+
+      setIsActive(false);
+    }
+  }, [lastBuyNowId, id]);
+
+  // update bids (via websockets)
+  useEffect(() => {
+    if (lastBidUpdate === id) {
+      // Only refetch bids for THIS auction
+      (async () => {
+        try {
+          const data = await getBids(id);
+          if (Array.isArray(data)) {
+            setBids(data);
+            if (data.length > 0) setHighestBid(data[0].bidAmount);
+          }
+        } catch (err) {
+          console.error('Error updating bids after socket event:', err);
+        }
+      })();
+    }
+  }, [lastBidUpdate, id]);
+
   const handleImageClick = (url) => {
     setSelectedImage(url);
   };
