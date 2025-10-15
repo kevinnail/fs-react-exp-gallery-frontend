@@ -203,25 +203,26 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
 
           {bids.length > 0 && (
             <div className="bid-history">
-              <button className="view-bids-btn" onClick={() => setShowHistory((prev) => !prev)}>
-                {showHistory ? 'Hide Bid History' : 'View Bid History'}
-              </button>
-
-              {showHistory && (
-                <ul className="bids-list">
-                  {bids.slice(0, 10).map((bid, index) => (
-                    <li key={bid.id || index} className="bid-entry">
-                      <span>${bid.bidAmount}</span>{' '}
-                      <small>
-                        {new Date(bid.createdAt).toLocaleTimeString('en-US', {
-                          hour: 'numeric',
-                          minute: 'numeric',
-                        })}
-                      </small>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {bids.map((bid) => (
+                <div
+                  key={bid.id}
+                  className={['bid-entry', user.id === bid.user.userId && 'my-bid']
+                    .filter(Boolean)
+                    .join(' ')}
+                >
+                  <img src={bid.user?.imageUrl} alt={bid.user?.firstName} className="bid-avatar" />
+                  <div className="bid-info">
+                    <span className="bid-name">{bid.user?.firstName}</span>
+                    <span className="bid-amount">${bid.bidAmount}</span>
+                    <span className="bid-time">
+                      {new Date(bid.createdAt).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
@@ -231,25 +232,71 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
           <div className="bid-modal-overlay" role="dialog" aria-modal="true">
             <div className="bid-modal">
               <h3>Place a Bid</h3>
-              <input
-                type="number"
-                min={highestBid >= (auction.startPrice || 0) ? highestBid : auction.startPrice}
-                value={bidAmount}
-                onChange={(e) => setBidAmount(e.target.value)}
-                placeholder={`Enter amount equal to or greater than $${highestBid >= (auction.startPrice || 0) ? highestBid : auction.startPrice}`}
-                className="bid-input"
-              />
+              <p>
+                {highestBid === 0 ? (
+                  'No bids yet'
+                ) : (
+                  <>
+                    Current High bid: <strong>${highestBid}</strong>
+                  </>
+                )}
+              </p>
+
+              {(() => {
+                const hasBids = highestBid > auction.startPrice;
+                const minBid = hasBids ? highestBid : auction.startPrice;
+                const comparisonText = hasBids ? 'greater than' : 'equal to or greater than';
+
+                return (
+                  <input
+                    type="number"
+                    min={minBid}
+                    value={bidAmount}
+                    onChange={(e) => setBidAmount(e.target.value)}
+                    placeholder={`Enter amount ${comparisonText} $${minBid}`}
+                    className="bid-input"
+                  />
+                );
+              })()}
+
               <div className="modal-actions">
                 <button
                   onClick={async () => {
                     try {
+                      const hasBids = highestBid > auction.startPrice;
                       const startPrice = auction.startPrice || 0;
-                      const startPriceMet = highestBid >= startPrice;
-                      const minAllowedBid = startPriceMet ? highestBid : startPrice;
+                      const amt = Number(bidAmount);
 
-                      if (Number(bidAmount) < minAllowedBid) {
-                        toast(`Bid must be $${minAllowedBid} or greater`, { theme: 'dark' });
+                      if (!Number.isFinite(amt)) {
+                        toast.warn('Enter a valid number', {
+                          theme: 'dark',
+                          draggable: true,
+                          draggablePercent: 60,
+                          autoClose: 3000,
+                        });
                         return;
+                      }
+
+                      if (!hasBids) {
+                        if (amt < startPrice) {
+                          toast.warn(`Bid must be greater than or equal to $${startPrice}`, {
+                            theme: 'dark',
+                            draggable: true,
+                            draggablePercent: 60,
+                            autoClose: 3000,
+                          });
+                          return;
+                        }
+                      } else {
+                        if (amt <= highestBid) {
+                          toast.warn(`Bid must be greater than $${highestBid}`, {
+                            theme: 'dark',
+                            draggable: true,
+                            draggablePercent: 60,
+                            autoClose: 3000,
+                          });
+                          return;
+                        }
                       }
 
                       await placeBid({ auctionId: id, userId: user.id, bidAmount });
