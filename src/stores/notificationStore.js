@@ -9,6 +9,15 @@ export const useNotificationStore = create((set) => ({
   unreadMessageCount: 0,
   wonAuctionCount: 0,
 
+  fetchUnreadWon: async () => {
+    try {
+      const notifications = await getUnreadAuctionNotifications();
+      const won = notifications.filter((n) => n.type === 'won');
+      set({ wonAuctionCount: won.length });
+    } catch (e) {
+      console.error('Error fetching won notifications:', e);
+    }
+  },
   incrementWonAuction: () =>
     set((state) => ({
       wonAuctionCount: state.wonAuctionCount + 1,
