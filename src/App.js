@@ -66,8 +66,16 @@ function App() {
   useEffect(() => {
     websocketService.connect();
 
-    const handleOutbid = (data) => {
-      toast.warn(`You’ve been outbid on auction #${data.auctionId}`, {
+    const handleOutbid = () => {
+      toast.warn(`You’ve been outbid!`, {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+    };
+    const handleYouWon = () => {
+      toast.success(`You won the auction!  Check your profile for more information.`, {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
@@ -76,9 +84,11 @@ function App() {
     };
 
     websocketService.on('user-outbid', handleOutbid);
+    websocketService.on('user-won', handleYouWon);
 
     return () => {
       websocketService.off('user-outbid', handleOutbid);
+      websocketService.off('user-won', handleYouWon);
       websocketService.disconnect(); // optional: only if App truly unmounts once
     };
   }, []);
