@@ -94,17 +94,6 @@ export default function Profile() {
     loadRecentPosts();
   }, []);
 
-  const handleClick = async () => {
-    try {
-      await signOut();
-      signout();
-    } catch (error) {
-      console.error('Error signing out:', error);
-      // Still clear state even if sign out fails
-      signout();
-    }
-  };
-
   const handleEditProfile = () => {
     setShowEditForm(true);
   };
