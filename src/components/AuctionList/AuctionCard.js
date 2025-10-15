@@ -73,6 +73,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
         const data = await getBids(id);
         if (Array.isArray(data)) {
           setBids(data);
+
           if (data.length > 0) setHighestBid(data[0].bidAmount);
         }
       } catch (err) {
@@ -156,7 +157,17 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
                   color: '#ffd500',
                 }}
               >
-                <strong>Current Bid:</strong> ${highestBid}
+                <strong>Current Bid:</strong> ${highestBid}{' '}
+                <span
+                  style={{
+                    fontSize: '.9rem',
+                    color: 'white',
+                    display: 'block',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {bids[0]?.userId === user?.id ? "You're the high bidder!" : ''}
+                </span>
               </p>
             )}
             <div className="bin-end-time-wrapper">
@@ -204,12 +215,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
           {bids.length > 0 && (
             <div className="bid-history">
               {bids.map((bid) => (
-                <div
-                  key={bid.id}
-                  className={['bid-entry', user.id === bid.user.userId && 'my-bid']
-                    .filter(Boolean)
-                    .join(' ')}
-                >
+                <div key={bid.id} className="bid-entry">
                   <img src={bid.user?.imageUrl} alt={bid.user?.firstName} className="bid-avatar" />
                   <div className="bid-info">
                     <span className="bid-name">{bid.user?.firstName}</span>
