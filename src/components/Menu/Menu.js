@@ -3,11 +3,27 @@ import { useUserStore } from '../../stores/userStore.js';
 import { downloadInventoryCSV } from '../../services/fetch-utils.js';
 import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
 import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import websocketService from '../../services/websocket.js';
+import { useNotificationStore } from '../../stores/notificationStore.js';
 
 export default function Menu({ handleClick, closeMenu }) {
   const { user, isAdmin } = useUserStore();
   const { unreadMessageCount } = useUnreadMessages();
   const location = useLocation();
+  // const [unreadCount, setUnreadCount] = useState(0);
+  const { unreadAuctionCount, incrementAuction, resetAuction } = useNotificationStore();
+
+  useEffect(() => {
+    const handleOutbid = () => incrementAuction();
+    websocketService.on('user-outbid', handleOutbid);
+    return () => websocketService.off('user-outbid', handleOutbid);
+  }, [incrementAuction]);
+
+  const handleAuctionsClick = () => {
+    resetAuction();
+    closeMenu();
+  };
 
   const handleDownloadCSV = () => {
     downloadInventoryCSV();
@@ -21,6 +37,7 @@ export default function Menu({ handleClick, closeMenu }) {
   const handleLinkClick = () => {
     closeMenu();
   };
+  console.log('Menu render -> unreadAuctionCount:', unreadAuctionCount);
 
   return (
     <div>
@@ -28,8 +45,11 @@ export default function Menu({ handleClick, closeMenu }) {
         <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
           Gallery
         </NavLink>{' '}
-        <NavLink className="mobile-new-link" to="/auctions" onClick={handleLinkClick}>
+        <NavLink className="mobile-new-link" to="/auctions" onClick={handleAuctionsClick}>
           Auctions
+          {unreadAuctionCount > 0 && location.pathname !== '/auctions' && (
+            <span className="unread-badge">{unreadAuctionCount}</span>
+          )}
         </NavLink>
       </>
       {!user && (
