@@ -74,6 +74,7 @@ function App() {
         autoClose: 3000,
       });
     };
+
     const handleYouWon = () => {
       toast.success(`You won the auction!  Check your profile for more information.`, {
         theme: 'dark',
@@ -83,12 +84,23 @@ function App() {
       });
     };
 
+    const handleAuctionEnded = () => {
+      toast.success(`Auction has ended.`, {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+    };
+
     websocketService.on('user-outbid', handleOutbid);
     websocketService.on('user-won', handleYouWon);
+    websocketService.on('auction-ended', handleAuctionEnded);
 
     return () => {
       websocketService.off('user-outbid', handleOutbid);
       websocketService.off('user-won', handleYouWon);
+      websocketService.off('auction-ended', handleAuctionEnded);
       websocketService.disconnect(); // optional: only if App truly unmounts once
     };
   }, []);
