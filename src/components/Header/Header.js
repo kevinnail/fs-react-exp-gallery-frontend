@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
@@ -14,7 +14,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { unreadAuctionCount, unreadMessageCount } = useNotificationStore();
+  const { unreadAuctionCount, unreadMessageCount, fetchUnreadAuctions } = useNotificationStore();
   const totalUnread = unreadAuctionCount + unreadMessageCount;
 
   const handleClick = async () => {
@@ -37,7 +37,10 @@ export default function Header() {
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
-  console.log('Header render -> unreadAuctionCount:', unreadAuctionCount);
+
+  useEffect(() => {
+    fetchUnreadAuctions();
+  }, []);
 
   return (
     <>
