@@ -313,10 +313,6 @@
   text-align: right;
 }
 
-.my-bid {
-  border: 1px solid rgb(255, 213, 0);
-}
-
 /* 
 
 ^ Responsive design below ========================================
@@ -384,7 +380,7 @@
 
   .bid-btn,
   .buy-btn {
-    width: 100%;
+    /* width: 100%; */
     padding: 0.6rem 1rem;
   }
 
