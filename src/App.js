@@ -19,7 +19,7 @@ import UserRoute from './components/UserRoute/UserRoute.js';
 import { createTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import websocketService from './services/websocket.js';
 import NotFound from './components/NotFound/NotFound.js';
 import UserDashboard from './components/Admin/Users/UsersDashboard.js';
@@ -66,8 +66,20 @@ function App() {
   useEffect(() => {
     websocketService.connect();
 
+    const handleOutbid = (data) => {
+      toast.warn(`You’ve been outbid on auction #${data.auctionId}`, {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+    };
+
+    websocketService.on('user-outbid', handleOutbid);
+
     return () => {
-      websocketService.disconnect();
+      websocketService.off('user-outbid', handleOutbid);
+      websocketService.disconnect(); // optional: only if App truly unmounts once
     };
   }, []);
 
