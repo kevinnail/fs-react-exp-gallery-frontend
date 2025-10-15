@@ -12,7 +12,8 @@ export default function Menu({ handleClick, closeMenu }) {
   const { unreadMessageCount } = useUnreadMessages();
   const location = useLocation();
   // const [unreadCount, setUnreadCount] = useState(0);
-  const { unreadAuctionCount, incrementAuction, resetAuction } = useNotificationStore();
+  const { unreadAuctionCount, incrementAuction, resetAuction, wonAuctionCount } =
+    useNotificationStore();
 
   useEffect(() => {
     const handleOutbid = () => incrementAuction();
@@ -80,7 +81,11 @@ export default function Menu({ handleClick, closeMenu }) {
             <>
               <NavLink className="mobile-new-link" to="/profile" onClick={handleLinkClick}>
                 Profile
+                {wonAuctionCount > 0 && location.pathname !== '/profile' && (
+                  <span className="unread-badge">{wonAuctionCount}</span>
+                )}
               </NavLink>
+
               <NavLink className="mobile-new-link" to="/messages" onClick={handleLinkClick}>
                 Messages
                 {unreadMessageCount > 0 && location.pathname !== '/messages' && (
