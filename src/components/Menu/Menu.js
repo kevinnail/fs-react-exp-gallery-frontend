@@ -12,8 +12,15 @@ export default function Menu({ handleClick, closeMenu }) {
   const { unreadMessageCount } = useUnreadMessages();
   const location = useLocation();
   // const [unreadCount, setUnreadCount] = useState(0);
-  const { unreadAuctionCount, incrementAuction, resetAuction, wonAuctionCount } =
-    useNotificationStore();
+
+  const {
+    unreadAuctionCount,
+    incrementAuction,
+    resetAuction,
+    wonAuctionCount,
+    incrementWonAuction,
+    resetWonAuction,
+  } = useNotificationStore();
 
   useEffect(() => {
     const handleOutbid = () => incrementAuction();
@@ -21,10 +28,25 @@ export default function Menu({ handleClick, closeMenu }) {
     return () => websocketService.off('user-outbid', handleOutbid);
   }, [incrementAuction]);
 
+  useEffect(() => {
+    const handleUserWon = () => incrementWonAuction();
+    websocketService.on('user-won', handleUserWon);
+    return () => websocketService.off('user-won', handleUserWon);
+  }, [incrementWonAuction]);
+
   const handleAuctionsClick = () => {
     resetAuction();
     closeMenu();
   };
+  const handleProfileClick = () => {
+    resetWonAuction();
+    closeMenu();
+  };
+
+  // defensive reset when the route is already /profile
+  useEffect(() => {
+    if (location.pathname === '/profile') resetWonAuction();
+  }, [location.pathname, resetWonAuction]);
 
   const handleDownloadCSV = () => {
     downloadInventoryCSV();
@@ -79,7 +101,7 @@ export default function Menu({ handleClick, closeMenu }) {
 
           {!isAdmin && (
             <>
-              <NavLink className="mobile-new-link" to="/profile" onClick={handleLinkClick}>
+              <NavLink className="mobile-new-link" to="/profile" onClick={handleProfileClick}>
                 Profile
                 {wonAuctionCount > 0 && location.pathname !== '/profile' && (
                   <span className="unread-badge">{wonAuctionCount}</span>
