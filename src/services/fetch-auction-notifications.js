@@ -48,26 +48,27 @@ export async function markAuctionNotificationsRead() {
   }
 }
 
+// ^ keeping for now could come in handy, corresponding route/ model method on the back end as well
 // Optional: fetch all (read + unread) notifications if needed for admin or history
-export async function getAllAuctionNotifications() {
-  try {
-    const res = await fetch(`${BASE_URL}/api/v1/auction-notifications/all`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    });
+// export async function getAllAuctionNotifications() {
+//   try {
+//     const res = await fetch(`${BASE_URL}/api/v1/auction-notifications/all`, {
+//       method: 'GET',
+//       headers: {
+//         Accept: 'application/json',
+//         'Content-Type': 'application/json',
+//       },
+//       credentials: 'include',
+//     });
 
-    if (!res.ok) {
-      throw new Error('Error fetching all auction notifications');
-    }
+//     if (!res.ok) {
+//       throw new Error('Error fetching all auction notifications');
+//     }
 
-    const data = await res.json();
-    return data;
-  } catch (e) {
-    console.error('Error fetching all auction notifications', e);
-    throw new Error(e.message || 'Error in getAllAuctionNotifications');
-  }
-}
+//     const data = await res.json();
+//     return data;
+//   } catch (e) {
+//     console.error('Error fetching all auction notifications', e);
+//     throw new Error(e.message || 'Error in getAllAuctionNotifications');
+//   }
+// }
