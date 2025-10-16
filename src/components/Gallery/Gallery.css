@@ -82,12 +82,15 @@
 }
 
 .contact-wrapper {
-  display: grid;
-  flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.491);
-  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 15px 20px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 255, 0.606);
+  width: 100%;
 }
 
 .site-msg-span {
@@ -117,11 +120,7 @@
   }
 
   .contact-wrapper {
-    min-width: 185px;
-    min-height: 131px;
-    display: grid;
-    flex-direction: column;
-    background-color: rgba(0, 0, 0, 0.45);
+    width: 800px;
   }
   .message-link-wrapper {
     display: flex;
