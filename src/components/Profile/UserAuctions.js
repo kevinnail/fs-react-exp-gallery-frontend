@@ -15,7 +15,6 @@ export default function UserAuctions({ userId }) {
     const loadUserAuctions = async () => {
       try {
         const data = await getUserAuctions(userId);
-        console.log('data', data);
 
         const rawActive = Array.isArray(data?.activeAuctionBids) ? data.activeAuctionBids : [];
         const rawWon = Array.isArray(data?.wonAuctions) ? data.wonAuctions : [];
@@ -33,7 +32,8 @@ export default function UserAuctions({ userId }) {
           })
         );
 
-        setActiveBids(hydrated);
+        const activeHydration = hydrated.filter((a) => (a.auction.isActive ? a : ''));
+        setActiveBids(activeHydration);
         setWonAuctions(rawWon);
       } catch (err) {
         console.error('Error loading user auctions:', err);

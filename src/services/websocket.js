@@ -96,6 +96,15 @@ class WebSocketService {
       this.socket.on('auction-BIN', (data) => {
         this.emit('auction-BIN', data);
       });
+
+      this.socket.on('user-outbid', (data) => {
+        this.emit('user-outbid', data);
+      });
+
+      this.socket.on('user-won', (data) => {
+        this.emit('user-won', data);
+      });
+      //
     } catch (error) {
       console.error('Error initializing WebSocket:', error);
       this.emit('connection', { connected: false, error });

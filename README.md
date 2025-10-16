@@ -1,83 +1,94 @@
 # Stress Less Glass
 
-A professional artist portfolio website showcasing my glass artwork. This full-stack application provides visitors with an elegant platform to browse my work and initiate contact for potential acquisitions. Built with a focus on performance and user experience, the site features a responsive design and robust image management system.
+A full-stack application for showcasing glass artwork, managing auctions, and enabling real-time messaging between artists and customers.  
+Built for performance, scalability, and smooth interaction across gallery browsing, communication, and live bidding.
 
 ![Logo](https://fs-react-exp-gallery-kn.netlify.app/logo-sq-180.png)
 
-## Table of Contents
+---
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Technical Implementation](#technical-implementation)
-- [Preview](#preview)
+## 🧩 Overview
 
-## Features
+**Stress Less Glass** combines a professional art portfolio with business management tools:
 
-- Dynamic image gallery with responsive grid layout
-- Secure image upload and management system with AWS S3 integration
-- Real-time image preview and editing capabilities
-- Advanced form handling with multi-image upload support
-- Responsive design with modern CSS animations
-- Secure authentication system for admin access
-- Order management and processing system
-- Business analytics and data export capabilities
+- Real-time direct messaging with encryption
+- Live auction system with timers and bidding
+- Automated notifications for outbids and auction wins
+- Profile management with secure image uploads to AWS S3
+- Admin dashboard for order tracking and customer communication
 
-## Tech Stack
+---
 
-[![React](https://img.shields.io/badge/-React-61DAFB?style=flat&logo=react&logoColor=black)](https://reactjs.org/)
-[![CSS3](https://img.shields.io/badge/-CSS3-1572B6?style=flat&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
-[![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![React Router](https://img.shields.io/badge/-React%20Router-CA4245?style=flat&logo=react-router&logoColor=white)](https://reactrouter.com/)
-[![Node.js](https://img.shields.io/badge/-Node.js-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Express](https://img.shields.io/badge/-Express-000000?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
-[![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![AWS S3](https://img.shields.io/badge/-AWS%20S3-232F3E?style=flat&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/s3/)
+## ⚙️ Architecture
 
-## Technical Implementation
+| Layer        | Tech                                                     |
+| ------------ | -------------------------------------------------------- |
+| **Frontend** | React 18, Zustand, MUI, React-Toastify, socket.io-client |
+| **Backend**  | Node.js, Express, PostgreSQL, socket.io, node-cron       |
+| **Storage**  | AWS S3 + CloudFront                                      |
+| **Testing**  | Jest, Supertest                                          |
+| **Auth**     | Custom JWT + HTTP-only cookies                           |
+| **Hosting**  | Heroku                                                   |
 
-### Architecture
+---
 
-- Full-stack application with React frontend and Express backend
-- RESTful API design for efficient data management
-- AWS S3 integration for optimized image storage and delivery
-- PostgreSQL database for reliable data persistence
-- JWT-based authentication system
-- Responsive design implementation using modern CSS techniques
+## 🧠 Core Systems
 
-### Key Technical Features
+### 1. Gallery, Profiles, and Admin Dashboard
 
-- **Advanced Image Management**
+- **User Profiles:**  
+  Each registered user has a profile displaying their name, avatar, and recent activity.  
+  Profile images are stored in **AWS S3** and automatically cleaned up when updated.
 
-  - Multi-image upload with real-time preview
-  - Dynamic image state management
-  - AWS S3 integration for cloud storage
-  - Automatic image optimization and delivery
+- **Admin Dashboard:**  
+  The admin doesn’t have a profile. Instead, they manage the platform through a dashboard that includes:
+  - Uploading and editing posts
+  - Tracking inventory totals and values
+  - Applying discounts or posting sale messages on the homepage
+  - Creating and managing auctions
+  - Sending and receiving messages with users
 
-- **Form Handling**
+- Responsive gallery with dynamic post display.
+- Secure S3 image upload and cleanup logic.
 
-  - Complex state management for mixed data types
-  - Real-time validation and error handling
-  - Efficient handling of FormData for file uploads
-  - Seamless integration between local and cloud storage
+### 2. Messaging
 
-- **Performance Optimization**
-  - Optimized image loading and caching
-  - Efficient database relationships with cascading operations
-  - Responsive design with CSS animations
-  - Cloud-based asset delivery through AWS S3
+- Real-time encrypted chat between admin and users.
+- Typing indicators
+- See [WebSocket Messaging Implementation](./docs/WEBSOCKET_IMPLEMENTATION.md).
 
-### Database Design
+### 3. Auctions
 
-- PostgreSQL database with optimized schema
-- Proper foreign key relationships for data integrity
-- Efficient cascading operations
-- Secure data storage and retrieval patterns
-- Comprehensive test suite using Jest
+- Time-based and Buy-It-Now auctions.
+- Automated expiration via `node-cron`.
+- Real-time bid updates and notifications.
+- See [Auctions & Notifications System](./docs/AUCTIONS_AND_NOTIFICATIONS.md).
 
-## Preview
+### 4. Notifications
 
-![Preview](./public/preview.gif)
+- Outbid, win, and auction-ended alerts.
+- Live badge counters via WebSockets and Zustand store.
 
-## Contact
+---
 
-For business inquiries, please visit [Stress Less Glass](http://stresslessglass.kevinnail.com) or contact me directly at [kevin@kevinnail.com](mailto:kevin@kevinnail.com).
+## 🧱 Database Schema (Simplified)
+
+- **users_admin** – Authenticated users and admins
+- **profiles** – Linked user details and avatars
+- **messages** – Encrypted conversations
+- **auctions** – Listings with timers and pricing
+- **bids** – User bid records
+- **auction_results** – Finalized winners
+- **auction_notifications** – Stored user alerts
+
+All keys use `ON DELETE CASCADE`. Indexed for read-heavy operations.
+
+---
+
+## 🧪 Testing & CI
+
+- Unit and integration coverage across backend routes.
+- Test runner:
+  ```bash
+  npm test -- -u --runInBand --detectOpenHandles --forceExit
+  ```

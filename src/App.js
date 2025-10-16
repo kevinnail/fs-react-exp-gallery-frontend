@@ -19,7 +19,7 @@ import UserRoute from './components/UserRoute/UserRoute.js';
 import { createTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import websocketService from './services/websocket.js';
 import NotFound from './components/NotFound/NotFound.js';
 import UserDashboard from './components/Admin/Users/UsersDashboard.js';
@@ -66,8 +66,42 @@ function App() {
   useEffect(() => {
     websocketService.connect();
 
+    const handleOutbid = () => {
+      toast.warn(`You’ve been outbid!`, {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+    };
+
+    const handleYouWon = () => {
+      toast.success(`You won the auction!  Check your profile for more information.`, {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+    };
+
+    const handleAuctionEnded = () => {
+      toast.success(`Auction has ended.`, {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+    };
+
+    websocketService.on('user-outbid', handleOutbid);
+    websocketService.on('user-won', handleYouWon);
+    websocketService.on('auction-ended', handleAuctionEnded);
+
     return () => {
-      websocketService.disconnect();
+      websocketService.off('user-outbid', handleOutbid);
+      websocketService.off('user-won', handleYouWon);
+      websocketService.off('auction-ended', handleAuctionEnded);
+      websocketService.disconnect(); // optional: only if App truly unmounts once
     };
   }, []);
 

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
-import { signOut } from '../../services/auth.js';
 import { fetchUserProfile, fetchGalleryPosts } from '../../services/fetch-utils.js';
 import ProfileForm from './ProfileForm.js';
 import './Profile.css';
@@ -9,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import UserAuctions from './UserAuctions.js';
 
 export default function Profile() {
-  const { user, signout } = useUserStore();
+  const { user } = useUserStore();
   const { profile, setProfile } = useProfileStore();
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
@@ -93,17 +92,6 @@ export default function Profile() {
 
     loadRecentPosts();
   }, []);
-
-  const handleClick = async () => {
-    try {
-      await signOut();
-      signout();
-    } catch (error) {
-      console.error('Error signing out:', error);
-      // Still clear state even if sign out fails
-      signout();
-    }
-  };
 
   const handleEditProfile = () => {
     setShowEditForm(true);

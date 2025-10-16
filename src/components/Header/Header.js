@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
@@ -7,11 +7,15 @@ import '../CoolSearchBox/CoolSearchBox.css';
 import Menu from '../Menu/Menu.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import { useNavigate } from 'react-router-dom';
+import { useNotificationStore } from '../../stores/notificationStore.js';
 
 export default function Header() {
   const { user, signout, isAdmin } = useUserStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  const { unreadAuctionCount, unreadMessageCount, fetchUnreadAuctions } = useNotificationStore();
+  const totalUnread = unreadAuctionCount + unreadMessageCount;
 
   const handleClick = async () => {
     await signOut();
@@ -34,6 +38,10 @@ export default function Header() {
     setIsMenuOpen(false);
   };
 
+  useEffect(() => {
+    fetchUnreadAuctions();
+  }, []);
+
   return (
     <>
       <header>
@@ -43,11 +51,17 @@ export default function Header() {
         <h1 className="title">Stress Less Glass</h1>
 
         <div className="header-section">
-          <img
-            className={user ? 'menu-icon' : 'menu-no-user'}
-            src="../menu.png"
-            onClick={handleMenuClick}
-          />
+          <div className="menu-icon-wrapper" onClick={handleMenuClick}>
+            <button
+              type="button"
+              className="menu-icon-wrapper"
+              onClick={handleMenuClick}
+              aria-label="Open menu"
+            >
+              <img className={user ? 'menu-icon' : 'menu-no-user'} src="../menu.png" alt="" />
+              {user && totalUnread > 0 && <span className="menu-badge">{totalUnread}</span>}
+            </button>
+          </div>
         </div>
       </header>
 

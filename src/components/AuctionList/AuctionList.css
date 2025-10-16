@@ -266,6 +266,53 @@
   justify-content: space-between;
 }
 
+.bid-history {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.bid-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+.bid-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.bid-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+.bid-name {
+  color: #fff;
+  font-weight: 500;
+}
+
+.bid-amount {
+  color: #8fff7a;
+}
+
+.bid-time {
+  color: #aaa;
+  font-size: 0.75rem;
+  text-align: right;
+}
+
 /* 
 
 ^ Responsive design below ========================================
@@ -333,8 +380,16 @@
 
   .bid-btn,
   .buy-btn {
-    width: 100%;
+    /* width: 100%; */
     padding: 0.6rem 1rem;
+  }
+
+  .bid-info {
+    display: grid;
+    grid-template-columns: 4fr 1fr 1fr;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.85rem;
   }
 }
 

@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useGalleryPosts } from '../../hooks/useGalleryPosts.js';
 import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
 import '../Gallery/Gallery.css';
-import Menu from '../Menu/Menu.js';
-import { signOut } from '../../services/auth.js';
-import { useUserStore } from '../../stores/userStore.js';
 import Loading from '../Loading/Loading.js';
 import { getSiteMessage } from '../../services/fetch-utils.js';
 import { Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AuctionCarousel from './AuctionCarousel.js';
+import { useNavigate } from 'react-router-dom';
+
 //
 //
 //
 export default function MainGallery() {
   const { posts, galleryLoading } = useGalleryPosts();
-  const { signout } = useUserStore();
   const [message, setMessage] = useState('');
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchMessage = async () => {
       try {
@@ -38,29 +37,14 @@ export default function MainGallery() {
     fetchMessage();
   }, []);
 
-  const handleClick = async () => {
-    await signOut();
-    signout();
-  };
-
   return galleryLoading ? (
     <Loading />
   ) : (
     <>
       <Box className="up-top-msg" sx={{ width: '100%' }}>
         <span className="site-msg-span">{message}</span>
-        <Box className="contact-wrapper">
-          {' '}
-          <span className="site-message-contact-header">Contact</span>
-          <Box className="message-link-wrapper">
-            <a href={'mailto:kevin@kevinnail.com'}>
-              <img className="site-msg-link-ig" width={'48px'} src="/email.png" />
-            </a>
-            <a href="https://www.instagram.com/stresslessglass">
-              <img width={'48px'} src="/IG.png" />
-            </a>
-          </Box>
-        </Box>
+
+        <AuctionCarousel />
       </Box>
       <Box className="gallery-list-container">
         {posts.map((post) => (

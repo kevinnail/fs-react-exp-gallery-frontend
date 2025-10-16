@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import websocketService from '../../services/websocket.js';
 import { useUserStore } from '../../stores/userStore.js';
+import { useNotificationStore } from '../../stores/notificationStore.js';
 
 export default function AuctionList() {
   const [auctions, setAuctions] = useState([]);
@@ -14,6 +15,7 @@ export default function AuctionList() {
   const { user, isAdmin } = useUserStore();
   const [lastBidUpdate, setLastBidUpdate] = useState(null);
   const [lastBuyNowId, setLastBuyNowId] = useState(null);
+  const { markAuctionsRead } = useNotificationStore();
 
   // fetch auctions
   useEffect(() => {
@@ -95,6 +97,10 @@ export default function AuctionList() {
     websocketService.on('auction-BIN', handleBuyItNow);
 
     return () => websocketService.off('auction-BIN', handleBuyItNow);
+  }, []);
+
+  useEffect(() => {
+    markAuctionsRead();
   }, []);
 
   if (loading) {

@@ -23,6 +23,7 @@ export async function getAuctions() {
     throw new Error(e.message || 'Error in getAuctions');
   }
 }
+
 export async function getUserAuctions(userId) {
   try {
     const res = await fetch(`${BASE_URL}/api/v1/auctions/user-auctions/${userId}`, {

@@ -41,7 +41,7 @@ export default function AuctionForm() {
           let formattedEndTime = '';
           if (currentAuction.endTime) {
             formattedEndTime = new Date(currentAuction.endTime)
-              .toLocaleString('sv-SE', { timeZone: 'local' })
+              .toLocaleString('sv-SE', { timeZone: 'America/Los_Angeles' })
               .replace(' ', 'T')
               .slice(0, 16);
           }

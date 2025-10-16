@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import './Auth.css';
-import { signOut, authUser } from '../../services/auth.js';
+import { authUser } from '../../services/auth.js';
 import { getUser } from '../../services/fetch-utils.js';
 import Loading from '../Loading/Loading.js';
 import { toast } from 'react-toastify';
@@ -13,8 +13,7 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignIn, setIsSignIn] = useState(true);
-  const { user, setUser, error, loading, setLoading, signout, setIsAdmin, isAdmin } =
-    useUserStore();
+  const { user, setUser, error, loading, setLoading, setIsAdmin, isAdmin } = useUserStore();
   const { type } = useParams();
   const [isFormRetracted, setIsFormRetracted] = useState(false);
   const navigate = useNavigate();
@@ -94,9 +93,24 @@ export default function Auth() {
     return true;
   };
 
-  const validatePassword = (password) => {
+  // runs live as user types
+  const validatePasswordLengthLive = (password) => {
     if (password.length > 50) {
       toast.warn('Password must be 50 characters or less', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3000,
+      });
+      return false;
+    }
+    return true;
+  };
+
+  // runs only at submit
+  const validatePasswordMinAtSubmit = (password) => {
+    if (password.length < 8) {
+      toast.warn('Password must be at least 8 characters long', {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
@@ -116,8 +130,9 @@ export default function Auth() {
   const handlePasswordChange = (e) => {
     const value = e.target.value;
     setPassword(value);
-    validatePassword(value);
+    validatePasswordLengthLive(value);
   };
+
   if (user) {
     return <Navigate to={isAdmin ? '/admin' : '/profile'} replace />;
   } else if (error) {
@@ -128,13 +143,56 @@ export default function Auth() {
   const submitAuth = async () => {
     try {
       setLoading(true);
+
+      // check email format/ value
       const normalizedEmail = email.trim();
+      // check if email is scammer and serve up some wasted time
+      if (email === 'stresslessglassauctions1@gmail.com') {
+        toast.success('Success! Please wait one moment until your account is created...', {
+          theme: 'dark',
+          autoClose: false,
+        });
+
+        // after 30 seconds
+        setTimeout(() => {
+          toast.info('Creating your profile...', {
+            theme: 'dark',
+            autoClose: 30000,
+          });
+        }, 1000);
+
+        // after 70 seconds
+        setTimeout(() => {
+          toast.info('Finalizing setup...', {
+            theme: 'dark',
+            autoClose: 70000,
+          });
+        }, 32000);
+
+        // after 1100 seconds
+        setTimeout(() => {
+          toast.success('All set! You can now sign in. Click here!', {
+            theme: 'dark',
+            autoClose: 90000,
+          });
+        }, 104000);
+
+        return;
+      }
       const isLengthOk = validateEmailLength(normalizedEmail);
       const isFormatOk = validateEmailFormat(normalizedEmail);
       if (!isLengthOk || !isFormatOk) {
         setLoading(false);
         return;
       }
+
+      // check if password is long enough
+      const isPasswordValid = validatePasswordMinAtSubmit(password);
+      if (!isPasswordValid) {
+        setLoading(false);
+        return;
+      }
+
       await authUser(normalizedEmail, password, type);
       const data = await getUser();
       if (data) {
@@ -155,17 +213,6 @@ export default function Auth() {
         autoClose: 5000,
       });
       setLoading(false);
-    }
-  };
-
-  const handleClick = async () => {
-    try {
-      await signOut();
-      signout();
-    } catch (error) {
-      console.error('Error signing out:', error);
-      // Still clear state even if sign out fails
-      signout();
     }
   };
 
@@ -191,7 +238,6 @@ export default function Auth() {
     });
   };
 
-  // show loading spinner while waiting
   if (loading) {
     return <Loading />;
   }
@@ -322,7 +368,7 @@ export default function Auth() {
                   <input
                     className="input-auth"
                     type="email"
-                    placeholder="email@email.com"
+                    placeholder="enter your email address"
                     value={email}
                     onChange={handleEmailChange}
                     maxLength={101}

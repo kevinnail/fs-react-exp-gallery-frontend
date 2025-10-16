@@ -1,13 +1,6 @@
+import { Box } from '@mui/material';
 import './AboutMe.css';
-import { signOut } from '../../services/auth.js';
-import { useUserStore } from '../../stores/userStore.js';
 export default function AboutMe() {
-  const { signout } = useUserStore();
-
-  const handleClick = async () => {
-    await signOut();
-    signout();
-  };
   return (
     <div className="about-me-div">
       <h1 className="about-me-h1">About Kevin</h1>
@@ -21,6 +14,16 @@ export default function AboutMe() {
           <div className="face3 bottom3"></div>
         </div>
       </div>
+      <Box className="contact-wrapper">
+        {' '}
+        <span className="site-message-contact-header">Contact</span>
+        <a href={'mailto:kevin@kevinnail.com'}>
+          <img className="site-msg-link-ig" width={'48px'} src="/email.png" />
+        </a>
+        <a href="https://www.instagram.com/stresslessglass">
+          <img width={'48px'} src="/IG.png" />
+        </a>
+      </Box>
       <p className="about-me-p">
         Welcome! I appreciate you checking out my page. I&apos;ve been blowing glass for about 28
         years. In recent years, I&apos;ve been working on making a life pivot into web development
