@@ -33,7 +33,8 @@ export default function UserAuctions({ userId }) {
           })
         );
 
-        setActiveBids(hydrated);
+        const activeHydration = hydrated.filter((a) => (a.auction.isActive ? a : ''));
+        setActiveBids(activeHydration);
         setWonAuctions(rawWon);
       } catch (err) {
         console.error('Error loading user auctions:', err);
