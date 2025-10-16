@@ -1,0 +1,50 @@
+.auction-carousel {
+  width: 100%;
+  max-width: 600px;
+  overflow: hidden;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.carousel-track {
+  display: flex;
+  animation: scroll 18s linear infinite;
+}
+
+.carousel-item {
+  flex: 0 0 auto;
+  width: 33%;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.carousel-item:hover {
+  transform: scale(1.05);
+}
+
+.carousel-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-item {
+    width: 50%;
+  }
+  .carousel-img {
+    height: 120px;
+  }
+}
