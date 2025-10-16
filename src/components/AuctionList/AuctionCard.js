@@ -5,20 +5,54 @@ import { buyItNow, getBids, placeBid } from '../../services/fetch-bids.js';
 import { useUserStore } from '../../stores/userStore.js';
 import { toast } from 'react-toastify';
 import { createPortal } from 'react-dom';
+import { useProfileStore } from '../../stores/profileStore.js';
 
 export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
   const id = Number(auction.id);
   const { user, isAdmin } = useUserStore();
+  const { profile } = useProfileStore();
 
   const [selectedImage, setSelectedImage] = useState(auction.imageUrls[0]);
   const [bids, setBids] = useState([]);
-  const [showHistory, setShowHistory] = useState(false);
+  // const [showHistory, setShowHistory] = useState(false);
   const [highestBid, setHighestBid] = useState(auction.currentBid || 0);
   const [isActive, setIsActive] = useState(auction.isActive);
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
+  const [timeLeft, setTimeLeft] = useState('');
+  const [showBidModal, setShowBidModal] = useState(false);
+  const [bidAmount, setBidAmount] = useState('');
+  const [showConfirmBIN, setShowConfirmBIN] = useState(false);
+
+  useEffect(() => {
+    if (!auction.endTime) return;
+
+    const updateCountdown = () => {
+      const diff = new Date(auction.endTime) - new Date();
+
+      if (diff <= 0) {
+        setTimeLeft('Auction ended');
+        return;
+      }
+
+      const totalHours = Math.floor(diff / 3600000);
+      const days = Math.floor(totalHours / 24);
+      const hrs = totalHours % 24;
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+
+      if (totalHours >= 24) {
+        setTimeLeft(`${days}d ${hrs}h ${mins}m ${secs}s`);
+      } else {
+        setTimeLeft(`${hrs}h ${mins}m ${secs}s`);
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [auction.endTime]);
 
   // initialize/ set isActive
   useEffect(() => {
@@ -50,23 +84,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
     }
   }, [lastBidUpdate, id]);
 
-  const handleImageClick = (url) => {
-    setSelectedImage(url);
-  };
-
-  const handleEdit = () => {
-    navigate(`/admin/auctions/${id}`);
-  };
-
-  const [showBidModal, setShowBidModal] = useState(false);
-  const [bidAmount, setBidAmount] = useState('');
-
-  const [showConfirmBIN, setShowConfirmBIN] = useState(false);
-
-  const handleNavAuth = () => {
-    navigate('/auth/sign-in');
-  };
-
+  // fetch bids
   useEffect(() => {
     const fetchBids = async () => {
       try {
@@ -90,6 +108,25 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
     fetchBids();
   }, [id]);
 
+  const handleImageClick = (url) => {
+    setSelectedImage(url);
+  };
+
+  const handleEdit = () => {
+    navigate(`/admin/auctions/${id}`);
+  };
+
+  const handleNavAuth = () => {
+    toast.info('Must be signed in to bid', {
+      theme: 'colored',
+      draggable: true,
+      draggablePercent: 60,
+      toastId: 'auction-list-2',
+      autoClose: false,
+    });
+    navigate('/auth/sign-in');
+  };
+
   const handleBuyItNow = async () => {
     try {
       await buyItNow({ auctionId: id, userId: user.id });
@@ -100,10 +137,49 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
         theme: 'colored',
         draggable: true,
         draggablePercent: 60,
-        toastId: 'auction-list-1',
+        toastId: 'auction-list-3',
         autoClose: false,
       });
     }
+  };
+
+  const checkProfileCompletion = () => {
+    if (!profile) return false;
+
+    const { firstName, lastName, imageUrl, userId } = profile;
+
+    // Must match logged-in user and have non-empty values
+    if (
+      !user ||
+      !user.id ||
+      user.id !== userId ||
+      !firstName?.trim() ||
+      !lastName?.trim() ||
+      !imageUrl?.trim()
+    ) {
+      toast.info(
+        `Please complete your profile (name and avatar) before bidding or buying. Thank you!`,
+        {
+          theme: 'dark',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: false,
+        }
+      );
+      navigate('/profile');
+      return false;
+    }
+
+    return true;
+  };
+  const handleBidClick = () => {
+    if (!user) return handleNavAuth();
+    if (checkProfileCompletion()) setShowBidModal(true);
+  };
+
+  const handleBuyNowClick = () => {
+    if (!user) return handleNavAuth();
+    if (checkProfileCompletion()) setShowConfirmBIN(true);
   };
 
   return (
@@ -182,6 +258,8 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
                   hour: 'numeric',
                   minute: 'numeric',
                 })}
+                <br />
+                <span style={{ color: '#00ff99', fontWeight: 'bold' }}>{timeLeft}</span>
               </p>
             </div>
           </div>
@@ -189,17 +267,11 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
           <div className="auction-actions">
             {isActive ? (
               <>
-                <button
-                  onClick={user ? () => setShowBidModal(true) : handleNavAuth}
-                  className="bid-btn"
-                >
+                <button onClick={handleBidClick} className="bid-btn">
                   Place Bid
                 </button>
                 {auction.buyNowPrice && (
-                  <button
-                    onClick={user ? () => setShowConfirmBIN(true) : handleNavAuth}
-                    className="buy-btn"
-                  >
+                  <button onClick={handleBuyNowClick} className="buy-btn">
                     Buy Now
                   </button>
                 )}
