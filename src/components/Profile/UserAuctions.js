@@ -15,7 +15,6 @@ export default function UserAuctions({ userId }) {
     const loadUserAuctions = async () => {
       try {
         const data = await getUserAuctions(userId);
-        console.log('data', data);
 
         const rawActive = Array.isArray(data?.activeAuctionBids) ? data.activeAuctionBids : [];
         const rawWon = Array.isArray(data?.wonAuctions) ? data.wonAuctions : [];

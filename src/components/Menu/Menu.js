@@ -60,7 +60,6 @@ export default function Menu({ handleClick, closeMenu }) {
   const handleLinkClick = () => {
     closeMenu();
   };
-  console.log('Menu render -> unreadAuctionCount:', unreadAuctionCount);
 
   return (
     <div>
