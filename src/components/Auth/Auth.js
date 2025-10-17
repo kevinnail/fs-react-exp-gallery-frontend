@@ -8,6 +8,8 @@ import Loading from '../Loading/Loading.js';
 import { toast } from 'react-toastify';
 import AgreementModal from './AgreementModal.js';
 import { useGalleryPosts } from '../../hooks/useGalleryPosts.js';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -23,6 +25,7 @@ export default function Auth() {
   const [currentStart, setCurrentStart] = useState(0);
   const { posts, galleryLoading } = useGalleryPosts();
   const [recentImages, setRecentImages] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const loadRecentPosts = async () => {
@@ -72,7 +75,7 @@ export default function Auth() {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
-        autoClose: 3000,
+        autoClose: 5000,
       });
       return false;
     }
@@ -86,7 +89,7 @@ export default function Auth() {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
-        autoClose: 3000,
+        autoClose: 5000,
       });
       return false;
     }
@@ -100,7 +103,7 @@ export default function Auth() {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
-        autoClose: 3000,
+        autoClose: 5000,
       });
       return false;
     }
@@ -114,8 +117,33 @@ export default function Auth() {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
-        autoClose: 3000,
+        autoClose: 5000,
       });
+      return false;
+    }
+    return true;
+  };
+
+  // At least 8 chars, 1 lowercase, 1 uppercase, 1 number, 1 special character
+  function isStrongPassword(password) {
+    // At least 8 chars, 1 lowercase, 1 uppercase, 1 number, 1 special character
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+    return regex.test(password);
+  }
+
+  const validatePasswordSignUp = (password) => {
+    console.log('password', password);
+
+    if (!isStrongPassword(password)) {
+      toast.warn(
+        'Password must be at least 8 characters long and include uppercase, lowercase, number, and symbol',
+        {
+          theme: 'dark',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: 10000,
+        }
+      );
       return false;
     }
     return true;
@@ -150,6 +178,9 @@ export default function Auth() {
       if (email === 'stresslessglassauctions1@gmail.com') {
         toast.success('Success! Please wait one moment until your account is created...', {
           theme: 'dark',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'secure-password',
           autoClose: false,
         });
 
@@ -181,7 +212,13 @@ export default function Auth() {
       }
       const isLengthOk = validateEmailLength(normalizedEmail);
       const isFormatOk = validateEmailFormat(normalizedEmail);
+
       if (!isLengthOk || !isFormatOk) {
+        setLoading(false);
+        return;
+      }
+
+      if (type === 'sign-up' && !validatePasswordSignUp(password)) {
         setLoading(false);
         return;
       }
@@ -202,7 +239,20 @@ export default function Auth() {
         setUser(user);
         setIsAdmin(isAdmin);
         setLoading(false);
-        navigate('/admin');
+        if (isAdmin) {
+          navigate('/admin');
+        } else {
+          navigate('/profile');
+        }
+      }
+
+      if (type === 'sign-up') {
+        toast.success('Account created successfully', {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: 5000,
+        });
       }
     } catch (e) {
       console.error(e);
@@ -377,15 +427,22 @@ export default function Auth() {
                     autoComplete="email"
                   />
                 </div>
-
-                <input
-                  className="input-auth"
-                  type="password"
-                  placeholder="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  maxLength={51}
-                />
+                <div className="password-field">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={handlePasswordChange}
+                    placeholder="Password"
+                    className="input-auth"
+                  />
+                  <span className="toggle-visibility" onClick={() => setShowPassword((v) => !v)}>
+                    {showPassword ? (
+                      <VisibilityOff fontSize="small" />
+                    ) : (
+                      <Visibility fontSize="small" />
+                    )}
+                  </span>
+                </div>
                 <button className="button-auth" onClick={isSignIn ? submitAuth : handleSignupClick}>
                   {isSignIn ? 'Sign In' : 'Sign Up'}
                 </button>
