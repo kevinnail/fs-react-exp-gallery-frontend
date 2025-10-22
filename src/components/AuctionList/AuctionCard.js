@@ -221,7 +221,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
           </div>
 
           <h2>{auction.title}</h2>
-          <p className="auction-description">{auction.description}</p>
+          <p style={{ whiteSpace: 'pre-wrap' }}>{auction.description}</p>
 
           <div className="auction-details">
             {isActive && (
