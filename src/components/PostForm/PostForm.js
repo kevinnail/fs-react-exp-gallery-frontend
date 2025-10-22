@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';

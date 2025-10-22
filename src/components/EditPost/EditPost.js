@@ -8,7 +8,7 @@ import {
 } from '../../services/fetch-utils.js';
 import PostForm from '../PostForm/PostForm.js';
 import { usePost } from '../../hooks/usePost.js';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Loading from '../Loading/Loading.js';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
