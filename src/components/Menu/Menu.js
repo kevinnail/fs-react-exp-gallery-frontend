@@ -97,17 +97,17 @@ export default function Menu({ handleClick, closeMenu }) {
               >
                 Dashboard
               </NavLink>
-              <NavLink className="mobile-new-link" to="/profile" onClick={handleProfileClick}>
-                Profile
+              <NavLink className="mobile-new-link" to="/account" onClick={handleProfileClick}>
+                Account
               </NavLink>
             </>
           )}
 
           {!isAdmin && (
             <>
-              <NavLink className="mobile-new-link" to="/profile" onClick={handleProfileClick}>
-                Profile
-                {wonAuctionCount > 0 && location.pathname !== '/profile' && (
+              <NavLink className="mobile-new-link" to="/account" onClick={handleProfileClick}>
+                Account
+                {wonAuctionCount > 0 && location.pathname !== '/account' && (
                   <span className="unread-badge">{wonAuctionCount}</span>
                 )}
               </NavLink>
