@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { fetchUserProfile, fetchGalleryPosts } from '../../services/fetch-utils.js';
-import ProfileForm from './ProfileForm.js';
+import ProfileForm from './AccountForm.js';
 import './Account.css';
 import { useProfileStore } from '../../stores/profileStore.js';
 import { Link, useNavigate } from 'react-router-dom';
 import UserAuctions from './UserAuctions.js';
 
-export default function Profile() {
+export default function Account() {
   const { user } = useUserStore();
   const { profile, setProfile } = useProfileStore();
   const [showEditForm, setShowEditForm] = useState(false);

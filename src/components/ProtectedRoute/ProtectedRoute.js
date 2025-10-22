@@ -13,7 +13,7 @@ export default function ProtectedRoute({ children }) {
   }
 
   if (!isAdmin) {
-    return <Navigate to="/profile" replace />;
+    return <Navigate to="/account" replace />;
   }
 
   return children;
