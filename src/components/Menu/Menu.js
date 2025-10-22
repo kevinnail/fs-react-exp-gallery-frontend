@@ -88,14 +88,19 @@ export default function Menu({ handleClick, closeMenu }) {
       {user && (
         <>
           {isAdmin && (
-            <NavLink
-              className="mobile-new-link"
-              to="/admin"
-              title="Dashboard"
-              onClick={handleLinkClick}
-            >
-              Dashboard
-            </NavLink>
+            <>
+              <NavLink
+                className="mobile-new-link"
+                to="/admin"
+                title="Dashboard"
+                onClick={handleLinkClick}
+              >
+                Dashboard
+              </NavLink>
+              <NavLink className="mobile-new-link" to="/profile" onClick={handleProfileClick}>
+                Profile
+              </NavLink>
+            </>
           )}
 
           {!isAdmin && (
