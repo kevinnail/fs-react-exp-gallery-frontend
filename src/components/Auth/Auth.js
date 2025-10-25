@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink, useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import './Auth.css';
@@ -22,7 +22,6 @@ export default function Auth() {
   const [isAgreementOpen, setAgreementOpen] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
-  const [currentStart, setCurrentStart] = useState(0);
   const { posts, galleryLoading } = useGalleryPosts();
   const [recentImages, setRecentImages] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
@@ -40,19 +39,6 @@ export default function Auth() {
     };
     loadRecentPosts();
   }, []);
-
-  const sortedPosts = useMemo(() => {
-    if (!Array.isArray(posts)) return [];
-    return [...posts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  }, [posts]);
-
-  useEffect(() => {
-    if (sortedPosts.length <= 6) return;
-    const id = setInterval(() => {
-      setCurrentStart((prev) => (prev + 6) % sortedPosts.length);
-    }, 8000);
-    return () => clearInterval(id);
-  }, [sortedPosts.length]);
 
   useEffect(() => {
     const loadRecentPosts = async () => {
