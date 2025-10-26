@@ -39,7 +39,9 @@ export default function Header() {
   };
 
   useEffect(() => {
-    fetchUnreadAuctions();
+    if (user) {
+      fetchUnreadAuctions();
+    }
   }, []);
 
   return (
