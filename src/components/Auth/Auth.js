@@ -26,20 +26,7 @@ export default function Auth() {
   const [recentImages, setRecentImages] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    const loadRecentPosts = async () => {
-      try {
-        if (Array.isArray(posts)) {
-          const sorted = posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-          setRecentImages(sorted);
-        }
-      } catch (err) {
-        console.error('Error loading posts:', err);
-      }
-    };
-    loadRecentPosts();
-  }, []);
-
+  // Get most recent posts for cube
   useEffect(() => {
     const loadRecentPosts = async () => {
       try {
@@ -53,6 +40,36 @@ export default function Auth() {
     };
     loadRecentPosts();
   }, [posts]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('verify_token') === 'true') {
+      toast.success('Email verified successfully! You can now sign in.', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 5000,
+      });
+    } else if (params.get('verified') === 'false') {
+      toast.error(
+        <div>
+          <p>Invalid or expired verification link.</p>
+          <p>
+            Please try again. If that fails, please contact me on{' '}
+            <a style={{ textDecoration: 'none' }} href="http://www.instagram.com/stresslessglass">
+              Instagram
+            </a>
+          </p>
+        </div>,
+        {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: false,
+        }
+      );
+    }
+  }, []);
 
   // Validation functions
   const validateEmailLength = (email) => {
@@ -118,8 +135,6 @@ export default function Auth() {
   }
 
   const validatePasswordSignUp = (password) => {
-    console.log('password', password);
-
     if (!isStrongPassword(password)) {
       toast.warn(
         'Password must be at least 8 characters long and include uppercase, lowercase, number, and symbol',
@@ -148,7 +163,7 @@ export default function Auth() {
   };
 
   if (user) {
-    return <Navigate to={isAdmin ? '/admin' : '/profile'} replace />;
+    return <Navigate to={isAdmin ? '/admin' : '/account'} replace />;
   } else if (error) {
     console.error(error);
   }
@@ -160,8 +175,10 @@ export default function Auth() {
 
       // check email format/ value
       const normalizedEmail = email.trim();
+
       // check if email is scammer and serve up some wasted time
-      if (email === 'stresslessglassauctions1@gmail.com') {
+      // ^ waste time START ================================================
+      if (normalizedEmail === 'stresslessglassauctions1@gmail.com') {
         toast.success('Success! Please wait one moment until your account is created...', {
           theme: 'dark',
           draggable: true,
@@ -196,6 +213,8 @@ export default function Auth() {
 
         return;
       }
+      // ^ waste time END =================================================
+
       const isLengthOk = validateEmailLength(normalizedEmail);
       const isFormatOk = validateEmailFormat(normalizedEmail);
 
@@ -218,6 +237,18 @@ export default function Auth() {
 
       await authUser(normalizedEmail, password, type);
       const data = await getUser();
+
+      if (!data?.user?.isVerified) {
+        toast.info('Please check your email to verify account!', {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: false,
+        });
+        setLoading(false);
+        return;
+      }
+
       if (data) {
         // Handle different possible data structures
         const user = data.user?.user || data.user || data;
@@ -228,7 +259,7 @@ export default function Auth() {
         if (isAdmin) {
           navigate('/admin');
         } else {
-          navigate('/profile');
+          navigate('/account');
         }
       }
 
