@@ -43,9 +43,9 @@ export default function Menu({ handleClick, closeMenu }) {
     closeMenu();
   };
 
-  // defensive reset when the route is already /profile
+  // defensive reset when the route is already /account
   useEffect(() => {
-    if (location.pathname === '/profile') resetWonAuction();
+    if (location.pathname === '/account') resetWonAuction();
   }, [location.pathname, resetWonAuction]);
 
   const handleDownloadCSV = () => {

@@ -166,7 +166,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
           autoClose: false,
         }
       );
-      navigate('/profile');
+      navigate('/account');
       return false;
     }
 
