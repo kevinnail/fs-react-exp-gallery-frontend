@@ -18,7 +18,13 @@ export default function AgreementModal({ isOpen, onAgree, onDecline }) {
           <ul>
             <li>You are 21 or older.</li>
             <li>You are legally allowed to view and purchase glass art.</li>
-            <li>You will be a kind human.</li>
+            <li>
+              <strong>
+                You agree to pay for any purchases/ auction wins within 24hrs/ ASAP{' '}
+                <span style={{ textDecoration: 'underline' }}>with communication</span> if more time
+                is needed.{' '}
+              </strong>
+            </li>
           </ul>
           <p>
             By clicking “Agree & Continue,” you acknowledge that you understand and accept these
