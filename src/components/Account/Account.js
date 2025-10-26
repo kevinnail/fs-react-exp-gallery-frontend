@@ -20,17 +20,17 @@ export default function Account() {
   const newUserMessage = (
     <>
       <p>
-        You can add your name or whatever you want me to call you, and an avatar image, using the
+        Please add your name or whatever you want me to call you, and an avatar image, using the
         edit button above.
       </p>
 
       <p>
-        If you have questions about work or a problem with your order, feel free to use the private/
+        If you have questions about work or a problem with an order, feel free to use the private/
         secure/ encrypted in house{' '}
         <Link className="message-link" to="/messages">
           messaging
         </Link>
-        !
+        ! <span>(link in menu)</span>
       </p>
       <p>
         I&apos;ll be adding features asap, just built Messages and Auctions- and we&apos;ll see what
