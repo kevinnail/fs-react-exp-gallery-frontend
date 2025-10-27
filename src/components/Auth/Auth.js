@@ -50,7 +50,7 @@ export default function Auth() {
         draggablePercent: 60,
         autoClose: 5000,
       });
-    } else if (params.get('verified') === 'false') {
+    } else if (params.get('verify') === 'false') {
       toast.error(
         <div>
           <p>Invalid or expired verification link.</p>
