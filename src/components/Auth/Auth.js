@@ -43,7 +43,7 @@ export default function Auth() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('verify_token') === 'true') {
+    if (params.get('verify') === 'true') {
       toast.success('Email verified successfully! You can now sign in.', {
         theme: 'colored',
         draggable: true,
