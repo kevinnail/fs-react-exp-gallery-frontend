@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { fetchUserProfile, fetchGalleryPosts } from '../../services/fetch-utils.js';
-import ProfileForm from './ProfileForm.js';
-import './Profile.css';
+import ProfileForm from './AccountForm.js';
+import './Account.css';
 import { useProfileStore } from '../../stores/profileStore.js';
 import { Link, useNavigate } from 'react-router-dom';
 import UserAuctions from './UserAuctions.js';
 
-export default function Profile() {
+export default function Account() {
   const { user } = useUserStore();
   const { profile, setProfile } = useProfileStore();
   const [showEditForm, setShowEditForm] = useState(false);
@@ -20,21 +20,21 @@ export default function Profile() {
   const newUserMessage = (
     <>
       <p>
-        You can add your name or whatever you want me to call you, and an avatar image, using the
+        Please add your name or whatever you want me to call you, and an avatar image, using the
         edit button above.
       </p>
 
       <p>
-        If you have questions about work or a problem with your order, feel free to use the private/
+        If you have questions about work or a problem with an order, feel free to use the private/
         secure/ encrypted in house{' '}
         <Link className="message-link" to="/messages">
           messaging
         </Link>
-        !
+        ! <span>(link in menu)</span>
       </p>
       <p>
-        I&apos;ll be adding features asap: early access to new work, comments on posts, auctions,
-        and we&apos;ll see what else! Stay tuned, thanks for being here.
+        I&apos;ll be adding features asap, just built Messages and Auctions- and we&apos;ll see what
+        else down the line! Stay tuned, thanks for being here.
       </p>
     </>
   );
@@ -51,8 +51,8 @@ export default function Profile() {
         </ul>
       </div>
       <p>
-        I&apos;ll be adding features asap: comments on posts, auctions, and we&apos;ll see what
-        else! Stay tuned, thanks for being here.
+        I&apos;ll be adding features asap, just built Messages and Auctions- and we&apos;ll see what
+        else down the line! Stay tuned, thanks for being here.
       </p>
     </>
   );

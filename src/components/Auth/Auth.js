@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink, useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import './Auth.css';
@@ -8,6 +8,8 @@ import Loading from '../Loading/Loading.js';
 import { toast } from 'react-toastify';
 import AgreementModal from './AgreementModal.js';
 import { useGalleryPosts } from '../../hooks/useGalleryPosts.js';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -20,10 +22,11 @@ export default function Auth() {
   const [isAgreementOpen, setAgreementOpen] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
-  const [currentStart, setCurrentStart] = useState(0);
   const { posts, galleryLoading } = useGalleryPosts();
   const [recentImages, setRecentImages] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
 
+  // Get most recent posts for cube
   useEffect(() => {
     const loadRecentPosts = async () => {
       try {
@@ -36,34 +39,37 @@ export default function Auth() {
       }
     };
     loadRecentPosts();
+  }, [posts]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('verify') === 'true') {
+      toast.success('Email verified successfully! You can now sign in.', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 5000,
+      });
+    } else if (params.get('verify') === 'false') {
+      toast.error(
+        <div>
+          <p>Invalid or expired verification link.</p>
+          <p>
+            Please try again. If that fails, please contact me on{' '}
+            <a style={{ textDecoration: 'none' }} href="http://www.instagram.com/stresslessglass">
+              Instagram
+            </a>
+          </p>
+        </div>,
+        {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: false,
+        }
+      );
+    }
   }, []);
-
-  const sortedPosts = useMemo(() => {
-    if (!Array.isArray(posts)) return [];
-    return [...posts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  }, [posts]);
-
-  useEffect(() => {
-    if (sortedPosts.length <= 6) return;
-    const id = setInterval(() => {
-      setCurrentStart((prev) => (prev + 6) % sortedPosts.length);
-    }, 8000);
-    return () => clearInterval(id);
-  }, [sortedPosts.length]);
-
-  useEffect(() => {
-    const loadRecentPosts = async () => {
-      try {
-        if (Array.isArray(posts)) {
-          const sorted = posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-          setRecentImages(sorted);
-        }
-      } catch (err) {
-        console.error('Error loading posts:', err);
-      }
-    };
-    loadRecentPosts();
-  }, [posts]);
 
   // Validation functions
   const validateEmailLength = (email) => {
@@ -72,7 +78,7 @@ export default function Auth() {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
-        autoClose: 3000,
+        autoClose: 5000,
       });
       return false;
     }
@@ -86,7 +92,7 @@ export default function Auth() {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
-        autoClose: 3000,
+        autoClose: 5000,
       });
       return false;
     }
@@ -100,7 +106,7 @@ export default function Auth() {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
-        autoClose: 3000,
+        autoClose: 5000,
       });
       return false;
     }
@@ -114,8 +120,31 @@ export default function Auth() {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
-        autoClose: 3000,
+        autoClose: 5000,
       });
+      return false;
+    }
+    return true;
+  };
+
+  // At least 8 chars, 1 lowercase, 1 uppercase, 1 number, 1 special character
+  function isStrongPassword(password) {
+    // At least 8 chars, 1 lowercase, 1 uppercase, 1 number, 1 special character
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+    return regex.test(password);
+  }
+
+  const validatePasswordSignUp = (password) => {
+    if (!isStrongPassword(password)) {
+      toast.warn(
+        'Password must be at least 8 characters long and include uppercase, lowercase, number, and symbol',
+        {
+          theme: 'dark',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: 10000,
+        }
+      );
       return false;
     }
     return true;
@@ -134,7 +163,7 @@ export default function Auth() {
   };
 
   if (user) {
-    return <Navigate to={isAdmin ? '/admin' : '/profile'} replace />;
+    return <Navigate to={isAdmin ? '/admin' : '/account'} replace />;
   } else if (error) {
     console.error(error);
   }
@@ -146,10 +175,15 @@ export default function Auth() {
 
       // check email format/ value
       const normalizedEmail = email.trim();
+
       // check if email is scammer and serve up some wasted time
-      if (email === 'stresslessglassauctions1@gmail.com') {
+      // ^ waste time START ================================================
+      if (normalizedEmail === 'stresslessglassauctions1@gmail.com') {
         toast.success('Success! Please wait one moment until your account is created...', {
           theme: 'dark',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'secure-password',
           autoClose: false,
         });
 
@@ -179,9 +213,17 @@ export default function Auth() {
 
         return;
       }
+      // ^ waste time END =================================================
+
       const isLengthOk = validateEmailLength(normalizedEmail);
       const isFormatOk = validateEmailFormat(normalizedEmail);
+
       if (!isLengthOk || !isFormatOk) {
+        setLoading(false);
+        return;
+      }
+
+      if (type === 'sign-up' && !validatePasswordSignUp(password)) {
         setLoading(false);
         return;
       }
@@ -195,6 +237,18 @@ export default function Auth() {
 
       await authUser(normalizedEmail, password, type);
       const data = await getUser();
+
+      if (!data?.user?.isVerified) {
+        toast.info('Please check your email to verify account!', {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: false,
+        });
+        setLoading(false);
+        return;
+      }
+
       if (data) {
         // Handle different possible data structures
         const user = data.user?.user || data.user || data;
@@ -202,7 +256,20 @@ export default function Auth() {
         setUser(user);
         setIsAdmin(isAdmin);
         setLoading(false);
-        navigate('/admin');
+        if (isAdmin) {
+          navigate('/admin');
+        } else {
+          navigate('/account');
+        }
+      }
+
+      if (type === 'sign-up') {
+        toast.success('Account created successfully', {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: 5000,
+        });
       }
     } catch (e) {
       console.error(e);
@@ -377,15 +444,22 @@ export default function Auth() {
                     autoComplete="email"
                   />
                 </div>
-
-                <input
-                  className="input-auth"
-                  type="password"
-                  placeholder="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  maxLength={51}
-                />
+                <div className="password-field">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={handlePasswordChange}
+                    placeholder="Password"
+                    className="input-auth"
+                  />
+                  <span className="toggle-visibility" onClick={() => setShowPassword((v) => !v)}>
+                    {showPassword ? (
+                      <VisibilityOff fontSize="small" />
+                    ) : (
+                      <Visibility fontSize="small" />
+                    )}
+                  </span>
+                </div>
                 <button className="button-auth" onClick={isSignIn ? submitAuth : handleSignupClick}>
                   {isSignIn ? 'Sign In' : 'Sign Up'}
                 </button>

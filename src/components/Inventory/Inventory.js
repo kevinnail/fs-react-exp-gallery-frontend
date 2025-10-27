@@ -1,4 +1,3 @@
-import React from 'react';
 import './Inventory.css';
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 

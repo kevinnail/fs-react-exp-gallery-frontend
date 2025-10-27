@@ -94,7 +94,6 @@ export async function signUpUser(email, password) {
     const data = await resp.json();
 
     if (resp.ok) {
-      await signInUser(email, password);
       return resp;
     } else {
       console.error(data.message);

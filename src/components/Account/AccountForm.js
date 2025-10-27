@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import './ProfileForm.css';
+import { useState, useEffect } from 'react';
+import './Account.css';
 import { useProfileStore } from '../../stores/profileStore.js';
 import { toast } from 'react-toastify';
 

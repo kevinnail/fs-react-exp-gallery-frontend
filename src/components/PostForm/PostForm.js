@@ -1,8 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
-import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
 import { useDropzone } from 'react-dropzone';
 import { Box } from '@mui/material';
@@ -25,7 +24,7 @@ export default function PostForm({
   const [descriptionInput, setDescriptionInput] = useState(description);
   const [priceInput, setPriceInput] = useState(price);
   const [categoryInput, setCategoryInput] = useState(category);
-  const { user, signout } = useUserStore();
+  const { user } = useUserStore();
   const [loading, setLoading] = useState(false);
   const [currentImages, setCurrentImages] = useState(imageUrls || []); // Added state for images currently in the post for display in the form
   const [deletedImages, setDeletedImages] = useState([]);
@@ -35,6 +34,7 @@ export default function PostForm({
   const [sellingLink, setSellingLink] = useState(selling_link);
 
   const [files, setFiles] = useState([]);
+
   const onDrop = useCallback((acceptedFiles) => {
     // Do something with the files
     setFiles(
@@ -56,42 +56,44 @@ export default function PostForm({
   });
 
   // Display thumbnails
-  const thumbs = !loading && (files.length > 0 || currentImages.length > 0) && (
-    <Box className="thumbnails-container">
-      {/* Display newly selected files */}
-      {files.map((file, index) => (
-        <Box key={file.name} className="thumbnail-wrapper">
-          <img src={file.preview} alt={`New image ${index + 1}`} className="thumbnail" />
-          <button
-            type="button"
-            className="delete-button-form"
-            onClick={(e) => {
-              e.preventDefault();
-              handleImageDelete(index);
-            }}
-          >
-            X
-          </button>
-        </Box>
-      ))}
-      {/* Display current images */}
-      {currentImages.map((url, index) => (
-        <Box key={url} className="thumbnail-wrapper">
-          <img src={url} alt={`Current image ${index + 1}`} className="thumbnail" />
-          <button
-            type="button"
-            className="delete-button-form"
-            onClick={(e) => {
-              e.preventDefault();
-              handleImageDelete(files.length + index);
-            }}
-          >
-            X
-          </button>
-        </Box>
-      ))}
-    </Box>
-  );
+  const thumbs = useMemo(() => {
+    if (loading || (files.length === 0 && currentImages.length === 0)) return null;
+
+    return (
+      <Box className="thumbnails-container">
+        {files.map((file, index) => (
+          <Box key={file.name} className="thumbnail-wrapper">
+            <img src={file.preview} alt={`New image ${index + 1}`} className="thumbnail" />
+            <button
+              type="button"
+              className="delete-button-form"
+              onClick={(e) => {
+                e.preventDefault();
+                handleImageDelete(index);
+              }}
+            >
+              X
+            </button>
+          </Box>
+        ))}
+        {currentImages.map((url, index) => (
+          <Box key={url} className="thumbnail-wrapper">
+            <img src={url} alt={`Current image ${index + 1}`} className="thumbnail" />
+            <button
+              type="button"
+              className="delete-button-form"
+              onClick={(e) => {
+                e.preventDefault();
+                handleImageDelete(files.length + index);
+              }}
+            >
+              X
+            </button>
+          </Box>
+        ))}
+      </Box>
+    );
+  }, [files, currentImages, loading]);
 
   let newOrEdit = '';
   let formFunctionMode = '';
@@ -169,10 +171,6 @@ export default function PostForm({
   if (loading) {
     return <Loading />;
   }
-  const handleClick = async () => {
-    await signOut();
-    signout();
-  };
 
   return (
     <>
