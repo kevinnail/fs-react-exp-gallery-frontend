@@ -250,17 +250,35 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
               <p>
                 <strong>BIN:</strong> ${auction.buyNowPrice || '—'}
               </p>
-              <p>
-                <strong>Ends: </strong>
-                {new Date(auction.endTime).toLocaleTimeString('en-US', {
-                  month: 'short',
-                  day: '2-digit',
-                  hour: 'numeric',
-                  minute: 'numeric',
-                })}
-                <br />
-                <span style={{ color: '#00ff99', fontWeight: 'bold' }}>{timeLeft}</span>
-              </p>
+              {isActive && (
+                <p
+                  style={{
+                    backgroundColor: 'black',
+                    padding: '.5rem',
+                    display: 'block',
+                    marginTop: '.5rem',
+                    textAlign: 'center',
+                    border: '1px solid yellow',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  <strong>Ends: </strong>
+                  {new Date(auction.endTime).toLocaleTimeString('en-US', {
+                    month: 'short',
+                    day: '2-digit',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                  })}
+                  <br />
+                  <span
+                    style={{
+                      color: isActive ? '#ffd500' : '',
+                    }}
+                  >
+                    {timeLeft}
+                  </span>
+                </p>
+              )}
             </div>
           </div>
 
