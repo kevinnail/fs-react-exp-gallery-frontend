@@ -148,6 +148,38 @@ export default function UserAuctions({ userId }) {
           <span>Reason: </span>
           {auction.closedReason === 'buy_now' ? 'Bought instantly' : 'Expired'}
         </p>
+        {auction.isPaid && (
+          <span
+            style={{
+              color: 'green',
+              padding: '2px 6px',
+              borderRadius: '4px',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              marginRight: '3rem',
+            }}
+          >
+            PAID
+          </span>
+        )}
+        {auction.trackingNumber && (
+          <p
+            onClick={() => handleTrackingClick(auction.trackingNumber)}
+            style={{
+              padding: '4px 6px',
+              borderRadius: '4px',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              marginRight: '3rem',
+              border: '1px solid green',
+              textAlign: 'center',
+              cursor: 'pointer',
+            }}
+          >
+            <span>Tracking </span>
+            <span>{auction.trackingNumber}</span>
+          </p>
+        )}
       </div>
     </>
   );
@@ -237,6 +269,12 @@ export default function UserAuctions({ userId }) {
     win.document.close();
   };
 
+  const handleTrackingClick = (trackingNumber) => {
+    if (!trackingNumber) return;
+    const url = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(trackingNumber)}`;
+    window.open(url, '_blank');
+  };
+
   return (
     <div className="user-auctions-widget">
       <span className="new-work-msg">
@@ -320,7 +358,9 @@ export default function UserAuctions({ userId }) {
             <div
               key={a.id}
               className="auction-mini-card won"
-              style={{ border: !a.isPaid ? '1px solid yellow' : '' }}
+              style={{
+                border: !a.isPaid ? '1px solid yellow' : '1px solid green',
+              }}
             >
               <WonCard auction={a} />
             </div>
