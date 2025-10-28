@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getBids } from '../../services/fetch-bids.js';
-import { getAuctions } from '../../services/fetch-auctions.js';
+import { getAdminAuctions, markAuctionPaid } from '../../services/fetch-auctions.js';
 import './AuctionResultsPanel.css';
+import { toast } from 'react-toastify';
 
 export default function AuctionResultsPanel() {
   const [auctions, setAuctions] = useState([]);
@@ -10,7 +11,7 @@ export default function AuctionResultsPanel() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const allAuctions = await getAuctions();
+        const allAuctions = await getAdminAuctions();
 
         // hydrate each auction with top bid + bidder if available
         const withResults = await Promise.all(
@@ -30,8 +31,15 @@ export default function AuctionResultsPanel() {
         );
 
         setAuctions(withResults);
-      } catch (err) {
-        console.error('Error loading auctions:', err);
+      } catch (e) {
+        console.error('Error loading auctions:', e);
+        toast.error(`${e.message}` || 'Error loading auctions', {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'auction-list-1',
+          autoClose: false,
+        });
       } finally {
         setLoading(false);
       }
@@ -69,6 +77,25 @@ export default function AuctionResultsPanel() {
           const image = a.imageUrls?.[0];
           const highBid = a.topBid ? a.topBid.bidAmount : 0;
 
+          const handleTogglePaid = async (auctionId, currentPaid) => {
+            try {
+              await markAuctionPaid(auctionId, !currentPaid);
+
+              setAuctions((prev) =>
+                prev.map((x) => (x.id === auctionId ? { ...x, isPaid: !currentPaid } : x))
+              );
+            } catch (e) {
+              console.error('Error marking auction paid');
+              toast.error(`${e.message}` || 'Error marking auction paid', {
+                theme: 'colored',
+                draggable: true,
+                draggablePercent: 60,
+                toastId: 'auction-list-1',
+                autoClose: false,
+              });
+            }
+          };
+
           return (
             <div
               key={a.id}
@@ -81,6 +108,23 @@ export default function AuctionResultsPanel() {
               )}
 
               <div className="auction-result-info">
+                {isClosed && (
+                  <button
+                    onClick={() => handleTogglePaid(a.id, a.isPaid)}
+                    style={{
+                      padding: '4px 8px',
+                      background: a.isPaid ? '#2a2' : '#a22',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      color: 'white',
+                      fontSize: '0.8rem',
+                    }}
+                  >
+                    {a.isPaid ? 'Paid' : 'Mark Paid'}
+                  </button>
+                )}
+
                 <h4 title={a.title}>{a.title}</h4>
 
                 <p>
