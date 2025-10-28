@@ -175,8 +175,6 @@ export async function markAuctionPaid(auctionId, isPaid) {
 }
 
 export async function getAdminAuctions() {
-  console.log('hi');
-
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/admin/admin-auctions`, {
       credentials: 'include',
@@ -185,6 +183,27 @@ export async function getAdminAuctions() {
     const data = await resp.json();
     if (!resp.ok) throw new Error(data.error || 'Failed to load admin auctions');
 
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function updateAuctionTracking(auctionId, trackingNumber) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/auctions/${auctionId}/tracking`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ trackingNumber }),
+      credentials: 'include',
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'Failed to update tracking');
     return data;
   } catch (err) {
     console.error(err);
