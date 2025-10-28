@@ -4,7 +4,6 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
   text-align: left;
-  cursor: pointer;
   background-color: black;
 }
 
@@ -48,9 +47,6 @@
   padding: 0.75rem;
   color: rgba(255, 255, 255, 0.9);
 }
-.auction-mini-info p {
-  font-size: 1rem;
-}
 
 .auction-mini-info h4 {
   font-size: 1.1rem;
@@ -79,11 +75,100 @@
   margin-bottom: 1.5rem;
 }
 
+.user-auctions-summary {
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: white;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.user-auctions-summary h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 0.25rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.summary-details {
+  background-color: black;
+}
+
+.summary-details-p {
+  font-size: 0.9rem;
+  padding: 0 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  margin: 0.25rem 0;
+}
+
+.summary-total {
+  padding: 0 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 0.5rem;
+  font-weight: 600;
+  font-size: 1.3rem !important;
+}
+
+.payment-info-banner {
+  margin-top: 1rem;
+  background: rgb(71, 71, 71);
+  border: 1px solid rgb(246, 255, 0);
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  padding: 0 1rem;
+  font-size: 1.2rem;
+  margin: 0;
+  text-align: left;
+}
+
+.payment-info-banner strong {
+  color: rgb(246, 255, 0);
+  text-shadow: 0 0 6px black;
+}
+
+.won-card-p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.payment-due {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.print-invoice {
+  top: 0.8rem;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
+  .payment-info-banner {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.95rem;
+  }
+
   .auction-mini-grid {
     grid-template-columns: 1fr;
   }
+
   .user-auctions-widget {
     padding-left: 1rem;
+  }
+
+  .user-auctions-summary {
+    padding: 0.75rem;
+  }
+
+  .summary-details p {
+    font-size: 0.95rem;
   }
 }
