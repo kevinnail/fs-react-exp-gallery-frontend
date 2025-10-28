@@ -313,9 +313,29 @@
   text-align: right;
 }
 
+.auction-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.auction-preview-item {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.auction-preview-img {
+  width: 100%;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
 /* 
 
-^ Responsive design below ========================================
+^ Responsive design below =============================================================================
 
 */
 
