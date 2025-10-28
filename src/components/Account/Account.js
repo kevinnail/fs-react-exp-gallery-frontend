@@ -19,12 +19,12 @@ export default function Account() {
 
   const newUserMessage = (
     <>
-      <p>
+      <p className="profile-content-p">
         Please add your name or whatever you want me to call you, and an avatar image, using the
         edit button above.
       </p>
 
-      <p>
+      <p className="profile-content-p">
         If you have questions about work or a problem with an order, feel free to use the private/
         secure/ encrypted in house{' '}
         <Link className="message-link" to="/messages">
@@ -32,7 +32,7 @@ export default function Account() {
         </Link>
         ! <span>(link in menu)</span>
       </p>
-      <p>
+      <p className="profile-content-p">
         I&apos;ll be adding features asap, just built Messages and Auctions- and we&apos;ll see what
         else down the line! Stay tuned, thanks for being here.
       </p>
@@ -50,7 +50,7 @@ export default function Account() {
           </li>
         </ul>
       </div>
-      <p>
+      <p className="profile-content-p">
         I&apos;ll be adding features asap, just built Messages and Auctions- and we&apos;ll see what
         else down the line! Stay tuned, thanks for being here.
       </p>
@@ -148,7 +148,7 @@ export default function Account() {
           <UserAuctions userId={user?.id} />
           <div className="new-work-section">
             <span className="new-work-msg">
-              <strong>Current Special: </strong>30% off of the new work here!{' '}
+              <strong>Current Special: </strong>30% off of the new work!{' '}
             </span>
             <div className="new-work-content">
               {recentPosts.length > 0 ? (
@@ -191,7 +191,7 @@ export default function Account() {
                   </div>
                 ))
               ) : (
-                <p>Coming soon! Check back for special deals on the latest pieces.</p>
+                <p>Coming soon! Check back, I&apos;m always working on stocking up. </p>
               )}
             </div>
           </div>
