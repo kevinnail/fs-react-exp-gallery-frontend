@@ -148,4 +148,46 @@ export async function updateAuction(id, auction) {
   }
 }
 
-// export async function deleteAuction(params) {}
+// ^ need to make this utility:  =======================================================================
+//* export async function deleteAuction(params) {}
+// ^ ========================================================================================
+
+export async function markAuctionPaid(auctionId, isPaid) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/auctions/${auctionId}/paid`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ isPaid }),
+      credentials: 'include',
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok) throw new Error(data.error || 'Failed to mark paid');
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function getAdminAuctions() {
+  console.log('hi');
+
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/admin/admin-auctions`, {
+      credentials: 'include',
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'Failed to load admin auctions');
+
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
