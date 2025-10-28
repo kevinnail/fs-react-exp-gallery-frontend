@@ -14,7 +14,6 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
 
   const [selectedImage, setSelectedImage] = useState(auction.imageUrls[0]);
   const [bids, setBids] = useState([]);
-  // const [showHistory, setShowHistory] = useState(false);
   const [highestBid, setHighestBid] = useState(auction.currentBid || 0);
   const [isActive, setIsActive] = useState(auction.isActive);
   const theme = useTheme();
@@ -24,6 +23,8 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
   const [showBidModal, setShowBidModal] = useState(false);
   const [bidAmount, setBidAmount] = useState('');
   const [showConfirmBIN, setShowConfirmBIN] = useState(false);
+
+  const hasEnded = !isActive;
 
   useEffect(() => {
     if (!auction.endTime) return;
@@ -233,7 +234,41 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
                   color: '#ffd500',
                 }}
               >
-                <strong>Current Bid:</strong> ${highestBid}{' '}
+                {hasEnded ? (
+                  <p
+                    style={{
+                      fontSize: '1.2rem',
+                      borderBottom: '1px solid grey',
+                      padding: '.5rem',
+                      color: '#ddd',
+                    }}
+                  >
+                    <strong>Collected</strong>
+                    <span style={{ display: 'block', fontSize: '.9rem' }}>final price private</span>
+                  </p>
+                ) : (
+                  <p
+                    style={{
+                      fontSize: '1.2rem',
+                      borderBottom: '1px solid grey',
+                      padding: '.5rem',
+                      color: '#ffd500',
+                    }}
+                  >
+                    <strong>Current Bid:</strong> ${highestBid}
+                    <span
+                      style={{
+                        fontSize: '.9rem',
+                        color: 'white',
+                        display: 'block',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {bids[0]?.userId === user?.id ? "You're the high bidder!" : ''}
+                    </span>
+                  </p>
+                )}
+
                 <span
                   style={{
                     fontSize: '.9rem',
@@ -302,24 +337,34 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
             Total Bids {bids.length}
           </p>
 
-          {bids.length > 0 && (
-            <div className="bid-history">
-              {bids.map((bid) => (
-                <div key={bid.id} className="bid-entry">
-                  <img src={bid.user?.imageUrl} alt={bid.user?.firstName} className="bid-avatar" />
-                  <div className="bid-info">
-                    <span className="bid-name">{bid.user?.firstName}</span>
-                    <span className="bid-amount">${bid.bidAmount}</span>
-                    <span className="bid-time">
-                      {new Date(bid.createdAt).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </span>
+          {hasEnded ? (
+            <p style={{ fontStyle: 'italic', marginTop: '.5rem', opacity: 0.7 }}>
+              Bid history hidden to protect collector value
+            </p>
+          ) : (
+            bids.length > 0 && (
+              <div className="bid-history">
+                {bids.map((bid) => (
+                  <div key={bid.id} className="bid-entry">
+                    <img
+                      src={bid.user?.imageUrl}
+                      alt={bid.user?.firstName}
+                      className="bid-avatar"
+                    />
+                    <div className="bid-info">
+                      <span className="bid-name">{bid.user?.firstName}</span>
+                      <span className="bid-amount">${bid.bidAmount}</span>
+                      <span className="bid-time">
+                        {new Date(bid.createdAt).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )
           )}
         </div>
       </div>
