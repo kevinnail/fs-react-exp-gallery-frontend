@@ -76,7 +76,7 @@ function App() {
     };
 
     const handleYouWon = () => {
-      toast.success(`You won the auction!  Check your profile for more information.`, {
+      toast.success(<p>You won the auction! Check your account page for more information.</p>, {
         theme: 'dark',
         draggable: true,
         draggablePercent: 60,
