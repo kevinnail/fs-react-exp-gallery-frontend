@@ -1,6 +1,16 @@
-import { Box } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import './AboutMe.css';
+import { useNavigate } from 'react-router-dom';
 export default function AboutMe() {
+  const navigate = useNavigate();
+
+  const handleNavMessages = () => {
+    navigate('/messages');
+  };
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <div className="about-me-div">
       <h1 className="about-me-h1">About Kevin</h1>
@@ -16,13 +26,40 @@ export default function AboutMe() {
       </div>
       <Box className="contact-wrapper">
         {' '}
-        <span className="site-message-contact-header">Contact</span>
-        <a href={'mailto:kevin@kevinnail.com'}>
-          <img className="site-msg-link-ig" width={'48px'} src="/email.png" />
-        </a>
-        <a href="https://www.instagram.com/stresslessglass">
-          <img width={'48px'} src="/IG.png" />
-        </a>
+        <h4 className="site-message-contact-header">Contact</h4>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {' '}
+          <div
+            style={{
+              display: 'grid',
+              gap: '10px',
+              cursor: 'pointer',
+              width: '250px',
+              placeItems: 'center',
+            }}
+            onClick={() => handleNavMessages()}
+          >
+            <span style={{ fontSize: '.9rem', textAlign: 'center' }}>Private msg me here!</span>
+            <img className="site-msg-link-ig" width={'48px'} src="/email.png" />
+          </div>
+          <div
+            style={{
+              display: 'grid',
+              gap: '10px',
+              cursor: 'pointer',
+              width: '250px',
+              placeItems: 'center',
+            }}
+            onClick={() => handleNavMessages()}
+          >
+            <span style={{ fontSize: '.9rem', textAlign: 'center' }}>
+              Or hit me up on Instagram
+            </span>
+            <a href="https://www.instagram.com/stresslessglass">
+              <img width={'48px'} src="/IG.png" />
+            </a>
+          </div>
+        </div>
       </Box>
       <p className="about-me-p">
         Welcome! I appreciate you checking out my page. I&apos;ve been blowing glass for about 28
@@ -47,11 +84,7 @@ export default function AboutMe() {
 
       <div className="about-me-p about-me-div-adjust">
         I&apos;m always looking to sell some glass and currently looking for work in tech. If
-        you&apos;re interested in either, please reach out to me{' '}
-        <a className="about-me-link" href="mailto:kevin@kevinnail.com">
-          via email
-        </a>{' '}
-        or on my pages below. Thanks for stopping by!
+        you&apos;re interested in either, please reach out to me. Thanks for stopping by!
         <br />
         <div className="about-me-link-container">
           <a
@@ -59,22 +92,94 @@ export default function AboutMe() {
             href="https://www.instagram.com/kevinnail_music/"
           >
             <img className="link-logo" src="./drumming-icon.png" />
+            {!isMobile && (
+              <div
+                style={{
+                  textDecoration: 'none',
+                  display: 'block',
+                  textAlign: 'center',
+                  width: '100%',
+                }}
+              >
+                My Music
+              </div>
+            )}
           </a>
           <a className="about-me-link" href="https://www.instagram.com/stresslessglass/">
             <img className="link-logo" src="./logo-sq-180.png" />
+            {!isMobile && (
+              <div
+                style={{
+                  textDecoration: 'none',
+                  display: 'block',
+                  textAlign: 'center',
+                  width: '100%',
+                }}
+              >
+                My Glass
+              </div>
+            )}
           </a>
           <a className="about-me-link" href="https://www.linkedin.com/in/kevinnail">
             <img className="link-logo" src="./li.png" />
+            {!isMobile && (
+              <div
+                style={{
+                  textDecoration: 'none',
+                  display: 'block',
+                  textAlign: 'center',
+                  width: '100%',
+                }}
+              >
+                Developer
+              </div>
+            )}
           </a>
           <a className="about-me-link about-icon-adapt" href="https://www.github.com/kevinnail">
             <img className="link-logo" src="./github.png" />
+            {!isMobile && (
+              <div
+                style={{
+                  textDecoration: 'none',
+                  display: 'block',
+                  textAlign: 'center',
+                  width: '100%',
+                }}
+              >
+                Code
+              </div>
+            )}
           </a>
           <div className="about-me-link-sub-container">
             <a className="about-me-link" href="https://www.instagram.com/good_morning_mushrooms">
               <img className="link-logo" src="./gmm.png" />
+              {!isMobile && (
+                <div
+                  style={{
+                    textDecoration: 'none',
+                    display: 'block',
+                    textAlign: 'center',
+                    width: '100%',
+                  }}
+                >
+                  Mushrooms!
+                </div>
+              )}
             </a>
             <a className="about-me-link" href="https://www.kevinnail.com">
               <img className="link-logo" src="./kcn-icon.png" />
+              {!isMobile && (
+                <div
+                  style={{
+                    textDecoration: 'none',
+                    display: 'block',
+                    textAlign: 'center',
+                    width: '100%',
+                  }}
+                >
+                  Home Page
+                </div>
+              )}
             </a>
           </div>
         </div>
