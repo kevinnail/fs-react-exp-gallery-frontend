@@ -1,12 +1,55 @@
 import { useEffect, useState } from 'react';
 import { getBids } from '../../services/fetch-bids.js';
-import { getAdminAuctions, markAuctionPaid } from '../../services/fetch-auctions.js';
+import {
+  getAdminAuctions,
+  markAuctionPaid,
+  updateAuctionTracking,
+} from '../../services/fetch-auctions.js';
 import './AuctionResultsPanel.css';
 import { toast } from 'react-toastify';
 
 export default function AuctionResultsPanel() {
   const [auctions, setAuctions] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [showTrackingModal, setShowTrackingModal] = useState(false);
+  const [trackingAuctionId, setTrackingAuctionId] = useState(null);
+  const [trackingInput, setTrackingInput] = useState('');
+
+  const openTrackingModal = (auctionId, existingTracking = '') => {
+    setTrackingAuctionId(auctionId);
+    setTrackingInput(existingTracking);
+    setShowTrackingModal(true);
+  };
+
+  const handleSaveTracking = async () => {
+    try {
+      await updateAuctionTracking(trackingAuctionId, trackingInput.trim());
+
+      setAuctions((prev) =>
+        prev.map((x) =>
+          x.id === trackingAuctionId ? { ...x, trackingNumber: trackingInput.trim() } : x
+        )
+      );
+
+      setShowTrackingModal(false);
+      toast.success('Tracking saved', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-track-fail',
+        autoClose: false,
+      });
+    } catch (e) {
+      toast.error(`${e.message}` || 'Error saving tracking', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-track-fail',
+        autoClose: false,
+      });
+    }
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -63,7 +106,7 @@ export default function AuctionResultsPanel() {
   return (
     <aside className="auction-results-panel">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h3>Auction Results</h3>
+        <h3>Auctions</h3>
         <span style={{ color: '#9f9' }}>${activeTotal.toLocaleString()}</span>
       </div>
 
@@ -109,20 +152,40 @@ export default function AuctionResultsPanel() {
 
               <div className="auction-result-info">
                 {isClosed && (
-                  <button
-                    onClick={() => handleTogglePaid(a.id, a.isPaid)}
-                    style={{
-                      padding: '4px 8px',
-                      background: a.isPaid ? '#2a2' : '#a22',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      color: 'white',
-                      fontSize: '0.8rem',
-                    }}
-                  >
-                    {a.isPaid ? 'Paid' : 'Mark Paid'}
-                  </button>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <button
+                      onClick={() => handleTogglePaid(a.id, a.isPaid)}
+                      style={{
+                        padding: '4px 8px',
+                        background: a.isPaid ? '#2a2' : '#a22',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        color: 'white',
+                        fontSize: '0.8rem',
+                        width: '40%',
+                      }}
+                    >
+                      {a.isPaid ? 'Paid' : 'Mark Paid'}
+                    </button>
+                    {a.isPaid && (
+                      <button
+                        onClick={() => openTrackingModal(a.id, a.trackingNumber)}
+                        style={{
+                          padding: '4px 8px',
+                          background: '#464646ff',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          color: 'white',
+                          fontSize: '0.8rem',
+                          width: '40%',
+                        }}
+                      >
+                        {a.trackingNumber ? `...${a.trackingNumber.slice(-4)}` : 'Tracking'}
+                      </button>
+                    )}
+                  </div>
                 )}
 
                 <h4 title={a.title}>{a.title}</h4>
@@ -149,6 +212,80 @@ export default function AuctionResultsPanel() {
           );
         })}
       </div>
+      {showTrackingModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.6)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              background: '#222',
+              padding: '20px',
+              borderRadius: '8px',
+              width: '300px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}
+          >
+            <h4 style={{ margin: 0 }}>Enter Tracking</h4>
+
+            <input
+              type="text"
+              placeholder="USPS Tracking Number"
+              value={trackingInput}
+              onChange={(e) => setTrackingInput(e.target.value)}
+              style={{
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #555',
+                background: '#111',
+                color: 'white',
+              }}
+            />
+
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <button
+                onClick={() => setShowTrackingModal(false)}
+                style={{
+                  padding: '6px 12px',
+                  background: '#444',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  color: 'white',
+                }}
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleSaveTracking}
+                style={{
+                  padding: '6px 12px',
+                  background: '#2a2',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  color: 'white',
+                }}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </aside>
   );
 }
