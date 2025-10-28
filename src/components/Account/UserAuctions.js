@@ -53,6 +53,10 @@ export default function UserAuctions({ userId }) {
 
   const allPaid = wonAuctions.every((a) => a.isPaid === true);
 
+  const handleAuctionNav = (id) => {
+    navigate(`/auctions/${id}`);
+  };
+
   const renderActiveBidCard = ({ bid, auction }) => {
     const img = auction?.imageUrls?.[0];
     const title = auction?.title || `Auction #${bid.auctionId}`;
@@ -92,7 +96,11 @@ export default function UserAuctions({ userId }) {
   };
 
   const WonCard = ({ auction }) => (
-    <>
+    <div
+      onClick={() => {
+        handleAuctionNav(auction.id);
+      }}
+    >
       {auction.imageUrls?.[0] ? (
         <img src={auction.imageUrls[0]} alt={auction.title} className="auction-mini-img" />
       ) : (
@@ -181,7 +189,7 @@ export default function UserAuctions({ userId }) {
           </p>
         )}
       </div>
-    </>
+    </div>
   );
 
   if (loading) {
@@ -342,7 +350,13 @@ export default function UserAuctions({ userId }) {
       {activeBids.length > 0 ? (
         <div className="auction-mini-grid">
           {activeBids.map(({ bid, auction }) => (
-            <div key={bid.id} className="auction-mini-card">
+            <div
+              key={bid.id}
+              className="auction-mini-card"
+              onClick={() => {
+                handleAuctionNav(auction.id);
+              }}
+            >
               {renderActiveBidCard({ bid, auction })}
             </div>
           ))}
