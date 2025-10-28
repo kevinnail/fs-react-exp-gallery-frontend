@@ -7,7 +7,6 @@
   letter-spacing: 1.5px;
   position: relative;
   height: calc(100vh - 90px);
-  overflow: hidden;
 }
 
 @keyframes ocean {
@@ -30,7 +29,6 @@
   width: 100%;
   position: relative;
   top: 100px;
-  padding: 1rem 0;
   background: linear-gradient(270deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.9));
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -666,8 +664,5 @@
   .button-auth {
     padding: 0.6rem 1.5rem;
     font-size: 1.1rem;
-  }
-  .auth-section-container {
-    top: 0;
   }
 }
