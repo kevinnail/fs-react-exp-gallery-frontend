@@ -12,8 +12,9 @@ export default function UserAuctions({ userId }) {
   const navigate = useNavigate();
 
   // calculate totals
-  const totalWon = wonAuctions.reduce((sum, a) => sum + (a.finalBid || 0), 0);
-  const shippingTotal = wonAuctions.length > 0 ? 9 + (wonAuctions.length - 1) * 1 : 0;
+  const unpaidWins = wonAuctions.filter((a) => !a.isPaid);
+  const totalWon = unpaidWins.reduce((sum, a) => sum + (a.finalBid || 0), 0);
+  const shippingTotal = unpaidWins.length > 0 ? 9 + (unpaidWins.length - 1) * 1 : 0;
   const grandTotal = totalWon + shippingTotal;
 
   useEffect(() => {
@@ -50,6 +51,8 @@ export default function UserAuctions({ userId }) {
     loadUserAuctions();
   }, [userId]);
 
+  const allPaid = wonAuctions.every((a) => a.isPaid === true);
+
   const renderActiveBidCard = ({ bid, auction }) => {
     const img = auction?.imageUrls?.[0];
     const title = auction?.title || `Auction #${bid.auctionId}`;
@@ -58,73 +61,95 @@ export default function UserAuctions({ userId }) {
 
     return (
       <>
-        <div key={bid.id} className="auction-mini-card">
-          {img ? (
-            <img src={img} alt={title} className="auction-mini-img" />
-          ) : (
-            <div className="auction-mini-img placeholder" />
-          )}
-          <div className="auction-mini-info">
-            <h4>{title}</h4>
-            <p>
-              <span>Your bid: </span>${Number(bid.bidAmount).toLocaleString()}
-            </p>
-            {typeof currentBid !== 'undefined' && (
-              <p>
-                <span>Current bid: </span>${Number(currentBid).toLocaleString()}
-              </p>
-            )}
-            <p>
-              <span>Placed: </span>
-              {new Date(bid.createdAt).toLocaleString()}
-            </p>
-            {endsAt && (
-              <p>
-                <span>Ends: </span>
-                {endsAt}
-              </p>
-            )}
-          </div>
-        </div>{' '}
-      </>
-    );
-  };
-
-  const renderWonCard = (a) => (
-    <div key={a.id} className="auction-mini-card won">
-      <div className="auction-mini-core">
-        {a.imageUrls?.[0] ? (
-          <img src={a.imageUrls[0]} alt={a.title} className="auction-mini-img" />
+        {img ? (
+          <img src={img} alt={title} className="auction-mini-img" />
         ) : (
           <div className="auction-mini-img placeholder" />
         )}
         <div className="auction-mini-info">
-          <h4>{a.title || `Auction #${a.auctionId}`}</h4>
-          <p className="won-card-p">
-            <span>Final bid: </span>${Number(a.finalBid).toLocaleString()}
+          <h4>{title}</h4>
+          <p>
+            <span>Your bid: </span>${Number(bid.bidAmount).toLocaleString()}
           </p>
-          {typeof a.buyNowPrice !== 'undefined' && (
-            <p className="won-card-p">
-              <span>Buy now price: </span>${Number(a.buyNowPrice).toLocaleString()}
+          {typeof currentBid !== 'undefined' && (
+            <p>
+              <span>Current bid: </span>${Number(currentBid).toLocaleString()}
             </p>
           )}
-          <p className="won-card-p">
-            <span>Closed: </span>
-            {new Date(a.closedAt).toLocaleString([], {
-              year: '2-digit',
-              month: '2-digit',
-              day: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
+          <p>
+            <span>Placed: </span>
+            {new Date(bid.createdAt).toLocaleString()}
           </p>
-          <p className="won-card-p">
-            <span>Reason: </span>
-            {a.closedReason === 'buy_now' ? 'Bought instantly' : 'Expired'}
-          </p>
+          {endsAt && (
+            <p>
+              <span>Ends: </span>
+              {endsAt}
+            </p>
+          )}
         </div>
+      </>
+    );
+  };
+
+  const WonCard = ({ auction }) => (
+    <>
+      {auction.imageUrls?.[0] ? (
+        <img src={auction.imageUrls[0]} alt={auction.title} className="auction-mini-img" />
+      ) : (
+        <div className="auction-mini-img placeholder" />
+      )}
+
+      <div className="auction-mini-info">
+        {!auction.isPaid && (
+          <>
+            <span
+              style={{
+                color: '#ffbb00',
+                padding: '2px 6px',
+                borderRadius: '4px',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                marginRight: '3rem',
+              }}
+            >
+              Payment Needed
+            </span>
+
+            <button onClick={handleMsgNav} className="pay-now-btn">
+              Message to Pay
+            </button>
+          </>
+        )}
+
+        <h4>{auction.title || `Auction #${auction.auctionId}`}</h4>
+
+        <p className="won-card-p">
+          <span>Final bid: </span>${Number(auction.finalBid).toLocaleString()}
+        </p>
+
+        {typeof auction.buyNowPrice !== 'undefined' && (
+          <p className="won-card-p">
+            <span>Buy now price: </span>${Number(auction.buyNowPrice).toLocaleString()}
+          </p>
+        )}
+
+        <p className="won-card-p">
+          <span>Closed: </span>
+          {new Date(auction.closedAt).toLocaleString([], {
+            year: '2-digit',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </p>
+
+        <p className="won-card-p">
+          <span>Reason: </span>
+          {auction.closedReason === 'buy_now' ? 'Bought instantly' : 'Expired'}
+        </p>
       </div>
-    </div>
+    </>
   );
 
   if (loading) {
@@ -165,7 +190,7 @@ export default function UserAuctions({ userId }) {
       '<table>' +
       '<thead><tr><th>Item</th><th>Final Bid</th><th>Closed Date</th><th>Shipping</th></tr></thead>' +
       '<tbody>' +
-      wonAuctions
+      unpaidWins
         .map((a, i) => {
           const shipping = i === 0 ? 9 : 1;
           return (
@@ -220,11 +245,11 @@ export default function UserAuctions({ userId }) {
 
       <div className="user-auctions-summary">
         <h4>Summary</h4>
-        {wonAuctions.length > 0 ? (
+        {wonAuctions.length > 0 && !allPaid ? (
           <>
             <div className="summary-details">
               <p className="summary-details-p">
-                <span>Items won:</span> {wonAuctions.length}
+                <span>Items won:</span> {unpaidWins.length}
               </p>
               <p className="summary-details-p">
                 <span>Subtotal:</span> ${totalWon.toLocaleString()}
@@ -239,15 +264,23 @@ export default function UserAuctions({ userId }) {
 
             <div className="payment-info-banner">
               <div className="payment-due">
-                {' '}
                 <strong>Payment Due!</strong>
-                <button
-                  className="mobile-new-link print-invoice"
-                  onClick={() => handlePrintInvoice()}
-                >
-                  Print invoice
-                </button>
+
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button
+                    className="pay-now-btn"
+                    onClick={handlePrintInvoice}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    Print invoice
+                  </button>
+
+                  <button className="pay-now-btn" onClick={handleMsgNav}>
+                    Message to Pay
+                  </button>
+                </div>
               </div>
+
               <p>
                 I can take Zelle, PayPal, Venmo, Cash App, or CC/Debit via invoice through email.
                 Contact me through{' '}
@@ -269,14 +302,30 @@ export default function UserAuctions({ userId }) {
 
       <h3>Active bids</h3>
       {activeBids.length > 0 ? (
-        <div className="auction-mini-grid">{activeBids.map(renderActiveBidCard)}</div>
+        <div className="auction-mini-grid">
+          {activeBids.map(({ bid, auction }) => (
+            <div key={bid.id} className="auction-mini-card">
+              {renderActiveBidCard({ bid, auction })}
+            </div>
+          ))}
+        </div>
       ) : (
         <p className="empty-msg">No active bids.</p>
       )}
 
       <h3>Won</h3>
       {wonAuctions.length > 0 ? (
-        <div className="auction-mini-grid">{wonAuctions.map(renderWonCard)}</div>
+        <div className="auction-mini-grid">
+          {wonAuctions.map((a) => (
+            <div
+              key={a.id}
+              className="auction-mini-card won"
+              style={{ border: !a.isPaid ? '1px solid yellow' : '' }}
+            >
+              <WonCard auction={a} />
+            </div>
+          ))}
+        </div>
       ) : (
         <p className="empty-msg">No completed wins yet.</p>
       )}
