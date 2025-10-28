@@ -36,11 +36,6 @@ export default function Admin() {
     setCurrentPage(1);
   };
 
-  const handleClick = async () => {
-    await signOut();
-    signout();
-  };
-
   if (loading) {
     return <Loading />;
   }
@@ -217,7 +212,7 @@ export default function Admin() {
                     textShadow: '0 0 1px black',
                   }}
                 >
-                  {selectedCategory ? 'Show All Categories' : 'Select Category'}
+                  {selectedCategory ? 'Show All Categories' : 'Categories'}
                 </Typography>
               </Button>
 
