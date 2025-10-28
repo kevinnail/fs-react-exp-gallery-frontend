@@ -25,6 +25,9 @@ import NotFound from './components/NotFound/NotFound.js';
 import UserDashboard from './components/Admin/Users/UsersDashboard.js';
 import AuctionList from './components/AuctionList/AuctionList.js';
 import AuctionForm from './components/AuctionForm/AuctionForm.js';
+import AuctionDetail from './components/AuctionList/AuctionDetail.js';
+import AuctionArchive from './components/AuctionArchive/AuctionArchive.js';
+
 const mainTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -117,6 +120,9 @@ function App() {
             <Route path="/search" element={<SearchResults />} />
             <Route path="/about-me" element={<AboutMe />} />
             <Route path="/auctions" element={<AuctionList />} />
+            <Route path="/auctions/:id" element={<AuctionDetail />} />
+            <Route path="/auctions/archive" element={<AuctionArchive />} />
+
             <Route path="/:id" element={<MainPostDetail />} />
 
             <Route
