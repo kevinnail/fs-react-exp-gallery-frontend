@@ -27,6 +27,7 @@ import AuctionList from './components/AuctionList/AuctionList.js';
 import AuctionForm from './components/AuctionForm/AuctionForm.js';
 import AuctionDetail from './components/AuctionList/AuctionDetail.js';
 import AuctionArchive from './components/AuctionArchive/AuctionArchive.js';
+import { useProfileStore } from './stores/profileStore.js';
 
 const mainTheme = createTheme({
   palette: {
@@ -65,7 +66,14 @@ function App() {
   const [theme, setTheme] = useState(mainTheme);
 
   const user = useUserStore((state) => state.user);
+  const { profile, fetchUserProfile } = useProfileStore();
 
+  useEffect(() => {
+    if (user && !profile) {
+      console.log('User authenticated but no profile, fetching...');
+      fetchUserProfile();
+    }
+  }, [user, profile, fetchUserProfile]);
   useEffect(() => {
     websocketService.connect();
 
