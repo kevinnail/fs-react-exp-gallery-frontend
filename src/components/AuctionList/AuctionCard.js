@@ -145,7 +145,9 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
   };
 
   const checkProfileCompletion = () => {
-    if (!profile) return false;
+    if (!profile) {
+      return false;
+    }
 
     const { firstName, lastName, imageUrl, userId } = profile;
 
@@ -460,7 +462,6 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
               </div>
             </div>
           </div>,
-          // document.getElementById('root')
           document.body
         )}
 

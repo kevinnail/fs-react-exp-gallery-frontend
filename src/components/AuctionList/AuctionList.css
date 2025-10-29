@@ -15,8 +15,22 @@
   transition: transform 0.2s ease;
 }
 
-.auction-card:hover {
-  /* transform: translateY(-3px); */
+.bid-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999; /* Make sure this is high enough */
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.bid-modal {
+  position: fixed; /* Use fixed instead of absolute */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
 }
 
 .edit-auction-icon-btn {
