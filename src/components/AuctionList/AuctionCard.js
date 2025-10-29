@@ -235,7 +235,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
                 }}
               >
                 {hasEnded ? (
-                  <p
+                  <span
                     style={{
                       fontSize: '1.2rem',
                       borderBottom: '1px solid grey',
@@ -245,9 +245,9 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
                   >
                     <strong>Collected</strong>
                     <span style={{ display: 'block', fontSize: '.9rem' }}>final price private</span>
-                  </p>
+                  </span>
                 ) : (
-                  <p
+                  <span
                     style={{
                       fontSize: '1.2rem',
                       borderBottom: '1px solid grey',
@@ -266,7 +266,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
                     >
                       {bids[0]?.userId === user?.id ? "You're the high bidder!" : ''}
                     </span>
-                  </p>
+                  </span>
                 )}
 
                 <span
@@ -320,11 +320,11 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
           <div className="auction-actions">
             {isActive ? (
               <>
-                <button onClick={handleBidClick} className="bid-btn">
+                <button type="button" onClick={handleBidClick} className="bid-btn">
                   Place Bid
                 </button>
                 {auction.buyNowPrice && (
-                  <button onClick={handleBuyNowClick} className="buy-btn">
+                  <button type="button" onClick={handleBuyNowClick} className="buy-btn">
                     Buy Now
                   </button>
                 )}
@@ -460,6 +460,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
               </div>
             </div>
           </div>,
+          // document.getElementById('root')
           document.body
         )}
 
