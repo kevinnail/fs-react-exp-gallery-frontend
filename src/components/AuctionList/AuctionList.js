@@ -3,10 +3,10 @@ import './AuctionList.css';
 import { getAuctions } from '../../services/fetch-auctions.js';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import websocketService from '../../services/websocket.js';
 import { useUserStore } from '../../stores/userStore.js';
 import { useNotificationStore } from '../../stores/notificationStore.js';
 import { getBids } from '../../services/fetch-bids.js';
+import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
 
 function AuctionPreviewItem({ auction, onClick }) {
   const [timeLeft, setTimeLeft] = useState('');
@@ -68,30 +68,12 @@ export default function AuctionList() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { user, isAdmin } = useUserStore();
-  const [lastBidUpdate, setLastBidUpdate] = useState(null);
-  const [lastBuyNowId, setLastBuyNowId] = useState(null);
+
   const { markAuctionsRead } = useNotificationStore();
-
-  useEffect(() => {
-    const handleBidPlaced = async ({ auctionId }) => {
-      try {
-        // fetch latest bids for that auction and update currentBid in the list
-        const data = await getBids(auctionId);
-        const newHigh = Array.isArray(data) && data.length ? data[0].bidAmount : null;
-
-        setAuctions((prev) =>
-          prev.map((a) => (a.id === auctionId ? { ...a, currentBid: newHigh ?? a.currentBid } : a))
-        );
-
-        setLastBidUpdate(auctionId); // keep your existing semantic if other parts rely on it
-      } catch (err) {
-        console.error('Error updating currentBid after bid-placed:', err);
-      }
-    };
-
-    websocketService.on('bid-placed', handleBidPlaced);
-    return () => websocketService.off('bid-placed', handleBidPlaced);
-  }, []);
+  const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
+  const lastBuyNowId = useAuctionEventsStore((s) => s.lastBuyNowId);
+  const lastAuctionEnded = useAuctionEventsStore((s) => s.lastAuctionEnded);
+  const lastAuctionCreated = useAuctionEventsStore((s) => s.lastAuctionCreated);
 
   // fetch auctions
   useEffect(() => {
@@ -117,63 +99,41 @@ export default function AuctionList() {
     fetchAuctions();
   }, []);
 
-  // set up listener for websocket auction end event
+  // set up listener for websocket auction bid event
   useEffect(() => {
-    const handleAuctionStart = ({ auction }) => {
-      setAuctions((prev) => [...prev, auction]);
-    };
-
-    websocketService.on('auction-created', handleAuctionStart);
-
-    return () => {
-      websocketService.off('auction-created', handleAuctionStart);
-    };
-  }, []);
-
-  // set up listener for websocket auction end event
+    if (!lastBidUpdate) return;
+    (async () => {
+      try {
+        const aId = lastBidUpdate;
+        const data = await getBids(aId);
+        const newHigh = Array.isArray(data) && data.length ? data[0].bidAmount : null;
+        setAuctions((prev) =>
+          prev.map((a) => (a.id === aId ? { ...a, currentBid: newHigh ?? a.currentBid } : a))
+        );
+      } catch (err) {
+        console.error('Error updating currentBid after bid-placed:', err);
+      }
+    })();
+  }, [lastBidUpdate]);
+  // set up listener for websocket auction created event
   useEffect(() => {
-    const handleAuctionEnd = ({ auctionId }) => {
-      setAuctions((prev) => {
-        const updated = prev.map((a) => {
-          return a.id === auctionId ? { ...a, isActive: false } : a;
-        });
-
-        return updated;
-      });
-    };
-
-    websocketService.on('auction-ended', handleAuctionEnd);
-
-    return () => {
-      websocketService.off('auction-ended', handleAuctionEnd);
-    };
-  }, []);
-
-  // set up listener for websocket auction new bid event
-  useEffect(() => {
-    const handleBidPlaced = ({ auctionId }) => {
-      setLastBidUpdate(auctionId);
-    };
-
-    websocketService.on('bid-placed', handleBidPlaced);
-
-    return () => {
-      websocketService.off('bid-placed', handleBidPlaced);
-    };
-  }, []);
+    if (!lastAuctionCreated) return;
+    setAuctions((prev) => [...prev, lastAuctionCreated]);
+  }, [lastAuctionCreated]);
 
   // set up listener for websocket auction BIN event
   useEffect(() => {
-    const handleBuyItNow = (auctionId) => {
-      setLastBuyNowId(auctionId);
-      // optionally also update list state:
-      setAuctions((prev) => prev.map((a) => (a.id === auctionId ? { ...a, isActive: false } : a)));
-    };
+    if (!lastBuyNowId) return;
+    const aId = Number(lastBuyNowId);
+    setAuctions((prev) => prev.map((a) => (a.id === aId ? { ...a, isActive: false } : a)));
+  }, [lastBuyNowId]);
 
-    websocketService.on('auction-BIN', handleBuyItNow);
-
-    return () => websocketService.off('auction-BIN', handleBuyItNow);
-  }, []);
+  // set up listener for websocket auction end event
+  useEffect(() => {
+    if (!lastAuctionEnded) return;
+    const aId = Number(lastAuctionEnded);
+    setAuctions((prev) => prev.map((a) => (a.id === aId ? { ...a, isActive: false } : a)));
+  }, [lastAuctionEnded]);
 
   useEffect(() => {
     markAuctionsRead();
