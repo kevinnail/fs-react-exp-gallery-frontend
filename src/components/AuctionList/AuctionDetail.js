@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAuctions } from '../../services/fetch-auctions.js';
-import websocketService from '../../services/websocket.js';
 import AuctionCard from './AuctionCard.js';
 
 export default function AuctionDetail() {
@@ -10,10 +9,6 @@ export default function AuctionDetail() {
 
   const [auction, setAuction] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // these replicate the exact "poke" signals your card already knows how to react to
-  const [lastBidUpdate, setLastBidUpdate] = useState(null);
-  const [lastBuyNowId, setLastBuyNowId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -34,39 +29,6 @@ export default function AuctionDetail() {
 
     return () => {
       isMounted = false;
-    };
-  }, [auctionId]);
-
-  // live sockets for exactly this auction - replicate the old trigger semantics 1:1
-  useEffect(() => {
-    if (!auctionId) return;
-
-    const onBidPlaced = ({ auctionId: aId }) => {
-      if (Number(aId) !== auctionId) return;
-      // tell the card to refetch its own bids (preserves your existing behavior)
-      setLastBidUpdate(auctionId);
-    };
-
-    const onBuyItNow = (aId) => {
-      if (Number(aId) !== auctionId) return;
-      // tell the card to close itself; also reflect locally for the header/badges
-      setLastBuyNowId(auctionId);
-      setAuction((prev) => (prev ? { ...prev, isActive: false } : prev));
-    };
-
-    const onAuctionEnded = ({ auctionId: aId }) => {
-      if (Number(aId) !== auctionId) return;
-      setAuction((prev) => (prev ? { ...prev, isActive: false } : prev));
-    };
-
-    websocketService.on('bid-placed', onBidPlaced);
-    websocketService.on('auction-BIN', onBuyItNow);
-    websocketService.on('auction-ended', onAuctionEnded);
-
-    return () => {
-      websocketService.off('bid-placed', onBidPlaced);
-      websocketService.off('auction-BIN', onBuyItNow);
-      websocketService.off('auction-ended', onAuctionEnded);
     };
   }, [auctionId]);
 
@@ -108,7 +70,7 @@ export default function AuctionDetail() {
           ← Back
         </button>
 
-        <AuctionCard auction={auction} lastBidUpdate={lastBidUpdate} lastBuyNowId={lastBuyNowId} />
+        <AuctionCard auction={auction} />
       </div>
     </div>
   );
