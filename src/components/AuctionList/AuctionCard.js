@@ -6,8 +6,12 @@ import { useUserStore } from '../../stores/userStore.js';
 import { toast } from 'react-toastify';
 import { createPortal } from 'react-dom';
 import { useProfileStore } from '../../stores/profileStore.js';
+import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
 
-export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
+export default function AuctionCard({ auction }) {
+  const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
+  const lastBuyNowId = useAuctionEventsStore((s) => s.lastBuyNowId);
+
   const id = Number(auction.id);
   const { user, isAdmin } = useUserStore();
   const { profile } = useProfileStore();
@@ -69,7 +73,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
 
   // update bids (via websockets)
   useEffect(() => {
-    if (lastBidUpdate === id) {
+    if (lastBidUpdate?.id === id) {
       // Only refetch bids for THIS auction
       (async () => {
         try {
@@ -258,16 +262,6 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
                     }}
                   >
                     <strong>Current Bid:</strong> ${highestBid}
-                    <span
-                      style={{
-                        fontSize: '.9rem',
-                        color: 'white',
-                        display: 'block',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {bids[0]?.userId === user?.id ? "You're the high bidder!" : ''}
-                    </span>
                   </span>
                 )}
 
@@ -383,30 +377,34 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
                     Current High bid: <strong>${highestBid}</strong>
                   </>
                 )}
+                {(() => {
+                  const hasBids = highestBid > 0;
+                  const minBid = hasBids ? highestBid : auction.startPrice;
+                  const comparisonText = hasBids
+                    ? `greater than $${highestBid}`
+                    : `equal to or greater than $${auction.startPrice}`;
+
+                  return (
+                    <>
+                      <p>Your bid must be {comparisonText}</p>
+                      <input
+                        type="number"
+                        min={minBid}
+                        value={bidAmount}
+                        onChange={(e) => setBidAmount(e.target.value)}
+                        placeholder={`Enter bid amount`}
+                        className="bid-input"
+                      />
+                    </>
+                  );
+                })()}
               </p>
-
-              {(() => {
-                const hasBids = highestBid > auction.startPrice;
-                const minBid = hasBids ? highestBid : auction.startPrice;
-                const comparisonText = hasBids ? 'greater than' : 'equal to or greater than';
-
-                return (
-                  <input
-                    type="number"
-                    min={minBid}
-                    value={bidAmount}
-                    onChange={(e) => setBidAmount(e.target.value)}
-                    placeholder={`Enter amount ${comparisonText} $${minBid}`}
-                    className="bid-input"
-                  />
-                );
-              })()}
 
               <div className="modal-actions">
                 <button
                   onClick={async () => {
                     try {
-                      const hasBids = highestBid > auction.startPrice;
+                      const hasBids = highestBid > 0;
                       const startPrice = auction.startPrice || 0;
                       const amt = Number(bidAmount);
 
@@ -420,7 +418,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
                         return;
                       }
 
-                      if (!hasBids) {
+                      if (!hasBids && amt < auction.startPrice) {
                         if (amt < startPrice) {
                           toast.warn(`Bid must be greater than or equal to $${startPrice}`, {
                             theme: 'dark',
@@ -450,6 +448,14 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
                       setShowBidModal(false);
                     } catch (err) {
                       console.error('Error placing bid:', err);
+                      console.log('err', err);
+
+                      toast.warn(err.message, {
+                        theme: 'dark',
+                        draggable: true,
+                        draggablePercent: 60,
+                        autoClose: 3000,
+                      });
                     }
                   }}
                   className="confirm-bid-btn"
