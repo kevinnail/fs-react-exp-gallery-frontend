@@ -316,7 +316,7 @@ export default function Auth() {
 
   return (
     <>
-      <div className="auth-container" style={{ overflow: !isMobile ? 'hidden' : '' }}>
+      <div className="auth-container">
         <div className="scene">
           {!isMobile && (
             <div className="cube">
