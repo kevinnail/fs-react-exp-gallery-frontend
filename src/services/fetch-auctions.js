@@ -68,6 +68,26 @@ export async function getAuctionDetail(id) {
   }
 }
 
+export async function getAuctionResults(auctionId) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/auctions/results/${auctionId}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const auctionDetail = await resp.json();
+
+    return auctionDetail;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function createAuction(auctionDetails) {
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/auctions`, {
