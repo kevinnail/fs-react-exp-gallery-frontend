@@ -107,7 +107,10 @@ export default function AuctionResultsPanel() {
     <aside className="auction-results-panel">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <h3>Auctions</h3>
-        <span style={{ color: '#9f9' }}>${activeTotal.toLocaleString()}</span>
+        <div>
+          <span>active bids total:</span>
+          <span style={{ color: '#9f9' }}> ${activeTotal.toLocaleString()}</span>
+        </div>
       </div>
 
       <div className="auction-results-list">
