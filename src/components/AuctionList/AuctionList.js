@@ -49,8 +49,7 @@ function AuctionPreviewItem({ auction, onClick }) {
       <div style={{ marginTop: '.4rem' }}>
         {hasEnded ? (
           <>
-            <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>Collected</div>
-            <div style={{ fontSize: '.85rem', opacity: 0.7 }}>final price private</div>
+            <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>closed</div>
           </>
         ) : (
           <>

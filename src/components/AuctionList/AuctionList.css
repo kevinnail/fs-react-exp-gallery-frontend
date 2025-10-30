@@ -272,7 +272,7 @@
 .bidding-closed {
   font-size: 1.5rem;
   font-weight: 600;
-  margin: 0;
+  margin: 0 0 0.5rem 0;
 }
 
 .bin-end-time-wrapper {
