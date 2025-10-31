@@ -71,11 +71,6 @@ export default function MainPostDetail() {
     onSwipedRight: handlePrevious,
   });
 
-  const handleClick = async () => {
-    await signOut();
-    signout();
-  };
-
   const handleCategoryClick = () => {
     navigate(`/search?q=${postDetail?.category}`);
   };

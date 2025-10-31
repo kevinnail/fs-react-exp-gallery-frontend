@@ -50,7 +50,7 @@ export default function Header() {
         <Link className="link" to={user && isAdmin ? '/admin' : '/'} onClick={handleHomeClick}>
           <img className="logo" src="../logo-sq.png" />
         </Link>
-        <h1 className="title">Stress Less Glass</h1>
+        <h1 className="biz-title">Stress Less Glass</h1>
 
         <div className="header-section">
           <div className="menu-icon-wrapper" onClick={handleMenuClick}>

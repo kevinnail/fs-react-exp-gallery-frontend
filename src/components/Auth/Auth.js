@@ -10,6 +10,8 @@ import AgreementModal from './AgreementModal.js';
 import { useGalleryPosts } from '../../hooks/useGalleryPosts.js';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useTheme } from '@emotion/react';
+import { useMediaQuery } from '@mui/material';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -25,6 +27,9 @@ export default function Auth() {
   const { posts, galleryLoading } = useGalleryPosts();
   const [recentImages, setRecentImages] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Get most recent posts for cube
   useEffect(() => {
@@ -313,30 +318,50 @@ export default function Auth() {
     <>
       <div className="auth-container">
         <div className="scene">
-          <div className="cube">
-            {['front', 'back', 'right', 'left', 'top', 'bottom'].map((pos, idx) => {
-              const post = recentImages[idx];
-              const img = post?.image_url || post?.imageUrl || post?.image;
-              const href = galleryLoading ? '#' : post?.id ? `/${post.id}` : '/';
+          {!isMobile && (
+            <div className="cube">
+              {['front', 'back', 'right', 'left', 'top', 'bottom'].map((pos, idx) => {
+                const post = recentImages[idx];
+                const img = post?.image_url || post?.imageUrl || post?.image;
+                const href = galleryLoading ? '#' : post?.id ? `/${post.id}` : '/';
 
-              if (galleryLoading) {
+                if (galleryLoading) {
+                  return (
+                    <div
+                      key={post?.id ?? pos}
+                      className={`face ${pos} placeholder`}
+                      style={{
+                        width: '100%',
+                        paddingBottom: '100%',
+                        backgroundColor: '#333',
+                        borderRadius: '5px',
+                        display: 'block',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        boxSizing: 'border-box',
+                        border: 'none',
+                      }}
+                    >
+                      {' '}
+                      <Link className="hidden-text-link" to={href}>
+                        {
+                          'This is a link to the gallery page if you are clever enough you might find it! '
+                        }
+                      </Link>
+                    </div>
+                  );
+                }
+
                 return (
                   <div
                     key={post?.id ?? pos}
-                    className={`face ${pos} placeholder`}
+                    className={`face ${pos}`}
                     style={{
-                      width: '100%',
-                      paddingBottom: '100%',
-                      backgroundColor: '#333',
-                      borderRadius: '5px',
-                      display: 'block',
+                      backgroundImage: `url(${img})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
-                      boxSizing: 'border-box',
-                      border: 'none',
                     }}
                   >
-                    {' '}
                     <Link className="hidden-text-link" to={href}>
                       {
                         'This is a link to the gallery page if you are clever enough you might find it! '
@@ -344,27 +369,9 @@ export default function Auth() {
                     </Link>
                   </div>
                 );
-              }
-
-              return (
-                <div
-                  key={post?.id ?? pos}
-                  className={`face ${pos}`}
-                  style={{
-                    backgroundImage: `url(${img})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                >
-                  <Link className="hidden-text-link" to={href}>
-                    {
-                      'This is a link to the gallery page if you are clever enough you might find it! '
-                    }
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
+              })}
+            </div>
+          )}
         </div>
 
         <div className="scene2">

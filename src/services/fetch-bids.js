@@ -36,7 +36,8 @@ export async function placeBid({ auctionId, userId, bidAmount }) {
       credentials: 'include',
     });
 
-    const data = await resp;
+    const data = await resp.json();
+
     if (resp.ok) {
       return data;
     } else {

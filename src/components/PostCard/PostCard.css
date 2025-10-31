@@ -19,11 +19,11 @@ body {
   grid-template-rows: 1fr;
   box-sizing: border-box;
   height: calc(100vh - 90px);
+  padding: 90px 0 0 0;
 }
 
 .admin-panel {
   border: 2px solid #00000083;
-  display: none;
   height: 100%;
   box-sizing: border-box;
 }
@@ -34,7 +34,7 @@ body {
   justify-items: flex-start;
   align-items: flex-start;
   margin: 1px auto;
-  padding: 50px 0 0 0rem;
+  padding: 100px 0 0 0rem;
   height: 90vh;
   background: linear-gradient(
     270deg,
@@ -274,10 +274,11 @@ body {
     background-color: black;
     background-color: #00000083;
     border: 2px solid #2f00ff83;
-    padding: 10px;
     height: 100%;
     box-sizing: border-box;
     margin-top: 50px;
+    overflow: auto;
+    max-height: 89vh;
   }
 
   .signout-button-adapt {
@@ -314,7 +315,7 @@ body {
   }
 
   .admin-container {
-    grid-template-columns: 200px 1fr 350px;
+    grid-template-columns: 350px 1fr 350px;
   }
   .list-container {
     top: 0px;

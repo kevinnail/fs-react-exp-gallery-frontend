@@ -25,6 +25,10 @@ import NotFound from './components/NotFound/NotFound.js';
 import UserDashboard from './components/Admin/Users/UsersDashboard.js';
 import AuctionList from './components/AuctionList/AuctionList.js';
 import AuctionForm from './components/AuctionForm/AuctionForm.js';
+import AuctionDetail from './components/AuctionList/AuctionDetail.js';
+import AuctionArchive from './components/AuctionArchive/AuctionArchive.js';
+import { useProfileStore } from './stores/profileStore.js';
+
 const mainTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -62,7 +66,14 @@ function App() {
   const [theme, setTheme] = useState(mainTheme);
 
   const user = useUserStore((state) => state.user);
+  const { profile, fetchUserProfile } = useProfileStore();
 
+  useEffect(() => {
+    if (user && !profile) {
+      console.log('User authenticated but no profile, fetching...');
+      fetchUserProfile();
+    }
+  }, [user, profile, fetchUserProfile]);
   useEffect(() => {
     websocketService.connect();
 
@@ -77,10 +88,10 @@ function App() {
 
     const handleYouWon = () => {
       toast.success(<p>You won the auction! Check your account page for more information.</p>, {
-        theme: 'dark',
+        theme: 'colored',
         draggable: true,
         draggablePercent: 60,
-        autoClose: 3000,
+        autoClose: false,
       });
     };
 
@@ -117,6 +128,9 @@ function App() {
             <Route path="/search" element={<SearchResults />} />
             <Route path="/about-me" element={<AboutMe />} />
             <Route path="/auctions" element={<AuctionList />} />
+            <Route path="/auctions/:id" element={<AuctionDetail />} />
+            <Route path="/auctions/archive" element={<AuctionArchive />} />
+
             <Route path="/:id" element={<MainPostDetail />} />
 
             <Route

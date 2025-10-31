@@ -1,20 +1,26 @@
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { buyItNow, getBids, placeBid } from '../../services/fetch-bids.js';
+import { buyItNow, getBids } from '../../services/fetch-bids.js';
 import { useUserStore } from '../../stores/userStore.js';
 import { toast } from 'react-toastify';
-import { createPortal } from 'react-dom';
 import { useProfileStore } from '../../stores/profileStore.js';
+import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
+import { getAuctionResults } from '../../services/fetch-auctions.js';
+import './AuctionCard.css';
+import AuctionBidModal from './AuctionBidModal';
+import ConfirmBINModal from './ConfirmBINModal';
 
-export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
+export default function AuctionCard({ auction }) {
+  const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
+  const lastBuyNowId = useAuctionEventsStore((s) => s.lastBuyNowId);
+
   const id = Number(auction.id);
   const { user, isAdmin } = useUserStore();
   const { profile } = useProfileStore();
 
   const [selectedImage, setSelectedImage] = useState(auction.imageUrls[0]);
   const [bids, setBids] = useState([]);
-  // const [showHistory, setShowHistory] = useState(false);
   const [highestBid, setHighestBid] = useState(auction.currentBid || 0);
   const [isActive, setIsActive] = useState(auction.isActive);
   const theme = useTheme();
@@ -22,8 +28,8 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState('');
   const [showBidModal, setShowBidModal] = useState(false);
-  const [bidAmount, setBidAmount] = useState('');
   const [showConfirmBIN, setShowConfirmBIN] = useState(false);
+  const [auctionResults, setAuctionResults] = useState();
 
   useEffect(() => {
     if (!auction.endTime) return;
@@ -68,7 +74,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
 
   // update bids (via websockets)
   useEffect(() => {
-    if (lastBidUpdate === id) {
+    if (lastBidUpdate?.id === id) {
       // Only refetch bids for THIS auction
       (async () => {
         try {
@@ -84,7 +90,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
     }
   }, [lastBidUpdate, id]);
 
-  // fetch bids
+  // fetch bids and auction results
   useEffect(() => {
     const fetchBids = async () => {
       try {
@@ -94,6 +100,11 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
 
           if (data.length > 0) setHighestBid(data[0].bidAmount);
         }
+
+        const resultData = await getAuctionResults(id);
+        console.log('resultData', resultData);
+
+        setAuctionResults(resultData);
       } catch (err) {
         console.error('Error fetching bids:', err);
         toast.error('Error fetching bids', {
@@ -106,7 +117,7 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
       }
     };
     fetchBids();
-  }, [id]);
+  }, [id, isActive]);
 
   const handleImageClick = (url) => {
     setSelectedImage(url);
@@ -144,7 +155,9 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
   };
 
   const checkProfileCompletion = () => {
-    if (!profile) return false;
+    if (!profile) {
+      return false;
+    }
 
     const { firstName, lastName, imageUrl, userId } = profile;
 
@@ -172,14 +185,23 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
 
     return true;
   };
+
   const handleBidClick = () => {
-    if (!user) return handleNavAuth();
-    if (checkProfileCompletion()) setShowBidModal(true);
+    if (!user) {
+      return handleNavAuth();
+    }
+    if (checkProfileCompletion()) {
+      setShowBidModal(true);
+    }
   };
 
   const handleBuyNowClick = () => {
-    if (!user) return handleNavAuth();
-    if (checkProfileCompletion()) setShowConfirmBIN(true);
+    if (!user) {
+      return handleNavAuth();
+    }
+    if (checkProfileCompletion()) {
+      setShowConfirmBIN(true);
+    }
   };
 
   return (
@@ -224,16 +246,21 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
           <p style={{ whiteSpace: 'pre-wrap' }}>{auction.description}</p>
 
           <div className="auction-details">
-            {isActive && (
-              <p
-                style={{
-                  fontSize: '1.2rem',
-                  borderBottom: '1px solid grey',
-                  padding: '.5rem',
-                  color: '#ffd500',
-                }}
-              >
-                <strong>Current Bid:</strong> ${highestBid}{' '}
+            <p
+              style={{
+                fontSize: '1.2rem',
+                borderBottom: '1px solid grey',
+                padding: '.5rem',
+                color: isActive ? '#ffd500' : '#ddd',
+              }}
+            >
+              {isActive && (
+                <span>
+                  <strong>Current Bid:</strong> ${highestBid}
+                </span>
+              )}
+
+              {isActive && (
                 <span
                   style={{
                     fontSize: '.9rem',
@@ -244,203 +271,148 @@ export default function AuctionCard({ auction, lastBidUpdate, lastBuyNowId }) {
                 >
                   {bids[0]?.userId === user?.id ? "You're the high bidder!" : ''}
                 </span>
-              </p>
-            )}
+              )}
+            </p>
+
             <div className="bin-end-time-wrapper">
               <p>
                 <strong>BIN:</strong> ${auction.buyNowPrice || '—'}
               </p>
-              <p>
-                <strong>Ends: </strong>
-                {new Date(auction.endTime).toLocaleTimeString('en-US', {
-                  month: 'short',
-                  day: '2-digit',
-                  hour: 'numeric',
-                  minute: 'numeric',
-                })}
-                <br />
-                <span style={{ color: '#00ff99', fontWeight: 'bold' }}>{timeLeft}</span>
-              </p>
+              {isActive && (
+                <p
+                  style={{
+                    backgroundColor: 'black',
+                    padding: '.5rem',
+                    display: 'block',
+                    marginTop: '.5rem',
+                    textAlign: 'center',
+                    border: '1px solid yellow',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  <strong>Ends: </strong>
+                  {new Date(auction.endTime).toLocaleTimeString('en-US', {
+                    month: 'short',
+                    day: '2-digit',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                  })}
+                  <br />
+                  <span
+                    style={{
+                      color: isActive ? '#ffd500' : '',
+                    }}
+                  >
+                    {timeLeft}
+                  </span>
+                </p>
+              )}
             </div>
           </div>
 
           <div className="auction-actions">
             {isActive ? (
               <>
-                <button onClick={handleBidClick} className="bid-btn">
+                <button type="button" onClick={handleBidClick} className="bid-btn">
                   Place Bid
                 </button>
                 {auction.buyNowPrice && (
-                  <button onClick={handleBuyNowClick} className="buy-btn">
+                  <button type="button" onClick={handleBuyNowClick} className="buy-btn">
                     Buy Now
                   </button>
                 )}
               </>
             ) : (
-              <p className="bidding-closed">Bidding is CLOSED</p>
+              <div>
+                <p className="bidding-closed">Bidding is CLOSED</p>
+                <div className="bid-entry">
+                  <span
+                    style={{
+                      fontSize: '.9rem',
+                      display: 'flex',
+                      gap: '10px',
+                      alignItems: 'center',
+                    }}
+                  >
+                    {' '}
+                    <img
+                      src={auctionResults?.profile?.imageUrl}
+                      alt={auctionResults?.profile?.firstName}
+                      className="bid-avatar"
+                    />
+                    {auctionResults?.profile?.firstName}
+                  </span>
+
+                  <span style={{ fontSize: '.9rem', fontWeight: 'normal' }}>
+                    {auctionResults?.reason === 'buy_now' ? 'Buy It Now' : 'Time Expired'}
+                  </span>
+                </div>
+              </div>
             )}
           </div>
+
           <p style={{ fontSize: '.9rem', marginTop: '.5rem', marginBottom: 0 }}>
             Total Bids {bids.length}
           </p>
 
-          {bids.length > 0 && (
-            <div className="bid-history">
-              {bids.map((bid) => (
-                <div key={bid.id} className="bid-entry">
-                  <img src={bid.user?.imageUrl} alt={bid.user?.firstName} className="bid-avatar" />
-                  <div className="bid-info">
-                    <span className="bid-name">{bid.user?.firstName}</span>
-                    <span className="bid-amount">${bid.bidAmount}</span>
-                    <span className="bid-time">
-                      {new Date(bid.createdAt).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </span>
+          {!isActive ? (
+            <p style={{ fontStyle: 'italic', marginTop: '.5rem', opacity: 0.7 }}></p>
+          ) : (
+            bids.length > 0 && (
+              <div className="bid-history">
+                {bids.map((bid) => (
+                  <div key={bid.id} className="bid-entry">
+                    <img
+                      src={bid.user?.imageUrl}
+                      alt={bid.user?.firstName}
+                      className="bid-avatar"
+                    />
+                    <div className="bid-info">
+                      <span className="bid-name">{bid.user?.firstName}</span>
+                      <span className="bid-amount">${bid.bidAmount}</span>
+                      <span className="bid-time">
+                        {new Date(bid.createdAt).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )
           )}
         </div>
       </div>
-      {showBidModal &&
-        createPortal(
-          <div className="bid-modal-overlay" role="dialog" aria-modal="true">
-            <div className="bid-modal">
-              <h3>Place a Bid</h3>
-              <p>
-                {highestBid === 0 ? (
-                  'No bids yet'
-                ) : (
-                  <>
-                    Current High bid: <strong>${highestBid}</strong>
-                  </>
-                )}
-              </p>
+      <AuctionBidModal
+        isOpen={showBidModal}
+        onClose={() => setShowBidModal(false)}
+        highestBid={highestBid}
+        auction={auction}
+        id={id}
+        user={user}
+        setBids={setBids}
+        setHighestBid={setHighestBid}
+      />
 
-              {(() => {
-                const hasBids = highestBid > auction.startPrice;
-                const minBid = hasBids ? highestBid : auction.startPrice;
-                const comparisonText = hasBids ? 'greater than' : 'equal to or greater than';
-
-                return (
-                  <input
-                    type="number"
-                    min={minBid}
-                    value={bidAmount}
-                    onChange={(e) => setBidAmount(e.target.value)}
-                    placeholder={`Enter amount ${comparisonText} $${minBid}`}
-                    className="bid-input"
-                  />
-                );
-              })()}
-
-              <div className="modal-actions">
-                <button
-                  onClick={async () => {
-                    try {
-                      const hasBids = highestBid > auction.startPrice;
-                      const startPrice = auction.startPrice || 0;
-                      const amt = Number(bidAmount);
-
-                      if (!Number.isFinite(amt)) {
-                        toast.warn('Enter a valid number', {
-                          theme: 'dark',
-                          draggable: true,
-                          draggablePercent: 60,
-                          autoClose: 3000,
-                        });
-                        return;
-                      }
-
-                      if (!hasBids) {
-                        if (amt < startPrice) {
-                          toast.warn(`Bid must be greater than or equal to $${startPrice}`, {
-                            theme: 'dark',
-                            draggable: true,
-                            draggablePercent: 60,
-                            autoClose: 3000,
-                          });
-                          return;
-                        }
-                      } else {
-                        if (amt <= highestBid) {
-                          toast.warn(`Bid must be greater than $${highestBid}`, {
-                            theme: 'dark',
-                            draggable: true,
-                            draggablePercent: 60,
-                            autoClose: 3000,
-                          });
-                          return;
-                        }
-                      }
-
-                      await placeBid({ auctionId: id, userId: user.id, bidAmount });
-                      const updated = await getBids(id);
-                      setBids(updated);
-                      setHighestBid(updated[0].bidAmount);
-                      setBidAmount('');
-                      setShowBidModal(false);
-                    } catch (err) {
-                      console.error('Error placing bid:', err);
-                    }
-                  }}
-                  className="confirm-bid-btn"
-                >
-                  Submit Bid
-                </button>
-                <button onClick={() => setShowBidModal(false)} className="cancel-bid-btn">
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
-
-      {showConfirmBIN &&
-        createPortal(
-          <div className="bid-modal-overlay" role="dialog" aria-modal="true">
-            <div className="bid-modal">
-              <h3>Confirm Purchase</h3>
-              <p style={{ marginBottom: '1rem' }}>
-                Are you sure you want to buy <strong>{auction.title}</strong> for $
-                {auction.buyNowPrice}?
-              </p>
-              <div className="modal-actions">
-                <button
-                  onClick={async () => {
-                    try {
-                      await handleBuyItNow();
-                      setIsActive(false);
-                      toast.success('Purchase successful', {
-                        theme: 'colored',
-                        toastId: 'auction-card-1',
-                      });
-                    } catch (err) {
-                      console.error(err);
-                      toast.error('Error completing purchase', {
-                        theme: 'colored',
-                        toastId: 'auction-card-2',
-                      });
-                    } finally {
-                      setShowConfirmBIN(false);
-                    }
-                  }}
-                  className="confirm-bid-btn"
-                >
-                  Yes, Buy Now
-                </button>
-                <button onClick={() => setShowConfirmBIN(false)} className="cancel-bid-btn">
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
+      <ConfirmBINModal
+        isOpen={showConfirmBIN}
+        onClose={() => setShowConfirmBIN(false)}
+        auction={auction}
+        onConfirm={async () => {
+          try {
+            await handleBuyItNow();
+            setIsActive(false);
+            toast.success('Purchase successful', { theme: 'colored', toastId: 'auction-card-1' });
+          } catch (err) {
+            console.error(err);
+            toast.error('Error completing purchase', {
+              theme: 'colored',
+              toastId: 'auction-card-2',
+            });
+          }
+        }}
+      />
     </>
   );
 }

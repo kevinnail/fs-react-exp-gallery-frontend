@@ -617,7 +617,7 @@ export async function postAdminMessage(message) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ message }), // Wrap the message in an object
+      body: JSON.stringify({ message }),
     });
 
     if (!response.ok) {
@@ -683,5 +683,28 @@ export async function updateProfileWithImage(imageUrl, firstName = null, lastNam
   } catch (error) {
     console.error('Error updating profile with image:', error);
     throw error;
+  }
+}
+
+export async function markWelcomeMessageFalse(userId) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/profile/welcome-message/${userId}`, {
+      method: 'PUT',
+      credentials: 'include',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ showWelcome: false }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to post the message');
+    }
+
+    return response;
+  } catch (e) {
+    console.error('An error occurred:', e);
+    throw e;
   }
 }

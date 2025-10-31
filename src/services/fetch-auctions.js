@@ -68,6 +68,26 @@ export async function getAuctionDetail(id) {
   }
 }
 
+export async function getAuctionResults(auctionId) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/auctions/results/${auctionId}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const auctionDetail = await resp.json();
+
+    return auctionDetail;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function createAuction(auctionDetails) {
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/auctions`, {
@@ -148,4 +168,65 @@ export async function updateAuction(id, auction) {
   }
 }
 
-// export async function deleteAuction(params) {}
+// ^ need to make this utility:  =======================================================================
+//* export async function deleteAuction(params) {}
+// ^ ========================================================================================
+
+export async function markAuctionPaid(auctionId, isPaid) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/auctions/${auctionId}/paid`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ isPaid }),
+      credentials: 'include',
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok) throw new Error(data.error || 'Failed to mark paid');
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function getAdminAuctions() {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/admin/admin-auctions`, {
+      credentials: 'include',
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'Failed to load admin auctions');
+
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function updateAuctionTracking(auctionId, trackingNumber) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/auctions/${auctionId}/tracking`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ trackingNumber }),
+      credentials: 'include',
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'Failed to update tracking');
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}

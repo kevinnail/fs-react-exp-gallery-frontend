@@ -59,7 +59,7 @@
   );
   text-align: left;
   font-weight: bold;
-  padding: 15px 0px 10px 0px;
+  padding: 95px 0px 10px 0px;
   font-family:
     'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana,
     sans-serif;
@@ -82,7 +82,7 @@
 }
 
 .contact-wrapper {
-  display: flex;
+  /* display: flex; */
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -116,6 +116,7 @@
 
   .site-message-contact-header {
     justify-self: center;
+    text-align: center;
     font-size: 1rem;
   }
 
