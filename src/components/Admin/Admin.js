@@ -3,7 +3,6 @@ import { usePosts } from '../../hooks/usePosts.js';
 import { useUserStore } from '../../stores/userStore.js';
 import PostCard from '../PostCard/PostCard.js';
 import './Admin.css';
-import { signOut } from '../../services/auth.js';
 import Loading from '../Loading/Loading.js';
 import Inventory from '../Inventory/Inventory.js';
 import {
