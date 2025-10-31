@@ -7,6 +7,8 @@ import {
 } from '../../services/fetch-auctions.js';
 import './AuctionResultsPanel.css';
 import { toast } from 'react-toastify';
+import websocketService from '../../services/websocket.js';
+import { useNavigate } from 'react-router-dom';
 
 export default function AuctionResultsPanel() {
   const [auctions, setAuctions] = useState([]);
@@ -15,6 +17,11 @@ export default function AuctionResultsPanel() {
   const [showTrackingModal, setShowTrackingModal] = useState(false);
   const [trackingAuctionId, setTrackingAuctionId] = useState(null);
   const [trackingInput, setTrackingInput] = useState('');
+  // simple tracking state: set when a user clicks the shipping thumbnail so other code
+  // (or tests) that expect `tracking` to be set will work. This state does NOT toggle
+  // the thumbnail; the thumbnail is shown only when the auction already has a trackingNumber.
+  const [tracking, setTracking] = useState('');
+  const navigate = useNavigate();
 
   const openTrackingModal = (auctionId, existingTracking = '') => {
     setTrackingAuctionId(auctionId);
@@ -89,6 +96,50 @@ export default function AuctionResultsPanel() {
     };
 
     loadData();
+
+    // subscribe to websocket events so the admin panel updates in real time
+    const handleAuctionEnded = async (payload) => {
+      // payload may be an object like { auctionId } or just auctionId
+      const auctionId = payload && (payload.auctionId || payload.id || payload);
+      if (!auctionId) return;
+
+      // optimistically mark auction closed
+      setAuctions((prev) => prev.map((a) => (a.id === auctionId ? { ...a, isActive: false } : a)));
+
+      try {
+        // fetch latest bids to hydrate winner/topBid if any
+        const bids = await getBids(auctionId);
+        if (Array.isArray(bids) && bids.length > 0) {
+          const topBid = bids.reduce((max, b) => (b.bidAmount > max.bidAmount ? b : max));
+          setAuctions((prev) =>
+            prev.map((a) =>
+              a.id === auctionId ? { ...a, topBid, winner: topBid.user, isActive: false } : a
+            )
+          );
+        }
+
+        toast.success('Auction has ended.', { theme: 'dark', autoClose: 3000 });
+      } catch (e) {
+        console.error('Error hydrating auction after end event', auctionId, e);
+      }
+    };
+
+    // 'user-won' can contain more specific info; treat it similarly
+    const handleUserWon = async (payload) => {
+      const auctionId = payload && (payload.auctionId || payload.id || payload);
+      if (!auctionId) return handleAuctionEnded(payload);
+      // re-use same logic
+      await handleAuctionEnded(payload);
+    };
+
+    websocketService.connect();
+    websocketService.on('auction-ended', handleAuctionEnded);
+    websocketService.on('user-won', handleUserWon);
+
+    return () => {
+      websocketService.off('auction-ended', handleAuctionEnded);
+      websocketService.off('user-won', handleUserWon);
+    };
   }, []);
 
   if (loading) {
@@ -103,6 +154,31 @@ export default function AuctionResultsPanel() {
     .filter((a) => a.isActive)
     .reduce((sum, a) => sum + (a.topBid?.bidAmount || 0), 0);
 
+  const handleNavTracking = (auction) => {
+    // If auction has a tracking number, open USPS tracking for that number.
+    // Otherwise open the USPS main site. Open in a new tab.
+    try {
+      if (auction && auction.trackingNumber) {
+        const url = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
+          auction.trackingNumber
+        )}`;
+        window.open(url, '_blank');
+      } else {
+        window.open('https://tools.usps.com', '_blank');
+      }
+    } catch (e) {
+      // fallback to navigation in-app if window.open fails
+      console.error('Error opening tracking link', e);
+      navigate('https://tools.usps.com');
+    }
+  };
+
+  // small helper to avoid inline multi-line handlers in JSX (keeps indentation shallow)
+  const handleShippingClick = (trackingNumber, auction) => {
+    setTracking(trackingNumber || '');
+    handleNavTracking(auction);
+  };
+
   return (
     <aside className="auction-results-panel">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -112,8 +188,7 @@ export default function AuctionResultsPanel() {
           <span style={{ color: '#9f9' }}> ${activeTotal.toLocaleString()}</span>
         </div>
       </div>
-
-      <div className="auction-results-list">
+      <div className="auction-results-list" data-current-tracking={tracking}>
         {auctions.map((a) => {
           const isClosed = !a.isActive;
           const winnerName = a.winner
@@ -148,7 +223,19 @@ export default function AuctionResultsPanel() {
               className={`auction-result-item ${isClosed ? 'closed' : 'active-auction'}`}
             >
               {image ? (
-                <img src={image} alt={a.title} className="auction-result-thumb" />
+                <div style={{ display: 'grid' }}>
+                  <img src={image} alt={a.title} className="auction-result-thumb" />
+
+                  {isClosed && a.trackingNumber ? (
+                    <img
+                      src={image}
+                      alt={`${a.title} shipping`}
+                      className="auction-result-thumb"
+                      onClick={() => handleShippingClick(a.trackingNumber, a)}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  ) : null}
+                </div>
               ) : (
                 <div className="auction-result-thumb placeholder" />
               )}
