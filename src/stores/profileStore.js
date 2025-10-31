@@ -79,4 +79,8 @@ export const useProfileStore = create((set) => ({
       });
     }
   },
+
+  // Minimal local setter for the welcome flag. Updates profile.showWelcome in-store only.
+  setShowWelcome: (value) =>
+    set((state) => ({ profile: { ...(state.profile || {}), showWelcome: value } })),
 }));
