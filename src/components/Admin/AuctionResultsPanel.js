@@ -8,7 +8,6 @@ import {
 import './AuctionResultsPanel.css';
 import { toast } from 'react-toastify';
 import websocketService from '../../services/websocket.js';
-import { useNavigate } from 'react-router-dom';
 
 export default function AuctionResultsPanel() {
   const [auctions, setAuctions] = useState([]);
@@ -17,11 +16,7 @@ export default function AuctionResultsPanel() {
   const [showTrackingModal, setShowTrackingModal] = useState(false);
   const [trackingAuctionId, setTrackingAuctionId] = useState(null);
   const [trackingInput, setTrackingInput] = useState('');
-  // simple tracking state: set when a user clicks the shipping thumbnail so other code
-  // (or tests) that expect `tracking` to be set will work. This state does NOT toggle
-  // the thumbnail; the thumbnail is shown only when the auction already has a trackingNumber.
-  const [tracking, setTracking] = useState('');
-  const navigate = useNavigate();
+  // no local click-tracking state; clicking the shipping icon is a plain link
 
   const openTrackingModal = (auctionId, existingTracking = '') => {
     setTrackingAuctionId(auctionId);
@@ -45,7 +40,7 @@ export default function AuctionResultsPanel() {
         draggable: true,
         draggablePercent: 60,
         toastId: 'auction-track-fail',
-        autoClose: false,
+        autoClose: 3000,
       });
     } catch (e) {
       toast.error(`${e.message}` || 'Error saving tracking', {
@@ -53,7 +48,7 @@ export default function AuctionResultsPanel() {
         draggable: true,
         draggablePercent: 60,
         toastId: 'auction-track-fail',
-        autoClose: false,
+        autoClose: 3000,
       });
     }
   };
@@ -153,31 +148,10 @@ export default function AuctionResultsPanel() {
   const activeTotal = auctions
     .filter((a) => a.isActive)
     .reduce((sum, a) => sum + (a.topBid?.bidAmount || 0), 0);
+  //
+  //
 
-  const handleNavTracking = (auction) => {
-    // If auction has a tracking number, open USPS tracking for that number.
-    // Otherwise open the USPS main site. Open in a new tab.
-    try {
-      if (auction && auction.trackingNumber) {
-        const url = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
-          auction.trackingNumber
-        )}`;
-        window.open(url, '_blank');
-      } else {
-        window.open('https://tools.usps.com', '_blank');
-      }
-    } catch (e) {
-      // fallback to navigation in-app if window.open fails
-      console.error('Error opening tracking link', e);
-      navigate('https://tools.usps.com');
-    }
-  };
-
-  // small helper to avoid inline multi-line handlers in JSX (keeps indentation shallow)
-  const handleShippingClick = (trackingNumber, auction) => {
-    setTracking(trackingNumber || '');
-    handleNavTracking(auction);
-  };
+  // Shipping links are plain anchors to USPS — no JS navigation helper needed.
 
   return (
     <aside className="auction-results-panel">
@@ -188,7 +162,7 @@ export default function AuctionResultsPanel() {
           <span style={{ color: '#9f9' }}> ${activeTotal.toLocaleString()}</span>
         </div>
       </div>
-      <div className="auction-results-list" data-current-tracking={tracking}>
+      <div className="auction-results-list">
         {auctions.map((a) => {
           const isClosed = !a.isActive;
           const winnerName = a.winner
@@ -222,19 +196,26 @@ export default function AuctionResultsPanel() {
               key={a.id}
               className={`auction-result-item ${isClosed ? 'closed' : 'active-auction'}`}
             >
-              {image ? (
+              {image || !image ? (
                 <div style={{ display: 'grid' }}>
                   <img src={image} alt={a.title} className="auction-result-thumb" />
-
-                  {isClosed && a.trackingNumber ? (
-                    <img
-                      src={image}
-                      alt={`${a.title} shipping`}
-                      className="auction-result-thumb"
-                      onClick={() => handleShippingClick(a.trackingNumber, a)}
-                      style={{ cursor: 'pointer' }}
-                    />
-                  ) : null}
+                  {isClosed && a.trackingNumber && (
+                    <a
+                      href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
+                        a.trackingNumber
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`View tracking for ${a.title}`}
+                    >
+                      <img
+                        alt="USPS"
+                        className="auction-result-thumb"
+                        style={{ width: '50px', height: '50px', margin: '.5rem 0 0 .25rem' }}
+                        src="../../../usps.png"
+                      />
+                    </a>
+                  )}
                 </div>
               ) : (
                 <div className="auction-result-thumb placeholder" />
