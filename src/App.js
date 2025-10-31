@@ -88,10 +88,10 @@ function App() {
 
     const handleYouWon = () => {
       toast.success(<p>You won the auction! Check your account page for more information.</p>, {
-        theme: 'dark',
+        theme: 'colored',
         draggable: true,
         draggablePercent: 60,
-        autoClose: 3000,
+        autoClose: false,
       });
     };
 
