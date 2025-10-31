@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
-import { fetchUserProfile, fetchGalleryPosts } from '../../services/fetch-utils.js';
+import {
+  fetchUserProfile,
+  fetchGalleryPosts,
+  markWelcomeMessageFalse,
+} from '../../services/fetch-utils.js';
 import ProfileForm from './AccountForm.js';
 import './Account.css';
 import { useProfileStore } from '../../stores/profileStore.js';
@@ -9,13 +13,58 @@ import UserAuctions from './UserAuctions.js';
 
 export default function Account() {
   const { user } = useUserStore();
-  const { profile, setProfile } = useProfileStore();
+  const { profile, setProfile, setShowWelcome } = useProfileStore();
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
   const navigate = useNavigate();
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const profileData = await fetchUserProfile();
+        setProfile(profileData);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+    loadProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const loadRecentPosts = async () => {
+      try {
+        const posts = await fetchGalleryPosts();
+
+        const twoWeeksAgo = new Date();
+        twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+        const recentWork = posts
+          .filter((post) => new Date(post.created_at) >= twoWeeksAgo && post.sold === false)
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        setRecentPosts(recentWork);
+      } catch (error) {
+        console.error('Error fetching recent posts:', error);
+      }
+    };
+
+    loadRecentPosts();
+  }, []);
 
   // Check if user has added name or image
   const hasNameOrImage = profile?.firstName || profile?.lastName || profile?.imageUrl;
+
+  const removeWelcomeMessage = async () => {
+    try {
+      // persist the preference to the backend
+      await markWelcomeMessageFalse(user?.id);
+    } catch (e) {
+      // still update local state even if the network call fails
+      console.error('Failed to persist welcome dismissal:', e);
+    } finally {
+      setShowWelcome(false);
+    }
+  };
 
   const newUserMessage = (
     <>
@@ -59,40 +108,6 @@ export default function Account() {
 
   const customerMessage = hasNameOrImage ? existingUserMessage : newUserMessage;
 
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const profileData = await fetchUserProfile();
-        setProfile(profileData);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      }
-    };
-    loadProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const loadRecentPosts = async () => {
-      try {
-        const posts = await fetchGalleryPosts();
-
-        const twoWeeksAgo = new Date();
-        twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-
-        const recentWork = posts
-          .filter((post) => new Date(post.created_at) >= twoWeeksAgo && post.sold === false)
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-        setRecentPosts(recentWork);
-      } catch (error) {
-        console.error('Error fetching recent posts:', error);
-      }
-    };
-
-    loadRecentPosts();
-  }, []);
-
   const handleEditProfile = () => {
     setShowEditForm(true);
   };
@@ -104,6 +119,26 @@ export default function Account() {
   const handleClickNewWork = (postId) => {
     navigate(`/${postId}`);
   };
+
+  // Time-based greeting (includes late-night/night-owl message)
+  const displayGreeting = (() => {
+    const hour = new Date().getHours();
+    const name = profile?.firstName || '';
+
+    // Late night / night-owl hours: 00:00 - 04:59
+    if (hour >= 0 && hour < 5) {
+      return name ? `Hey ${name}, enjoy the late night energy!` : 'Enjoy the late night energy!';
+    }
+
+    // Morning: 05:00 - 11:59
+    if (hour >= 5 && hour < 12) return name ? `Good morning, ${name}!` : 'Good morning!';
+
+    // Afternoon: 12:00 - 17:59
+    if (hour >= 12 && hour < 18) return name ? `Good afternoon, ${name}!` : 'Good afternoon!';
+
+    // Evening: 18:00 - 23:59
+    return name ? `Good evening, ${name}!` : 'Good evening!';
+  })();
 
   return (
     <div className="profile-container">
@@ -137,18 +172,27 @@ export default function Account() {
         </div>
 
         <div className="profile-details">
-          <h2 className="detail-value">
-            {' '}
-            {`${profile?.firstName ? 'Welcome,  ' + profile.firstName + '!' : 'Welcome!'}`}
-          </h2>
-          {customerMessage}
+          <h2 className="detail-value">{displayGreeting}</h2>
+          {profile?.showWelcome && customerMessage}
+          {profile?.showWelcome && (
+            <span className="got-it-button" onClick={removeWelcomeMessage}>
+              Got it! Don&apos;t show this message again
+            </span>
+          )}
         </div>
 
         <div className="profile-dashboard-wide">
           <UserAuctions userId={user?.id} />
-          <div className="new-work-section">
+          <div
+            className="new-work-section"
+            style={{ border: '1px solid white', paddingTop: '.5rem', margin: '1rem 0' }}
+          >
             <span className="new-work-msg">
-              <strong>Current Special: </strong>30% off of the new work!{' '}
+              <span style={{ display: 'block', textAlign: 'center' }}>
+                <strong>Current Special:</strong>{' '}
+              </span>
+              30% OFF of the new work! All new work will be discounted for 2 weeks after it&apos;s
+              posted
             </span>
             <div className="new-work-content">
               {recentPosts.length > 0 ? (
@@ -191,7 +235,10 @@ export default function Account() {
                   </div>
                 ))
               ) : (
-                <p>Coming soon! Check back, I&apos;m always working on stocking up. </p>
+                <p style={{ margin: '1rem' }}>
+                  No new work right now! Check back regularly, I&apos;m always working on stocking
+                  up.{' '}
+                </p>
               )}
             </div>
           </div>
