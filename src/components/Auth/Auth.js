@@ -313,7 +313,9 @@ export default function Auth() {
   if (loading) {
     return <Loading />;
   }
-
+  const handleAuthNavAuctions = () => {
+    navigate('/auctions');
+  };
   return (
     <>
       <div className="auth-container">
@@ -413,17 +415,31 @@ export default function Auth() {
           <div className="auth-content-wrapper">
             <div className="welcome-section">
               <h2 className="welcome-title">Welcome to Stress Less Glass</h2>
-              <p className="welcome-message">Create your free account!</p>
-              <div className="welcome-features">
-                <ul>
-                  <li>Exclusive discounts & early access to new work</li>
-                  <li>Bid on in house Auctions</li>
-                  <li>Message me - private & encrypted</li>
-                </ul>
+              <div className="welcome-message-wrapper">
+                <h5 className="welcome-message">Create your free account!</h5>
+                <div className="welcome-features">
+                  <ul>
+                    <li>Get exclusive discounts & early access to new work</li>
+                    <li>
+                      Bid on secure, <strong>scammer-free </strong> in-house{' '}
+                      <span
+                        className="auth-auction-link"
+                        onClick={() => {
+                          handleAuthNavAuctions();
+                        }}
+                      >
+                        Auctions
+                      </span>
+                    </li>
+                    <li>1 click tracking </li>
+                    <li>Print invoices</li>
+                    <li>Message me directly - private & encrypted</li>
+                  </ul>
+                </div>
               </div>
             </div>
 
-            <div className="form-section">
+            <div className="auth-form-section">
               <div className="sign-in-sign-out">
                 <NavLink className="auth-link" to="/auth/sign-in" onClick={() => setIsSignIn(true)}>
                   Sign-in
