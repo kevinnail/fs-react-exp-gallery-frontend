@@ -66,7 +66,7 @@ export default function UserAuctions({ userId }) {
     return (
       <>
         {img ? (
-          <img src={img} alt={title} className="auction-mini-img" />
+          <img src={img} alt={title} className="auction-mini-img  auction-mini-card-image" />
         ) : (
           <div className="auction-mini-img placeholder" />
         )}
@@ -96,13 +96,16 @@ export default function UserAuctions({ userId }) {
   };
 
   const WonCard = ({ auction }) => (
-    <div
-      onClick={() => {
-        handleAuctionNav(auction.id);
-      }}
-    >
+    <div>
       {auction.imageUrls?.[0] ? (
-        <img src={auction.imageUrls[0]} alt={auction.title} className="auction-mini-img" />
+        <img
+          onClick={() => {
+            handleAuctionNav(auction.auctionId);
+          }}
+          src={auction.imageUrls[0]}
+          alt={auction.title}
+          className="auction-mini-img auction-mini-card-image"
+        />
       ) : (
         <div className="auction-mini-img placeholder" />
       )}
@@ -171,22 +174,27 @@ export default function UserAuctions({ userId }) {
           </span>
         )}
         {auction.trackingNumber && (
-          <p
-            onClick={() => handleTrackingClick(auction.trackingNumber)}
-            style={{
-              padding: '4px 6px',
-              borderRadius: '4px',
-              fontSize: '1rem',
-              fontWeight: 'bold',
-              marginRight: '3rem',
-              border: '1px solid green',
-              textAlign: 'center',
-              cursor: 'pointer',
-            }}
-          >
-            <span>Tracking </span>
-            <span>{auction.trackingNumber}</span>
-          </p>
+          <div className="tracking-link">
+            <a
+              href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
+                auction.trackingNumber
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`View tracking for ${auction.title}`}
+            >
+              <img
+                alt="USPS"
+                className="auction-result-thumb"
+                style={{ width: '50px', height: '50px', margin: '.5rem 0 0 .25rem' }}
+                src="../../../usps.png"
+              />
+            </a>
+            <p onClick={() => handleTrackingClick(auction.trackingNumber)}>
+              <span>Tracking number: </span>
+              <span>{auction.trackingNumber}</span>
+            </p>
+          </div>
         )}
       </div>
     </div>
@@ -354,7 +362,7 @@ export default function UserAuctions({ userId }) {
               key={bid.id}
               className="auction-mini-card"
               onClick={() => {
-                handleAuctionNav(auction.id);
+                handleAuctionNav(auction.auctionId);
               }}
             >
               {renderActiveBidCard({ bid, auction })}
