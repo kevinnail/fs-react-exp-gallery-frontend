@@ -153,8 +153,8 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.cancel-btn,
-.submit-btn {
+.cancel-btn-account,
+.submit-btn-account {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 8px;
@@ -162,31 +162,32 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 500;
+  max-height: 150px;
 }
 
-.cancel-btn {
+.cancel-btn-account {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.cancel-btn:hover {
+.cancel-btn-account:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-.submit-btn {
+.submit-btn-account {
   background: linear-gradient(315deg, black, grey);
   color: white;
   border: none;
 }
 
-.submit-btn:hover:not(:disabled) {
+.submit-btn-account:hover:not(:disabled) {
   background: linear-gradient(315deg, grey, black);
   transform: translateY(-1px);
 }
 
-.submit-btn:disabled {
+.submit-btn-account:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
