@@ -8,6 +8,7 @@ import {
 import './AuctionResultsPanel.css';
 import { toast } from 'react-toastify';
 import websocketService from '../../services/websocket.js';
+import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
 
 export default function AuctionResultsPanel() {
   const [auctions, setAuctions] = useState([]);
@@ -16,7 +17,28 @@ export default function AuctionResultsPanel() {
   const [showTrackingModal, setShowTrackingModal] = useState(false);
   const [trackingAuctionId, setTrackingAuctionId] = useState(null);
   const [trackingInput, setTrackingInput] = useState('');
-  // no local click-tracking state; clicking the shipping icon is a plain link
+
+  const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
+  useEffect(() => {
+    if (!lastBidUpdate) return;
+    const auctionId = Number(lastBidUpdate.id);
+
+    (async () => {
+      try {
+        const bids = await getBids(auctionId);
+        if (Array.isArray(bids) && bids.length > 0) {
+          const topBid = bids.reduce((max, b) => (b.bidAmount > max.bidAmount ? b : max));
+          setAuctions((prev) =>
+            prev.map((a) =>
+              Number(a.id) === auctionId ? { ...a, topBid, winner: topBid.user } : a
+            )
+          );
+        }
+      } catch (err) {
+        console.error('Error updating admin high bid:', err);
+      }
+    })();
+  }, [lastBidUpdate]);
 
   const openTrackingModal = (auctionId, existingTracking = '') => {
     setTrackingAuctionId(auctionId);
