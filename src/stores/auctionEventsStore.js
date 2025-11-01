@@ -9,7 +9,8 @@ export const useAuctionEventsStore = create((set, get) => ({
   lastBidUpdate: null,
   lastBuyNowId: null,
   lastAuctionEnded: null,
-  lastAuctionCreated: null, // stores the auction object
+  lastAuctionCreated: null,
+  lastAuctionExtended: null,
 
   // actions
   setBid: (auctionId) => set({ lastBidUpdate: { id: Number(auctionId), t: Date.now() } }),
@@ -17,6 +18,8 @@ export const useAuctionEventsStore = create((set, get) => ({
   setBuyNow: (auctionId) => set({ lastBuyNowId: Number(auctionId) }),
   setEnded: (auctionId) => set({ lastAuctionEnded: Number(auctionId) }),
   setCreated: (auction) => set({ lastAuctionCreated: auction }),
+  setExtended: (auctionId, newEndTime) =>
+    set({ lastAuctionExtended: { id: Number(auctionId), newEndTime, t: Date.now() } }),
 
   // one-time listener attach
   attachListeners: () => {
@@ -37,6 +40,10 @@ export const useAuctionEventsStore = create((set, get) => ({
 
     websocketService.on('auction-created', ({ auction }) => {
       get().setCreated(auction);
+    });
+
+    websocketService.on('auction-extended', ({ auctionId, newEndTime }) => {
+      get().setExtended(auctionId, newEndTime);
     });
   },
 }));
