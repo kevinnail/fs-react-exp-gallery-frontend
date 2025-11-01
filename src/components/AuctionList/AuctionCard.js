@@ -1,5 +1,5 @@
 import { useMediaQuery, useTheme } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { buyItNow, getBids } from '../../services/fetch-bids.js';
 import { useUserStore } from '../../stores/userStore.js';
@@ -30,6 +30,27 @@ export default function AuctionCard({ auction }) {
   const [showBidModal, setShowBidModal] = useState(false);
   const [showConfirmBIN, setShowConfirmBIN] = useState(false);
   const [auctionResults, setAuctionResults] = useState();
+
+  const lastAuctionEnded = useAuctionEventsStore((s) => s.lastAuctionEnded);
+  const lastAuctionExtended = useAuctionEventsStore((s) => s.lastAuctionExtended);
+
+  // set up listener for websocket auction end event
+  useEffect(() => {
+    if (!lastAuctionEnded) return;
+    if (Number(lastAuctionEnded) !== Number(id)) return;
+
+    setIsActive(false);
+  }, [lastAuctionEnded, id]);
+
+  useEffect(() => {
+    if (!lastAuctionExtended) return;
+
+    // Only for THIS auction card
+    if (Number(lastAuctionExtended.id) !== Number(id)) return;
+
+    const newEnd = lastAuctionExtended.newEndTime;
+    if (!newEnd) return;
+  }, [lastAuctionExtended, id]);
 
   useEffect(() => {
     if (!auction.endTime) return;
@@ -102,7 +123,6 @@ export default function AuctionCard({ auction }) {
         }
 
         const resultData = await getAuctionResults(id);
-        console.log('resultData', resultData);
 
         setAuctionResults(resultData);
       } catch (err) {
@@ -203,6 +223,7 @@ export default function AuctionCard({ auction }) {
       setShowConfirmBIN(true);
     }
   };
+  const highBidder = bids[0]?.userId === user?.id;
 
   return (
     <>
@@ -269,7 +290,7 @@ export default function AuctionCard({ auction }) {
                     fontWeight: 'bold',
                   }}
                 >
-                  {bids[0]?.userId === user?.id ? "You're the high bidder!" : ''}
+                  {highBidder ? "You're the high bidder!" : ''}
                 </span>
               )}
             </p>
@@ -313,8 +334,13 @@ export default function AuctionCard({ auction }) {
           <div className="auction-actions">
             {isActive ? (
               <>
-                <button type="button" onClick={handleBidClick} className="bid-btn">
-                  Place Bid
+                <button
+                  type="button"
+                  onClick={handleBidClick}
+                  className="bid-btn"
+                  style={{ background: highBidder ? 'green' : '' }}
+                >
+                  {highBidder ? "You're the high bidder" : 'Place Bid'}
                 </button>
                 {auction.buyNowPrice && (
                   <button type="button" onClick={handleBuyNowClick} className="buy-btn">

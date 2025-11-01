@@ -17,6 +17,40 @@ export default function AuctionBidModal({
 
   if (!isOpen) return null;
 
+  const handleBidSubmit = async () => {
+    try {
+      const hasBids = highestBid > 0;
+      const startPrice = auction.startPrice || 0;
+      const amt = Number(bidAmount);
+
+      if (!Number.isFinite(amt)) {
+        toast.warn('Enter a valid number', { theme: 'dark', autoClose: 3000 });
+        return;
+      }
+
+      if (!hasBids && amt < startPrice) {
+        toast.warn(`Bid must be greater than or equal to $${startPrice}`, {
+          theme: 'dark',
+          autoClose: 3000,
+        });
+        return;
+      } else if (hasBids && amt <= highestBid) {
+        toast.warn(`Bid must be greater than $${highestBid}`, { theme: 'dark', autoClose: 3000 });
+        return;
+      }
+
+      await placeBid({ auctionId: id, userId: user.id, bidAmount: amt });
+      const updated = await getBids(id);
+      setBids(updated);
+      if (updated && updated.length > 0) setHighestBid(updated[0].bidAmount);
+      setBidAmount('');
+      onClose();
+    } catch (err) {
+      console.error('Error placing bid:', err);
+      toast.warn(err.message, { theme: 'dark', autoClose: 3000 });
+    }
+  };
+
   return createPortal(
     <div className="bid-modal-overlay" role="dialog" aria-modal="true">
       <div className="bid-modal">
@@ -49,6 +83,12 @@ export default function AuctionBidModal({
                   onChange={(e) => setBidAmount(e.target.value)}
                   placeholder={`Enter bid amount`}
                   className="bid-input"
+                  onKeyDown={async (e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      await handleBidSubmit();
+                    }
+                  }}
                 />
               </>
             );

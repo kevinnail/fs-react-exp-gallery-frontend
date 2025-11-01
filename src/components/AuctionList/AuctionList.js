@@ -73,6 +73,7 @@ export default function AuctionList() {
   const lastBuyNowId = useAuctionEventsStore((s) => s.lastBuyNowId);
   const lastAuctionEnded = useAuctionEventsStore((s) => s.lastAuctionEnded);
   const lastAuctionCreated = useAuctionEventsStore((s) => s.lastAuctionCreated);
+  const lastAuctionExtended = useAuctionEventsStore((s) => s.lastAuctionExtended);
 
   // fetch auctions
   useEffect(() => {
@@ -103,7 +104,8 @@ export default function AuctionList() {
     if (!lastBidUpdate) return;
     (async () => {
       try {
-        const aId = lastBidUpdate;
+        const aId = lastBidUpdate.id;
+
         const data = await getBids(aId);
         const newHigh = Array.isArray(data) && data.length ? data[0].bidAmount : null;
         setAuctions((prev) =>
@@ -114,6 +116,7 @@ export default function AuctionList() {
       }
     })();
   }, [lastBidUpdate]);
+
   // set up listener for websocket auction created event
   useEffect(() => {
     if (!lastAuctionCreated) return;
@@ -124,7 +127,9 @@ export default function AuctionList() {
   useEffect(() => {
     if (!lastBuyNowId) return;
     const aId = Number(lastBuyNowId);
-    setAuctions((prev) => prev.map((a) => (a.id === aId ? { ...a, isActive: false } : a)));
+    setAuctions((prev) =>
+      prev.map((a) => (Number(a.id) === Number(aId) ? { ...a, isActive: false } : a))
+    );
   }, [lastBuyNowId]);
 
   // set up listener for websocket auction end event
@@ -133,6 +138,16 @@ export default function AuctionList() {
     const aId = Number(lastAuctionEnded);
     setAuctions((prev) => prev.map((a) => (a.id === aId ? { ...a, isActive: false } : a)));
   }, [lastAuctionEnded]);
+
+  // set up listener for auction extended event
+  useEffect(() => {
+    if (!lastAuctionExtended) return;
+    const { id, newEndTime } = lastAuctionExtended;
+
+    setAuctions((prev) =>
+      prev.map((a) => (Number(a.id) === Number(id) ? { ...a, endTime: newEndTime } : a))
+    );
+  }, [lastAuctionExtended]);
 
   useEffect(() => {
     markAuctionsRead();

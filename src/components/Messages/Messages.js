@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
-import { signOut } from '../../services/auth.js';
 import {
   getMyMessages,
   sendMessage,
@@ -14,7 +13,7 @@ import { useMessaging } from '../../hooks/useWebSocket.js';
 import './Messages.css';
 
 export default function Messages() {
-  const { signout, isAdmin } = useUserStore();
+  const { isAdmin } = useUserStore();
   const location = useLocation();
   const { refreshUnreadCount } = useUnreadMessages();
   const {
@@ -37,16 +36,7 @@ export default function Messages() {
   const [pieceMetadata, setPieceMetadata] = useState(null);
   const [typingTimeout, setTypingTimeout] = useState(null);
   const messagesListRef = useRef(null);
-
-  const handleClick = async () => {
-    try {
-      await signOut();
-      signout();
-    } catch (error) {
-      console.error('Error signing out:', error);
-      signout();
-    }
-  };
+  const navigate = useNavigate();
 
   const loadMessages = async () => {
     try {
@@ -163,8 +153,6 @@ export default function Messages() {
     e.preventDefault();
     if (!newMessage.trim() || sending) return;
 
-    let optimisticMessage = null;
-
     try {
       setSending(true);
 
@@ -175,19 +163,6 @@ export default function Messages() {
       if (pieceMetadata) {
         messageToSend = `${newMessage}\n\n---\nAbout this piece: ${pieceMetadata.title} (${pieceMetadata.category}) - $${pieceMetadata.price}\nView: ${pieceMetadata.url}\nImage: ${pieceMetadata.imageUrl}`;
       }
-
-      // Create optimistic message for immediate display
-      optimisticMessage = {
-        id: `temp-${Date.now()}`, // Temporary ID
-        messageContent: messageToSend,
-        sentAt: new Date().toISOString(),
-        isFromAdmin: false,
-        isRead: true,
-        conversationId: conversationId || 'temp-conversation',
-      };
-
-      // Add optimistic message to local state immediately
-      setMessages((prev) => [...prev, optimisticMessage]);
 
       if (conversationId) {
         // Reply to existing conversation
@@ -203,15 +178,6 @@ export default function Messages() {
         }
       }
 
-      // Replace optimistic message with real message from server
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === optimisticMessage.id
-            ? { ...response, conversationId: response.conversationId }
-            : msg
-        )
-      );
-
       setNewMessage('');
       // Clear piece metadata after sending
       setPieceMetadata(null);
@@ -222,10 +188,6 @@ export default function Messages() {
       }
     } catch (error) {
       console.error('Error sending message:', error);
-      // Remove optimistic message on error
-      if (optimisticMessage) {
-        setMessages((prev) => prev.filter((msg) => msg.id !== optimisticMessage.id));
-      }
     } finally {
       setSending(false);
     }
@@ -316,8 +278,24 @@ export default function Messages() {
   return (
     <div className="messages-container">
       <div className="messages-content">
+        <div style={{ display: 'flex', justifyContent: 'flex-start', position: 'absolute' }}>
+          <button
+            onClick={() => navigate(-1)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#fff',
+              fontSize: '0.9rem',
+              cursor: 'pointer',
+              padding: 0,
+              justifySelf: 'start',
+            }}
+          >
+            ← Back
+          </button>
+        </div>
         <div className="messages-header">
-          <h1>Contact Kevin</h1>
+          <h1 style={{ marginTop: '1rem' }}>Contact Kevin</h1>
         </div>
 
         <div className="conversation-container">
@@ -418,6 +396,12 @@ export default function Messages() {
                 className="message-input"
                 rows="3"
                 disabled={sending}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault(); // stop newline
+                    handleSendMessage(e); // submit
+                  }
+                }}
               />
               <button
                 type="submit"

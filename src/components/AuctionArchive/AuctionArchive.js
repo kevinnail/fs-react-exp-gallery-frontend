@@ -21,7 +21,24 @@ export default function AuctionArchive() {
   return (
     <div className="messages-container">
       <div className="messages-content">
-        <h1>Archive</h1>
+        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+          <button
+            onClick={() => navigate(-1)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#fff',
+              fontSize: '0.9rem',
+              cursor: 'pointer',
+              padding: 0,
+              justifySelf: 'start',
+            }}
+          >
+            ← Back
+          </button>
+        </div>
+
+        <h1 style={{ margin: 0 }}>Archive</h1>
         <p>Collected glass art - final prices private</p>
         <div className="auction-grid">
           {auctions.map((a) => (

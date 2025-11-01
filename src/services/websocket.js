@@ -89,6 +89,10 @@ class WebSocketService {
         this.emit('auction-ended', data);
       });
 
+      this.socket.on('auction-extended', (data) => {
+        this.emit('auction-extended', data);
+      });
+
       this.socket.on('bid-placed', (data) => {
         this.emit('bid-placed', data);
       });

@@ -1,18 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
-import { signOut } from '../../services/auth.js';
 import {
   getConversationById,
   addAdminReply,
   getConversations,
   markMessageAsRead,
 } from '../../services/fetch-messages.js';
-import Menu from '../Menu/Menu.js';
 import { useMessaging } from '../../hooks/useWebSocket.js';
 import './AdminInbox.css';
 
 export default function AdminInbox() {
-  const { signout, isAdmin } = useUserStore();
+  const { isAdmin } = useUserStore();
   const {
     isConnected,
     messages,
@@ -33,16 +31,6 @@ export default function AdminInbox() {
   const [newReply, setNewReply] = useState('');
   const [typingTimeout, setTypingTimeout] = useState(null);
   const messagesListRef = useRef(null);
-
-  const handleClick = async () => {
-    try {
-      await signOut();
-      signout();
-    } catch (error) {
-      console.error('Error signing out:', error);
-      signout();
-    }
-  };
 
   const loadConversations = async (forceReload = false) => {
     try {
@@ -173,6 +161,7 @@ export default function AdminInbox() {
     list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' });
   };
 
+  // Scroll to bottom
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -189,6 +178,25 @@ export default function AdminInbox() {
       }
     };
   }, [isConnected, selectedConversation, joinConversation, leaveConversation]);
+
+  // load conversation on mount
+  useEffect(() => {
+    loadConversations();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Refresh conversations when new messages arrive via WebSocket
+  useEffect(() => {
+    if (messages.length > 0) {
+      // Check if the latest message is from a customer and not from admin
+      const latestMessage = messages[messages.length - 1];
+      if (latestMessage && !latestMessage.isFromAdmin) {
+        // Refresh conversations to pick up new conversations
+        loadConversations(true);
+      }
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
 
   const handleTyping = (e) => {
     const value = e.target.value;
@@ -271,24 +279,6 @@ export default function AdminInbox() {
 
     return <p>{messageContent}</p>;
   };
-
-  useEffect(() => {
-    loadConversations();
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Refresh conversations when new messages arrive via WebSocket
-  useEffect(() => {
-    if (messages.length > 0) {
-      // Check if the latest message is from a customer and not from admin
-      const latestMessage = messages[messages.length - 1];
-      if (latestMessage && !latestMessage.isFromAdmin) {
-        // Refresh conversations to pick up new conversations
-        loadConversations(true);
-      }
-    }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messages]);
 
   return (
     <div className="admin-inbox-container">
@@ -402,6 +392,12 @@ export default function AdminInbox() {
                       className="reply-input"
                       rows="3"
                       disabled={sending}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault(); // stop newline
+                          handleSendReply(e); // submit
+                        }
+                      }}
                     />
                     <button
                       type="submit"

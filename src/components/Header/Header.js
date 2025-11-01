@@ -8,9 +8,12 @@ import Menu from '../Menu/Menu.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationStore } from '../../stores/notificationStore.js';
+import { useProfileStore } from '../../stores/profileStore.js';
 
 export default function Header() {
   const { user, signout, isAdmin } = useUserStore();
+  const { profile } = useProfileStore();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -49,9 +52,16 @@ export default function Header() {
       <header>
         <Link className="link" to={user && isAdmin ? '/admin' : '/'} onClick={handleHomeClick}>
           <img className="logo" src="../logo-sq.png" />
-        </Link>
-        <h1 className="biz-title">Stress Less Glass</h1>
-
+        </Link>{' '}
+        <div>
+          <h1 className="biz-title">Stress Less Glass</h1>{' '}
+          <span style={{ fontSize: '.8rem' }}>logged in as: </span>
+          <span>
+            <strong>
+              {profile?.firstName} {profile?.lastName}
+            </strong>
+          </span>
+        </div>
         <div className="header-section">
           <div className="menu-icon-wrapper" onClick={handleMenuClick}>
             <button

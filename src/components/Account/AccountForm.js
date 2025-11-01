@@ -162,10 +162,10 @@ export default function ProfileForm({ handleCloseForm }) {
           </div>
 
           <div className="form-actions">
-            <button type="button" onClick={handleCloseForm} className="cancel-btn">
+            <button type="button" onClick={handleCloseForm} className="cancel-btn-account">
               Cancel
             </button>
-            <button type="submit" className="submit-btn" disabled={loading}>
+            <button type="submit" className="submit-btn-account" disabled={loading}>
               {loading ? 'Updating...' : 'Update Profile'}
             </button>
           </div>
