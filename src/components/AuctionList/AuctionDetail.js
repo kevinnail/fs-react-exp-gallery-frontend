@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAuctions } from '../../services/fetch-auctions.js';
 import AuctionCard from './AuctionCard.js';
+import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
 
 export default function AuctionDetail() {
   const { id } = useParams();
@@ -11,6 +12,14 @@ export default function AuctionDetail() {
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
+
+  const lastAuctionExtended = useAuctionEventsStore((s) => s.lastAuctionExtended);
+  useEffect(() => {
+    if (!lastAuctionExtended) return;
+    if (lastAuctionExtended.id !== auctionId) return;
+
+    setAuction((prev) => (prev ? { ...prev, endTime: lastAuctionExtended.newEndTime } : prev));
+  }, [lastAuctionExtended, auctionId]);
 
   // load this one auction
   useEffect(() => {
