@@ -1,6 +1,27 @@
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 export default function ConfirmBINModal({ isOpen, onClose, onConfirm, auction }) {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = async (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        try {
+          await onConfirm();
+        } finally {
+          onClose();
+        }
+      } else if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onConfirm, onClose]);
+
   if (!isOpen) return null;
 
   return createPortal(
