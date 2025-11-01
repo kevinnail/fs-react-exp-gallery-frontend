@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
-import { signOut } from '../../services/auth.js';
 import {
   getMyMessages,
   sendMessage,
@@ -14,7 +13,7 @@ import { useMessaging } from '../../hooks/useWebSocket.js';
 import './Messages.css';
 
 export default function Messages() {
-  const { signout, isAdmin } = useUserStore();
+  const { isAdmin } = useUserStore();
   const location = useLocation();
   const { refreshUnreadCount } = useUnreadMessages();
   const {
@@ -37,16 +36,7 @@ export default function Messages() {
   const [pieceMetadata, setPieceMetadata] = useState(null);
   const [typingTimeout, setTypingTimeout] = useState(null);
   const messagesListRef = useRef(null);
-
-  const handleClick = async () => {
-    try {
-      await signOut();
-      signout();
-    } catch (error) {
-      console.error('Error signing out:', error);
-      signout();
-    }
-  };
+  const navigate = useNavigate();
 
   const loadMessages = async () => {
     try {
@@ -316,8 +306,24 @@ export default function Messages() {
   return (
     <div className="messages-container">
       <div className="messages-content">
+        <div style={{ display: 'flex', justifyContent: 'flex-start', position: 'absolute' }}>
+          <button
+            onClick={() => navigate(-1)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#fff',
+              fontSize: '0.9rem',
+              cursor: 'pointer',
+              padding: 0,
+              justifySelf: 'start',
+            }}
+          >
+            ← Back
+          </button>
+        </div>
         <div className="messages-header">
-          <h1>Contact Kevin</h1>
+          <h1 style={{ marginTop: '1rem' }}>Contact Kevin</h1>
         </div>
 
         <div className="conversation-container">

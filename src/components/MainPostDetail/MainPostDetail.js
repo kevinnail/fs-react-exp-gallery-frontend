@@ -5,8 +5,6 @@ import Modal from 'react-modal';
 import { useSwipeable } from 'react-swipeable'; // Add this import
 Modal.setAppElement('#root'); // If your app is using #root as the main container
 import '../PostDetail/PostDetail.css';
-import { signOut } from '../../services/auth.js';
-import { useUserStore } from '../../stores/userStore.js';
 import Loading from '../Loading/Loading.js';
 
 export default function MainPostDetail() {
@@ -17,7 +15,6 @@ export default function MainPostDetail() {
   const [isLoaded, setIsLoaded] = useState(false);
   // Always render the image src in detail view; placeholder only for initial load
   const containerRef = useRef(null);
-  const { signout } = useUserStore();
   const navigate = useNavigate();
 
   const glasspassLogoLink =
@@ -94,6 +91,23 @@ export default function MainPostDetail() {
     <>
       <div className="post-detail-div-wrapper">
         <section className="message-button-wrapper">
+          {' '}
+          <div style={{ display: 'flex', justifyContent: 'flex-start', position: 'absolute' }}>
+            <button
+              onClick={() => navigate(-1)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#fff',
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                padding: 0,
+                justifySelf: 'start',
+              }}
+            >
+              ← Back
+            </button>
+          </div>
           <button
             className="message-about-piece-button"
             onClick={() =>
@@ -111,19 +125,13 @@ export default function MainPostDetail() {
               })
             }
           >
+            {' '}
             💬 Message Kevin about this piece
           </button>
         </section>
         <div className="detail-top-container">
           <div className="post-detail-div">
             <section className="title-container">
-              <button
-                className="retract-button2 btn-adjust"
-                onClick={() => navigate(-1)}
-                title="Back to previous page"
-              >
-                <span className="arrow-icon">←</span>
-              </button>
               <h1 className="detail-title">{postDetail?.title}</h1>
             </section>
             <section className="title-cat-container">
