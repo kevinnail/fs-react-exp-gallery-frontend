@@ -9,15 +9,17 @@ import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationStore } from '../../stores/notificationStore.js';
 import { useProfileStore } from '../../stores/profileStore.js';
+import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
 
 export default function Header() {
   const { user, signout, isAdmin } = useUserStore();
   const { profile } = useProfileStore();
+  const { unreadMessageCount } = useUnreadMessages();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { unreadAuctionCount, unreadMessageCount, fetchUnreadAuctions } = useNotificationStore();
+  const { unreadAuctionCount, fetchUnreadAuctions } = useNotificationStore();
   const totalUnread = unreadAuctionCount + unreadMessageCount;
 
   const handleClick = async () => {
@@ -45,7 +47,7 @@ export default function Header() {
     if (user) {
       fetchUnreadAuctions();
     }
-  }, []);
+  }, [user, fetchUnreadAuctions]);
 
   return (
     <>
@@ -71,7 +73,9 @@ export default function Header() {
               aria-label="Open menu"
             >
               <img className={user ? 'menu-icon' : 'menu-no-user'} src="../menu.png" alt="" />
-              {user && totalUnread > 0 && <span className="menu-badge">{totalUnread}</span>}
+              {user && totalUnread > 0 && location.pathname !== '/messages' && (
+                <span className="menu-badge">{totalUnread}</span>
+              )}
             </button>
           </div>
         </div>
