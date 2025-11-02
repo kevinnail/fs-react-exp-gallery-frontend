@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import websocketService from '../services/websocket.js';
+import { useLocation } from 'react-router-dom';
 
 export const useWebSocket = () => {
   const [isConnected, setIsConnected] = useState(false);
@@ -62,12 +63,14 @@ export const useWebSocket = () => {
   };
 };
 
+// -------------------- Messaging hook --------------------
 // Hook specifically for messaging functionality
 export const useMessaging = () => {
   const [messages, setMessages] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [typingUsers, setTypingUsers] = useState([]);
+  const location = useLocation();
 
   const {
     isConnected,
@@ -81,9 +84,31 @@ export const useMessaging = () => {
   } = useWebSocket();
 
   useEffect(() => {
+    // Handle incoming messages
     // Listen for new messages
-    const handleNewMessage = (data) => {
+    const handleNewMessage = async (data) => {
       const message = data.message || data;
+      console.log('📨 new_message received:', message);
+
+      try {
+        // await markMessageAsRead(message.id);
+      } catch (err) {
+        console.error('Error marking live admin message as read:', err);
+      }
+
+      if (location.pathname === '/messages' && message.isFromAdmin) {
+        console.log('✅ marking as read');
+        try {
+          await markMessageAsRead(message.id, message.conversationId);
+        } catch (err) {
+          console.error('Error marking live admin message as read:', err);
+        }
+      } else {
+        console.log('❌ condition not met:', {
+          path: location.pathname,
+          isFromAdmin: message.isFromAdmin,
+        });
+      }
 
       setMessages((prev) => {
         if (prev.some((m) => m.id === message.id)) return prev;
@@ -120,21 +145,15 @@ export const useMessaging = () => {
 
     // Listen for typing events
     const handleTypingStart = (data) => {
-      setTypingUsers((prev) => {
-        if (!prev.includes(data.userId)) {
-          return [...prev, data.userId];
-        }
-        return prev;
-      });
+      setTypingUsers((prev) => (prev.includes(data.userId) ? prev : [...prev, data.userId]));
     };
 
     const handleTypingStop = (data) => {
-      setTypingUsers((prev) => prev.filter((userId) => userId !== data.userId));
+      setTypingUsers((prev) => prev.filter((u) => u !== data.userId));
     };
 
     // Add event listeners
     addEventListener('new_message', handleNewMessage);
-    addEventListener('new_customer_message', handleNewMessage);
     addEventListener('message_read', handleMessageRead);
     addEventListener('conversation_updated', handleConversationUpdate);
     addEventListener('typing_start', handleTypingStart);
@@ -143,13 +162,12 @@ export const useMessaging = () => {
     // Cleanup
     return () => {
       removeEventListener('new_message', handleNewMessage);
-      removeEventListener('new_customer_message', handleNewMessage);
       removeEventListener('message_read', handleMessageRead);
       removeEventListener('conversation_updated', handleConversationUpdate);
       removeEventListener('typing_start', handleTypingStart);
       removeEventListener('typing_stop', handleTypingStop);
     };
-  }, [addEventListener, removeEventListener]);
+  }, [addEventListener, removeEventListener, location.pathname, markMessageAsRead]);
 
   // Typing indicator management
   const startTyping = (conversationId) => {
