@@ -70,7 +70,6 @@ function App() {
 
   useEffect(() => {
     if (user && !profile) {
-      console.log('User authenticated but no profile, fetching...');
       fetchUserProfile();
     }
   }, [user, profile, fetchUserProfile]);
