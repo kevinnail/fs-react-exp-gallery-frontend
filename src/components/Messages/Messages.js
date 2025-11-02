@@ -5,7 +5,7 @@ import {
   getMyMessages,
   sendMessage,
   replyToConversation,
-  markMessageAsRead,
+  markMessageAsReadFetchCall,
 } from '../../services/fetch-messages.js';
 import { getAdminProfile } from '../../services/fetch-utils.js';
 import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
@@ -62,7 +62,13 @@ export default function Messages() {
 
       for (const message of unreadAdminMessages) {
         try {
-          await markMessageAsRead(message.id);
+          await markMessageAsReadFetchCall(message.id);
+          const res = await getMyMessages();
+          console.log(
+            'DB says unread:',
+            res.filter((m) => !m.isRead).map((m) => m.id)
+          );
+
           // Also mark via WebSocket for real-time updates
           if (isConnected) {
             markWebSocketMessageAsRead(message.id);
@@ -130,11 +136,6 @@ export default function Messages() {
 
     return () => clearTimeout(timeout);
   }, [isConnected]);
-
-  // Refresh unread count when component mounts
-  useEffect(() => {
-    refreshUnreadCount();
-  }, [refreshUnreadCount]);
 
   // Scroll to bottom when component mounts and messages are loaded
   useEffect(() => {
