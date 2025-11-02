@@ -28,6 +28,8 @@ import AuctionForm from './components/AuctionForm/AuctionForm.js';
 import AuctionDetail from './components/AuctionList/AuctionDetail.js';
 import AuctionArchive from './components/AuctionArchive/AuctionArchive.js';
 import { useProfileStore } from './stores/profileStore.js';
+import { useMessaging } from './hooks/useWebSocket.js';
+import { getMyMessages } from './services/fetch-messages.js';
 
 const mainTheme = createTheme({
   palette: {
@@ -67,12 +69,33 @@ function App() {
 
   const user = useUserStore((state) => state.user);
   const { profile, fetchUserProfile } = useProfileStore();
+  const { isConnected, joinConversation } = useMessaging();
+
+  useEffect(() => {
+    if (!user || !isConnected) return;
+
+    const joinUserConversation = async () => {
+      try {
+        const messages = await getMyMessages();
+        if (messages.length > 0) {
+          const convId = messages[0].conversationId;
+          joinConversation(convId);
+          console.log('✅ Joined conversation early for notifications:', convId);
+        }
+      } catch (err) {
+        console.error('Failed to pre-join conversation:', err);
+      }
+    };
+
+    joinUserConversation();
+  }, [user, isConnected, joinConversation]);
 
   useEffect(() => {
     if (user && !profile) {
       fetchUserProfile();
     }
   }, [user, profile, fetchUserProfile]);
+
   useEffect(() => {
     websocketService.connect();
 
