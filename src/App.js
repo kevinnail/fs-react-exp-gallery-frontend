@@ -80,7 +80,6 @@ function App() {
         if (messages.length > 0) {
           const convId = messages[0].conversationId;
           joinConversation(convId);
-          console.log('✅ Joined conversation early for notifications:', convId);
         }
       } catch (err) {
         console.error('Failed to pre-join conversation:', err);

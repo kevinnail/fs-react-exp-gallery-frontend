@@ -22,7 +22,6 @@ export default function Messages() {
     setMessages,
     typingUsers,
     joinConversation,
-    leaveConversation,
     markMessageAsRead: markWebSocketMessageAsRead,
     startTyping,
     stopTyping,
@@ -63,11 +62,6 @@ export default function Messages() {
       for (const message of unreadAdminMessages) {
         try {
           await markMessageAsReadFetchCall(message.id);
-          const res = await getMyMessages();
-          console.log(
-            'DB says unread:',
-            res.filter((m) => !m.isRead).map((m) => m.id)
-          );
 
           // Also mark via WebSocket for real-time updates
           if (isConnected) {

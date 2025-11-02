@@ -88,7 +88,6 @@ export const useMessaging = () => {
     // Listen for new messages
     const handleNewMessage = async (data) => {
       const message = data.message || data;
-      console.log('📨 new_message received:', message);
 
       try {
         // await markMessageAsRead(message.id);
@@ -97,17 +96,11 @@ export const useMessaging = () => {
       }
 
       if (location.pathname === '/messages' && message.isFromAdmin) {
-        console.log('✅ marking as read');
         try {
           await markMessageAsRead(message.id, message.conversationId);
         } catch (err) {
           console.error('Error marking live admin message as read:', err);
         }
-      } else {
-        console.log('❌ condition not met:', {
-          path: location.pathname,
-          isFromAdmin: message.isFromAdmin,
-        });
       }
 
       setMessages((prev) => {
