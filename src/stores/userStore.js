@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { getUser } from '../services/fetch-utils.js';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import websocketService from '../services/websocket.js';
 
 export const useUserStore = create((set) => ({
   user: null,
@@ -10,7 +11,12 @@ export const useUserStore = create((set) => ({
   loading: false,
   isAdmin: false,
   unreadMessageCount: 0,
-  setUser: (user) => set({ user }),
+  setUser: (user) => {
+    set({ user });
+    if (user) {
+      websocketService.connect();
+    }
+  },
   setError: (error) => set({ error }),
   setLoading: (loading) => set({ loading }),
   setIsAdmin: (isAdmin) => set({ isAdmin }),
