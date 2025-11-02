@@ -112,19 +112,6 @@ export default function Messages() {
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
-  // Join conversation when connected and conversationId is available
-  useEffect(() => {
-    if (isConnected && conversationId) {
-      joinConversation(conversationId);
-    }
-
-    return () => {
-      if (conversationId) {
-        leaveConversation(conversationId);
-      }
-    };
-  }, [isConnected, conversationId, joinConversation, leaveConversation]);
-
   // Add a timeout to show connection status after a delay
   useEffect(() => {
     const timeout = setTimeout(() => {
