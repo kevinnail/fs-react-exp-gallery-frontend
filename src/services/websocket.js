@@ -25,6 +25,7 @@ class WebSocketService {
         reconnectionDelay: 1000,
         timeout: 20000,
       });
+      window.ws = this.socket;
 
       this.socket.on('connect', () => {
         console.info('WebSocket connected:', this.socket.id);
@@ -150,9 +151,9 @@ class WebSocketService {
   }
 
   // Mark message as read
-  markMessageAsRead(messageId) {
+  markMessageAsRead(messageId, conversationId) {
     if (this.socket && this.isConnected) {
-      this.socket.emit('mark_message_read', messageId);
+      this.socket.emit('mark_message_read', { messageId, conversationId });
     }
   }
 
