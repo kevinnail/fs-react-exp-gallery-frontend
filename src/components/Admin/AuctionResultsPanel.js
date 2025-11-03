@@ -9,6 +9,7 @@ import './AuctionResultsPanel.css';
 import { toast } from 'react-toastify';
 import websocketService from '../../services/websocket.js';
 import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
+import { useNavigate } from 'react-router-dom';
 
 export default function AuctionResultsPanel() {
   const [auctions, setAuctions] = useState([]);
@@ -17,6 +18,7 @@ export default function AuctionResultsPanel() {
   const [showTrackingModal, setShowTrackingModal] = useState(false);
   const [trackingAuctionId, setTrackingAuctionId] = useState(null);
   const [trackingInput, setTrackingInput] = useState('');
+  const navigate = useNavigate();
 
   const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
   useEffect(() => {
@@ -211,7 +213,9 @@ export default function AuctionResultsPanel() {
               });
             }
           };
-
+          const navAuction = (auctionId) => {
+            navigate(`/auctions/${auctionId}`);
+          };
           return (
             <div
               key={a.id}
@@ -219,7 +223,14 @@ export default function AuctionResultsPanel() {
             >
               {image || !image ? (
                 <div style={{ display: 'grid' }}>
-                  <img src={image} alt={a.title} className="auction-result-thumb" />
+                  <img
+                    src={image}
+                    alt={a.title}
+                    onClick={() => {
+                      navAuction(a.id);
+                    }}
+                    className="auction-result-thumb"
+                  />
                   {isClosed && a.trackingNumber && (
                     <a
                       href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
