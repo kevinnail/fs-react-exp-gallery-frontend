@@ -281,19 +281,6 @@ export default function AuctionCard({ auction }) {
                   <strong>Current Bid:</strong> ${highestBid}
                 </span>
               )}
-
-              {/* {isActive && (
-                <span
-                  style={{
-                    fontSize: '.9rem',
-                    color: 'white',
-                    display: 'block',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  {highBidder ? "You're the high bidder!" : ''}
-                </span>
-              )} */}
             </p>
 
             <div className="bin-end-time-wrapper">
