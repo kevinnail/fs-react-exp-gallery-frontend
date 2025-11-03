@@ -20,7 +20,7 @@ import { createTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import { toast, ToastContainer } from 'react-toastify';
-import websocketService from './services/websocket.js';
+import websocketService, { attachAdminListener } from './services/websocket.js';
 import NotFound from './components/NotFound/NotFound.js';
 import UserDashboard from './components/Admin/Users/UsersDashboard.js';
 import AuctionList from './components/AuctionList/AuctionList.js';
@@ -66,10 +66,19 @@ const mainTheme = createTheme({
 function App() {
   // eslint-disable-next-line
   const [theme, setTheme] = useState(mainTheme);
-
-  const user = useUserStore((state) => state.user);
+  const { user, isAdmin, setUnreadMessageCount } = useUserStore();
   const { profile, fetchUserProfile } = useProfileStore();
   const { isConnected, joinConversation } = useMessaging();
+
+  if (user && user.isAdmin) {
+    attachAdminListener();
+  }
+
+  useEffect(() => {
+    if (!user) {
+      useUserStore.getState().fetchUser();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!user || !isConnected) return;
@@ -96,8 +105,6 @@ function App() {
   }, [user, profile, fetchUserProfile]);
 
   useEffect(() => {
-    websocketService.connect();
-
     const handleOutbid = () => {
       toast.warn(`You’ve been outbid!`, {
         theme: 'dark',
@@ -133,9 +140,26 @@ function App() {
       websocketService.off('user-outbid', handleOutbid);
       websocketService.off('user-won', handleYouWon);
       websocketService.off('auction-ended', handleAuctionEnded);
-      websocketService.disconnect(); // optional: only if App truly unmounts once
+      websocketService.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (!user || !isAdmin) return;
+
+    const handleAdminNotify = (data) => {
+      const msg = data?.message || data;
+      if (msg && !msg.isFromAdmin) {
+        setUnreadMessageCount((prev) => prev + 1);
+      }
+    };
+
+    websocketService.on('new_customer_message', handleAdminNotify);
+
+    return () => {
+      websocketService.off('new_customer_message', handleAdminNotify);
+    };
+  }, [user, setUnreadMessageCount, isAdmin]);
 
   return (
     <div className="App">
