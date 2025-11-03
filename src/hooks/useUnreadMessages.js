@@ -1,18 +1,26 @@
 import { useEffect } from 'react';
 import { useUserStore } from '../stores/userStore.js';
-import { getMyMessages } from '../services/fetch-messages.js';
+import { getConversations, getMyMessages } from '../services/fetch-messages.js';
 import websocketService from '../services/websocket.js';
 
 export const useUnreadMessages = () => {
   const { user, unreadMessageCount, setUnreadMessageCount, isAdmin } = useUserStore();
 
   const refreshUnreadCount = async () => {
-    if (!user || isAdmin) return;
+    if (!user) return;
 
     try {
-      const messages = await getMyMessages();
-      const unreadCount = messages.filter((m) => !m.isRead && m.isFromAdmin).length;
-      setUnreadMessageCount(unreadCount);
+      if (isAdmin) {
+        const conversations = await getConversations();
+        const unread = conversations.reduce((acc, c) => {
+          return acc + Number(c.unread_count || 0);
+        }, 0);
+        setUnreadMessageCount(unread);
+      } else {
+        const messages = await getMyMessages();
+        const unread = messages.filter((m) => !m.isRead && m.isFromAdmin).length;
+        setUnreadMessageCount(unread);
+      }
     } catch {
       setUnreadMessageCount(0);
     }
@@ -33,6 +41,13 @@ export const useUnreadMessages = () => {
       websocketService.off('conversation_updated', update);
     };
   }, [user, isAdmin]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    // always fetch on login, admin or not
+    refreshUnreadCount();
+  }, [user]);
 
   return {
     unreadMessageCount,
