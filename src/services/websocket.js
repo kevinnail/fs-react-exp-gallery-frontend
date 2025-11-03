@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { useUserStore } from '../stores/userStore.js';
 
 const BASE_URL = process.env.REACT_APP_HOME_URL;
 
@@ -25,6 +26,7 @@ class WebSocketService {
         reconnectionDelay: 1000,
         timeout: 20000,
       });
+
       window.ws = this.socket;
 
       this.socket.on('connect', () => {
@@ -201,6 +203,22 @@ class WebSocketService {
       socketId: this.socket?.id || null,
     };
   }
+}
+
+let adminListenerAttached = false;
+
+export function attachAdminListener() {
+  if (adminListenerAttached) return;
+  adminListenerAttached = true;
+
+  const { setUnreadMessageCount } = useUserStore.getState();
+
+  websocketService.on('new_customer_message', (data) => {
+    const msg = data?.message || data;
+    if (msg && !msg.isFromAdmin) {
+      setUnreadMessageCount((prev) => prev + 1);
+    }
+  });
 }
 
 // Create and export a singleton instance
