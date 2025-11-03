@@ -147,7 +147,7 @@ export async function getAllMessages() {
 }
 
 // Admin marks message as read
-export async function markMessageAsRead(messageId) {
+export async function markMessageAsReadFetchCall(messageId) {
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/messages/${messageId}/read`, {
       method: 'PATCH',

@@ -289,7 +289,6 @@ body {
   .signout-button {
     display: flex;
     justify-content: space-between;
-    font-family: 'Shadows Into Light', cursive;
     margin-bottom: 5px;
   }
 

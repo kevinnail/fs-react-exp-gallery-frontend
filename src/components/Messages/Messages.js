@@ -5,7 +5,7 @@ import {
   getMyMessages,
   sendMessage,
   replyToConversation,
-  markMessageAsRead,
+  markMessageAsReadFetchCall,
 } from '../../services/fetch-messages.js';
 import { getAdminProfile } from '../../services/fetch-utils.js';
 import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
@@ -17,12 +17,12 @@ export default function Messages() {
   const location = useLocation();
   const { refreshUnreadCount } = useUnreadMessages();
   const {
+    socket,
     isConnected,
     messages,
     setMessages,
     typingUsers,
     joinConversation,
-    leaveConversation,
     markMessageAsRead: markWebSocketMessageAsRead,
     startTyping,
     stopTyping,
@@ -62,7 +62,8 @@ export default function Messages() {
 
       for (const message of unreadAdminMessages) {
         try {
-          await markMessageAsRead(message.id);
+          await markMessageAsReadFetchCall(message.id);
+
           // Also mark via WebSocket for real-time updates
           if (isConnected) {
             markWebSocketMessageAsRead(message.id);
@@ -106,19 +107,6 @@ export default function Messages() {
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
-  // Join conversation when connected and conversationId is available
-  useEffect(() => {
-    if (isConnected && conversationId) {
-      joinConversation(conversationId);
-    }
-
-    return () => {
-      if (conversationId) {
-        leaveConversation(conversationId);
-      }
-    };
-  }, [isConnected, conversationId, joinConversation, leaveConversation]);
-
   // Add a timeout to show connection status after a delay
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -130,11 +118,6 @@ export default function Messages() {
 
     return () => clearTimeout(timeout);
   }, [isConnected]);
-
-  // Refresh unread count when component mounts
-  useEffect(() => {
-    refreshUnreadCount();
-  }, [refreshUnreadCount]);
 
   // Scroll to bottom when component mounts and messages are loaded
   useEffect(() => {
@@ -156,7 +139,6 @@ export default function Messages() {
     try {
       setSending(true);
 
-      let response;
       let messageToSend = newMessage;
 
       // Always include piece metadata if available (for both new conversations and replies)
@@ -165,17 +147,22 @@ export default function Messages() {
       }
 
       if (conversationId) {
-        // Reply to existing conversation
-        response = await replyToConversation(conversationId, messageToSend);
+        socket.emit('send_message', {
+          conversationId,
+          messageContent: messageToSend,
+        });
       } else {
-        // Start new conversation
-        response = await sendMessage(messageToSend);
+        // still use the REST call once to create a new conversation
+        const response = await sendMessage(messageToSend);
         setConversationId(response.conversationId);
-
-        // Join the new conversation room
         if (isConnected) {
           joinConversation(response.conversationId);
         }
+        // then emit through WebSocket to trigger real-time flow
+        socket.emit('send_message', {
+          conversationId: response.conversationId,
+          messageContent: messageToSend,
+        });
       }
 
       setNewMessage('');

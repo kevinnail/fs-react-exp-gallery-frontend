@@ -1,58 +1,42 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { useUserStore } from '../stores/userStore.js';
 import { getMyMessages } from '../services/fetch-messages.js';
 import websocketService from '../services/websocket.js';
 
 export const useUnreadMessages = () => {
-  const { unreadMessageCount, setUnreadMessageCount, user } = useUserStore();
+  const { user, unreadMessageCount, setUnreadMessageCount, isAdmin } = useUserStore();
 
-  const checkUnreadMessages = useCallback(async () => {
-    if (!user) {
-      setUnreadMessageCount(0);
-      return;
-    }
+  const refreshUnreadCount = async () => {
+    if (!user || isAdmin) return;
 
     try {
       const messages = await getMyMessages();
-      // Count unread admin messages (messages from admin that haven't been read)
-      const unreadCount = messages.filter(
-        (message) => !message.isRead && message.isFromAdmin
-      ).length;
-
+      const unreadCount = messages.filter((m) => !m.isRead && m.isFromAdmin).length;
       setUnreadMessageCount(unreadCount);
-    } catch (error) {
-      console.error('Error checking unread messages:', error);
+    } catch {
       setUnreadMessageCount(0);
     }
-  }, [user, setUnreadMessageCount]);
+  };
 
   useEffect(() => {
-    checkUnreadMessages();
-  }, [user, checkUnreadMessages]);
+    if (!user || isAdmin) return;
 
-  // WebSocket event handlers for real-time updates
-  useEffect(() => {
-    if (!user) return;
+    const update = () => refreshUnreadCount();
 
-    const handleAnyMessage = () => {
-      checkUnreadMessages();
-    };
-
-    websocketService.on('new_message', handleAnyMessage);
-    websocketService.on('new_customer_message', handleAnyMessage);
-    websocketService.on('message_read', handleAnyMessage);
-    websocketService.on('conversation_updated', handleAnyMessage);
+    websocketService.on('new_message', update);
+    websocketService.on('message_read', update);
+    websocketService.on('conversation_updated', update);
 
     return () => {
-      websocketService.off('new_message', handleAnyMessage);
-      websocketService.off('new_customer_message', handleAnyMessage);
-      websocketService.off('message_read', handleAnyMessage);
-      websocketService.off('conversation_updated', handleAnyMessage);
+      websocketService.off('new_message', update);
+      websocketService.off('message_read', update);
+      websocketService.off('conversation_updated', update);
     };
-  }, [user, checkUnreadMessages]);
+  }, [user, isAdmin]);
 
   return {
     unreadMessageCount,
-    refreshUnreadCount: checkUnreadMessages,
+    refreshUnreadCount,
+    setUnreadMessageCount,
   };
 };

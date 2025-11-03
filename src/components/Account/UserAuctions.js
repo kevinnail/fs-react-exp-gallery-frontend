@@ -298,9 +298,9 @@ export default function UserAuctions({ userId }) {
       </span>
 
       <div className="user-auctions-summary">
-        <h4>Summary</h4>
         {wonAuctions.length > 0 && !allPaid ? (
           <>
+            <h4>Auctions needing payment:</h4>
             <div className="summary-details">
               <p className="summary-details-p">
                 <span>Items won:</span> {unpaidWins.length}
@@ -350,7 +350,9 @@ export default function UserAuctions({ userId }) {
             </div>
           </>
         ) : (
-          <p className="empty-msg">No wins yet to summarize.</p>
+          <p className="empty-msg">
+            Waiting for your item(s)? You can find your tracking number & link below.
+          </p>
         )}
       </div>
 

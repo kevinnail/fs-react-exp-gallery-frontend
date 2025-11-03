@@ -1,12 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-// import reportWebVitals from './reportWebVitals';
-import { useUserStore } from './stores/userStore.js';
 import { BrowserRouter } from 'react-router-dom';
-
-// Initialize user store
-useUserStore.getState().fetchUser();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -4,7 +4,7 @@ import {
   getConversationById,
   addAdminReply,
   getConversations,
-  markMessageAsRead,
+  markMessageAsReadFetchCall,
 } from '../../services/fetch-messages.js';
 import { useMessaging } from '../../hooks/useWebSocket.js';
 import './AdminInbox.css';
@@ -24,6 +24,8 @@ export default function AdminInbox() {
     startTyping,
     stopTyping,
   } = useMessaging();
+
+  const { setUnreadMessageCount } = useUserStore();
 
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -111,7 +113,7 @@ export default function AdminInbox() {
 
       for (const message of unreadCustomerMessages) {
         try {
-          await markMessageAsRead(message.id);
+          await markMessageAsReadFetchCall(message.id);
           // Also mark via WebSocket for real-time updates
           if (isConnected) {
             markWebSocketMessageAsRead(message.id);
@@ -120,6 +122,9 @@ export default function AdminInbox() {
           console.error('Error marking message as read:', error);
         }
       }
+
+      //  Reset unread message badge for admin
+      setUnreadMessageCount(0);
 
       // Refresh conversations to update unread counts
       await loadConversations(true);
@@ -394,8 +399,8 @@ export default function AdminInbox() {
                       disabled={sending}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault(); // stop newline
-                          handleSendReply(e); // submit
+                          e.preventDefault();
+                          handleSendReply(e);
                         }
                       }}
                     />

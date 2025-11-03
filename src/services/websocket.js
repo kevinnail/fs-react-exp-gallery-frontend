@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { useUserStore } from '../stores/userStore.js';
 
 const BASE_URL = process.env.REACT_APP_HOME_URL;
 
@@ -25,6 +26,8 @@ class WebSocketService {
         reconnectionDelay: 1000,
         timeout: 20000,
       });
+
+      window.ws = this.socket;
 
       this.socket.on('connect', () => {
         console.info('WebSocket connected:', this.socket.id);
@@ -150,9 +153,9 @@ class WebSocketService {
   }
 
   // Mark message as read
-  markMessageAsRead(messageId) {
+  markMessageAsRead(messageId, conversationId) {
     if (this.socket && this.isConnected) {
-      this.socket.emit('mark_message_read', messageId);
+      this.socket.emit('mark_message_read', { messageId, conversationId });
     }
   }
 
@@ -200,6 +203,22 @@ class WebSocketService {
       socketId: this.socket?.id || null,
     };
   }
+}
+
+let adminListenerAttached = false;
+
+export function attachAdminListener() {
+  if (adminListenerAttached) return;
+  adminListenerAttached = true;
+
+  const { setUnreadMessageCount } = useUserStore.getState();
+
+  websocketService.on('new_customer_message', (data) => {
+    const msg = data?.message || data;
+    if (msg && !msg.isFromAdmin) {
+      setUnreadMessageCount((prev) => prev + 1);
+    }
+  });
 }
 
 // Create and export a singleton instance

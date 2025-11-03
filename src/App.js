@@ -20,7 +20,7 @@ import { createTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import { toast, ToastContainer } from 'react-toastify';
-import websocketService from './services/websocket.js';
+import websocketService, { attachAdminListener } from './services/websocket.js';
 import NotFound from './components/NotFound/NotFound.js';
 import UserDashboard from './components/Admin/Users/UsersDashboard.js';
 import AuctionList from './components/AuctionList/AuctionList.js';
@@ -28,6 +28,8 @@ import AuctionForm from './components/AuctionForm/AuctionForm.js';
 import AuctionDetail from './components/AuctionList/AuctionDetail.js';
 import AuctionArchive from './components/AuctionArchive/AuctionArchive.js';
 import { useProfileStore } from './stores/profileStore.js';
+import { useMessaging } from './hooks/useWebSocket.js';
+import { getMyMessages } from './services/fetch-messages.js';
 
 const mainTheme = createTheme({
   palette: {
@@ -64,19 +66,45 @@ const mainTheme = createTheme({
 function App() {
   // eslint-disable-next-line
   const [theme, setTheme] = useState(mainTheme);
-
-  const user = useUserStore((state) => state.user);
+  const { user, isAdmin, setUnreadMessageCount } = useUserStore();
   const { profile, fetchUserProfile } = useProfileStore();
+  const { isConnected, joinConversation } = useMessaging();
+
+  if (user && user.isAdmin) {
+    attachAdminListener();
+  }
+
+  useEffect(() => {
+    if (!user) {
+      useUserStore.getState().fetchUser();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!user || !isConnected) return;
+
+    const joinUserConversation = async () => {
+      try {
+        const messages = await getMyMessages();
+        if (messages.length > 0) {
+          const convId = messages[0].conversationId;
+          joinConversation(convId);
+        }
+      } catch (err) {
+        console.error('Failed to pre-join conversation:', err);
+      }
+    };
+
+    joinUserConversation();
+  }, [user, isConnected, joinConversation]);
 
   useEffect(() => {
     if (user && !profile) {
-      console.log('User authenticated but no profile, fetching...');
       fetchUserProfile();
     }
   }, [user, profile, fetchUserProfile]);
-  useEffect(() => {
-    websocketService.connect();
 
+  useEffect(() => {
     const handleOutbid = () => {
       toast.warn(`You’ve been outbid!`, {
         theme: 'dark',
@@ -112,9 +140,26 @@ function App() {
       websocketService.off('user-outbid', handleOutbid);
       websocketService.off('user-won', handleYouWon);
       websocketService.off('auction-ended', handleAuctionEnded);
-      websocketService.disconnect(); // optional: only if App truly unmounts once
+      websocketService.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (!user || !isAdmin) return;
+
+    const handleAdminNotify = (data) => {
+      const msg = data?.message || data;
+      if (msg && !msg.isFromAdmin) {
+        setUnreadMessageCount((prev) => prev + 1);
+      }
+    };
+
+    websocketService.on('new_customer_message', handleAdminNotify);
+
+    return () => {
+      websocketService.off('new_customer_message', handleAdminNotify);
+    };
+  }, [user, setUnreadMessageCount, isAdmin]);
 
   return (
     <div className="App">
