@@ -12,6 +12,7 @@ import './AdminInbox.css';
 export default function AdminInbox() {
   const { isAdmin } = useUserStore();
   const {
+    socket,
     isConnected,
     messages,
     setMessages,
@@ -144,8 +145,13 @@ export default function AdminInbox() {
 
     try {
       setSending(true);
-      await addAdminReply(selectedConversation, newReply);
 
+      socket.emit('send_message', {
+        conversationId: selectedConversation,
+        messageContent: newReply,
+      });
+
+      //clear state
       setNewReply('');
 
       // Stop typing indicator
@@ -243,6 +249,9 @@ export default function AdminInbox() {
   };
 
   const renderMessageWithPieceMetadata = (messageContent) => {
+    if (!messageContent) {
+      return <p>[Message unavailable]</p>;
+    }
     // Check if message contains piece metadata
     const pieceMetadataMatch = messageContent.match(
       /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
