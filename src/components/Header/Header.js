@@ -8,13 +8,12 @@ import Menu from '../Menu/Menu.js';
 import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationStore } from '../../stores/notificationStore.js';
-import { useProfileStore } from '../../stores/profileStore.js';
+
 import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
 
 export default function Header() {
   const { user, signout, isAdmin } = useUserStore();
-  const { profile } = useProfileStore();
-  const { unreadMessageCount } = useUnreadMessages();
+  const { unreadMessageCount, refreshUnreadCount } = useUnreadMessages();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -56,13 +55,7 @@ export default function Header() {
           <img className="logo" src="../logo-sq.png" />
         </Link>{' '}
         <div>
-          <h1 className="biz-title">Stress Less Glass</h1>{' '}
-          <span style={{ fontSize: '.8rem' }}>logged in as: </span>
-          <span>
-            <strong>
-              {profile?.firstName} {profile?.lastName}
-            </strong>
-          </span>
+          <h1 className="biz-title">Stress Less Glass </h1>{' '}
         </div>
         <div className="header-section">
           <div className="menu-icon-wrapper" onClick={handleMenuClick}>

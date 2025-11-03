@@ -6,12 +6,12 @@ import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import websocketService from '../../services/websocket.js';
 import { useNotificationStore } from '../../stores/notificationStore.js';
-
+import { useProfileStore } from '../../stores/profileStore.js';
 export default function Menu({ handleClick, closeMenu }) {
   const { user, isAdmin } = useUserStore();
   const { unreadMessageCount } = useUnreadMessages();
   const location = useLocation();
-  // const [unreadCount, setUnreadCount] = useState(0);
+  const { profile } = useProfileStore();
 
   const {
     unreadAuctionCount,
@@ -64,6 +64,27 @@ export default function Menu({ handleClick, closeMenu }) {
   return (
     <div>
       <>
+        {user && (
+          <div
+            style={{
+              fontSize: '.8rem',
+              display: 'grid',
+              textAlign: 'center',
+            }}
+          >
+            <span>logged in as:</span>
+            <span
+              style={{
+                fontSize: '1rem',
+                margin: '.5rem 0 1rem 0',
+
+                color: '#4c35ffff',
+              }}
+            >
+              <strong>{`${profile?.firstName} ${profile?.lastName?.length > 10 ? profile?.lastName.substring(0, 1) + '.' : profile?.lastName}`}</strong>
+            </span>
+          </div>
+        )}
         <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
           Gallery
         </NavLink>{' '}
@@ -129,7 +150,10 @@ export default function Menu({ handleClick, closeMenu }) {
                 title="Inbox"
                 onClick={handleLinkClick}
               >
-                Inbox
+                Inbox{' '}
+                {unreadMessageCount > 0 && location.pathname !== '/messages' && (
+                  <span className="unread-badge">{unreadMessageCount}</span>
+                )}
               </NavLink>
               <NavLink
                 className="mobile-new-link"
