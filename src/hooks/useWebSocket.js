@@ -9,7 +9,9 @@ export const useWebSocket = () => {
 
   useEffect(() => {
     // Connect to WebSocket
-    websocketService.connect();
+    if (!websocketService.socket || !websocketService.isConnected) {
+      websocketService.connect();
+    }
 
     // Set up connection status listener
     const handleConnection = (data) => {
@@ -51,6 +53,7 @@ export const useWebSocket = () => {
   };
 
   return {
+    socket: websocketService.socket,
     isConnected,
     socketId,
     addEventListener,
@@ -73,6 +76,7 @@ export const useMessaging = () => {
   const location = useLocation();
 
   const {
+    socket,
     isConnected,
     addEventListener,
     removeEventListener,
@@ -174,6 +178,7 @@ export const useMessaging = () => {
   };
 
   return {
+    socket,
     isConnected,
     messages,
     setMessages,
