@@ -214,21 +214,17 @@ export default function AuctionList() {
           </p>
         </div>
         <div className="auction-list">
-          {auctions.length === 0 ? (
+          {active.length === 0 ? (
             <p>No active auctions right now.</p>
           ) : (
             <div className="auction-grid">
-              {auctions.length === 0 ? (
-                <p>No active auctions right now.</p>
-              ) : (
-                displayAuctions.map((auction) => (
-                  <AuctionPreviewItem
-                    key={auction.id}
-                    auction={auction}
-                    onClick={() => navigate(`/auctions/${auction.id}`)}
-                  />
-                ))
-              )}
+              {displayAuctions.map((auction) => (
+                <AuctionPreviewItem
+                  key={auction.id}
+                  auction={auction}
+                  onClick={() => navigate(`/auctions/${auction.id}`)}
+                />
+              ))}
             </div>
           )}
         </div>
