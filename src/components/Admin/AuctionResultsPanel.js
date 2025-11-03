@@ -149,7 +149,6 @@ export default function AuctionResultsPanel() {
       await handleAuctionEnded(payload);
     };
 
-    websocketService.connect();
     websocketService.on('auction-ended', handleAuctionEnded);
     websocketService.on('user-won', handleUserWon);
 
