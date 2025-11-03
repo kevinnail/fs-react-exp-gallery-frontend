@@ -25,6 +25,8 @@ export default function AdminInbox() {
     stopTyping,
   } = useMessaging();
 
+  const { setUnreadMessageCount } = useUserStore();
+
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -120,6 +122,9 @@ export default function AdminInbox() {
           console.error('Error marking message as read:', error);
         }
       }
+
+      //  Reset unread message badge for admin
+      setUnreadMessageCount(0);
 
       // Refresh conversations to update unread counts
       await loadConversations(true);
@@ -394,8 +399,8 @@ export default function AdminInbox() {
                       disabled={sending}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault(); // stop newline
-                          handleSendReply(e); // submit
+                          e.preventDefault();
+                          handleSendReply(e);
                         }
                       }}
                     />
