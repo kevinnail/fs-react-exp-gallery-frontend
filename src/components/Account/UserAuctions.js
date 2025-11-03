@@ -351,7 +351,8 @@ export default function UserAuctions({ userId }) {
           </>
         ) : (
           <p className="empty-msg">
-            Waiting for your item(s)? You can find your tracking number & link below.
+            Waiting for your item(s)? You can find your tracking number & link in the Won section
+            below.
           </p>
         )}
       </div>
@@ -364,7 +365,7 @@ export default function UserAuctions({ userId }) {
               key={bid.id}
               className="auction-mini-card"
               onClick={() => {
-                handleAuctionNav(auction.auctionId);
+                handleAuctionNav(auction.id);
               }}
             >
               {renderActiveBidCard({ bid, auction })}
