@@ -9,11 +9,9 @@ import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationStore } from '../../stores/notificationStore.js';
 
-import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
-
 export default function Header() {
   const { user, signout, isAdmin } = useUserStore();
-  const { unreadMessageCount, refreshUnreadCount } = useUnreadMessages();
+  const unreadMessageCount = useUserStore((s) => s.unreadMessageCount);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
