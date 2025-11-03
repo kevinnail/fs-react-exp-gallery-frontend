@@ -88,8 +88,7 @@ export const useMessaging = () => {
   } = useWebSocket();
 
   useEffect(() => {
-    // Handle incoming messages
-    // Listen for new messages
+    // Listen for/ handle new messages
     const handleNewMessage = async (data) => {
       const message = data.message || data;
 
