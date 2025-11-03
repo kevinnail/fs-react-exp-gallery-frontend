@@ -1,5 +1,5 @@
 import { useMediaQuery, useTheme } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { buyItNow, getBids } from '../../services/fetch-bids.js';
 import { useUserStore } from '../../stores/userStore.js';
@@ -223,7 +223,8 @@ export default function AuctionCard({ auction }) {
       setShowConfirmBIN(true);
     }
   };
-  const highBidder = bids[0]?.userId === user?.id;
+
+  const highBidder = bids[0]?.userId !== undefined && bids[0]?.userId === user?.id;
 
   return (
     <>
@@ -278,19 +279,6 @@ export default function AuctionCard({ auction }) {
               {isActive && (
                 <span>
                   <strong>Current Bid:</strong> ${highestBid}
-                </span>
-              )}
-
-              {isActive && (
-                <span
-                  style={{
-                    fontSize: '.9rem',
-                    color: 'white',
-                    display: 'block',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  {highBidder ? "You're the high bidder!" : ''}
                 </span>
               )}
             </p>

@@ -325,28 +325,32 @@ export default function AdminInbox() {
                   >
                     <div className="conversation-header">
                       <div className="conversation-header-content">
-                        {conversation.image_url ? (
-                          <img
-                            src={conversation.image_url}
-                            alt="Customer avatar"
-                            className="conversation-avatar"
-                          />
-                        ) : (
-                          <div className="conversation-avatar-fallback">
-                            {conversation.email ? conversation.email.charAt(0).toUpperCase() : '?'}
-                          </div>
+                        <div className="conversation-header-content-wrapper">
+                          {conversation.image_url ? (
+                            <img
+                              src={conversation.image_url}
+                              alt="Customer avatar"
+                              className="conversation-avatar"
+                            />
+                          ) : (
+                            <div className="conversation-avatar-fallback">
+                              {conversation.email
+                                ? conversation.email.charAt(0).toUpperCase()
+                                : '?'}
+                            </div>
+                          )}
+                          <span className="sender-email">{conversation.email}</span>
+                        </div>
+
+                        {conversation.unread_count > 0 && (
+                          <span className="admin-unread-badge">{conversation.unread_count}</span>
                         )}
-                        <span className="sender-email">{conversation.email}</span>
                       </div>
-                      <span className="message-count">{conversation.message_count} messages</span>
                     </div>
                     <div className="conversation-meta">
                       <span className="last-message-time">
                         {formatDate(conversation.last_message_at)}
                       </span>
-                      {conversation.unread_count > 0 && (
-                        <span className="unread-badge">{conversation.unread_count}</span>
-                      )}
                     </div>
                   </div>
                 ))}
