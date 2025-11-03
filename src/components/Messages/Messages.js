@@ -17,6 +17,7 @@ export default function Messages() {
   const location = useLocation();
   const { refreshUnreadCount } = useUnreadMessages();
   const {
+    socket,
     isConnected,
     messages,
     setMessages,
@@ -138,7 +139,6 @@ export default function Messages() {
     try {
       setSending(true);
 
-      let response;
       let messageToSend = newMessage;
 
       // Always include piece metadata if available (for both new conversations and replies)
@@ -147,17 +147,22 @@ export default function Messages() {
       }
 
       if (conversationId) {
-        // Reply to existing conversation
-        response = await replyToConversation(conversationId, messageToSend);
+        socket.emit('send_message', {
+          conversationId,
+          messageContent: messageToSend,
+        });
       } else {
-        // Start new conversation
-        response = await sendMessage(messageToSend);
+        // still use the REST call once to create a new conversation
+        const response = await sendMessage(messageToSend);
         setConversationId(response.conversationId);
-
-        // Join the new conversation room
         if (isConnected) {
           joinConversation(response.conversationId);
         }
+        // then emit through WebSocket to trigger real-time flow
+        socket.emit('send_message', {
+          conversationId: response.conversationId,
+          messageContent: messageToSend,
+        });
       }
 
       setNewMessage('');
