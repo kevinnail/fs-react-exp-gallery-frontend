@@ -77,7 +77,6 @@ export default function Menu({ handleClick, closeMenu }) {
               style={{
                 fontSize: '1rem',
                 margin: '.5rem 0 1rem 0',
-
                 color: '#4c35ffff',
               }}
             >
