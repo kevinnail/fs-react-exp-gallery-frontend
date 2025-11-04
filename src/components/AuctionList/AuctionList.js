@@ -214,8 +214,8 @@ export default function AuctionList() {
           </p>
         </div>
         <div className="auction-list">
-          {active.length === 0 ? (
-            <p>No active auctions right now.</p>
+          {displayAuctions.length === 0 ? (
+            <p>No auctions right now.</p>
           ) : (
             <div className="auction-grid">
               {displayAuctions.map((auction) => (
