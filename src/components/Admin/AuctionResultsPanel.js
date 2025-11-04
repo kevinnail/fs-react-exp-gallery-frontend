@@ -47,10 +47,10 @@ export default function AuctionResultsPanel() {
     setTrackingInput(existingTracking);
     setShowTrackingModal(true);
   };
-
   const handleSaveTracking = async () => {
+    setLoading(true);
     try {
-      await updateAuctionTracking(trackingAuctionId, trackingInput.trim());
+      const response = await updateAuctionTracking(trackingAuctionId, trackingInput.trim());
 
       setAuctions((prev) =>
         prev.map((x) =>
@@ -58,14 +58,17 @@ export default function AuctionResultsPanel() {
         )
       );
 
-      setShowTrackingModal(false);
-      toast.success('Tracking saved', {
-        theme: 'dark',
-        draggable: true,
-        draggablePercent: 60,
-        toastId: 'auction-track-fail',
-        autoClose: 3000,
-      });
+      if (response) {
+        setShowTrackingModal(false);
+        setLoading(false);
+        toast.success('Tracking saved and email sent!', {
+          theme: 'dark',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'auction-track-fail',
+          autoClose: 3000,
+        });
+      }
     } catch (e) {
       toast.error(`${e.message}` || 'Error saving tracking', {
         theme: 'colored',
@@ -74,6 +77,7 @@ export default function AuctionResultsPanel() {
         toastId: 'auction-track-fail',
         autoClose: 3000,
       });
+      setLoading(false);
     }
   };
 
