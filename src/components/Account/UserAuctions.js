@@ -190,7 +190,10 @@ export default function UserAuctions({ userId }) {
                 src="../../../usps.png"
               />
             </a>
-            <p onClick={() => handleTrackingClick(auction.trackingNumber)}>
+            <p
+              style={{ textAlign: 'left' }}
+              onClick={() => handleTrackingClick(auction.trackingNumber)}
+            >
               <span>Tracking number: </span>
               <span>{auction.trackingNumber}</span>
             </p>

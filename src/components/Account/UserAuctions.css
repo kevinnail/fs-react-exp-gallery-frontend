@@ -52,7 +52,7 @@
 
 .auction-mini-info p {
   margin: 0;
-  font-size: 0.9rem;
+  /* font-size: 0.9rem; */
 }
 
 .auction-mini-info h4 {
@@ -177,20 +177,16 @@
 .tracking-link {
   padding: 4px 20px 4px 6px;
   border-radius: 4px;
-  font-size: 1rem;
-  font-weight: bold;
+  font-size: 0.8rem;
   border: 1px solid green;
   text-align: center;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 2rem;
+  gap: 5px;
 }
 
-.tracking-link p {
-  font-size: 1.3rem;
-}
 /* 
 
 ^ Responsive start ===================================================================================================
@@ -204,10 +200,6 @@
 
   .auction-mini-grid {
     grid-template-columns: 1fr;
-  }
-
-  .user-auctions-widget {
-    /* padding-left: 1rem; */
   }
 
   .user-auctions-summary {

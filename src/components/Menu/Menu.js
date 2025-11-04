@@ -9,7 +9,7 @@ import { useNotificationStore } from '../../stores/notificationStore.js';
 import { useProfileStore } from '../../stores/profileStore.js';
 export default function Menu({ handleClick, closeMenu }) {
   const { user, isAdmin } = useUserStore();
-  const { unreadMessageCount, setUnreadMessageCount } = useUnreadMessages();
+  const { unreadMessageCount } = useUnreadMessages();
   const location = useLocation();
   const { profile } = useProfileStore();
 
