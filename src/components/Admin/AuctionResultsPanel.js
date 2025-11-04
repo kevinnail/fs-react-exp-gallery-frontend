@@ -302,7 +302,10 @@ export default function AuctionResultsPanel() {
                 </p>
 
                 <p>
-                  <span>{isClosed ? 'Winner:' : 'High Bidder:'}</span> {winnerName || 'No bids'}
+                  <span>{isClosed ? 'Winner:' : 'High Bidder:'}</span>{' '}
+                  {winnerName.length < 30
+                    ? winnerName
+                    : winnerName.substring(0, 20) + '...' || 'No bids'}
                 </p>
 
                 {isClosed && (
