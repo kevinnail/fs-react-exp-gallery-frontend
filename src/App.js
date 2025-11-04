@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import { useUserStore } from './stores/userStore.js';
 import Auth from './components/Auth/Auth.js';
@@ -70,6 +70,8 @@ function App() {
   const { profile, fetchUserProfile } = useProfileStore();
   const { isConnected, joinConversation } = useMessaging();
 
+  const navigate = useNavigate();
+
   if (user && user.isAdmin) {
     attachAdminListener();
   }
@@ -132,14 +134,47 @@ function App() {
       });
     };
 
+    const handleNavAccount = () => {
+      toast.dismiss();
+      navigate('/account');
+    };
+
+    const handleTrackingUpdated = () => {
+      toast.success(
+        <div>
+          <span style={{ fontSize: '1rem', display: 'block', marginBottom: '1rem' }}>
+            Tracking # has been updated!
+          </span>
+          <span
+            style={{ fontSize: '.9rem' }}
+            onClick={() => {
+              handleNavAccount();
+            }}
+          >
+            go to{' '}
+            <span style={{ fontWeight: 'bold', color: 'green', cursor: 'pointer' }}>Account </span>
+            page
+          </span>
+        </div>,
+        {
+          theme: 'dark',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: false,
+        }
+      );
+    };
+
     websocketService.on('user-outbid', handleOutbid);
     websocketService.on('user-won', handleYouWon);
     websocketService.on('auction-ended', handleAuctionEnded);
+    websocketService.on('tracking-info', handleTrackingUpdated);
 
     return () => {
       websocketService.off('user-outbid', handleOutbid);
       websocketService.off('user-won', handleYouWon);
       websocketService.off('auction-ended', handleAuctionEnded);
+      websocketService.off('tracking-info', handleTrackingUpdated);
       websocketService.disconnect();
     };
   }, []);
