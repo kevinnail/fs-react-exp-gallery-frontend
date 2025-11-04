@@ -80,6 +80,7 @@ export default function Messages() {
     }
   };
 
+  // for showing admin avatar/ name
   const loadAdminProfile = async () => {
     try {
       const adminData = await getAdminProfile();
@@ -153,6 +154,7 @@ export default function Messages() {
       } else {
         // still use the REST call once to create a new conversation
         const response = await sendMessage(messageToSend);
+
         setConversationId(response.conversationId);
         if (isConnected) {
           joinConversation(response.conversationId);
@@ -161,6 +163,9 @@ export default function Messages() {
         socket.emit('send_message', {
           conversationId: response.conversationId,
           messageContent: messageToSend,
+          isFromAdmin: response.isFromAdmin,
+          userId: response.userId,
+          messageId: response.id,
         });
       }
 
