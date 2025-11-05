@@ -186,7 +186,7 @@ export async function markAuctionPaid(auctionId, isPaid) {
 
     const data = await resp.json();
 
-    if (!resp.ok) throw new Error(data.error || 'Failed to mark paid');
+    if (!resp.ok) throw new Error(data.message || 'Failed to mark paid');
     return data;
   } catch (err) {
     console.error(err);
@@ -201,7 +201,7 @@ export async function getAdminAuctions() {
     });
 
     const data = await resp.json();
-    if (!resp.ok) throw new Error(data.error || 'Failed to load admin auctions');
+    if (!resp.ok) throw new Error(data.message || 'Failed to load admin auctions');
 
     return data;
   } catch (err) {
@@ -223,7 +223,9 @@ export async function updateAuctionTracking(auctionId, trackingNumber) {
     });
 
     const data = await resp.json();
-    if (!resp.ok) throw new Error(data.error || 'Failed to update tracking');
+    console.log('data', data);
+
+    if (!resp.ok) throw new Error(data.message || 'Failed to update tracking');
     return data;
   } catch (err) {
     console.error(err);

@@ -166,7 +166,7 @@ export default function AuctionResultsPanel() {
     };
   }, []);
 
-  if (!loading) {
+  if (loading) {
     return (
       <aside className="auction-results-panel">
         <Loading />
