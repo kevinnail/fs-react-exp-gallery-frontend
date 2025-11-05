@@ -249,9 +249,7 @@
   height: 100%;
   overflow: auto;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+  top: 100px;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -270,21 +268,14 @@
   right: 0px;
   background: rgb(253, 34, 34);
   color: white;
-  font-weight: bold;
   width: 40px;
   height: 40px;
   border-radius: 5px;
   border-bottom-right-radius: 0px;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
+  border-radius: 0px;
   border: 1px solid white;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  display: block;
-  padding-bottom: 1px;
+  font-size: 1.5rem;
 }
 
 .post-detail-div-wrapper {
