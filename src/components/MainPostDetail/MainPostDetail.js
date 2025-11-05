@@ -256,7 +256,7 @@ export default function MainPostDetail() {
                   />
                 )}
                 <button className="modal-close" onClick={closeModal}>
-                  x
+                  &#10006;
                 </button>
                 {currentIndex > 0 && (
                   <button className="modal-navigation previous" onClick={handlePrevious}></button>
