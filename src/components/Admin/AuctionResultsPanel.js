@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import websocketService from '../../services/websocket.js';
 import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../Loading/Loading.js';
 
 export default function AuctionResultsPanel() {
   const [auctions, setAuctions] = useState([]);
@@ -21,6 +22,7 @@ export default function AuctionResultsPanel() {
   const navigate = useNavigate();
 
   const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
+
   useEffect(() => {
     if (!lastBidUpdate) return;
     const auctionId = Number(lastBidUpdate.id);
@@ -47,10 +49,12 @@ export default function AuctionResultsPanel() {
     setTrackingInput(existingTracking);
     setShowTrackingModal(true);
   };
+
   const handleSaveTracking = async () => {
+    setShowTrackingModal(false);
     setLoading(true);
     try {
-      const response = await updateAuctionTracking(trackingAuctionId, trackingInput.trim());
+      await updateAuctionTracking(trackingAuctionId, trackingInput.trim());
 
       setAuctions((prev) =>
         prev.map((x) =>
@@ -58,17 +62,14 @@ export default function AuctionResultsPanel() {
         )
       );
 
-      if (response) {
-        setShowTrackingModal(false);
-        setLoading(false);
-        toast.success('Tracking saved and email sent!', {
-          theme: 'dark',
-          draggable: true,
-          draggablePercent: 60,
-          toastId: 'auction-track-fail',
-          autoClose: 3000,
-        });
-      }
+      setLoading(false);
+      toast.success('Tracking saved and email sent!', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-track-fail',
+        autoClose: 3000,
+      });
     } catch (e) {
       toast.error(`${e.message}` || 'Error saving tracking', {
         theme: 'colored',
@@ -77,6 +78,7 @@ export default function AuctionResultsPanel() {
         toastId: 'auction-track-fail',
         autoClose: 3000,
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -164,10 +166,10 @@ export default function AuctionResultsPanel() {
     };
   }, []);
 
-  if (loading) {
+  if (!loading) {
     return (
       <aside className="auction-results-panel">
-        <p>Loading results...</p>
+        <Loading />
       </aside>
     );
   }
