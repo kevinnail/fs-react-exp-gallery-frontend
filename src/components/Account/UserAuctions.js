@@ -27,7 +27,6 @@ export default function UserAuctions({ userId }) {
     setWonAuctions((prev) =>
       prev.map((a) => (a.auctionId === id || a.id === id ? { ...a, isPaid } : a))
     );
-    console.log('useEffect running- lastAuctionPaid:', lastAuctionPaid);
   }, [lastAuctionPaid]);
 
   const lastTrackingUpdate = useAuctionEventsStore((s) => s.lastTrackingUpdate);
