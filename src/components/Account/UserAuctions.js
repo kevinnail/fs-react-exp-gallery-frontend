@@ -30,6 +30,17 @@ export default function UserAuctions({ userId }) {
     console.log('useEffect running- lastAuctionPaid:', lastAuctionPaid);
   }, [lastAuctionPaid]);
 
+  const lastTrackingUpdate = useAuctionEventsStore((s) => s.lastTrackingUpdate);
+
+  useEffect(() => {
+    if (!lastTrackingUpdate) return;
+    const { id, trackingNumber } = lastTrackingUpdate;
+
+    setWonAuctions((prev) =>
+      prev.map((a) => (a.auctionId === id || a.id === id ? { ...a, trackingNumber } : a))
+    );
+  }, [lastTrackingUpdate]);
+
   useEffect(() => {
     const loadUserAuctions = async () => {
       try {
