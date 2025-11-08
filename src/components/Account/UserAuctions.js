@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './UserAuctions.css';
 import { getUserAuctions, getAuctionDetail } from '../../services/fetch-auctions.js';
 import { useNavigate } from 'react-router-dom';
+import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
 
 export default function UserAuctions({ userId }) {
   // active bids hydrated with their auction details
@@ -16,6 +17,18 @@ export default function UserAuctions({ userId }) {
   const totalWon = unpaidWins.reduce((sum, a) => sum + (a.finalBid || 0), 0);
   const shippingTotal = unpaidWins.length > 0 ? 9 + (unpaidWins.length - 1) * 1 : 0;
   const grandTotal = totalWon + shippingTotal;
+
+  const lastAuctionPaid = useAuctionEventsStore((s) => s.lastAuctionPaid);
+
+  useEffect(() => {
+    if (!lastAuctionPaid) return;
+    const { id, isPaid } = lastAuctionPaid;
+
+    setWonAuctions((prev) =>
+      prev.map((a) => (a.auctionId === id || a.id === id ? { ...a, isPaid } : a))
+    );
+    console.log('useEffect running- lastAuctionPaid:', lastAuctionPaid);
+  }, [lastAuctionPaid]);
 
   useEffect(() => {
     const loadUserAuctions = async () => {

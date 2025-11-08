@@ -115,6 +115,10 @@ class WebSocketService {
       this.socket.on('tracking-info', (data) => {
         this.emit('tracking-info', data);
       });
+
+      this.socket.on('auction-paid', (data) => {
+        this.emit('auction-paid', data);
+      });
       //
     } catch (error) {
       console.error('Error initializing WebSocket:', error);
