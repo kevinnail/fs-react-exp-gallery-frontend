@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
 import { useUserStore } from './stores/userStore.js';
 import Auth from './components/Auth/Auth.js';
@@ -69,7 +69,7 @@ function App() {
   const { user, isAdmin, setUnreadMessageCount } = useUserStore();
   const { profile, fetchUserProfile } = useProfileStore();
   const { isConnected, joinConversation } = useMessaging();
-
+  const location = useLocation();
   const navigate = useNavigate();
 
   if (user && user.isAdmin) {
@@ -117,6 +117,7 @@ function App() {
     };
 
     const handleYouWon = () => {
+      if (location.pathname.includes('/account')) return;
       toast.success(<p>You won the auction! Check your account page for more information.</p>, {
         theme: 'colored',
         draggable: true,
@@ -126,6 +127,8 @@ function App() {
     };
 
     const handleAuctionEnded = () => {
+      if (location.pathname.includes('/account')) return;
+
       toast.success(`Auction has ended.`, {
         theme: 'dark',
         draggable: true,
