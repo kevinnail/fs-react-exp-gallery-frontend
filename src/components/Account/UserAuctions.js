@@ -19,6 +19,7 @@ export default function UserAuctions({ userId }) {
   const grandTotal = totalWon + shippingTotal;
 
   const lastAuctionPaid = useAuctionEventsStore((s) => s.lastAuctionPaid);
+  const lastTrackingUpdate = useAuctionEventsStore((s) => s.lastTrackingUpdate);
 
   useEffect(() => {
     if (!lastAuctionPaid) return;
@@ -28,8 +29,6 @@ export default function UserAuctions({ userId }) {
       prev.map((a) => (a.auctionId === id || a.id === id ? { ...a, isPaid } : a))
     );
   }, [lastAuctionPaid]);
-
-  const lastTrackingUpdate = useAuctionEventsStore((s) => s.lastTrackingUpdate);
 
   useEffect(() => {
     if (!lastTrackingUpdate) return;
