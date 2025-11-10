@@ -23,18 +23,18 @@
 
 .inventory-table .MuiTableBody-root .MuiTableRow-root:not(:last-child):hover {
   box-shadow: 0 0 0 2px #beb3f283 inset;
-  background-color: #2f00ff83;
+  background-color: #0026a153;
 }
 .selectedRow {
   box-shadow: 0 0 0 2px #785eee inset;
-  background-color: #2f00ff83;
+  background-color: #0026a153;
 }
 
 .large-size-inventory {
   background-color: rgb(15, 15, 15);
   position: absolute;
   width: 100%;
-  border: 1px solid #2f44ff;
+  border: 1px solid #0026a153;
 }
 /*
   
