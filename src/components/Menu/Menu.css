@@ -42,17 +42,6 @@
   background-color: #0026a153;
 }
 
-/* .menu-new-link[aria-current='page']::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: #0026a1;
-  border-radius: 2px;
-} */
-
 .unread-badge {
   background: #c00000;
   color: #fff;
@@ -81,11 +70,6 @@
 }
 
 .menu-new-link[data-admin-group='start'] {
-  margin-top: 10px;
-  padding-top: 12px;
-  border-top: 1px solid #222;
-}
-.menu-new-link[data-admin-group='end'] {
   margin-top: 10px;
   padding-top: 12px;
   border-top: 1px solid #222;

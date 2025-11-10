@@ -184,7 +184,6 @@ export default function Menu({ handleClick, closeMenu }) {
                   handleDownloadCSV();
                   closeMenu();
                 }}
-                data-admin-group="end"
               >
                 Inventory
               </button>
@@ -196,6 +195,7 @@ export default function Menu({ handleClick, closeMenu }) {
             to="/about-me"
             title="About Kevin"
             onClick={handleLinkClick}
+            data-admin-group="start"
           >
             About
           </NavLink>
