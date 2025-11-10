@@ -472,9 +472,15 @@ export default function Auth() {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={handlePasswordChange}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        isSignIn ? submitAuth() : handleSignupClick();
+                      }
+                    }}
                     placeholder="Password"
                     className="input-auth"
                   />
+
                   <span className="toggle-visibility" onClick={() => setShowPassword((v) => !v)}>
                     {showPassword ? (
                       <VisibilityOff fontSize="small" />
