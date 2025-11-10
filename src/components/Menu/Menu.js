@@ -85,10 +85,10 @@ export default function Menu({ handleClick, closeMenu }) {
             </span>
           </div>
         )}
-        <NavLink className="mobile-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
+        <NavLink className="menu-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
           Gallery
         </NavLink>{' '}
-        <NavLink className="mobile-new-link" to="/auctions" onClick={handleAuctionsClick}>
+        <NavLink className="menu-new-link" to="/auctions" onClick={handleAuctionsClick}>
           Auctions
           {unreadAuctionCount > 0 && location.pathname !== '/auctions' && (
             <span className="unread-badge">{unreadAuctionCount}</span>
@@ -97,10 +97,10 @@ export default function Menu({ handleClick, closeMenu }) {
       </>
       {!user && (
         <>
-          <NavLink className="mobile-new-link" to="/about-me" onClick={handleLinkClick}>
+          <NavLink className="menu-new-link" to="/about-me" onClick={handleLinkClick}>
             About
           </NavLink>
-          <NavLink className="mobile-new-link" to="/auth/sign-in" onClick={handleLinkClick}>
+          <NavLink className="menu-new-link" to="/auth/sign-in" onClick={handleLinkClick}>
             Sign In
           </NavLink>
         </>
@@ -111,7 +111,7 @@ export default function Menu({ handleClick, closeMenu }) {
           {isAdmin && (
             <>
               <NavLink
-                className="mobile-new-link"
+                className="menu-new-link"
                 to="/admin"
                 title="Dashboard"
                 onClick={handleLinkClick}
@@ -124,14 +124,14 @@ export default function Menu({ handleClick, closeMenu }) {
 
           {!isAdmin && (
             <>
-              <NavLink className="mobile-new-link" to="/account" onClick={handleProfileClick}>
+              <NavLink className="menu-new-link" to="/account" onClick={handleProfileClick}>
                 Account
                 {wonAuctionCount > 0 && location.pathname !== '/account' && (
                   <span className="unread-badge">{wonAuctionCount}</span>
                 )}
               </NavLink>
 
-              <NavLink className="mobile-new-link" to="/messages" onClick={handleLinkClick}>
+              <NavLink className="menu-new-link" to="/messages" onClick={handleLinkClick}>
                 Messages
                 {unreadMessageCount > 0 && location.pathname !== '/messages' && (
                   <span className="unread-badge">{unreadMessageCount}</span>
@@ -143,7 +143,7 @@ export default function Menu({ handleClick, closeMenu }) {
             <>
               {' '}
               <NavLink
-                className="mobile-new-link"
+                className="menu-new-link"
                 to="/admin/inbox"
                 title="Inbox"
                 onClick={handleLinkClick}
@@ -154,7 +154,7 @@ export default function Menu({ handleClick, closeMenu }) {
                 )}
               </NavLink>
               <NavLink
-                className="mobile-new-link"
+                className="menu-new-link"
                 to="/admin/new"
                 title="Make new post"
                 onClick={handleLinkClick}
@@ -162,7 +162,7 @@ export default function Menu({ handleClick, closeMenu }) {
                 New
               </NavLink>
               <NavLink
-                className="mobile-new-link"
+                className="menu-new-link"
                 to="/admin/discounts"
                 title="Post a new sale"
                 onClick={handleLinkClick}
@@ -170,7 +170,7 @@ export default function Menu({ handleClick, closeMenu }) {
                 Sale!
               </NavLink>
               <NavLink
-                className="mobile-new-link"
+                className="menu-new-link"
                 to="/admin/users"
                 title="Users Dashboard"
                 onClick={handleLinkClick}
@@ -178,7 +178,7 @@ export default function Menu({ handleClick, closeMenu }) {
                 Users
               </NavLink>
               <button
-                className="mobile-new-link download-button"
+                className="menu-new-link download-button"
                 title="Download Inventory CSV"
                 onClick={() => {
                   handleDownloadCSV();
@@ -192,7 +192,7 @@ export default function Menu({ handleClick, closeMenu }) {
           )}
 
           <NavLink
-            className="mobile-new-link"
+            className="menu-new-link"
             to="/about-me"
             title="About Kevin"
             onClick={handleLinkClick}
@@ -201,7 +201,7 @@ export default function Menu({ handleClick, closeMenu }) {
           </NavLink>
 
           {isAdmin && (
-            <NavLink className="mobile-new-link" to="/account" onClick={handleProfileClick}>
+            <NavLink className="menu-new-link" to="/account" onClick={handleProfileClick}>
               Account
             </NavLink>
           )}
