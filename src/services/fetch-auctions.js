@@ -115,8 +115,6 @@ export async function createAuction(auctionDetails) {
 // Upload single image to S3 and return URL
 export async function uploadAuctionImagesToS3(imageFiles) {
   try {
-    console.log('imageFiles', imageFiles);
-
     const formData = new FormData();
     for (const file of imageFiles) {
       formData.append('imageFiles', file);
@@ -223,7 +221,6 @@ export async function updateAuctionTracking(auctionId, trackingNumber) {
     });
 
     const data = await resp.json();
-    console.log('data', data);
 
     if (!resp.ok) throw new Error(data.message || 'Failed to update tracking');
     return data;
