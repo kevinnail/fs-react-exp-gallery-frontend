@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import websocketService from '../../services/websocket.js';
 import { useNotificationStore } from '../../stores/notificationStore.js';
 import { useProfileStore } from '../../stores/profileStore.js';
+import './Menu.css'; // added
+
 export default function Menu({ handleClick, closeMenu }) {
   const { user, isAdmin } = useUserStore();
   const { unreadMessageCount } = useUnreadMessages();
@@ -43,7 +45,6 @@ export default function Menu({ handleClick, closeMenu }) {
     closeMenu();
   };
 
-  // defensive reset when the route is already /account
   useEffect(() => {
     if (location.pathname === '/account') resetWonAuction();
   }, [location.pathname, resetWonAuction]);
@@ -62,7 +63,7 @@ export default function Menu({ handleClick, closeMenu }) {
   };
 
   return (
-    <div>
+    <div className="menu">
       <>
         {user && (
           <div
@@ -76,8 +77,8 @@ export default function Menu({ handleClick, closeMenu }) {
             <span
               style={{
                 fontSize: '1rem',
-                margin: '.5rem 0 1rem 0',
-                color: '#4c35ffff',
+                margin: '.5rem 0 0rem 0',
+                color: '#222 !important',
               }}
             >
               <strong>{`${profile?.firstName} ${profile?.lastName?.length > 10 ? profile?.lastName.substring(0, 1) + '.' : profile?.lastName}`}</strong>
@@ -114,11 +115,9 @@ export default function Menu({ handleClick, closeMenu }) {
                 to="/admin"
                 title="Dashboard"
                 onClick={handleLinkClick}
+                data-admin-group="start"
               >
                 Dashboard
-              </NavLink>
-              <NavLink className="mobile-new-link" to="/account" onClick={handleProfileClick}>
-                Account
               </NavLink>
             </>
           )}
@@ -170,16 +169,6 @@ export default function Menu({ handleClick, closeMenu }) {
               >
                 Sale!
               </NavLink>
-              <button
-                className="mobile-new-link download-button"
-                title="Download Inventory CSV"
-                onClick={() => {
-                  handleDownloadCSV();
-                  closeMenu();
-                }}
-              >
-                Inventory
-              </button>
               <NavLink
                 className="mobile-new-link"
                 to="/admin/users"
@@ -188,6 +177,17 @@ export default function Menu({ handleClick, closeMenu }) {
               >
                 Users
               </NavLink>
+              <button
+                className="mobile-new-link download-button"
+                title="Download Inventory CSV"
+                onClick={() => {
+                  handleDownloadCSV();
+                  closeMenu();
+                }}
+                data-admin-group="end"
+              >
+                Inventory
+              </button>
             </>
           )}
 
@@ -199,6 +199,13 @@ export default function Menu({ handleClick, closeMenu }) {
           >
             About
           </NavLink>
+
+          {isAdmin && (
+            <NavLink className="mobile-new-link" to="/account" onClick={handleProfileClick}>
+              Account
+            </NavLink>
+          )}
+
           <button
             title="Sign Out"
             className="signout-button signout-button-adapt"
