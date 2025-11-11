@@ -1,0 +1,70 @@
+.menu {
+  padding: 0.25rem 0 0 0;
+  background: #111;
+  color: #e6e6e6;
+  font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-new-link.active {
+  box-shadow: none !important;
+  color: inherit !important;
+}
+
+.menu-new-link,
+.download-button,
+.signout-button {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 2rem 8px 18px;
+  font-size: 1rem;
+  color: #e6e6e6;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.menu-new-link:hover,
+.download-button:hover,
+.signout-button:hover {
+  color: #fff;
+  background: #1a1a1a;
+  text-decoration: none;
+}
+
+.menu-new-link[aria-current='page'] {
+  font-weight: 700;
+  position: relative;
+  color: white;
+  background-color: #0026a153;
+}
+
+.unread-badge {
+  background: #c00000;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.menu > div[style] span,
+.menu > div[style] strong {
+  color: #e6e6e6 !important;
+}
+
+.signout-button-adapt {
+  border-top: 1px solid #222;
+  margin-top: 6px;
+  padding-top: 14px !important;
+}
+
+.menu-new-link[data-admin-group='start'] {
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #222;
+}
