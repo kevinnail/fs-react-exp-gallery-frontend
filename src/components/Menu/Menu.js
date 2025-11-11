@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import websocketService from '../../services/websocket.js';
 import { useNotificationStore } from '../../stores/notificationStore.js';
 import { useProfileStore } from '../../stores/profileStore.js';
+
 import './Menu.css';
 
 export default function Menu({ handleClick, closeMenu }) {

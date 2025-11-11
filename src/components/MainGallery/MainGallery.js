@@ -8,7 +8,6 @@ import { Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AuctionCarousel from './AuctionCarousel.js';
-import { useNavigate } from 'react-router-dom';
 
 //
 //
@@ -16,7 +15,6 @@ import { useNavigate } from 'react-router-dom';
 export default function MainGallery() {
   const { posts, galleryLoading } = useGalleryPosts();
   const [message, setMessage] = useState('');
-  const navigate = useNavigate();
   useEffect(() => {
     const fetchMessage = async () => {
       try {

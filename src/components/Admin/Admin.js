@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { usePosts } from '../../hooks/usePosts.js';
-import { useUserStore } from '../../stores/userStore.js';
 import PostCard from '../PostCard/PostCard.js';
 import './Admin.css';
 import Loading from '../Loading/Loading.js';
@@ -19,7 +18,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AuctionResultsPanel from './AuctionResultsPanel.js';
 
 export default function Admin() {
-  const { signout } = useUserStore();
   const { posts, loading, setPosts } = usePosts();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
