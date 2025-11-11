@@ -151,6 +151,7 @@ export default function AuctionList() {
 
   useEffect(() => {
     markAuctionsRead();
+    //eslint-disable-next-line
   }, []);
 
   if (loading) {

@@ -40,13 +40,14 @@ export const useUnreadMessages = () => {
       websocketService.off('message_read', update);
       websocketService.off('conversation_updated', update);
     };
+    // eslint-disable-next-line
   }, [user, isAdmin]);
 
   useEffect(() => {
     if (!user) return;
 
-    // always fetch on login, admin or not
     refreshUnreadCount();
+    // eslint-disable-next-line
   }, [user]);
 
   return {

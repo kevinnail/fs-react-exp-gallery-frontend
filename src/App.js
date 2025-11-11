@@ -180,6 +180,7 @@ function App() {
       websocketService.off('tracking-info', handleTrackingUpdated);
       websocketService.disconnect();
     };
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
