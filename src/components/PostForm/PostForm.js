@@ -93,6 +93,7 @@ export default function PostForm({
         ))}
       </Box>
     );
+    // eslint-disable-next-line
   }, [files, currentImages, loading]);
 
   let newOrEdit = '';

@@ -156,6 +156,7 @@ class WebSocketService {
     if (this.socket && this.isConnected) {
       this.socket.emit('send_message', messageData);
     } else {
+      // eslint-disable-next-line no-console
       console.warn('Socket not connected, cannot send message');
     }
   }

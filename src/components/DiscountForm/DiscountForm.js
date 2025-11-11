@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useUserStore } from '../../stores/userStore.js';
-import { signOut } from '../../services/auth.js';
 import './DiscountForm.css';
 import { bulkPostEdit, postAdminMessage, getSiteMessage } from '../../services/fetch-utils.js';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function DiscountForm() {
   const [percentage, setPercentage] = useState('');
   const [message, setMessage] = useState('');
-  const { signout } = useUserStore();
   const [action, setAction] = useState('apply');
   const navigate = useNavigate();
 
@@ -33,11 +30,6 @@ export default function DiscountForm() {
 
     fetchMessage();
   }, []);
-
-  const handleClick = async () => {
-    await signOut();
-    signout();
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
