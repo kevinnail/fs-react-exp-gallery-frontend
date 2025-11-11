@@ -14,7 +14,7 @@
   padding: 0.3rem;
 }
 
-..close-button-rules-modal {
+.close-button-rules-modal {
   margin-top: 1.5rem;
   width: 100%;
   padding: 0.6rem;
@@ -25,6 +25,7 @@
   cursor: pointer;
   font-weight: 600;
 }
+
 .auction-rules-modal-wrapper {
   position: fixed;
   top: 0;
