@@ -1,5 +1,5 @@
 .menu {
-  padding: 0;
+  padding: 0.25rem 0 0 0;
   background: #111;
   color: #e6e6e6;
   font-family: system-ui, sans-serif;
@@ -20,8 +20,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 18px;
-  font-size: 0.95rem;
+  padding: 8px 2rem 8px 18px;
+  font-size: 1rem;
+
   color: #e6e6e6;
   width: 100%;
   box-sizing: border-box;
@@ -50,12 +51,6 @@
   border-radius: 999px;
   font-weight: 600;
   margin-left: 8px;
-}
-
-.menu > div[style] {
-  padding: 14px 18px;
-  border-bottom: 1px solid #222;
-  margin-bottom: 4px;
 }
 
 .menu > div[style] span,

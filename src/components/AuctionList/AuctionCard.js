@@ -10,6 +10,7 @@ import { getAuctionResults } from '../../services/fetch-auctions.js';
 import './AuctionCard.css';
 import AuctionBidModal from './AuctionBidModal';
 import ConfirmBINModal from './ConfirmBINModal';
+import AuctionRulesModal from './AuctionRulesModal.js';
 
 export default function AuctionCard({ auction }) {
   const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
@@ -33,6 +34,8 @@ export default function AuctionCard({ auction }) {
 
   const lastAuctionEnded = useAuctionEventsStore((s) => s.lastAuctionEnded);
   const lastAuctionExtended = useAuctionEventsStore((s) => s.lastAuctionExtended);
+
+  const [showRules, setShowRules] = useState(false);
 
   // set up listener for websocket auction end event
   useEffect(() => {
@@ -365,10 +368,23 @@ export default function AuctionCard({ auction }) {
             )}
           </div>
 
-          <p style={{ fontSize: '.9rem', marginTop: '.5rem', marginBottom: 0 }}>
-            Total Bids {bids.length}
-          </p>
-
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <p style={{ fontSize: '.9rem', marginTop: '.5rem', marginBottom: 0 }}>
+              Total Bids {bids.length}
+            </p>
+            <p
+              style={{
+                fontSize: '.85rem',
+                textDecoration: 'underline',
+                cursor: 'pointer',
+                opacity: 0.8,
+                marginTop: '.5rem',
+              }}
+              onClick={() => setShowRules(true)}
+            >
+              Auction Rules
+            </p>
+          </div>
           {!isActive ? (
             <p style={{ fontStyle: 'italic', marginTop: '.5rem', opacity: 0.7 }}></p>
           ) : (
@@ -423,10 +439,14 @@ export default function AuctionCard({ auction }) {
             toast.error('Error completing purchase', {
               theme: 'colored',
               toastId: 'auction-card-2',
+              draggable: true,
+              draggablePercent: 60,
+              autoClose: false,
             });
           }
         }}
       />
+      <AuctionRulesModal isOpen={showRules} onClose={() => setShowRules(false)} />
     </>
   );
 }

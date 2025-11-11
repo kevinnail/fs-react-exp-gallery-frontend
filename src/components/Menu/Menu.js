@@ -7,7 +7,8 @@ import { useEffect } from 'react';
 import websocketService from '../../services/websocket.js';
 import { useNotificationStore } from '../../stores/notificationStore.js';
 import { useProfileStore } from '../../stores/profileStore.js';
-import './Menu.css'; // added
+
+import './Menu.css';
 
 export default function Menu({ handleClick, closeMenu }) {
   const { user, isAdmin } = useUserStore();
@@ -71,6 +72,7 @@ export default function Menu({ handleClick, closeMenu }) {
               fontSize: '.8rem',
               display: 'grid',
               textAlign: 'center',
+              marginBottom: '.75rem',
             }}
           >
             <span>logged in as:</span>
@@ -88,12 +90,14 @@ export default function Menu({ handleClick, closeMenu }) {
         <NavLink className="menu-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
           Gallery
         </NavLink>{' '}
-        <NavLink className="menu-new-link" to="/auctions" onClick={handleAuctionsClick}>
-          Auctions
-          {unreadAuctionCount > 0 && location.pathname !== '/auctions' && (
-            <span className="unread-badge">{unreadAuctionCount}</span>
-          )}
-        </NavLink>
+        <div style={{ position: 'relative', padding: '0' }}>
+          <NavLink className="menu-new-link" to="/auctions" onClick={handleAuctionsClick}>
+            Auctions
+            {unreadAuctionCount > 0 && location.pathname !== '/auctions' && (
+              <span className="unread-badge">{unreadAuctionCount}</span>
+            )}
+          </NavLink>
+        </div>
       </>
       {!user && (
         <>
@@ -124,35 +128,40 @@ export default function Menu({ handleClick, closeMenu }) {
 
           {!isAdmin && (
             <>
-              <NavLink className="menu-new-link" to="/account" onClick={handleProfileClick}>
-                Account
-                {wonAuctionCount > 0 && location.pathname !== '/account' && (
-                  <span className="unread-badge">{wonAuctionCount}</span>
-                )}
-              </NavLink>
-
-              <NavLink className="menu-new-link" to="/messages" onClick={handleLinkClick}>
-                Messages
-                {unreadMessageCount > 0 && location.pathname !== '/messages' && (
-                  <span className="unread-badge">{unreadMessageCount}</span>
-                )}
-              </NavLink>
+              <div style={{ position: 'relative', padding: '0' }}>
+                <NavLink className="menu-new-link" to="/account" onClick={handleProfileClick}>
+                  Account
+                  {wonAuctionCount > 0 && location.pathname !== '/account' && (
+                    <span className="unread-badge">{wonAuctionCount}</span>
+                  )}
+                </NavLink>
+              </div>
+              <div style={{ position: 'relative', padding: '0' }}>
+                <NavLink className="menu-new-link" to="/messages" onClick={handleLinkClick}>
+                  Messages
+                  {unreadMessageCount > 0 && location.pathname !== '/messages' && (
+                    <span className="unread-badge">{unreadMessageCount}</span>
+                  )}
+                </NavLink>
+              </div>
             </>
           )}
           {isAdmin && (
             <>
               {' '}
-              <NavLink
-                className="menu-new-link"
-                to="/admin/inbox"
-                title="Inbox"
-                onClick={handleLinkClick}
-              >
-                Inbox{' '}
-                {unreadMessageCount > 0 && location.pathname !== '/messages' && (
-                  <span className="unread-badge">{unreadMessageCount}</span>
-                )}
-              </NavLink>
+              <div style={{ position: 'relative', padding: '0' }}>
+                <NavLink
+                  className="menu-new-link"
+                  to="/admin/inbox"
+                  title="Inbox"
+                  onClick={handleLinkClick}
+                >
+                  Inbox{' '}
+                  {unreadMessageCount > 0 && location.pathname !== '/messages' && (
+                    <span className="unread-badge">{unreadMessageCount}</span>
+                  )}
+                </NavLink>
+              </div>
               <NavLink
                 className="menu-new-link"
                 to="/admin/new"

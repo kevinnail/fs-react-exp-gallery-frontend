@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { getAuctions } from '../../services/fetch-auctions.js';
 import { getBids } from '../../services/fetch-bids.js';
 import './AuctionCarousel.css';
+import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
 
 export default function AuctionCarousel() {
   const [auctions, setAuctions] = useState([]);
   const navigate = useNavigate();
+  const lastAuctionCreated = useAuctionEventsStore((s) => s.lastAuctionCreated);
 
   useEffect(() => {
     const fetchAuctionsAndBids = async () => {
@@ -37,7 +39,7 @@ export default function AuctionCarousel() {
     };
 
     fetchAuctionsAndBids();
-  }, []);
+  }, [lastAuctionCreated]);
 
   if (!auctions.length) return null;
 
