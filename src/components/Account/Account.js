@@ -14,6 +14,7 @@ import UserAuctions from './UserAuctions.js';
 export default function Account() {
   const { user } = useUserStore();
   const { profile, setProfile, setShowWelcome } = useProfileStore();
+
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
   const navigate = useNavigate();
@@ -146,15 +147,16 @@ export default function Account() {
         <button
           onClick={handleEditProfile}
           className="edit-profile-icon-btn"
-          aria-label="Edit Profile"
+          aria-label="Edit Settings"
+          title="Edit Settings"
         >
-          ✎
+          <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>🌣</span>
         </button>
 
         <div className="profile-header">
           <div className="profile-picture-section">
             {profile?.imageUrl ? (
-              <img src={profile.imageUrl} alt="Profile" className="profile-picture" />
+              <img src={profile?.imageUrl} alt="Profile" className="profile-picture" />
             ) : (
               <div className="profile-picture-placeholder">
                 {profile?.firstName?.charAt(0) || user?.email?.charAt(0) || 'U'}
@@ -164,10 +166,29 @@ export default function Account() {
           <div className="profile-info">
             <h1>
               {profile?.firstName || profile?.lastName
-                ? `${profile.firstName || ''} ${profile.lastName || ''}`
+                ? `${profile?.firstName || ''} ${profile?.lastName || ''}`
                 : ''}
             </h1>
             <p className="user-email">{user?.email}</p>
+            <div
+              style={{
+                border: `1px solid ${profile?.sendEmailNotifications ? 'green' : 'yellow'}`,
+                padding: '.25rem .5rem',
+                borderRadius: '12px',
+              }}
+            >
+              Email notifications are{' '}
+              {profile?.sendEmailNotifications ? (
+                <>
+                  <strong>enabled</strong> You will receive one email for new work, auctions, and
+                  tracking info.
+                </>
+              ) : (
+                <>
+                  <strong>disabled</strong>, you will only receive emails for tracking info.
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -191,8 +212,8 @@ export default function Account() {
               <span style={{ display: 'block', textAlign: 'center' }}>
                 <strong>Current Special:</strong>{' '}
               </span>
-              30% OFF of the new work! All new work will be discounted for 2 weeks after it&apos;s
-              posted
+              <strong>50% OFF</strong> of the new work for all new sign ups! After the sign up
+              special ends, all new work will be discounted for 2 weeks after it&apos;s posted
             </span>
             <div className="new-work-content">
               {recentPosts.length > 0 ? (

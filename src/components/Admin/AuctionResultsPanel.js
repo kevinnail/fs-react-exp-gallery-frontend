@@ -143,7 +143,12 @@ export default function AuctionResultsPanel() {
           );
         }
 
-        toast.success('Auction has ended.', { theme: 'dark', autoClose: 3000 });
+        toast.success('Auction has ended.', {
+          theme: 'dark',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: 3000,
+        });
       } catch (e) {
         console.error('Error hydrating auction after end event', auctionId, e);
       }
