@@ -83,8 +83,17 @@ export default function Account() {
         ! <span>(link in menu)</span>
       </p>
       <p className="profile-content-p">
-        I&apos;ll be adding features asap, just built Messages and Auctions- and we&apos;ll see what
-        else down the line! Stay tuned, thanks for being here.
+        I&apos;ll be adding more features asap, I just built Messages and Auctions- and we&apos;ll
+        see what else I get going down the line! One thing is I&apos;m looking into getting my blog
+        going again for those interested in some long form content, free from doom scrolling.
+        It&apos;ll be hikes/ nature, astronomy/ astrophotography, music, fun coding stuff I&apos;m
+        working on, etc.- coming soon.
+      </p>
+      <p className="profile-content-p">
+        Let me know if you run into any bugs/ technical issues and I&apos;ll get &apos;em fixed
+      </p>
+      <p className="profile-content-p" style={{ textAlign: 'center', margin: '2rem' }}>
+        Stay tuned, and thanks for being here.
       </p>
     </>
   );
@@ -101,8 +110,17 @@ export default function Account() {
         </ul>
       </div>
       <p className="profile-content-p">
-        I&apos;ll be adding features asap, just built Messages and Auctions- and we&apos;ll see what
-        else down the line! Stay tuned, thanks for being here.
+        I&apos;ll be adding more features asap, I just built Messages and Auctions- and we&apos;ll
+        see what else I get going down the line! One thing is I&apos;m looking into getting my blog
+        going again for those interested in some long form content, free from doom scrolling.
+        It&apos;ll be hikes/ nature, astronomy/ astrophotography, music, fun coding stuff I&apos;m
+        working on, etc.- coming soon.
+      </p>
+      <p className="profile-content-p">
+        Let me know if you run into any bugs/ technical issues and I&apos;ll get &apos;em fixed
+      </p>
+      <p className="profile-content-p" style={{ textAlign: 'center', margin: '2rem' }}>
+        Stay tuned, and thanks for being here.
       </p>
     </>
   );
