@@ -19,7 +19,13 @@ export const useProfileStore = create((set) => ({
   setLoading: (loading) => set({ loading }),
 
   // Single profile update method: optionally upload image, then update full profile
-  updateUserProfile: async ({ firstName, lastName, file, existingImageUrl }) => {
+  updateUserProfile: async ({
+    firstName,
+    lastName,
+    file,
+    existingImageUrl,
+    sendEmailNotifications,
+  }) => {
     try {
       set({ loading: true });
 
@@ -40,7 +46,7 @@ export const useProfileStore = create((set) => ({
         finalImageUrl,
         firstName,
         lastName,
-        file ? existingImageUrl : null
+        sendEmailNotifications
       );
       set({ profile: updatedProfile, loading: false });
 

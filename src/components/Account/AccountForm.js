@@ -6,10 +6,13 @@ import { toast } from 'react-toastify';
 
 export default function ProfileForm({ handleCloseForm }) {
   const { updateUserProfile, profile, loading } = useProfileStore();
+
   const [formData, setFormData] = useState({
     firstName: profile?.firstName || '',
     lastName: profile?.lastName || '',
     imageUrl: null,
+    sendEmailNotifications:
+      profile?.sendEmailNotifications !== undefined ? profile.sendEmailNotifications : true,
   });
   const [previewImage, setPreviewImage] = useState(profile?.imageUrl || null);
 
@@ -20,7 +23,9 @@ export default function ProfileForm({ handleCloseForm }) {
         firstName: profile.firstName || '',
         lastName: profile.lastName || '',
         imageUrl: null,
+        sendEmailNotifications: profile.sendEmailNotifications,
       });
+
       setPreviewImage(profile.imageUrl || null);
     }
   }, [profile]);
@@ -93,6 +98,7 @@ export default function ProfileForm({ handleCloseForm }) {
         lastName: formData.lastName,
         file: formData.imageUrl,
         existingImageUrl: profile?.imageUrl || null,
+        sendEmailNotifications: formData.sendEmailNotifications,
       });
 
       handleCloseForm();
@@ -159,6 +165,26 @@ export default function ProfileForm({ handleCloseForm }) {
                 {formData.imageUrl ? 'Change Image' : 'Choose Image'}
               </label>
             </div>
+          </div>
+
+          <div
+            className="form-group"
+            style={{ border: '1px solid yellow ', padding: '.5rem', borderRadius: '8px' }}
+          >
+            <label>
+              <input
+                type="checkbox"
+                name="sendEmailNotifications"
+                checked={formData.sendEmailNotifications}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    sendEmailNotifications: e.target.checked,
+                  }))
+                }
+              />
+              Receive email notifications for new work/ auctions
+            </label>
           </div>
 
           <div className="form-actions">

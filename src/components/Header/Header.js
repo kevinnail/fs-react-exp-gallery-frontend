@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
@@ -18,6 +18,9 @@ export default function Header() {
 
   const { unreadAuctionCount, fetchUnreadAuctions } = useNotificationStore();
   const totalUnread = unreadAuctionCount + unreadMessageCount;
+
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
 
   const handleClick = async () => {
     await signOut();
@@ -40,6 +43,22 @@ export default function Header() {
     setIsMenuOpen(false);
   };
 
+  // Close menu if clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   useEffect(() => {
     if (user) {
       fetchUnreadAuctions();
@@ -56,7 +75,7 @@ export default function Header() {
           <h1 className="biz-title">Stress Less Glass </h1>{' '}
         </div>
         <div className="header-section">
-          <div className="menu-icon-wrapper" onClick={handleMenuClick}>
+          <div className="menu-icon-wrapper" ref={buttonRef} onClick={handleMenuClick}>
             <button
               type="button"
               className="menu-icon-wrapper"
@@ -73,6 +92,7 @@ export default function Header() {
       </header>
 
       <div
+        ref={menuRef}
         className={`menu-icon-adapt menu-div ${isMenuOpen ? ' open ' : ''}${
           location.pathname === '/admin' ? ' menu-div-adapt ' : ''
         }`}

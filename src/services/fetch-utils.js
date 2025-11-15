@@ -659,7 +659,12 @@ export async function uploadImageToS3(imageFile) {
 }
 
 // Update profile with image URL
-export async function updateProfileWithImage(imageUrl, firstName = null, lastName = null) {
+export async function updateProfileWithImage(
+  imageUrl,
+  firstName = null,
+  lastName = null,
+  sendEmailNotifications
+) {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/profile/images`, {
       method: 'POST',
@@ -670,6 +675,7 @@ export async function updateProfileWithImage(imageUrl, firstName = null, lastNam
         image_url: imageUrl,
         firstName: firstName,
         lastName: lastName,
+        sendEmailNotifications,
       }),
       credentials: 'include',
     });

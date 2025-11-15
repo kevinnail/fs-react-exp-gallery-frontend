@@ -25,7 +25,6 @@ export default function MainPostDetail() {
 
   let sellingLogoLink = glasspassLogoLink;
   let store = 'GlassPass';
-  let isInstagram = false;
 
   const platform = postDetail?.selling_link?.toLowerCase();
   if (platform?.includes('etsy')) {
@@ -92,22 +91,6 @@ export default function MainPostDetail() {
       <div className="post-detail-div-wrapper">
         <section className="message-button-wrapper">
           {' '}
-          <div style={{ display: 'flex', justifyContent: 'flex-start', position: 'absolute' }}>
-            <button
-              onClick={() => navigate(-1)}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#fff',
-                fontSize: '0.9rem',
-                cursor: 'pointer',
-                padding: 0,
-                justifySelf: 'start',
-              }}
-            >
-              ← Back
-            </button>
-          </div>
           <button
             className="message-about-piece-button"
             onClick={() =>
@@ -132,7 +115,25 @@ export default function MainPostDetail() {
         <div className="detail-top-container">
           <div className="post-detail-div">
             <section className="title-container">
-              <h1 className="detail-title">{postDetail?.title}</h1>
+              <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <button
+                  onClick={() => navigate(-1)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#fff',
+                    fontSize: '0.9rem',
+                    cursor: 'pointer',
+                    padding: '.5rem',
+                    justifySelf: 'start',
+                  }}
+                >
+                  ← Back
+                </button>
+              </div>
+              <div>
+                <h1 className="detail-title">{postDetail?.title}</h1>
+              </div>
             </section>
             <section className="title-cat-container">
               <div>

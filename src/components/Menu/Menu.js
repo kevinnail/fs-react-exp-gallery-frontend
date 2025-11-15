@@ -41,6 +41,7 @@ export default function Menu({ handleClick, closeMenu }) {
     resetAuction();
     closeMenu();
   };
+
   const handleProfileClick = () => {
     resetWonAuction();
     closeMenu();
