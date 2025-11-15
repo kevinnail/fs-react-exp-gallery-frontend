@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { searchGalleryPosts } from '../../services/fetch-utils.js';
-import Menu from '../Menu/Menu.js';
-import { signOut } from '../../services/auth.js';
 import MainGalleryPostCard from '../MainGalleryPostCard/MainGalleryPostCard.js';
-import { useUserStore } from '../../stores/userStore.js';
 import { useNavigate } from 'react-router-dom';
 const SearchResults = () => {
   const [posts, setPosts] = useState([]);
   const location = useLocation();
-  const { signout } = useUserStore();
   const navigate = useNavigate();
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -23,30 +19,31 @@ const SearchResults = () => {
     fetchSearchResults();
   }, [location]);
 
-  const handleClick = async () => {
-    await signOut();
-    signout();
-  };
-
   // Render your search results (e.g., using a list, grid, or other layout)
   return (
-    <>
-      <div className="menu-search-container">
-        <Menu handleClick={handleClick} />
+    <div style={{ marginTop: '90px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <button
+          onClick={() => navigate(-1)}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#fff',
+            fontSize: '0.9rem',
+            cursor: 'pointer',
+            padding: '.5rem',
+            justifySelf: 'start',
+          }}
+        >
+          ← Back
+        </button>
       </div>
-      <button
-        className="retract-button2 btn-adjust"
-        onClick={() => navigate(-1)}
-        title="Back to previous page"
-      >
-        <span className="arrow-icon">←</span>
-      </button>
       <div className="gallery-list-container">
         {posts.map((post) => (
           <MainGalleryPostCard key={post.id} {...post} posts={posts} />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
