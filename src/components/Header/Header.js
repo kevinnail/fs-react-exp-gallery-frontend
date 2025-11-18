@@ -22,6 +22,41 @@ export default function Header() {
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
 
+  //
+
+  function DevIndicator() {
+    const [isDev, setIsDev] = useState(false);
+
+    useEffect(() => {
+      if (process.env.NODE_ENV === 'development') {
+        setIsDev(true);
+      }
+    }, []);
+
+    if (!isDev) return null;
+
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          top: '55px',
+          right: '75px',
+          zIndex: 9999,
+          background: 'orange',
+          color: 'black',
+          fontWeight: 'bold',
+          padding: '4px 8px',
+          borderRadius: '4px',
+          fontSize: '16px',
+        }}
+      >
+        DEV
+      </div>
+    );
+  }
+
+  //
+
   const handleClick = async () => {
     await signOut();
     signout();
@@ -68,6 +103,7 @@ export default function Header() {
   return (
     <>
       <header>
+        <DevIndicator />
         <Link className="link" to={user && isAdmin ? '/admin' : '/'} onClick={handleHomeClick}>
           <img className="logo" src="../logo-sq.png" />
         </Link>{' '}
