@@ -342,6 +342,7 @@ export default function AuctionCard({ auction }) {
             ) : (
               <div>
                 <p className="bidding-closed">Bidding is CLOSED</p>
+                <span style={{ fontSize: '.9rem' }}>Winner:</span>
                 <div className="bid-entry">
                   <span
                     style={{
@@ -433,7 +434,13 @@ export default function AuctionCard({ auction }) {
           try {
             await handleBuyItNow();
             setIsActive(false);
-            toast.success('Purchase successful', { theme: 'colored', toastId: 'auction-card-1' });
+            toast.success('Purchase successful', {
+              theme: 'colored',
+              toastId: 'auction-card-1',
+              draggable: true,
+              draggablePercent: 60,
+              autoClose: false,
+            });
           } catch (err) {
             console.error(err);
             toast.error('Error completing purchase', {

@@ -299,7 +299,7 @@ export default function UserAuctions({ userId }) {
 </div>` +
       '<div class="footer">' +
       '<p>Payment Due!</p>' +
-      '<p>Zelle, PayPal, Venmo, Cash App, or CC/Debit via emailed invoice.</p>' +
+      '<p>Zelle, Venmo, Cash App, or CC/Debit via emailed invoice.</p>' +
       '<p>Thank you for supporting Stress Less Glass!</p>' +
       '</div>' +
       '<script>window.onload = () => window.print();</script>' +
@@ -361,8 +361,8 @@ export default function UserAuctions({ userId }) {
               </div>
 
               <p>
-                I can take Zelle, PayPal, Venmo, Cash App, or CC/Debit via invoice through email.
-                Contact me through{' '}
+                I can take Zelle, Venmo, Cash App, or CC/Debit via invoice through email. Contact me
+                through{' '}
                 <span
                   onClick={handleMsgNav}
                   style={{ cursor: 'pointer', textDecoration: 'underline' }}

@@ -331,14 +331,12 @@
 
 .admin-customer-message .admin-message-time {
   display: block;
-  width: 30%;
   text-align: right;
   margin-bottom: 0.25rem;
 }
 
 .admin-admin-message .admin-message-time {
   display: block;
-  width: 25%;
   text-align: left;
   margin-bottom: 0.25rem;
 }

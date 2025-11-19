@@ -14,9 +14,11 @@ import UserAuctions from './UserAuctions.js';
 export default function Account() {
   const { user } = useUserStore();
   const { profile, setProfile, setShowWelcome } = useProfileStore();
+
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
   const navigate = useNavigate();
+
   useEffect(() => {
     const loadProfile = async () => {
       try {
@@ -66,6 +68,26 @@ export default function Account() {
     }
   };
 
+  function ProfileMessage() {
+    return (
+      <div>
+        <p className="profile-content-p">
+          I&apos;ll be adding more features asap, I just built Messages and Auctions- and we&apos;ll
+          see what else I get going down the line! One thing is I&apos;m looking into getting my
+          blog going again for those interested in some long form content, free from doom scrolling.
+          It&apos;ll be hikes/ nature, astronomy/ astrophotography, music, fun coding stuff I&apos;m
+          working on, etc.- coming soon.
+        </p>
+        <p className="profile-content-p" style={{ marginTop: '1rem' }}>
+          Let me know if you run into any bugs/ technical issues and I&apos;ll get &apos;em fixed.
+        </p>
+        <p className="profile-content-p" style={{ textAlign: 'center', margin: '2rem' }}>
+          Stay tuned, and thanks for being here.
+        </p>
+      </div>
+    );
+  }
+
   const newUserMessage = (
     <>
       <p className="profile-content-p">
@@ -81,10 +103,7 @@ export default function Account() {
         </Link>
         ! <span>(link in menu)</span>
       </p>
-      <p className="profile-content-p">
-        I&apos;ll be adding features asap, just built Messages and Auctions- and we&apos;ll see what
-        else down the line! Stay tuned, thanks for being here.
-      </p>
+      <ProfileMessage />
     </>
   );
 
@@ -92,17 +111,14 @@ export default function Account() {
     <>
       <div>
         Thanks for setting up an account! You can now message me directly via Messages in 2 ways:
-        <ul>
+        <ol>
           <li>Message me directly via Messages up in menu</li>
           <li>
-            Message me from the details page of a piece and Messages will automatically link it.
+            Message me from the details page of a piece and Messages will automatically link it
           </li>
-        </ul>
+        </ol>
       </div>
-      <p className="profile-content-p">
-        I&apos;ll be adding features asap, just built Messages and Auctions- and we&apos;ll see what
-        else down the line! Stay tuned, thanks for being here.
-      </p>
+      <ProfileMessage />
     </>
   );
 
@@ -146,15 +162,16 @@ export default function Account() {
         <button
           onClick={handleEditProfile}
           className="edit-profile-icon-btn"
-          aria-label="Edit Profile"
+          aria-label="Edit Settings"
+          title="Edit Settings"
         >
-          ✎
+          <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>🌣</span>
         </button>
 
         <div className="profile-header">
           <div className="profile-picture-section">
             {profile?.imageUrl ? (
-              <img src={profile.imageUrl} alt="Profile" className="profile-picture" />
+              <img src={profile?.imageUrl} alt="Profile" className="profile-picture" />
             ) : (
               <div className="profile-picture-placeholder">
                 {profile?.firstName?.charAt(0) || user?.email?.charAt(0) || 'U'}
@@ -164,10 +181,29 @@ export default function Account() {
           <div className="profile-info">
             <h1>
               {profile?.firstName || profile?.lastName
-                ? `${profile.firstName || ''} ${profile.lastName || ''}`
+                ? `${profile?.firstName || ''} ${profile?.lastName || ''}`
                 : ''}
             </h1>
             <p className="user-email">{user?.email}</p>
+            <div
+              style={{
+                border: `1px solid ${profile?.sendEmailNotifications ? 'green' : 'yellow'}`,
+                padding: '.25rem .5rem',
+                borderRadius: '12px',
+              }}
+            >
+              Email notifications are{' '}
+              {profile?.sendEmailNotifications ? (
+                <>
+                  <strong>enabled</strong> You will receive one email for new work, auctions, and
+                  tracking info.
+                </>
+              ) : (
+                <>
+                  <strong>disabled</strong>, you will only receive emails for tracking info.
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -191,8 +227,17 @@ export default function Account() {
               <span style={{ display: 'block', textAlign: 'center' }}>
                 <strong>Current Special:</strong>{' '}
               </span>
-              30% OFF of the new work! All new work will be discounted for 2 weeks after it&apos;s
-              posted
+              <span style={{ display: 'block', textAlign: 'left' }}>
+                <strong>50% OFF</strong> of the new work for all new sign ups{' '}
+                <strong style={{ color: 'yellow' }}>until the end of November! </strong>This extends
+                to GlassPass and Etsy just message me and I&apos;ll get it taken care of.
+              </span>
+              <br />
+              <span style={{ display: 'block', textAlign: 'left' }}>
+                {' '}
+                After the sign up special ends, all new work will be discounted for 2 weeks after
+                it&apos;s posted.
+              </span>
             </span>
             <div className="new-work-content">
               {recentPosts.length > 0 ? (
