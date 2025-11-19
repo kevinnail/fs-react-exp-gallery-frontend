@@ -362,8 +362,8 @@ export default function AdminInbox() {
               <>
                 <div className="messages-list" ref={messagesListRef}>
                   {messages.map((message) => {
-                    // In admin view: customer messages go left, admin messages go right
                     const isCustomerMessage = !message.isFromAdmin && isAdmin;
+
                     return (
                       <div
                         key={message.id}
