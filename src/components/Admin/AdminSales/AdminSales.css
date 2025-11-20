@@ -1,0 +1,210 @@
+.admin-sales-wrapper {
+  width: 60%;
+  margin: 90px auto 0 auto;
+  border: 1px solid #0026a153;
+  background-color: black;
+  height: fit-content;
+}
+
+.admin-sales-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  color: #fff;
+}
+
+.admin-sales-content {
+  width: 100%;
+  max-width: 1200px;
+  padding: 1rem;
+}
+
+.sales-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.sales-header p {
+  margin-top: 0.25rem;
+  color: #ccc;
+}
+
+.sales-layout {
+  display: flex;
+  margin-top: 1.5rem;
+}
+
+/* Sales list */
+.sales-list {
+  width: 35%;
+  padding-right: 1rem;
+  border-right: 1px solid #333;
+}
+
+.sales-list h2 {
+  margin-top: 0;
+}
+
+.sales-items {
+  margin-top: 0.75rem;
+}
+
+.sales-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #1b1b1b;
+  border: 1px solid #333;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  align-items: center;
+}
+
+.sales-item-img-wrapper {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.sales-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sales-item-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.sales-detail-img {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border: 1px solid #333;
+  margin-bottom: 1rem;
+}
+
+.sales-item.selected {
+  border-color: #2f00ff83;
+}
+
+.sales-item-header {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.sales-item-meta {
+  font-size: 0.8rem;
+  color: #bbb;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Right panel */
+.sales-panel {
+  width: 65%;
+  padding-left: 1.5rem;
+}
+
+.no-sale-selected {
+  padding: 1rem;
+  color: #aaa;
+}
+
+.sales-detail h2 {
+  margin-top: 0;
+}
+
+.sales-detail-row {
+  display: flex;
+  margin: 0.75rem 0;
+  gap: 1rem;
+}
+
+.sales-detail-row label {
+  width: 150px;
+  color: #ccc;
+}
+
+.tracking-input {
+  width: 250px;
+  padding: 0.3rem;
+  background: #111;
+  border: 1px solid #555;
+  color: #fff;
+}
+
+.save-tracking-button {
+  background: green;
+  color: #000;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.add-sale-button {
+  background: green;
+  color: #000;
+  border: none;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  margin-left: auto;
+  font-size: 0.9rem;
+}
+
+.sales-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cancel-button {
+  background: #444;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+/* 
+
+^================== Responsive begin =======================
+
+*/
+
+@media (max-width: 768px) {
+  .sales-layout {
+    flex-direction: column;
+  }
+
+  .sales-list {
+    width: 100%;
+    border-right: none;
+    padding-right: 0;
+    margin-bottom: 1rem;
+  }
+
+  .sales-panel {
+    width: 100%;
+    padding-left: 0;
+  }
+
+  .sales-detail-img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .sales-item-img-wrapper {
+    width: 50px;
+    height: 50px;
+  }
+  .admin-sales-wrapper {
+    width: 100%;
+  }
+}
