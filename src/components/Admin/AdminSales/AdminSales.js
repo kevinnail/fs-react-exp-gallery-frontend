@@ -43,13 +43,13 @@ export default function AdminSales() {
 
   // handle saving tracking number
   const handleSaveTracking = async () => {
-    await updateSaleTracking(selectedSale, trackingInput); // service call
+    await updateSaleTracking(selectedSale, trackingInput);
     await loadSales();
   };
 
   // handle creating a new sale
   const handleCreateSale = async () => {
-    await createSale(newBuyerEmail, newPieceId, newPrice, newTracking); // service call
+    await createSale(newBuyerEmail, newPieceId, newPrice, newTracking);
 
     // reset inputs
     setNewBuyerEmail('');
@@ -61,9 +61,18 @@ export default function AdminSales() {
     await loadSales();
   };
 
+  const handleTrackingClick = (trackingNumber) => {
+    if (!trackingNumber) return;
+    const url = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(trackingNumber)}`;
+    window.open(url, '_blank');
+  };
+
   useEffect(() => {
     loadSales();
   }, []);
+
+  // the one new refactor line
+  const currentSale = selectedSale ? sales.find((s) => s.id === selectedSale) : null;
 
   return (
     <div className="admin-sales-wrapper">
@@ -112,14 +121,15 @@ export default function AdminSales() {
 
                       <div className="sales-item-info">
                         <span className="sales-post-title">{sale.post_title}</span>
+
                         <div className="sales-item-meta">
                           <span>${sale.price}</span>
                           <span>{sale.buyer_email}</span>
                         </div>
+
                         <div className="sales-item-meta">
                           <span>
-                            <strong>{sale.buyer_first_name}</strong>
-                            {` `}
+                            <strong>{sale.buyer_first_name}</strong>{' '}
                             {sale.buyer_last_name.length > 30
                               ? sale.buyer_last_name.slice(0, 4) + '...'
                               : sale.buyer_last_name}
@@ -186,39 +196,61 @@ export default function AdminSales() {
                     Cancel
                   </button>
                 </div>
-              ) : !selectedSale ? (
+              ) : !currentSale ? (
                 <div className="no-sale-selected">
                   <p>Select a sale to view details</p>
                 </div>
               ) : (
                 <div className="sales-detail">
-                  <img
-                    src={sales.find((s) => s.id === selectedSale)?.image_url}
-                    alt="Piece"
-                    className="sales-detail-img"
-                  />
+                  <img src={currentSale.image_url} alt="Piece" className="sales-detail-img" />
+
+                  <div className="tracking-link">
+                    <a
+                      href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
+                        currentSale.tracking_number
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`View tracking for ${currentSale.post_title}`}
+                    >
+                      <img
+                        alt="USPS"
+                        className="auction-result-thumb"
+                        style={{ width: '50px', height: '50px', margin: '.5rem 0 0 .25rem' }}
+                        src="../../../usps.png"
+                      />
+                    </a>
+
+                    <p
+                      style={{ textAlign: 'left' }}
+                      onClick={() => handleTrackingClick(currentSale.tracking_number)}
+                    >
+                      <span style={{ display: 'block', position: 'relative', right: '50%' }}>
+                        Tracking number:
+                      </span>
+                      <span style={{ display: 'block' }}>{currentSale.tracking_number}</span>
+                    </p>
+                  </div>
 
                   <div className="sales-detail-row">
                     <label>Buyer:</label>
-                    <span>{sales.find((s) => s.id === selectedSale)?.buyer_first_name}</span>
-                    <span>
-                      {sales.find((s) => s.id === selectedSale)?.buyer_last_name.slice(0, 1)}.
-                    </span>
+                    <span>{currentSale.buyer_first_name}</span>
+                    <span>{currentSale.buyer_last_name.slice(0, 1)}.</span>
                   </div>
 
                   <div className="sales-detail-row">
                     <label>Email:</label>
-                    <span>{sales.find((s) => s.id === selectedSale)?.buyer_email}.</span>
+                    <span>{currentSale.buyer_email}</span>
                   </div>
 
                   <div className="sales-detail-row">
                     <label>Piece:</label>
-                    <span>{sales.find((s) => s.id === selectedSale)?.post_title}</span>
+                    <span>{currentSale.post_title}</span>
                   </div>
 
                   <div className="sales-detail-row">
                     <label>Price:</label>
-                    <span>${sales.find((s) => s.id === selectedSale)?.price}</span>
+                    <span>${currentSale.price}</span>
                   </div>
 
                   <div className="sales-detail-row">
