@@ -124,6 +124,15 @@ export default function Menu({ handleClick, closeMenu }) {
               >
                 Dashboard
               </NavLink>
+              <NavLink
+                className="menu-new-link"
+                to="/admin/sales"
+                title="Dashboard"
+                onClick={handleLinkClick}
+                data-admin-group="start"
+              >
+                Sales
+              </NavLink>
             </>
           )}
 
@@ -177,7 +186,7 @@ export default function Menu({ handleClick, closeMenu }) {
                 title="Post a new sale"
                 onClick={handleLinkClick}
               >
-                Sale!
+                Promotions!
               </NavLink>
               <NavLink
                 className="menu-new-link"
