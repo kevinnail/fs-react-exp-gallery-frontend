@@ -24,6 +24,26 @@ export async function getAllSales() {
   }
 }
 
-export async function createSale() {}
+export async function updateSaleTracking(postId, trackingNumber) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/admin/${postId}/tracking`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ trackingNumber }),
+      credentials: 'include',
+    });
 
-export async function updateSaleTracking() {}
+    const data = await resp.json();
+
+    if (!resp.ok) throw new Error(data.message || 'Failed to update tracking');
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function createSale() {}
