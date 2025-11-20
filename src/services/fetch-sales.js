@@ -12,6 +12,7 @@ export async function getAllSales() {
     });
 
     const data = await resp.json();
+
     if (resp.ok) {
       return data;
     } else {
@@ -22,3 +23,7 @@ export async function getAllSales() {
     throw error;
   }
 }
+
+export async function createSale() {}
+
+export async function updateSaleTracking() {}
