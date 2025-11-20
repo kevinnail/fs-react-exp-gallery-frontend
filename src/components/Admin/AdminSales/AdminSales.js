@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import './AdminSales.css';
-import { getAllSales, createSale, updateSaleTracking } from '../../../services/fetch-sales.js';
+import {
+  getAllSales,
+  createSale,
+  updateSaleTracking,
+  updateSalePaidStatus,
+} from '../../../services/fetch-sales.js';
 
 export default function AdminSales() {
   const [sales, setSales] = useState([]);
@@ -232,6 +237,27 @@ export default function AdminSales() {
                     </p>
                   </div>
 
+                  {/* PAID STATUS + TOGGLE */}
+                  <div className="sales-paid-status">
+                    <div
+                      className="sales-paid-status-indicator"
+                      style={{ backgroundColor: currentSale.is_paid ? 'green' : 'yellow' }}
+                    >
+                      {currentSale.is_paid ? 'Paid' : 'Not Paid'}
+                    </div>
+
+                    <button
+                      className="sale-paid-toggle-button"
+                      style={{ backgroundColor: currentSale.is_paid ? 'green' : 'yellow' }}
+                      onClick={async () => {
+                        await updateSalePaidStatus(currentSale.id, !currentSale.is_paid);
+                        await loadSales();
+                      }}
+                    >
+                      {currentSale.is_paid ? 'Mark Unpaid' : 'Mark Paid'}
+                    </button>
+                  </div>
+
                   <div className="sales-detail-row">
                     <label>Buyer:</label>
                     <span>{currentSale.buyer_first_name}</span>
@@ -263,9 +289,11 @@ export default function AdminSales() {
                     />
                   </div>
 
-                  <button className="save-tracking-button" onClick={handleSaveTracking}>
-                    Save Tracking
-                  </button>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <button className="save-tracking-button" onClick={handleSaveTracking}>
+                      Save Tracking
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

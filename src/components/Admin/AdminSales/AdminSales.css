@@ -176,6 +176,40 @@
   margin-left: 0.5rem;
 }
 
+.sales-paid-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.sales-paid-status-indicator {
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 1.5rem;
+  background-color: #111;
+  border: 1px solid #444;
+  color: black;
+}
+
+.sale-paid-toggle-button {
+  border: 1px solid #0022aa;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  /* border-radius: 6px; */
+  font-size: 0.85rem;
+  transition: background 0.15s;
+}
+
+.sale-paid-toggle-button:hover {
+  background: #0033cc;
+}
+
+.sale-paid-toggle-button:active {
+  background: #002a9a;
+}
+
 /* 
 
 ^================== Responsive begin =======================
