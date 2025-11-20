@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './AdminSales.css';
+import { getAllSales, createSale, updateSaleTracking } from '../../../services/fetch-sales.js';
 
 export default function AdminSales() {
   const [sales, setSales] = useState([]);
@@ -20,42 +21,7 @@ export default function AdminSales() {
     try {
       setLoading(true);
 
-      // placeholder before service integration
-      const salesData = [
-        {
-          id: 1,
-          post_title: 'Fumed Sherlock Pipe',
-          price: 150,
-          buyer_email: 'collector1@example.com',
-          image_url: 'https://via.placeholder.com/80x80?text=Pipe',
-          tracking_number: '9400111899223847238497',
-        },
-        {
-          id: 2,
-          post_title: 'Blue Reticello Pendant',
-          price: 85,
-          buyer_email: 'glassfanatic@example.com',
-          image_url: 'https://via.placeholder.com/80x80?text=Pendant',
-          tracking_number: null,
-        },
-        {
-          id: 3,
-          post_title: 'Inside-Out Spoon',
-          price: 60,
-          buyer_email: 'newbuyer2025@example.com',
-          image_url: 'https://via.placeholder.com/80x80?text=Spoon',
-          tracking_number: '9405511202558394021123',
-        },
-        {
-          id: 4,
-          post_title: 'Color-Changing Chillum',
-          price: 40,
-          buyer_email: 'vipcollector@example.com',
-          image_url: 'https://via.placeholder.com/80x80?text=Chillum',
-          tracking_number: null,
-        },
-      ];
-
+      const salesData = await getAllSales();
       setSales(salesData);
     } catch (error) {
       console.error('Error loading sales:', error);
@@ -120,8 +86,6 @@ export default function AdminSales() {
           <div className="sales-layout">
             {/* Sales list */}
             <div className="sales-list">
-              <h2>All Sales</h2>
-
               {loading ? (
                 <div className="loading-sales">
                   <p>Loading sales...</p>
@@ -151,6 +115,15 @@ export default function AdminSales() {
                         <div className="sales-item-meta">
                           <span>${sale.price}</span>
                           <span>{sale.buyer_email}</span>
+                        </div>
+                        <div className="sales-item-meta">
+                          <span>
+                            <strong>{sale.buyer_first_name}</strong>
+                            {` `}
+                            {sale.buyer_last_name.length > 30
+                              ? sale.buyer_last_name.slice(0, 4) + '...'
+                              : sale.buyer_last_name}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -219,8 +192,6 @@ export default function AdminSales() {
                 </div>
               ) : (
                 <div className="sales-detail">
-                  <h2>Sale Details</h2>
-
                   <img
                     src={sales.find((s) => s.id === selectedSale)?.image_url}
                     alt="Piece"
@@ -229,7 +200,15 @@ export default function AdminSales() {
 
                   <div className="sales-detail-row">
                     <label>Buyer:</label>
-                    <span>{sales.find((s) => s.id === selectedSale)?.buyer_email}</span>
+                    <span>{sales.find((s) => s.id === selectedSale)?.buyer_first_name}</span>
+                    <span>
+                      {sales.find((s) => s.id === selectedSale)?.buyer_last_name.slice(0, 1)}.
+                    </span>
+                  </div>
+
+                  <div className="sales-detail-row">
+                    <label>Email:</label>
+                    <span>{sales.find((s) => s.id === selectedSale)?.buyer_email}.</span>
                   </div>
 
                   <div className="sales-detail-row">
@@ -264,8 +243,3 @@ export default function AdminSales() {
     </div>
   );
 }
-
-// service functions to implement later:
-async function getAllSales() {}
-async function createSale(email, postId, price, tracking) {}
-async function updateSaleTracking(saleId, tracking) {}

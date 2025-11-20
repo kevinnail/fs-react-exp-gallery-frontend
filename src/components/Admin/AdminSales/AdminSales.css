@@ -46,7 +46,7 @@
 }
 
 .sales-items {
-  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .sales-item {
@@ -104,6 +104,10 @@
   justify-content: space-between;
 }
 
+.sales-post-title {
+  font-size: 1rem;
+}
+
 /* Right panel */
 .sales-panel {
   width: 65%;
@@ -121,12 +125,12 @@
 
 .sales-detail-row {
   display: flex;
-  margin: 0.75rem 0;
-  gap: 1rem;
+  margin: 0 0 0.25rem 0;
+  gap: 0.5rem;
 }
 
 .sales-detail-row label {
-  width: 150px;
+  width: 100px;
   color: #ccc;
 }
 
