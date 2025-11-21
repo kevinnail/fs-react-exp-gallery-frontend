@@ -242,28 +242,25 @@ export default function Account() {
 
         {/*  */}
         {/*  */}
-        <div className="profile-dashboard-wide">
+        <div className="tab-content-wrapper">
           {tab === 0 && (
-            <div
-              className="new-work-section"
-              style={{ border: '1px solid white', paddingTop: '.5rem', margin: '1rem 0' }}
-            >
+            <div className="new-work-section">
               <span className="new-work-msg">
                 <span style={{ display: 'block', textAlign: 'center' }}>
-                  <strong>Current Special:</strong>{' '}
+                  <strong>Current Special:</strong>
                 </span>
                 <span style={{ display: 'block', textAlign: 'left' }}>
-                  <strong>50% OFF</strong> of the new work for all new sign ups{' '}
-                  <strong style={{ color: 'yellow' }}>until the end of November! </strong>This
-                  extends to GlassPass and Etsy just message me and I&apos;ll get it taken care of.
+                  <strong>50% OFF</strong> of the new work for all new sign ups
+                  <strong style={{ color: 'yellow' }}> until the end of November!</strong>
+                  This extends to GlassPass and Etsy just message me.
                 </span>
                 <br />
                 <span style={{ display: 'block', textAlign: 'left' }}>
-                  {' '}
                   After the sign up special ends, all new work will be discounted for 2 weeks after
                   it&apos;s posted.
                 </span>
               </span>
+
               <div className="new-work-content">
                 {recentPosts.length > 0 ? (
                   recentPosts.map((post) => (
@@ -272,20 +269,19 @@ export default function Account() {
                       className="recent-post-card"
                       onClick={() => handleClickNewWork(post.id)}
                     >
-                      {' '}
                       <div className="recent-post-image-title-wrapper">
-                        {' '}
                         <img src={post.image_url} alt={post.title} className="recent-post-image" />
                       </div>
+
                       <div className="recent-post-details">
                         <p>
-                          <span>Category: </span>
+                          <span>Category:</span>
                           <span>{post.category}</span>
                         </p>
+
                         <p>
-                          <span>Price:</span>{' '}
+                          <span>Price:</span>
                           <span style={{ fontWeight: '600' }}>
-                            {' '}
                             <span
                               style={{
                                 color: 'red',
@@ -305,10 +301,7 @@ export default function Account() {
                     </div>
                   ))
                 ) : (
-                  <p style={{ margin: '1rem' }}>
-                    No new work right now! Check back regularly, I&apos;m always working on stocking
-                    up.{' '}
-                  </p>
+                  <p style={{ margin: '1rem' }}>No new work right now! Check back regularly.</p>
                 )}
               </div>
             </div>
