@@ -318,6 +318,34 @@ div {
   transform: translateY(1px);
 }
 
+.account-tabs-container {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.account-tabs {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.account-tabs-indicator {
+  background-color: green;
+  height: 3px;
+}
+
+.account-tab {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  text-transform: none;
+}
+
+.account-tab.Mui-selected {
+  color: white;
+}
+
+.account-tab:hover {
+  color: yellow;
+}
+
 /* 
 
 ^ responsive css below =============================================
