@@ -115,6 +115,7 @@ export default function AdminSales() {
                       key={sale.id}
                       className={`sales-item ${selectedSale === sale.id ? 'selected' : ''}`}
                       onClick={() => handleSelectSale(sale.id)}
+                      style={{ border: !sale.is_paid && '1px solid yellow' }}
                     >
                       <div className="sales-item-img-wrapper">
                         <img
@@ -209,33 +210,35 @@ export default function AdminSales() {
                 <div className="sales-detail">
                   <img src={currentSale.image_url} alt="Piece" className="sales-detail-img" />
 
-                  <div className="tracking-link">
-                    <a
-                      href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
-                        currentSale.tracking_number
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`View tracking for ${currentSale.post_title}`}
-                    >
-                      <img
-                        alt="USPS"
-                        className="auction-result-thumb"
-                        style={{ width: '50px', height: '50px', margin: '.5rem 0 0 .25rem' }}
-                        src="../../../usps.png"
-                      />
-                    </a>
+                  {currentSale.tracking_number && currentSale.tracking_number !== '0' && (
+                    <div className="tracking-link">
+                      <a
+                        href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
+                          currentSale.tracking_number
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`View tracking for ${currentSale.post_title}`}
+                      >
+                        <img
+                          alt="USPS"
+                          className="auction-result-thumb"
+                          style={{ width: '50px', height: '50px', margin: '.5rem 0 0 .25rem' }}
+                          src="../../../usps.png"
+                        />
+                      </a>
 
-                    <p
-                      style={{ textAlign: 'left' }}
-                      onClick={() => handleTrackingClick(currentSale.tracking_number)}
-                    >
-                      <span style={{ display: 'block', position: 'relative', right: '50%' }}>
-                        Tracking number:
-                      </span>
-                      <span style={{ display: 'block' }}>{currentSale.tracking_number}</span>
-                    </p>
-                  </div>
+                      <p
+                        style={{ textAlign: 'left' }}
+                        onClick={() => handleTrackingClick(currentSale.tracking_number)}
+                      >
+                        <span style={{ display: 'block', position: 'relative', right: '50%' }}>
+                          Tracking number:
+                        </span>
+                        <span style={{ display: 'block' }}>{currentSale.tracking_number}</span>
+                      </p>
+                    </div>
+                  )}
 
                   {/* PAID STATUS + TOGGLE */}
                   <div className="sales-paid-status">
