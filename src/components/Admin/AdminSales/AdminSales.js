@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import './AdminSales.css';
 import {
   getAllSales,
@@ -48,22 +49,42 @@ export default function AdminSales() {
 
   // handle saving tracking number
   const handleSaveTracking = async () => {
-    await updateSaleTracking(selectedSale, trackingInput);
-    await loadSales();
+    try {
+      await updateSaleTracking(selectedSale, trackingInput);
+      await loadSales();
+    } catch (e) {
+      toast.error(`${e.message}` || 'Error updating tracking number', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'admin-sales-tracking-1',
+        autoClose: 3000,
+      });
+    }
   };
 
   // handle creating a new sale
   const handleCreateSale = async () => {
-    await createSale(newBuyerEmail, newPieceId, newPrice, newTracking);
+    try {
+      await createSale(newBuyerEmail, newPieceId, newPrice, newTracking);
 
-    // reset inputs
-    setNewBuyerEmail('');
-    setNewPieceId('');
-    setNewPrice('');
-    setNewTracking('');
+      // reset inputs
+      setNewBuyerEmail('');
+      setNewPieceId('');
+      setNewPrice('');
+      setNewTracking('');
 
-    setIsCreatingSale(false);
-    await loadSales();
+      setIsCreatingSale(false);
+      await loadSales();
+    } catch (e) {
+      toast.error(`${e.message}` || 'Error creating sale', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'admin-sales-create-1',
+        autoClose: 3000,
+      });
+    }
   };
 
   const handleTrackingClick = (trackingNumber) => {
@@ -136,8 +157,8 @@ export default function AdminSales() {
                         <div className="sales-item-meta">
                           <span>
                             <strong>{sale.buyer_first_name}</strong>{' '}
-                            {sale.buyer_last_name.length > 30
-                              ? sale.buyer_last_name.slice(0, 4) + '...'
+                            {sale.buyer_last_name?.length > 30
+                              ? sale.buyer_last_name?.slice(0, 4) + '...'
                               : sale.buyer_last_name}
                           </span>
                         </div>
@@ -248,8 +269,18 @@ export default function AdminSales() {
                       className="sale-paid-toggle-button"
                       style={{ backgroundColor: currentSale.is_paid ? 'green' : 'yellow' }}
                       onClick={async () => {
-                        await updateSalePaidStatus(currentSale.id, !currentSale.is_paid);
-                        await loadSales();
+                        try {
+                          await updateSalePaidStatus(currentSale.id, !currentSale.is_paid);
+                          await loadSales();
+                        } catch (e) {
+                          toast.error(`${e.message}` || 'Error updating payment status', {
+                            theme: 'colored',
+                            draggable: true,
+                            draggablePercent: 60,
+                            toastId: 'admin-sales-paid-1',
+                            autoClose: 3000,
+                          });
+                        }
                       }}
                     >
                       {currentSale.is_paid ? 'Mark Unpaid' : 'Mark Paid'}
@@ -259,7 +290,7 @@ export default function AdminSales() {
                   <div className="sales-detail-row">
                     <label>Buyer:</label>
                     <span>{currentSale.buyer_first_name}</span>
-                    <span>{currentSale.buyer_last_name.slice(0, 1)}.</span>
+                    <span>{currentSale.buyer_last_name?.slice(0, 1)}.</span>
                   </div>
 
                   <div className="sales-detail-row">
