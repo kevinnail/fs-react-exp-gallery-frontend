@@ -98,7 +98,7 @@ export default function UserSales({ userId }) {
                   </span>
                 )}
 
-                {sale.is_paid && !sale.tracking_number && (
+                {sale.is_paid && sale.tracking_number === '0' && (
                   <span
                     style={{
                       color: 'yellow',
@@ -112,8 +112,7 @@ export default function UserSales({ userId }) {
                     Paid - Shipping Soon
                   </span>
                 )}
-
-                {sale.tracking_number && (
+                {sale.tracking_number && sale.tracking_number !== '0' && (
                   <span
                     style={{
                       color: 'green',
