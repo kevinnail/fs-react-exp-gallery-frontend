@@ -211,31 +211,26 @@ export default function AdminSales() {
                   <img src={currentSale.image_url} alt="Piece" className="sales-detail-img" />
 
                   {currentSale.tracking_number && currentSale.tracking_number !== '0' && (
-                    <div className="tracking-link">
-                      <a
-                        href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
-                          currentSale.tracking_number
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`View tracking for ${currentSale.post_title}`}
-                      >
-                        <img
-                          alt="USPS"
-                          className="auction-result-thumb"
-                          style={{ width: '50px', height: '50px', margin: '.5rem 0 0 .25rem' }}
-                          src="../../../usps.png"
-                        />
-                      </a>
+                    <div
+                      className="tracking-link"
+                      onClick={() => handleTrackingClick(currentSale.tracking_number)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleTrackingClick(currentSale.tracking_number);
+                      }}
+                    >
+                      <img
+                        alt="USPS"
+                        className="auction-result-thumb"
+                        style={{ width: '50px', height: '50px', margin: '.5rem 0 0 .25rem' }}
+                        src="../../../usps.png"
+                      />
 
-                      <p
-                        style={{ textAlign: 'left' }}
-                        onClick={() => handleTrackingClick(currentSale.tracking_number)}
-                      >
-                        <span style={{ display: 'block', position: 'relative', right: '50%' }}>
-                          Tracking number:
-                        </span>
-                        <span style={{ display: 'block' }}>{currentSale.tracking_number}</span>
+                      <p style={{ textAlign: 'left', margin: 0 }}>
+                        <span>Tracking number:</span>
+                        <br />
+                        <span>{currentSale.tracking_number}</span>
                       </p>
                     </div>
                   )}
