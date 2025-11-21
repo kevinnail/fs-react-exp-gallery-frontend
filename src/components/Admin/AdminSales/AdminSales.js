@@ -100,6 +100,24 @@ export default function AdminSales() {
   // the one new refactor line
   const currentSale = selectedSale ? sales.find((s) => s.id === selectedSale) : null;
 
+  // Helper function to determine border color based on payment and shipping status
+  const getSaleBorderColor = (sale) => {
+    // Not paid and no tracking = red
+    if (!sale.is_paid && (!sale.tracking_number || sale.tracking_number === '0')) {
+      return 'red';
+    }
+    // Paid but no tracking = yellow
+    if (sale.is_paid && (!sale.tracking_number || sale.tracking_number === '0')) {
+      return 'yellow';
+    }
+    // Paid and has tracking = green
+    if (sale.is_paid && sale.tracking_number && sale.tracking_number !== '0') {
+      return 'green';
+    }
+    // Default fallback
+    return '#333';
+  };
+
   return (
     <div className="admin-sales-wrapper">
       <div className="admin-sales-container">
@@ -136,7 +154,7 @@ export default function AdminSales() {
                       key={sale.id}
                       className={`sales-item ${selectedSale === sale.id ? 'selected' : ''}`}
                       onClick={() => handleSelectSale(sale.id)}
-                      style={{ border: !sale.is_paid && '1px solid yellow' }}
+                      style={{ border: `2px solid ${getSaleBorderColor(sale)}` }}
                     >
                       <div className="sales-item-img-wrapper">
                         <img
@@ -267,7 +285,10 @@ export default function AdminSales() {
 
                     <button
                       className="sale-paid-toggle-button"
-                      style={{ backgroundColor: currentSale.is_paid ? 'green' : 'yellow' }}
+                      style={{
+                        border: '1px solid',
+                        borderColor: currentSale.is_paid ? 'green' : 'yellow',
+                      }}
                       onClick={async () => {
                         try {
                           await updateSalePaidStatus(currentSale.id, !currentSale.is_paid);
