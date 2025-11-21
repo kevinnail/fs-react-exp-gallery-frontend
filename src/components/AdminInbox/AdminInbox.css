@@ -187,6 +187,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .messages-list {
@@ -194,12 +195,14 @@
   padding: 0.5rem;
   overflow-y: auto;
   max-height: 400px;
+  min-width: 0;
 }
 
 .admin-message-item {
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .message-avatar {
@@ -281,6 +284,7 @@
   font-size: 1rem;
   line-height: 1.4;
   white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 /* Enhanced styles for piece metadata in messages */

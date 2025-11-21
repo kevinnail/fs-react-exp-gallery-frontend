@@ -196,26 +196,27 @@ export default function UserAuctions({ userId }) {
           </span>
         )}
         {auction.trackingNumber && (
-          <div className="tracking-link">
-            <a
-              href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
-                auction.trackingNumber
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`View tracking for ${auction.title}`}
-            >
-              <img
-                alt="USPS"
-                className="auction-result-thumb"
-                style={{ width: '50px', height: '50px', margin: '.5rem 0 0 .25rem' }}
-                src="../../../usps.png"
-              />
-            </a>
-            <p
-              style={{ textAlign: 'left' }}
-              onClick={() => handleTrackingClick(auction.trackingNumber)}
-            >
+          <div
+            className="tracking-link"
+            onClick={() => handleTrackingClick(auction.trackingNumber)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleTrackingClick(auction.trackingNumber);
+            }}
+          >
+            <img
+              alt="USPS"
+              className="auction-result-thumb"
+              style={{
+                width: '50px',
+                height: '50px',
+                margin: '.5rem 0 0 .25rem',
+              }}
+              src="../../../usps.png"
+            />
+
+            <p style={{ textAlign: 'left', margin: 0 }}>
               <span>Tracking number: </span>
               <span>{auction.trackingNumber}</span>
             </p>

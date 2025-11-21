@@ -10,6 +10,9 @@ import './Account.css';
 import { useProfileStore } from '../../stores/profileStore.js';
 import { Link, useNavigate } from 'react-router-dom';
 import UserAuctions from './UserAuctions.js';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import UserSales from './UserSales/UserSales.js';
 
 export default function Account() {
   const { user } = useUserStore();
@@ -18,6 +21,12 @@ export default function Account() {
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
   const navigate = useNavigate();
+
+  const [tab, setTab] = useState(0);
+
+  const handleTabChange = (e, newValue) => {
+    setTab(newValue);
+  };
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -217,76 +226,88 @@ export default function Account() {
           )}
         </div>
 
-        <div className="profile-dashboard-wide">
-          <UserAuctions userId={user?.id} />
-          <div
-            className="new-work-section"
-            style={{ border: '1px solid white', paddingTop: '.5rem', margin: '1rem 0' }}
-          >
-            <span className="new-work-msg">
-              <span style={{ display: 'block', textAlign: 'center' }}>
-                <strong>Current Special:</strong>{' '}
+        <Tabs
+          value={tab}
+          onChange={handleTabChange}
+          className="account-tabs"
+          TabIndicatorProps={{ className: 'account-tabs-indicator' }}
+        >
+          <Tab className="account-tab" label="Specials" />
+          <Tab className="account-tab" label="Auctions" />
+          <Tab className="account-tab" label="Purchases" />
+        </Tabs>
+
+        {/*  */}
+        {/*  */}
+
+        {/*  */}
+        {/*  */}
+        <div className="tab-content-wrapper">
+          {tab === 0 && (
+            <div className="new-work-section">
+              <span className="new-work-msg">
+                <span style={{ display: 'block', textAlign: 'center' }}>
+                  <strong>Current Special:</strong>
+                </span>
+                <span style={{ display: 'block', textAlign: 'left' }}>
+                  <strong>50% OFF</strong> of the new work for all new sign ups
+                  <strong style={{ color: 'yellow' }}> until the end of November!</strong>
+                  This extends to GlassPass and Etsy just message me.
+                </span>
+                <br />
+                <span style={{ display: 'block', textAlign: 'left' }}>
+                  After the sign up special ends, all new work will be discounted for 2 weeks after
+                  it&apos;s posted.
+                </span>
               </span>
-              <span style={{ display: 'block', textAlign: 'left' }}>
-                <strong>50% OFF</strong> of the new work for all new sign ups{' '}
-                <strong style={{ color: 'yellow' }}>until the end of November! </strong>This extends
-                to GlassPass and Etsy just message me and I&apos;ll get it taken care of.
-              </span>
-              <br />
-              <span style={{ display: 'block', textAlign: 'left' }}>
-                {' '}
-                After the sign up special ends, all new work will be discounted for 2 weeks after
-                it&apos;s posted.
-              </span>
-            </span>
-            <div className="new-work-content">
-              {recentPosts.length > 0 ? (
-                recentPosts.map((post) => (
-                  <div
-                    key={post.id}
-                    className="recent-post-card"
-                    onClick={() => handleClickNewWork(post.id)}
-                  >
-                    {' '}
-                    <div className="recent-post-image-title-wrapper">
-                      {' '}
-                      <img src={post.image_url} alt={post.title} className="recent-post-image" />
-                    </div>
-                    <div className="recent-post-details">
-                      <p>
-                        <span>Category: </span>
-                        <span>{post.category}</span>
-                      </p>
-                      <p>
-                        <span>Price:</span>{' '}
-                        <span style={{ fontWeight: '600' }}>
-                          {' '}
-                          <span
-                            style={{
-                              color: 'red',
-                              textDecoration: 'line-through',
-                              marginRight: '1rem',
-                            }}
-                          >
-                            {post.price ? `$${post.price}` : 'N/A'}
+
+              <div className="new-work-content">
+                {recentPosts.length > 0 ? (
+                  recentPosts.map((post) => (
+                    <div
+                      key={post.id}
+                      className="recent-post-card"
+                      onClick={() => handleClickNewWork(post.id)}
+                    >
+                      <div className="recent-post-image-title-wrapper">
+                        <img src={post.image_url} alt={post.title} className="recent-post-image" />
+                      </div>
+
+                      <div className="recent-post-details">
+                        <p>
+                          <span>Category:</span>
+                          <span>{post.category}</span>
+                        </p>
+
+                        <p>
+                          <span>Price:</span>
+                          <span style={{ fontWeight: '600' }}>
+                            <span
+                              style={{
+                                color: 'red',
+                                textDecoration: 'line-through',
+                                marginRight: '1rem',
+                              }}
+                            >
+                              {post.price ? `$${post.price}` : 'N/A'}
+                            </span>
+                            <i className="fa fa-arrow-right" aria-hidden="true"></i>
+                            <span style={{ marginLeft: '.25rem' }}>
+                              ${(post.price * 0.7).toFixed(0)}
+                            </span>
                           </span>
-                          <i className="fa fa-arrow-right" aria-hidden="true"></i>
-                          <span style={{ marginLeft: '.25rem' }}>
-                            ${(post.price * 0.7).toFixed(0)}
-                          </span>
-                        </span>
-                      </p>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <p style={{ margin: '1rem' }}>
-                  No new work right now! Check back regularly, I&apos;m always working on stocking
-                  up.{' '}
-                </p>
-              )}
+                  ))
+                ) : (
+                  <p style={{ margin: '1rem' }}>No new work right now! Check back regularly.</p>
+                )}
+              </div>
             </div>
-          </div>
+          )}
+          {tab === 1 && <UserAuctions userId={user?.id} />}
+          {tab === 2 && <UserSales userId={user?.id} />}
         </div>
       </div>
 

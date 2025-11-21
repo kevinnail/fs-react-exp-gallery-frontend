@@ -30,6 +30,7 @@ import AuctionArchive from './components/AuctionArchive/AuctionArchive.js';
 import { useProfileStore } from './stores/profileStore.js';
 import { useMessaging } from './hooks/useWebSocket.js';
 import { getMyMessages } from './services/fetch-messages.js';
+import AdminSales from './components/Admin/AdminSales/AdminSales.js';
 
 const mainTheme = createTheme({
   palette: {
@@ -254,6 +255,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <UserDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/sales"
+              element={
+                <ProtectedRoute>
+                  <AdminSales />
                 </ProtectedRoute>
               }
             />

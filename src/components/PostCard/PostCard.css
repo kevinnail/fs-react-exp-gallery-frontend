@@ -23,7 +23,6 @@ body {
 }
 
 .admin-panel {
-  border: 2px solid #00000083;
   height: 100%;
   box-sizing: border-box;
 }
@@ -273,7 +272,7 @@ body {
     padding: 0 0rem;
     background-color: black;
     background-color: #00000083;
-    border: 2px solid #2f00ff83;
+    border: 1px solid #0026a153;
     height: 100%;
     box-sizing: border-box;
     margin-top: 50px;

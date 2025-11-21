@@ -210,7 +210,7 @@ div {
   margin: 0 auto;
   text-align: center;
   color: white;
-  margin: 0 0 0.5rem 0;
+  margin: 0 auto 0.5rem auto;
   font-weight: 600;
   border: 1px solid white;
   padding: 0.5rem 1rem;
@@ -316,6 +316,34 @@ div {
 
 .got-it-button:active {
   transform: translateY(1px);
+}
+
+.account-tabs-container {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.account-tabs {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.account-tabs-indicator {
+  background-color: green;
+  height: 3px;
+}
+
+.account-tab {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  text-transform: none;
+}
+
+.account-tab.Mui-selected {
+  color: white;
+}
+
+.account-tab:hover {
+  color: yellow;
 }
 
 /* 
