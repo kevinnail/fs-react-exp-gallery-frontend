@@ -1,0 +1,68 @@
+.user-sales-widget {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border: 1px solid white;
+  color: white;
+  background-color: black;
+  text-align: left;
+}
+
+.user-sales-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.user-sales-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.2s ease;
+}
+
+.user-sales-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.user-sales-info {
+  padding: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sales-card-p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.empty-msg {
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.tracking-link {
+  padding: 4px 20px 4px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  border: 1px solid green;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-sales-grid {
+    grid-template-columns: 1fr;
+  }
+}
