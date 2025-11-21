@@ -28,6 +28,9 @@ export async function getAllSales() {
 
 export async function updateSaleTracking(postId, trackingNumber) {
   try {
+    if (!trackingNumber) {
+      trackingNumber = '0';
+    }
     const resp = await fetch(`${BASE_URL}/api/v1/admin/${postId}/tracking`, {
       method: 'PUT',
       headers: {
@@ -72,9 +75,9 @@ export async function updateSalePaidStatus(id, isPaid) {
   }
 }
 
-export async function getUserSales(userId) {
+export async function getUserSales() {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/sales/user/${userId}`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/user-sales`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
