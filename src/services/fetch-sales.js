@@ -71,3 +71,23 @@ export async function updateSalePaidStatus(id, isPaid) {
     throw err;
   }
 }
+
+export async function getUserSales(userId) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/sales/user/${userId}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.message || 'Failed to fetch user sales');
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
