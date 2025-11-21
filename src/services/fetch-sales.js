@@ -1,6 +1,32 @@
 const BASE_URL = process.env.REACT_APP_HOME_URL;
 
-export async function createSale() {}
+export async function createSale(buyerEmail, postId, price, tracking) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/admin/sales`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        buyerEmail,
+        postId,
+        price,
+        tracking,
+      }),
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok) throw new Error(data.message || 'Failed to create sale');
+
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
 
 export async function getAllSales() {
   try {
