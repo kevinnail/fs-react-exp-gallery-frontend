@@ -12,7 +12,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import UserAuctions from './UserAuctions.js';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
 import UserSales from './UserSales/UserSales.js';
 
 export default function Account() {
