@@ -69,10 +69,10 @@ export default function UserSales({ userId }) {
               }}
             >
               {/* IMAGE */}
-              {sale.image_url ? (
+              {sale.post_image_url ? (
                 <img
                   onClick={() => handlePieceNav(sale.post_id)}
-                  src={sale.image_url}
+                  src={sale.post_image_url}
                   alt={sale.post_title}
                   className="user-sales-img"
                 />
@@ -128,8 +128,37 @@ export default function UserSales({ userId }) {
                   </span>
                 )}
 
+                {/* TRACKING */}
+                {sale.tracking_number && sale.tracking_number !== '0' && (
+                  <div
+                    className="tracking-link"
+                    onClick={() => handleTrackingClick(sale.tracking_number)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleTrackingClick(sale.tracking_number);
+                    }}
+                  >
+                    <img
+                      alt="USPS"
+                      className="auction-result-thumb"
+                      style={{
+                        width: '50px',
+                        height: '50px',
+                        margin: '.5rem 0 0 .25rem',
+                      }}
+                      src="../../../usps.png"
+                    />
+
+                    <p style={{ textAlign: 'left', margin: 0 }}>
+                      <span>Tracking number: </span>
+                      <span>{sale.tracking_number}</span>
+                    </p>
+                  </div>
+                )}
+
                 {/* Title */}
-                <h4>{sale.post_title}</h4>
+                <h4 style={{ margin: '.5rem 0 0 0' }}>{sale.post_title}</h4>
 
                 {/* Price */}
                 <p className="sales-card-p">
@@ -148,38 +177,6 @@ export default function UserSales({ userId }) {
                       minute: '2-digit',
                     })}
                   </p>
-                )}
-
-                {/* TRACKING */}
-                {sale.tracking_number && (
-                  <div className="tracking-link">
-                    <a
-                      href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
-                        sale.tracking_number
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`View tracking for ${sale.post_title}`}
-                    >
-                      <img
-                        alt="USPS"
-                        className="auction-result-thumb"
-                        style={{
-                          width: '50px',
-                          height: '50px',
-                          margin: '.5rem 0 0 .25rem',
-                        }}
-                        src="../../../usps.png"
-                      />
-                    </a>
-                    <p
-                      style={{ textAlign: 'left' }}
-                      onClick={() => handleTrackingClick(sale.tracking_number)}
-                    >
-                      <span>Tracking number: </span>
-                      <span>{sale.tracking_number}</span>
-                    </p>
-                  </div>
                 )}
               </div>
             </div>
