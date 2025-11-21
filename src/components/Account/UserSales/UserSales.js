@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './UserSales.css';
 import { getUserSales } from '../../../services/fetch-sales.js';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function UserSales({ userId }) {
   const [sales, setSales] = useState([]);
@@ -15,8 +16,15 @@ export default function UserSales({ userId }) {
       try {
         const data = await getUserSales(userId);
         setSales(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error('Error loading user sales:', err);
+      } catch (e) {
+        console.error('Error loading user sales:', e);
+        toast.error(`${e.message}` || 'Error loading your purchases', {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'user-sales-1',
+          autoClose: 3000,
+        });
       } finally {
         setLoading(false);
       }
@@ -97,21 +105,21 @@ export default function UserSales({ userId }) {
                     Payment Needed
                   </span>
                 )}
-
-                {sale.is_paid && sale.tracking_number === '0' && (
-                  <span
-                    style={{
-                      color: 'yellow',
-                      padding: '2px 6px',
-                      borderRadius: '4px',
-                      fontSize: '1rem',
-                      fontWeight: 'bold',
-                      marginRight: '3rem',
-                    }}
-                  >
-                    Paid - Shipping Soon
-                  </span>
-                )}
+                {(sale.is_paid && sale.tracking_number === '0') ||
+                  (sale.tracking_number === null && (
+                    <span
+                      style={{
+                        color: 'yellow',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontSize: '1rem',
+                        fontWeight: 'bold',
+                        marginRight: '3rem',
+                      }}
+                    >
+                      Paid - Shipping Soon
+                    </span>
+                  ))}
                 {sale.tracking_number && sale.tracking_number !== '0' && (
                   <span
                     style={{
