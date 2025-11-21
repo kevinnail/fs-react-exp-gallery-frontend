@@ -90,6 +90,7 @@
 
 .sales-item.selected {
   border-color: #2f00ff83;
+  background-color: #333;
 }
 
 .sales-item-header {
