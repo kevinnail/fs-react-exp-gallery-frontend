@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import './AdminSales.css';
 import {
   getAllSales,
@@ -48,22 +49,42 @@ export default function AdminSales() {
 
   // handle saving tracking number
   const handleSaveTracking = async () => {
-    await updateSaleTracking(selectedSale, trackingInput);
-    await loadSales();
+    try {
+      await updateSaleTracking(selectedSale, trackingInput);
+      await loadSales();
+    } catch (e) {
+      toast.error(`${e.message}` || 'Error updating tracking number', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'admin-sales-tracking-1',
+        autoClose: 3000,
+      });
+    }
   };
 
   // handle creating a new sale
   const handleCreateSale = async () => {
-    await createSale(newBuyerEmail, newPieceId, newPrice, newTracking);
+    try {
+      await createSale(newBuyerEmail, newPieceId, newPrice, newTracking);
 
-    // reset inputs
-    setNewBuyerEmail('');
-    setNewPieceId('');
-    setNewPrice('');
-    setNewTracking('');
+      // reset inputs
+      setNewBuyerEmail('');
+      setNewPieceId('');
+      setNewPrice('');
+      setNewTracking('');
 
-    setIsCreatingSale(false);
-    await loadSales();
+      setIsCreatingSale(false);
+      await loadSales();
+    } catch (e) {
+      toast.error(`${e.message}` || 'Error creating sale', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'admin-sales-create-1',
+        autoClose: 3000,
+      });
+    }
   };
 
   const handleTrackingClick = (trackingNumber) => {
@@ -78,6 +99,24 @@ export default function AdminSales() {
 
   // the one new refactor line
   const currentSale = selectedSale ? sales.find((s) => s.id === selectedSale) : null;
+
+  // Helper function to determine border color based on payment and shipping status
+  const getSaleBorderColor = (sale) => {
+    // Not paid and no tracking = red
+    if (!sale.is_paid && (!sale.tracking_number || sale.tracking_number === '0')) {
+      return 'red';
+    }
+    // Paid but no tracking = yellow
+    if (sale.is_paid && (!sale.tracking_number || sale.tracking_number === '0')) {
+      return 'yellow';
+    }
+    // Paid and has tracking = green
+    if (sale.is_paid && sale.tracking_number && sale.tracking_number !== '0') {
+      return 'green';
+    }
+    // Default fallback
+    return '#333';
+  };
 
   return (
     <div className="admin-sales-wrapper">
@@ -115,7 +154,7 @@ export default function AdminSales() {
                       key={sale.id}
                       className={`sales-item ${selectedSale === sale.id ? 'selected' : ''}`}
                       onClick={() => handleSelectSale(sale.id)}
-                      style={{ border: !sale.is_paid && '1px solid yellow' }}
+                      style={{ border: `2px solid ${getSaleBorderColor(sale)}` }}
                     >
                       <div className="sales-item-img-wrapper">
                         <img
@@ -136,8 +175,8 @@ export default function AdminSales() {
                         <div className="sales-item-meta">
                           <span>
                             <strong>{sale.buyer_first_name}</strong>{' '}
-                            {sale.buyer_last_name.length > 30
-                              ? sale.buyer_last_name.slice(0, 4) + '...'
+                            {sale.buyer_last_name?.length > 30
+                              ? sale.buyer_last_name?.slice(0, 4) + '...'
                               : sale.buyer_last_name}
                           </span>
                         </div>
@@ -246,10 +285,23 @@ export default function AdminSales() {
 
                     <button
                       className="sale-paid-toggle-button"
-                      style={{ backgroundColor: currentSale.is_paid ? 'green' : 'yellow' }}
+                      style={{
+                        border: '1px solid',
+                        borderColor: currentSale.is_paid ? 'green' : 'yellow',
+                      }}
                       onClick={async () => {
-                        await updateSalePaidStatus(currentSale.id, !currentSale.is_paid);
-                        await loadSales();
+                        try {
+                          await updateSalePaidStatus(currentSale.id, !currentSale.is_paid);
+                          await loadSales();
+                        } catch (e) {
+                          toast.error(`${e.message}` || 'Error updating payment status', {
+                            theme: 'colored',
+                            draggable: true,
+                            draggablePercent: 60,
+                            toastId: 'admin-sales-paid-1',
+                            autoClose: 3000,
+                          });
+                        }
                       }}
                     >
                       {currentSale.is_paid ? 'Mark Unpaid' : 'Mark Paid'}
@@ -259,7 +311,7 @@ export default function AdminSales() {
                   <div className="sales-detail-row">
                     <label>Buyer:</label>
                     <span>{currentSale.buyer_first_name}</span>
-                    <span>{currentSale.buyer_last_name.slice(0, 1)}.</span>
+                    <span>{currentSale.buyer_last_name?.slice(0, 1)}.</span>
                   </div>
 
                   <div className="sales-detail-row">

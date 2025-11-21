@@ -194,21 +194,34 @@
   color: black;
 }
 
-.sale-paid-toggle-button {
-  border: 1px solid #0022aa;
-  padding: 0.4rem 0.9rem;
-  cursor: pointer;
-  /* border-radius: 6px; */
-  font-size: 0.85rem;
+.sale-paid-toggle-button,
+.save-tracking-button,
+.add-sale-button {
   transition: background 0.15s;
+  max-width: 150px;
+  padding: 4px 8px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-size: 0.8rem;
+  width: 40%;
+  border-width: 1px;
+  border-style: solid;
 }
 
-.sale-paid-toggle-button:hover {
-  background: #0033cc;
+.sale-paid-toggle-button:hover,
+.save-tracking-button:hover,
+.add-sale-button:hover {
+  background-color: darkgreen;
 }
 
-.sale-paid-toggle-button:active {
-  background: #002a9a;
+.sale-paid-toggle-button:active,
+.save-tracking-button:active,
+.add-sale-button:active {
+  background-color: rgb(0, 47, 0);
+  border-color: #555;
 }
 
 /* 
