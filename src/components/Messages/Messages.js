@@ -143,7 +143,7 @@ export default function Messages() {
 
       // Always include piece metadata if available (for both new conversations and replies)
       if (pieceMetadata) {
-        messageToSend = `${newMessage}\n\n---\nAbout this piece: ${pieceMetadata.title} (${pieceMetadata.category}) - $${pieceMetadata.price}\nView: ${pieceMetadata.url}\nImage: ${pieceMetadata.imageUrl}`;
+        messageToSend = `${newMessage}\n\n---\nAbout this piece: ${pieceMetadata.title} (${pieceMetadata.category}) - $${pieceMetadata.price} | discounted: $${pieceMetadata.discountedPrice}\nView: ${pieceMetadata.url}\nImage: ${pieceMetadata.imageUrl}`;
       }
 
       if (conversationId) {
@@ -225,11 +225,26 @@ export default function Messages() {
 
   const renderMessageWithPieceMetadata = (messageContent) => {
     // Check if message contains piece metadata
-    const pieceMetadataMatch = messageContent.match(
-      /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
+    // Try new format first (with discounted price)
+    let pieceMetadataMatch = messageContent.match(
+      /About this piece: (.+?) \(([^)]+)\) - \$(.+?) \| discounted: \$(.+?)\nView: (.+)/
     );
+    // Fallback for legacy messages without discounted price
+    if (!pieceMetadataMatch) {
+      pieceMetadataMatch = messageContent.match(
+        /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
+      );
+    }
+
     if (pieceMetadataMatch) {
-      const [, title, category, price, url] = pieceMetadataMatch;
+      const [, title, category, price, discountedPriceOrUrl, maybeUrl] = pieceMetadataMatch;
+
+      // If legacy format, discountedPriceOrUrl is actually the URL
+      const isLegacy = !maybeUrl;
+      const discounted = isLegacy ? null : discountedPriceOrUrl;
+      const url = isLegacy ? discountedPriceOrUrl : maybeUrl;
+
+      // extract imageUrl the same way you already do
 
       // Extract imageUrl from message content
       const imageMatch = messageContent.match(/Image: (.+)/);
@@ -253,8 +268,9 @@ export default function Messages() {
               <span>Category:</span> {category}
             </p>
             <p>
-              <span>Price:</span> ${price}
+              <span>Price:</span> {renderSalePrice(price, discounted)}
             </p>
+
             <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
               View piece
             </a>
@@ -264,6 +280,31 @@ export default function Messages() {
     }
 
     return <p>{messageContent}</p>;
+  };
+
+  const renderSalePrice = (price, discountedPrice) => {
+    const numPrice = Number(price);
+    const numDiscount = Number(discountedPrice);
+
+    if (discountedPrice && numDiscount < numPrice) {
+      return (
+        <>
+          <span className="detail-on-sale">ON SALE! </span>
+          <span
+            style={{
+              textDecoration: 'line-through',
+              marginRight: '10px',
+              color: 'red',
+            }}
+          >
+            ${numPrice.toFixed(2)}
+          </span>
+          <span>${numDiscount.toFixed(2)}</span>
+        </>
+      );
+    }
+
+    return <span>${numPrice.toFixed(2)}</span>;
   };
 
   return (
@@ -351,8 +392,10 @@ export default function Messages() {
                   <strong>Category:</strong> {pieceMetadata.category}
                 </p>
                 <p>
-                  <strong>Price:</strong> ${pieceMetadata.price}
+                  <strong>Price:</strong>{' '}
+                  {renderSalePrice(pieceMetadata.price, pieceMetadata.discountedPrice)}
                 </p>
+
                 <a href={pieceMetadata.url} target="_blank" rel="noopener noreferrer">
                   View piece details →
                 </a>

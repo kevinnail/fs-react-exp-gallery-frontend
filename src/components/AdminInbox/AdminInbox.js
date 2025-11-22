@@ -252,18 +252,48 @@ export default function AdminInbox() {
       return <p>[Message unavailable]</p>;
     }
     // Check if message contains piece metadata
-    const pieceMetadataMatch = messageContent.match(
-      /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
+    // Try new format first (with discounted price)
+    let pieceMetadataMatch = messageContent.match(
+      /About this piece: (.+?) \(([^)]+)\) - \$(.+?) \| discounted: \$(.+?)\nView: (.+)/
     );
+    // Fallback for legacy messages without discounted price
+    if (!pieceMetadataMatch) {
+      pieceMetadataMatch = messageContent.match(
+        /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
+      );
+    }
     if (pieceMetadataMatch) {
-      const [, title, category, price, url] = pieceMetadataMatch;
+      const [, title, category, price, discountedPrice, url] = pieceMetadataMatch;
 
       // Extract imageUrl from message content
       const imageMatch = messageContent.match(/Image: (.+)/);
       const imageUrl = imageMatch ? imageMatch[1] : null;
 
       const mainMessage = messageContent.split('\n\n---\n')[0];
+      const renderSalePrice = (price, discountedPrice) => {
+        const numPrice = Number(price);
+        const numDiscount = Number(discountedPrice);
 
+        if (discountedPrice && numDiscount < numPrice) {
+          return (
+            <>
+              <span className="detail-on-sale">ON SALE! </span>
+              <span
+                style={{
+                  textDecoration: 'line-through',
+                  marginRight: '10px',
+                  color: 'red',
+                }}
+              >
+                ${numPrice.toFixed(2)}
+              </span>
+              <span>${numDiscount.toFixed(2)}</span>
+            </>
+          );
+        }
+
+        return <span>${numPrice.toFixed(2)}</span>;
+      };
       return (
         <>
           <p>{mainMessage}</p>
@@ -280,7 +310,7 @@ export default function AdminInbox() {
               <span>Category:</span> {category}
             </p>
             <p>
-              <span>Price:</span> ${price}
+              <span>Price:</span> {renderSalePrice(price, discountedPrice)}
             </p>
             <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
               View piece

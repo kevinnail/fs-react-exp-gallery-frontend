@@ -101,6 +101,7 @@ export default function MainPostDetail() {
                     title: postDetail?.title,
                     category: postDetail?.category,
                     price: postDetail?.price,
+                    discountedPrice: postDetail?.discountedPrice,
                     imageUrl: imageUrls?.[0],
                     url: window.location.href,
                   },
