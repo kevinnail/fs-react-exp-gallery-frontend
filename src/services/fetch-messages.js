@@ -87,6 +87,7 @@ export async function getConversations() {
     });
 
     const data = await resp.json();
+
     if (resp.ok) {
       return data;
     } else {

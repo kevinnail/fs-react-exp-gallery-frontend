@@ -125,10 +125,20 @@
   /* justify-content: space-between; */
 }
 
-.sender-email {
+.sender-info-wrapper {
+  display: grid;
+}
+
+.sender-name {
   color: white;
   font-weight: 500;
   font-size: 1rem;
+}
+
+.sender-email {
+  color: white;
+  font-weight: 500;
+  font-size: 0.8rem;
 }
 
 .message-count {

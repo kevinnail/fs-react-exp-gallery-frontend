@@ -51,6 +51,7 @@ export default function AdminInbox() {
         } else {
           // Data is in message format, need to group by conversation
           const conversationMap = new Map();
+
           conversationsData.forEach((message) => {
             const convId = Number(message.conversation_id);
             if (!conversationMap.has(convId)) {
@@ -62,6 +63,8 @@ export default function AdminInbox() {
               conversationMap.set(convId, {
                 conversation_id: convId,
                 email: customerEmail,
+                firstName: message.first_name,
+                lastName: message.last_name,
                 image_url: message.image_url,
                 message_count: 0,
                 last_message_at: message.sentAt,
@@ -98,6 +101,7 @@ export default function AdminInbox() {
   const loadConversationMessages = async (conversationId) => {
     try {
       const messageData = await getConversationById(conversationId);
+
       setMessages(messageData);
       setSelectedConversation(conversationId);
 
@@ -368,7 +372,16 @@ export default function AdminInbox() {
                                 : '?'}
                             </div>
                           )}
-                          <span className="sender-email">{conversation.email}</span>
+                          <div className="sender-info-wrapper">
+                            {' '}
+                            <span className="sender-name">
+                              {conversation.first_name}{' '}
+                              <span className="sender-name">
+                                {conversation.last_name?.slice(0, 1)}
+                              </span>
+                            </span>
+                            <span className="sender-email">{conversation.email}</span>
+                          </div>
                         </div>
 
                         {conversation.unread_count > 0 && (
@@ -390,6 +403,29 @@ export default function AdminInbox() {
           <div className="messages-panel">
             {selectedConversation ? (
               <>
+                {(() => {
+                  const convo = conversations.find(
+                    (c) => Number(c.user_id) === Number(messages[0]?.userId)
+                  );
+                  return convo ? (
+                    <div
+                      style={{
+                        display: 'flex',
+                        gap: '.5rem',
+                        padding: '.5rem',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      <img
+                        src={convo.image_url}
+                        alt="Customer avatar"
+                        className="conversation-avatar"
+                      />
+                      <span>{convo.first_name}</span>
+                      <span>{convo.last_name?.slice(0, 1)}</span>
+                    </div>
+                  ) : null;
+                })()}
                 <div className="messages-list" ref={messagesListRef}>
                   {messages.map((message) => {
                     const isCustomerMessage = !message.isFromAdmin && isAdmin;
@@ -415,21 +451,18 @@ export default function AdminInbox() {
                     );
                   })}
                 </div>
-
                 {/* Typing indicator */}
                 {typingUsers.length > 0 && (
                   <div className="typing-indicator">
                     <p>Customer is typing...</p>
                   </div>
                 )}
-
                 {/* Connection status indicator */}
                 {!isConnected && (
                   <div className="connection-status">
                     <p>Connecting to real-time messaging...</p>
                   </div>
                 )}
-
                 <form onSubmit={handleSendReply} className="reply-form">
                   <div className="input-container">
                     <textarea
