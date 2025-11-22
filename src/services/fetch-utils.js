@@ -1,6 +1,15 @@
 /// urls for both local and deployed
 const BASE_URL = process.env.REACT_APP_HOME_URL;
 
+import { useUserStore } from '../stores/userStore.js';
+
+// Helper to check for auth errors and clear user state
+function checkAuthResponse(response) {
+  if (response.status === 401 || response.status === 403) {
+    useUserStore.getState().handleAuthError();
+  }
+}
+
 /* Auth related functions */
 export async function getUser() {
   try {
@@ -12,6 +21,8 @@ export async function getUser() {
       },
       credentials: 'include',
     });
+
+    checkAuthResponse(resp);
 
     if (resp.ok) {
       const user = await resp.json();
@@ -37,6 +48,8 @@ export async function getAllUsers() {
       },
       credentials: 'include',
     });
+
+    checkAuthResponse(resp);
 
     if (resp.ok) {
       const users = await resp.json();
@@ -160,6 +173,8 @@ export async function fetchUserProfile() {
       credentials: 'include',
     });
 
+    checkAuthResponse(resp);
+
     if (resp.ok) {
       const profile = await resp.json();
       return profile;
@@ -187,6 +202,9 @@ export async function fetchPosts() {
       },
       credentials: 'include',
     });
+
+    checkAuthResponse(resp);
+
     const data = await resp.json();
 
     if (resp.ok) {
@@ -287,6 +305,9 @@ export async function deleteById(post_id) {
       },
       credentials: 'include',
     });
+
+    checkAuthResponse(resp);
+
     const msg = await resp.json();
 
     return msg;
@@ -308,6 +329,9 @@ export async function updatePost(id, post) {
       body: JSON.stringify({ id, post }),
       credentials: 'include',
     });
+
+    checkAuthResponse(resp);
+
     const msg = await resp.json();
 
     return msg;
