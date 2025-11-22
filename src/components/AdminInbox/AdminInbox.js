@@ -253,14 +253,29 @@ export default function AdminInbox() {
   };
 
   const formatDate = (dateString) => {
-    const newDateString = new Date(dateString).toLocaleString([], {
-      hour: '2-digit',
-      minute: '2-digit',
+    const d = new Date(dateString);
+    const now = new Date();
+    const sameYear = d.getFullYear() === now.getFullYear();
+
+    if (sameYear) {
+      const datePart = d.toLocaleDateString([], {
+        day: 'numeric',
+        month: 'short',
+      });
+      const timePart = d.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      });
+      return `${datePart} at ${timePart}`;
+    }
+
+    const dateWithYear = d.toLocaleDateString([], {
+      day: 'numeric',
       month: 'short',
-      year: '2-digit',
+      year: 'numeric',
     });
-    const finalDateString = newDateString.replace(',', ' at  ');
-    return finalDateString;
+    return dateWithYear;
   };
 
   const renderMessageWithPieceMetadata = (messageContent) => {
