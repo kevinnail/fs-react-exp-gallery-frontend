@@ -471,7 +471,7 @@
 */
 @media (max-width: 768px) {
   .conversations-list {
-    max-height: 300px;
+    max-height: none;
   }
 
   .admin-inbox-content {
