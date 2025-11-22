@@ -35,6 +35,17 @@ export const useUserStore = create((set) => ({
     });
   },
 
+  handleAuthError: () => {
+    websocketService.disconnect?.();
+    set({
+      user: null,
+      isAdmin: false,
+      error: 'Session expired',
+      loading: false,
+      unreadMessageCount: 0,
+    });
+  },
+
   fetchUser: async () => {
     try {
       const data = await getUser();
