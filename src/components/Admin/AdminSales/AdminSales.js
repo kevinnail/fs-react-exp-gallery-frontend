@@ -171,11 +171,11 @@ export default function AdminSales() {
 
     const onSuccess = () => {
       toast.success('Address copied', {
-        theme: 'colored',
+        theme: 'dark',
         draggable: true,
         draggablePercent: 60,
         toastId: 'admin-sales-address-copied',
-        autoClose: 2500,
+        autoClose: 2000,
       });
     };
 
