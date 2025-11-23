@@ -353,7 +353,13 @@
   background: #333;
 }
 
-^================== Responsive begin ======================= */ @media (max-width: 768px) {
+/*
+
+^================== Responsive begin ======================= 
+
+*/
+
+@media (max-width: 768px) {
   .sales-layout {
     flex-direction: column;
   }
