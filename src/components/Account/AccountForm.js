@@ -38,6 +38,20 @@ export default function ProfileForm({ handleCloseForm }) {
   const addressBtnBackground = needsAttention ? '#e74c3c' : '#fffbe6';
   const addressBtnColor = needsAttention ? '#fff' : '#222';
   const addressBtnWeight = needsAttention ? 700 : 500;
+  const countries = [
+    { code: 'US', name: 'United States' },
+    { code: 'CA', name: 'Canada' },
+    { code: 'GB', name: 'United Kingdom' },
+    { code: 'AU', name: 'Australia' },
+    { code: 'DE', name: 'Germany' },
+    { code: 'FR', name: 'France' },
+    { code: 'ES', name: 'Spain' },
+    { code: 'IT', name: 'Italy' },
+    { code: 'NL', name: 'Netherlands' },
+    { code: 'SE', name: 'Sweden' },
+    { code: 'NZ', name: 'New Zealand' },
+    { code: 'JP', name: 'Japan' },
+  ];
 
   // Update form data when profile changes
   useEffect(() => {
@@ -332,15 +346,19 @@ export default function ProfileForm({ handleCloseForm }) {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="countryCode">Country Code</label>
-                  <input
-                    type="text"
+                  <label htmlFor="countryCode">Country</label>
+                  <select
                     id="countryCode"
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleInputChange}
-                    placeholder="US"
-                  />
+                  >
+                    {countries.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             )}
