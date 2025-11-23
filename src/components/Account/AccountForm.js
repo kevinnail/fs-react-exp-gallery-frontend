@@ -101,6 +101,34 @@ export default function ProfileForm({ handleCloseForm }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    // Sanitize city autocomplete that may include state (e.g. "Eugene, OR")
+    if (name === 'city') {
+      const cityStatePattern = /^(.*?),(\s*)([A-Za-z]{2})$/; // captures City, ST
+      const match = value.match(cityStatePattern);
+      if (match) {
+        const parsedCity = match[1].trim();
+        const parsedState = match[3].toUpperCase();
+        setFormData((prev) => ({
+          ...prev,
+          city: parsedCity,
+          state: prev.state ? prev.state : parsedState,
+        }));
+
+        return;
+      }
+    }
+
+    // If user manually typed state in state field with lowercase, normalize
+    if (name === 'state') {
+      const normalized = value.toUpperCase().trim();
+      // Only keep first two letters if user pasted longer region code for US
+      setFormData((prev) => ({
+        ...prev,
+        state: normalized.length > 2 ? normalized.slice(0, 2) : normalized,
+      }));
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -168,8 +196,26 @@ export default function ProfileForm({ handleCloseForm }) {
     }
   };
 
+  // Close on clicking outside modal content
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      handleCloseForm();
+    }
+  };
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'Escape') {
+        handleCloseForm();
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [handleCloseForm]);
+
   return (
-    <div className="profile-form-overlay">
+    <div className="profile-form-overlay" onClick={handleOverlayClick}>
       <div className="profile-form-container">
         <div className="profile-form-header">
           <h2>Edit Profile</h2>
@@ -299,6 +345,7 @@ export default function ProfileForm({ handleCloseForm }) {
                     value={formData.addressLine1}
                     onChange={handleInputChange}
                     placeholder="123 Main St"
+                    autoComplete="address-line1"
                   />
                 </div>
                 <div className="form-group">
@@ -310,6 +357,7 @@ export default function ProfileForm({ handleCloseForm }) {
                     value={formData.addressLine2}
                     onChange={handleInputChange}
                     placeholder="Apt, suite, etc. (optional)"
+                    autoComplete="address-line2"
                   />
                 </div>
                 <div className="form-group">
@@ -321,8 +369,10 @@ export default function ProfileForm({ handleCloseForm }) {
                     value={formData.city}
                     onChange={handleInputChange}
                     placeholder="City"
+                    autoComplete="address-level2"
                   />
                 </div>
+
                 <div className="form-group">
                   <label htmlFor="state">State</label>
                   <input
@@ -332,6 +382,7 @@ export default function ProfileForm({ handleCloseForm }) {
                     value={formData.state}
                     onChange={handleInputChange}
                     placeholder="State"
+                    autoComplete="address-level1"
                   />
                 </div>
                 <div className="form-group">
@@ -343,6 +394,7 @@ export default function ProfileForm({ handleCloseForm }) {
                     value={formData.postalCode}
                     onChange={handleInputChange}
                     placeholder="ZIP or postal code"
+                    autoComplete="postal-code"
                   />
                 </div>
                 <div className="form-group">
@@ -352,6 +404,7 @@ export default function ProfileForm({ handleCloseForm }) {
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleInputChange}
+                    autoComplete="country-name"
                   >
                     {countries.map((c) => (
                       <option key={c.code} value={c.code}>

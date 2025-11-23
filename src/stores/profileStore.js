@@ -62,7 +62,7 @@ export const useProfileStore = create((set) => ({
       set({ profile: result.profile, address: result.address, loading: false });
 
       toast.success('Profile updated successfully!', {
-        theme: 'colored',
+        theme: 'dark',
         draggable: true,
         draggablePercent: 60,
         toastId: 'profile-update',

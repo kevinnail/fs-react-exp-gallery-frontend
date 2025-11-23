@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import {
   getConversationById,
@@ -9,6 +10,7 @@ import { useMessaging } from '../../hooks/useWebSocket.js';
 import './AdminInbox.css';
 
 export default function AdminInbox() {
+  const navigate = useNavigate();
   const { isAdmin } = useUserStore();
   const {
     socket,
@@ -325,6 +327,56 @@ export default function AdminInbox() {
 
         return <span>${numPrice.toFixed(2)}</span>;
       };
+      // Try to derive the post id from the URL (last path segment)
+      let postId = null;
+      try {
+        const u = new URL(url);
+        const parts = u.pathname.split('/').filter(Boolean);
+        postId = parts[parts.length - 1] || null;
+      } catch (e) {
+        // ignore
+      }
+
+      const handleCreateSale = () => {
+        // Find current conversation's customer details
+        let customer = null;
+        if (messages && messages.length > 0) {
+          const convo = conversations.find(
+            (c) => Number(c.user_id) === Number(messages[0]?.userId)
+          );
+          if (convo) {
+            customer = {
+              id: convo.user_id,
+              email: convo.email,
+              firstName: convo.first_name,
+              lastName: convo.last_name,
+              avatar: convo.image_url,
+            };
+          }
+        }
+
+        const piece = {
+          id: postId ? Number(postId) : null,
+          title,
+          price: Number(price),
+          discountedPrice: discountedPrice ? Number(discountedPrice) : null,
+          imageUrl,
+          url,
+        };
+
+        navigate('/admin/sales', {
+          state: {
+            fromInbox: true,
+            prefill: {
+              buyerEmail: customer?.email || null,
+              user: customer,
+              piece,
+            },
+          },
+          replace: false,
+        });
+      };
+
       return (
         <>
           <p>{mainMessage}</p>
@@ -346,6 +398,9 @@ export default function AdminInbox() {
             <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
               View piece
             </a>
+            <button type="button" className="create-sale-button" onClick={handleCreateSale}>
+              Create Sale →
+            </button>
           </div>
         </>
       );
