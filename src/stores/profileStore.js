@@ -5,7 +5,7 @@ import { compressImageToJpeg } from '../services/image-compress.js';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const useProfileStore = create((set, get) => ({
+export const useProfileStore = create((set) => ({
   profile: null,
   address: null,
   error: '',

@@ -12,7 +12,7 @@ import UserSales from './UserSales/UserSales.js';
 
 export default function Account() {
   const { user } = useUserStore();
-  const { profile, setProfile, setShowWelcome, fetchUserProfile } = useProfileStore();
+  const { profile, setShowWelcome, fetchUserProfile } = useProfileStore();
 
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
