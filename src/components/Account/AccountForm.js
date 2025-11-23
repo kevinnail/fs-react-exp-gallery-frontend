@@ -1,3 +1,4 @@
+// ...existing code...
 import { useState, useEffect } from 'react';
 import './Account.css';
 import './AccountForm.css';
@@ -5,7 +6,7 @@ import { useProfileStore } from '../../stores/profileStore.js';
 import { toast } from 'react-toastify';
 
 export default function ProfileForm({ handleCloseForm }) {
-  const { updateUserProfile, profile, loading } = useProfileStore();
+  const { updateUserProfile, profile, loading, address } = useProfileStore();
 
   const [formData, setFormData] = useState({
     firstName: profile?.firstName || '',
@@ -13,22 +14,64 @@ export default function ProfileForm({ handleCloseForm }) {
     imageUrl: null,
     sendEmailNotifications:
       profile?.sendEmailNotifications !== undefined ? profile.sendEmailNotifications : true,
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    countryCode: 'US',
   });
+  const [showAddress, setShowAddress] = useState(false);
   const [previewImage, setPreviewImage] = useState(profile?.imageUrl || null);
+
+  // Helper: check if any required address field is filled
+  const requiredAddressFields = ['addressLine1', 'city', 'state', 'postalCode'];
+
+  const allAddressFieldsFilled = requiredAddressFields.every(
+    (field) => formData[field].trim() !== ''
+  );
+
+  // Also highlight when no address is provided at all
+  const needsAttention = !allAddressFieldsFilled; // true for partial OR empty
+
+  // Button style values (avoid long ternaries inline)
+  const addressBtnBackground = needsAttention ? '#e74c3c' : '#fffbe6';
+  const addressBtnColor = needsAttention ? '#fff' : '#222';
+  const addressBtnWeight = needsAttention ? 700 : 500;
+  const countries = [
+    { code: 'US', name: 'United States' },
+    { code: 'CA', name: 'Canada' },
+    { code: 'GB', name: 'United Kingdom' },
+    { code: 'AU', name: 'Australia' },
+    { code: 'DE', name: 'Germany' },
+    { code: 'FR', name: 'France' },
+    { code: 'ES', name: 'Spain' },
+    { code: 'IT', name: 'Italy' },
+    { code: 'NL', name: 'Netherlands' },
+    { code: 'SE', name: 'Sweden' },
+    { code: 'NZ', name: 'New Zealand' },
+    { code: 'JP', name: 'Japan' },
+  ];
 
   // Update form data when profile changes
   useEffect(() => {
     if (profile) {
-      setFormData({
+      setFormData((prev) => ({
+        ...prev,
         firstName: profile.firstName || '',
         lastName: profile.lastName || '',
         imageUrl: null,
         sendEmailNotifications: profile.sendEmailNotifications,
-      });
-
+        addressLine1: address?.addressLine1 || '',
+        addressLine2: address?.addressLine2 || '',
+        city: address?.city || '',
+        state: address?.state || '',
+        postalCode: address?.postalCode || '',
+        countryCode: address?.countryCode || 'US',
+      }));
       setPreviewImage(profile.imageUrl || null);
     }
-  }, [profile]);
+  }, [profile, address]);
 
   // Validation functions
   const validateName = (name, fieldName) => {
@@ -93,12 +136,29 @@ export default function ProfileForm({ handleCloseForm }) {
     e.preventDefault();
 
     try {
+      // Submit-time address validation: all-or-nothing
+      const required = ['addressLine1', 'city', 'state', 'postalCode'];
+      const allFilled = required.every((f) => (formData[f] || '').trim() !== '');
+
+      let addressPayload = {};
+      if (allFilled) {
+        addressPayload = {
+          addressLine1: formData.addressLine1,
+          addressLine2: formData.addressLine2 || '',
+          city: formData.city,
+          state: formData.state,
+          postalCode: formData.postalCode,
+          countryCode: formData.countryCode || 'US',
+        };
+      }
+
       await updateUserProfile({
         firstName: formData.firstName,
         lastName: formData.lastName,
         file: formData.imageUrl,
         existingImageUrl: profile?.imageUrl || null,
         sendEmailNotifications: formData.sendEmailNotifications,
+        ...addressPayload,
       });
 
       handleCloseForm();
@@ -185,6 +245,123 @@ export default function ProfileForm({ handleCloseForm }) {
               />
               Receive email notifications for new work/ auctions
             </label>
+          </div>
+
+          {/* Shipping Address Section */}
+          <div className="form-group address-section">
+            <button
+              type="button"
+              className="toggle-address-btn"
+              onClick={() => setShowAddress((prev) => !prev)}
+              style={{
+                marginBottom: '0.5rem',
+                background: addressBtnBackground,
+                border: '1px solid #ccc',
+                borderRadius: '6px',
+                padding: '0.5rem 1rem',
+                cursor: 'pointer',
+                color: addressBtnColor,
+                fontWeight: addressBtnWeight,
+                transition: 'background 0.2s',
+              }}
+            >
+              {showAddress ? 'Hide Shipping Address' : 'Add shipping address'}
+            </button>
+            {showAddress && (
+              <div
+                className="address-fields"
+                style={{
+                  padding: '1rem',
+                  borderRadius: '8px',
+                  border: '1px solid #ffe066',
+                }}
+              >
+                <div
+                  className="address-hint"
+                  style={{
+                    fontSize: '.8rem',
+                    marginBottom: '.5rem',
+                    color: needsAttention ? '#e74c3c' : '#555',
+                    padding: needsAttention ? '0.25rem 0.5rem' : 0,
+                    borderRadius: '4px',
+                  }}
+                >
+                  {needsAttention
+                    ? 'Provide all fields if adding an address, or leave all blank. Partial address not accepted.'
+                    : 'Things look stokey!'}
+                </div>
+                <div className="form-group">
+                  <label htmlFor="addressLine1">Street Address</label>
+                  <input
+                    type="text"
+                    id="addressLine1"
+                    name="addressLine1"
+                    value={formData.addressLine1}
+                    onChange={handleInputChange}
+                    placeholder="123 Main St"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="addressLine2">Address Line 2 (optional)</label>
+                  <input
+                    type="text"
+                    id="addressLine2"
+                    name="addressLine2"
+                    value={formData.addressLine2}
+                    onChange={handleInputChange}
+                    placeholder="Apt, suite, etc. (optional)"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="city">City</label>
+                  <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    placeholder="City"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="state">State</label>
+                  <input
+                    type="text"
+                    id="state"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    placeholder="State"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="postalCode">Postal Code</label>
+                  <input
+                    type="text"
+                    id="postalCode"
+                    name="postalCode"
+                    value={formData.postalCode}
+                    onChange={handleInputChange}
+                    placeholder="ZIP or postal code"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="countryCode">Country</label>
+                  <select
+                    id="countryCode"
+                    name="countryCode"
+                    value={formData.countryCode}
+                    onChange={handleInputChange}
+                  >
+                    {countries.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="form-actions">

@@ -1,16 +1,13 @@
 // stores/userStore.js (or wherever you want to place it)
 import { create } from 'zustand';
-import {
-  fetchUserProfile,
-  uploadImageToS3,
-  updateProfileWithImage,
-} from '../services/fetch-utils.js';
+import { fetchUserProfile, uploadImageToS3, putProfile } from '../services/fetch-utils.js';
 import { compressImageToJpeg } from '../services/image-compress.js';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const useProfileStore = create((set) => ({
   profile: null,
+  address: null,
   error: '',
   loading: false,
 
@@ -25,6 +22,12 @@ export const useProfileStore = create((set) => ({
     file,
     existingImageUrl,
     sendEmailNotifications,
+    addressLine1,
+    addressLine2,
+    city,
+    state,
+    postalCode,
+    countryCode,
   }) => {
     try {
       set({ loading: true });
@@ -42,13 +45,21 @@ export const useProfileStore = create((set) => ({
         finalImageUrl = uploadResult.secure_url;
       }
 
-      const updatedProfile = await updateProfileWithImage(
-        finalImageUrl,
+      const result = await putProfile({
         firstName,
         lastName,
-        sendEmailNotifications
-      );
-      set({ profile: updatedProfile, loading: false });
+        imageUrl: finalImageUrl,
+        sendEmailNotifications,
+        addressLine1,
+        addressLine2,
+        city,
+        state,
+        postalCode,
+        countryCode,
+      });
+
+      // result should be { profile, address }
+      set({ profile: result.profile, address: result.address, loading: false });
 
       toast.success('Profile updated successfully!', {
         theme: 'colored',
@@ -72,8 +83,12 @@ export const useProfileStore = create((set) => ({
   fetchUserProfile: async () => {
     try {
       set({ loading: true });
-      const profile = await fetchUserProfile();
-      set({ profile: profile, loading: false });
+      const result = await fetchUserProfile();
+      if (result === null) {
+        set({ profile: null, address: null, loading: false });
+        return;
+      }
+      set({ profile: result.profile, address: result.address, loading: false });
     } catch (e) {
       set({ error: e.message, loading: false });
       toast.error(`Error fetching profile: ${e.message}`, {

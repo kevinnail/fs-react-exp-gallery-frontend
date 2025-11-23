@@ -28,6 +28,7 @@ export default function AdminInbox() {
   const { setUnreadMessageCount } = useUserStore();
 
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const [showMobileModal, setShowMobileModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [newReply, setNewReply] = useState('');
@@ -51,6 +52,7 @@ export default function AdminInbox() {
         } else {
           // Data is in message format, need to group by conversation
           const conversationMap = new Map();
+
           conversationsData.forEach((message) => {
             const convId = Number(message.conversation_id);
             if (!conversationMap.has(convId)) {
@@ -62,6 +64,8 @@ export default function AdminInbox() {
               conversationMap.set(convId, {
                 conversation_id: convId,
                 email: customerEmail,
+                firstName: message.first_name,
+                lastName: message.last_name,
                 image_url: message.image_url,
                 message_count: 0,
                 last_message_at: message.sentAt,
@@ -95,11 +99,23 @@ export default function AdminInbox() {
     }
   };
 
+  // Mobile check helper
+  const isMobile = () =>
+    typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(max-width: 768px)').matches;
+
   const loadConversationMessages = async (conversationId) => {
     try {
       const messageData = await getConversationById(conversationId);
+
       setMessages(messageData);
       setSelectedConversation(conversationId);
+
+      // On mobile, open messages in full-screen modal
+      if (isMobile()) {
+        setShowMobileModal(true);
+      }
 
       // Join the conversation room for real-time updates
       if (isConnected) {
@@ -237,14 +253,29 @@ export default function AdminInbox() {
   };
 
   const formatDate = (dateString) => {
-    const newDateString = new Date(dateString).toLocaleString([], {
-      hour: '2-digit',
-      minute: '2-digit',
+    const d = new Date(dateString);
+    const now = new Date();
+    const sameYear = d.getFullYear() === now.getFullYear();
+
+    if (sameYear) {
+      const datePart = d.toLocaleDateString([], {
+        day: 'numeric',
+        month: 'short',
+      });
+      const timePart = d.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      });
+      return `${datePart} at ${timePart}`;
+    }
+
+    const dateWithYear = d.toLocaleDateString([], {
+      day: 'numeric',
       month: 'short',
-      year: '2-digit',
+      year: 'numeric',
     });
-    const finalDateString = newDateString.replace(',', ' at  ');
-    return finalDateString;
+    return dateWithYear;
   };
 
   const renderMessageWithPieceMetadata = (messageContent) => {
@@ -252,18 +283,48 @@ export default function AdminInbox() {
       return <p>[Message unavailable]</p>;
     }
     // Check if message contains piece metadata
-    const pieceMetadataMatch = messageContent.match(
-      /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
+    // Try new format first (with discounted price)
+    let pieceMetadataMatch = messageContent.match(
+      /About this piece: (.+?) \(([^)]+)\) - \$(.+?) \| discounted: \$(.+?)\nView: (.+)/
     );
+    // Fallback for legacy messages without discounted price
+    if (!pieceMetadataMatch) {
+      pieceMetadataMatch = messageContent.match(
+        /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
+      );
+    }
     if (pieceMetadataMatch) {
-      const [, title, category, price, url] = pieceMetadataMatch;
+      const [, title, category, price, discountedPrice, url] = pieceMetadataMatch;
 
       // Extract imageUrl from message content
       const imageMatch = messageContent.match(/Image: (.+)/);
       const imageUrl = imageMatch ? imageMatch[1] : null;
 
       const mainMessage = messageContent.split('\n\n---\n')[0];
+      const renderSalePrice = (price, discountedPrice) => {
+        const numPrice = Number(price);
+        const numDiscount = Number(discountedPrice);
 
+        if (discountedPrice && numDiscount < numPrice) {
+          return (
+            <>
+              <span className="detail-on-sale">ON SALE! </span>
+              <span
+                style={{
+                  textDecoration: 'line-through',
+                  marginRight: '10px',
+                  color: 'red',
+                }}
+              >
+                ${numPrice.toFixed(2)}
+              </span>
+              <span>${numDiscount.toFixed(2)}</span>
+            </>
+          );
+        }
+
+        return <span>${numPrice.toFixed(2)}</span>;
+      };
       return (
         <>
           <p>{mainMessage}</p>
@@ -280,7 +341,7 @@ export default function AdminInbox() {
               <span>Category:</span> {category}
             </p>
             <p>
-              <span>Price:</span> ${price}
+              <span>Price:</span> {renderSalePrice(price, discountedPrice)}
             </p>
             <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
               View piece
@@ -338,7 +399,16 @@ export default function AdminInbox() {
                                 : '?'}
                             </div>
                           )}
-                          <span className="sender-email">{conversation.email}</span>
+                          <div className="sender-info-wrapper">
+                            {' '}
+                            <span className="sender-name">
+                              {conversation.first_name}{' '}
+                              <span className="sender-name">
+                                {conversation.last_name?.slice(0, 1)}
+                              </span>
+                            </span>
+                            <span className="sender-email">{conversation.email}</span>
+                          </div>
                         </div>
 
                         {conversation.unread_count > 0 && (
@@ -357,9 +427,32 @@ export default function AdminInbox() {
             )}
           </div>
 
-          <div className="messages-panel">
+          <div className="messages-panel messages-panel-desktop">
             {selectedConversation ? (
               <>
+                {(() => {
+                  const convo = conversations.find(
+                    (c) => Number(c.user_id) === Number(messages[0]?.userId)
+                  );
+                  return convo ? (
+                    <div
+                      style={{
+                        display: 'flex',
+                        gap: '.5rem',
+                        padding: '.5rem',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      <img
+                        src={convo.image_url}
+                        alt="Customer avatar"
+                        className="conversation-avatar"
+                      />
+                      <span>{convo.first_name}</span>
+                      <span>{convo.last_name?.slice(0, 1)}</span>
+                    </div>
+                  ) : null;
+                })()}
                 <div className="messages-list" ref={messagesListRef}>
                   {messages.map((message) => {
                     const isCustomerMessage = !message.isFromAdmin && isAdmin;
@@ -385,21 +478,18 @@ export default function AdminInbox() {
                     );
                   })}
                 </div>
-
                 {/* Typing indicator */}
                 {typingUsers.length > 0 && (
                   <div className="typing-indicator">
                     <p>Customer is typing...</p>
                   </div>
                 )}
-
                 {/* Connection status indicator */}
                 {!isConnected && (
                   <div className="connection-status">
                     <p>Connecting to real-time messaging...</p>
                   </div>
                 )}
-
                 <form onSubmit={handleSendReply} className="reply-form">
                   <div className="input-container">
                     <textarea
@@ -434,6 +524,108 @@ export default function AdminInbox() {
           </div>
         </div>
       </div>
+      {/* Mobile full-screen messages modal */}
+      {showMobileModal && (
+        <div className="mobile-messages-modal" role="dialog" aria-modal="true">
+          <button
+            type="button"
+            className="close-mobile-modal"
+            onClick={() => setShowMobileModal(false)}
+            aria-label="Back"
+          >
+            ← Back
+          </button>
+          <div className="messages-panel messages-panel-mobile">
+            {selectedConversation ? (
+              <>
+                {(() => {
+                  const convo = conversations.find(
+                    (c) => Number(c.user_id) === Number(messages[0]?.userId)
+                  );
+                  return convo ? (
+                    <div
+                      style={{
+                        display: 'flex',
+                        gap: '.5rem',
+                        padding: '.5rem',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      <img
+                        src={convo.image_url}
+                        alt="Customer avatar"
+                        className="conversation-avatar"
+                      />
+                      <span>{convo.first_name}</span>
+                      <span>{convo.last_name?.slice(0, 1)}</span>
+                    </div>
+                  ) : null;
+                })()}
+                <div className="messages-list" ref={messagesListRef}>
+                  {messages.map((message) => {
+                    const isCustomerMessage = !message.isFromAdmin && isAdmin;
+
+                    return (
+                      <div
+                        key={message.id}
+                        className={`admin-message-item ${isCustomerMessage ? 'admin-customer-message' : 'admin-admin-message'}`}
+                      >
+                        <span className="admin-message-time">{formatDate(message.sentAt)}</span>
+                        {isCustomerMessage ? (
+                          <div className="admin-message-content">
+                            {renderMessageWithPieceMetadata(message.messageContent)}
+                          </div>
+                        ) : (
+                          <div className="admin-message-content-wrapper">
+                            <div className="admin-message-content">
+                              {renderMessageWithPieceMetadata(message.messageContent)}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                {typingUsers.length > 0 && (
+                  <div className="typing-indicator">
+                    <p>Customer is typing...</p>
+                  </div>
+                )}
+                {!isConnected && (
+                  <div className="connection-status">
+                    <p>Connecting to real-time messaging...</p>
+                  </div>
+                )}
+                <form onSubmit={handleSendReply} className="reply-form">
+                  <div className="input-container">
+                    <textarea
+                      value={newReply}
+                      onChange={handleTyping}
+                      placeholder="Type your reply..."
+                      className="reply-input"
+                      rows="3"
+                      disabled={sending}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendReply(e);
+                        }
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={!newReply.trim() || sending}
+                      className="reply-button"
+                    >
+                      {sending ? 'Sending...' : 'Reply'}
+                    </button>
+                  </div>
+                </form>
+              </>
+            ) : null}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
