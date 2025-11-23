@@ -172,16 +172,6 @@ export default function AdminSales() {
     ].filter(Boolean);
     const text = lines.join('\n');
 
-    const onSuccess = () => {
-      toast.success('Address copied', {
-        theme: 'dark',
-        draggable: true,
-        draggablePercent: 60,
-        toastId: 'admin-sales-address-copied',
-        autoClose: 2000,
-      });
-    };
-
     const onFail = () => {
       toast.error('Failed to copy address', {
         theme: 'colored',
@@ -198,7 +188,7 @@ export default function AdminSales() {
       window.navigator.clipboard &&
       window.navigator.clipboard.writeText
     ) {
-      window.navigator.clipboard.writeText(text).then(onSuccess).catch(onFail);
+      window.navigator.clipboard.writeText(text).catch(onFail);
     } else {
       try {
         const ta = document.createElement('textarea');
@@ -209,10 +199,23 @@ export default function AdminSales() {
         ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
-        onSuccess();
       } catch (e) {
         onFail();
       }
+    }
+  };
+  const handleSearchByEmail = () => {
+    if (!newBuyerEmail) return;
+    const emailLower = newBuyerEmail.toLowerCase();
+    setSearchTerm(newBuyerEmail);
+    setShowUserResults(true);
+    // attempt immediate auto-select for exact match
+    const match = users.find((u) => {
+      const userEmail = (u.email || u.user_email || '').toLowerCase();
+      return userEmail === emailLower;
+    });
+    if (match) {
+      handleSelectUser(match);
     }
   };
 
@@ -467,12 +470,24 @@ export default function AdminSales() {
 
                   <div className="sales-detail-row">
                     <label>Buyer Email:</label>
-                    <input
-                      type="text"
-                      className="tracking-input"
-                      value={newBuyerEmail}
-                      onChange={(e) => setNewBuyerEmail(e.target.value)}
-                    />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
+                      <input
+                        type="text"
+                        className="tracking-input"
+                        value={newBuyerEmail}
+                        onChange={(e) => setNewBuyerEmail(e.target.value)}
+                      />
+                      {newBuyerEmail && (
+                        <button
+                          type="button"
+                          onClick={handleSearchByEmail}
+                          className="search-email-button"
+                          aria-label="Use email to find user"
+                        >
+                          Find User
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="sales-detail-row">

@@ -340,6 +340,19 @@
   cursor: not-allowed;
 }
 
+.search-email-button {
+  background: #222;
+  color: #fff;
+  border: 1px solid #444;
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.search-email-button:hover {
+  background: #333;
+}
+
 ^================== Responsive begin ======================= */ @media (max-width: 768px) {
   .sales-layout {
     flex-direction: column;
