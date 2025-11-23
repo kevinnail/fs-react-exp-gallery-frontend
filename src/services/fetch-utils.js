@@ -714,3 +714,65 @@ export async function markWelcomeMessageFalse(userId) {
     throw e;
   }
 }
+
+// New: PUT profile (profile + optional address), returns { profile, address }
+export async function putProfile({
+  firstName,
+  lastName,
+  imageUrl,
+  sendEmailNotifications,
+  addressLine1,
+  addressLine2,
+  city,
+  state,
+  postalCode,
+  countryCode,
+}) {
+  try {
+    const body = {
+      firstName: firstName ?? null,
+      lastName: lastName ?? null,
+      imageUrl: imageUrl ?? null,
+      sendEmailNotifications,
+    };
+
+    // Only attach address fields if caller provided them (all-or-nothing handled upstream)
+    if (
+      addressLine1 !== undefined ||
+      addressLine2 !== undefined ||
+      city !== undefined ||
+      state !== undefined ||
+      postalCode !== undefined ||
+      countryCode !== undefined
+    ) {
+      Object.assign(body, {
+        addressLine1,
+        addressLine2: addressLine2 ?? '',
+        city,
+        state,
+        postalCode,
+        countryCode: countryCode || 'US',
+      });
+    }
+
+    const response = await fetch(`${BASE_URL}/api/v1/profile`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to update profile');
+    }
+
+    return data; // { profile, address }
+  } catch (error) {
+    console.error('Error putting profile:', error);
+    throw error;
+  }
+}
