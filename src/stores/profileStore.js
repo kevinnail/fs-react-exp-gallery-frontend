@@ -5,7 +5,7 @@ import { compressImageToJpeg } from '../services/image-compress.js';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const useProfileStore = create((set) => ({
+export const useProfileStore = create((set, get) => ({
   profile: null,
   address: null,
   error: '',
@@ -83,8 +83,12 @@ export const useProfileStore = create((set) => ({
   fetchUserProfile: async () => {
     try {
       set({ loading: true });
-      const profile = await fetchUserProfile();
-      set({ profile: profile, loading: false });
+      const result = await fetchUserProfile();
+      if (result === null) {
+        set({ profile: null, address: null, loading: false });
+        return;
+      }
+      set({ profile: result.profile, address: result.address, loading: false });
     } catch (e) {
       set({ error: e.message, loading: false });
       toast.error(`Error fetching profile: ${e.message}`, {
