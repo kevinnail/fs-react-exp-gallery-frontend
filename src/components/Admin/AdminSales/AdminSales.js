@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './AdminSales.css';
 import {
@@ -10,6 +11,7 @@ import {
 import { getAllUsers } from '../../../services/fetch-utils.js';
 
 export default function AdminSales() {
+  const location = useLocation();
   const [sales, setSales] = useState([]);
   const [selectedSale, setSelectedSale] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,6 +21,7 @@ export default function AdminSales() {
   const [debouncedTerm, setDebouncedTerm] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserResults, setShowUserResults] = useState(false);
+  const [prefillApplied, setPrefillApplied] = useState(false);
 
   // state for creating a sale
   const [newBuyerEmail, setNewBuyerEmail] = useState('');
@@ -215,6 +218,44 @@ export default function AdminSales() {
 
   // the one new refactor line
   const currentSale = selectedSale ? sales.find((s) => s.id === selectedSale) : null;
+
+  // Prefill from AdminInbox navigation
+  useEffect(() => {
+    const prefill = location.state?.prefill;
+    if (!prefill || prefillApplied) return;
+
+    // Open create sale form
+    setIsCreatingSale(true);
+
+    // Prefill fields
+    if (prefill.buyerEmail) setNewBuyerEmail(prefill.buyerEmail);
+    if (prefill.piece?.id) setNewPieceId(prefill.piece.id);
+    if (prefill.piece) {
+      const hasDiscount =
+        prefill.piece.discountedPrice !== null &&
+        prefill.piece.discountedPrice !== undefined &&
+        !Number.isNaN(prefill.piece.discountedPrice);
+      const priceToUse = hasDiscount ? prefill.piece.discountedPrice : prefill.piece.price;
+      if (priceToUse !== null && priceToUse !== undefined) setNewPrice(String(priceToUse));
+    }
+
+    // Try selecting the user from loaded users by id or email
+    if (users && users.length > 0 && (prefill.user?.id || prefill.user?.email)) {
+      const match = users.find(
+        (u) =>
+          (prefill.user?.id && Number(u.id) === Number(prefill.user.id)) ||
+          (prefill.user?.email &&
+            ((u.email && u.email.toLowerCase() === prefill.user.email.toLowerCase()) ||
+              (u.user_email && u.user_email.toLowerCase() === prefill.user.email.toLowerCase())))
+      );
+      if (match) {
+        setSelectedUser(match);
+      }
+    }
+
+    setPrefillApplied(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state, users, prefillApplied]);
 
   // Helper function to determine border color based on payment and shipping status
   const getSaleBorderColor = (sale) => {

@@ -326,6 +326,22 @@
   text-align: center;
 }
 
+.create-sale-button {
+  display: block;
+  margin: 0.5rem auto 0 auto;
+  background: linear-gradient(135deg, #1f8e3d, #0e6c2a);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.create-sale-button:hover {
+  filter: brightness(1.1);
+}
+
 .piece-metadata-highlight-content {
   display: flex;
   gap: 20px;
