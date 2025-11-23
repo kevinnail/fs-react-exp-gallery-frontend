@@ -161,8 +161,8 @@ export async function fetchUserProfile() {
     });
 
     if (resp.ok) {
-      const profile = await resp.json();
-      return profile;
+      const result = await resp.json();
+      return result;
     } else if (resp.status === 401 || resp.status === 403) {
       return null;
     } else {
