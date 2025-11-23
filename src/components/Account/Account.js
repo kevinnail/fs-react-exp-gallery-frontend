@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
-import {
-  fetchUserProfile,
-  fetchGalleryPosts,
-  markWelcomeMessageFalse,
-} from '../../services/fetch-utils.js';
+import { fetchGalleryPosts, markWelcomeMessageFalse } from '../../services/fetch-utils.js';
 import ProfileForm from './AccountForm.js';
 import './Account.css';
 import { useProfileStore } from '../../stores/profileStore.js';
@@ -16,7 +12,7 @@ import UserSales from './UserSales/UserSales.js';
 
 export default function Account() {
   const { user } = useUserStore();
-  const { profile, setProfile, setShowWelcome } = useProfileStore();
+  const { profile, setProfile, setShowWelcome, fetchUserProfile } = useProfileStore();
 
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
@@ -29,15 +25,8 @@ export default function Account() {
   };
 
   useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const profileData = await fetchUserProfile();
-        setProfile(profileData);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      }
-    };
-    loadProfile();
+    // Use store method so both profile & address get populated
+    fetchUserProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
