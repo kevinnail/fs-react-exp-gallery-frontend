@@ -6,7 +6,7 @@ import { useProfileStore } from '../../stores/profileStore.js';
 import { toast } from 'react-toastify';
 
 export default function ProfileForm({ handleCloseForm }) {
-  const { updateUserProfile, profile, loading } = useProfileStore();
+  const { updateUserProfile, profile, loading, address } = useProfileStore();
 
   const [formData, setFormData] = useState({
     firstName: profile?.firstName || '',
@@ -48,17 +48,16 @@ export default function ProfileForm({ handleCloseForm }) {
         lastName: profile.lastName || '',
         imageUrl: null,
         sendEmailNotifications: profile.sendEmailNotifications,
-        // Optionally, prefill address fields if you have them in profile/address state
-        // addressLine1: profile.address?.addressLine1 || '',
-        // addressLine2: profile.address?.addressLine2 || '',
-        // city: profile.address?.city || '',
-        // state: profile.address?.state || '',
-        // postalCode: profile.address?.postalCode || '',
-        // countryCode: profile.address?.countryCode || 'US',
+        addressLine1: address?.addressLine1 || '',
+        addressLine2: address?.addressLine2 || '',
+        city: address?.city || '',
+        state: address?.state || '',
+        postalCode: address?.postalCode || '',
+        countryCode: address?.countryCode || 'US',
       }));
       setPreviewImage(profile.imageUrl || null);
     }
-  }, [profile]);
+  }, [profile, address]);
 
   // Validation functions
   const validateName = (name, fieldName) => {
@@ -125,23 +124,7 @@ export default function ProfileForm({ handleCloseForm }) {
     try {
       // Submit-time address validation: all-or-nothing
       const required = ['addressLine1', 'city', 'state', 'postalCode'];
-      const anyFilled = required.some((f) => (formData[f] || '').trim() !== '');
       const allFilled = required.every((f) => (formData[f] || '').trim() !== '');
-      console.log('address submit validation', { anyFilled, allFilled });
-
-      if (anyFilled && !allFilled) {
-        const toastOptions = {
-          theme: 'dark',
-          draggable: true,
-          draggablePercent: 60,
-          autoClose: 4000,
-        };
-        toast.error(
-          'Please complete all required address fields (street, city, state, postal code) or leave them all blank and fill them in later',
-          toastOptions
-        );
-        return;
-      }
 
       let addressPayload = {};
       if (allFilled) {
@@ -279,7 +262,20 @@ export default function ProfileForm({ handleCloseForm }) {
                   border: '1px solid #ffe066',
                 }}
               >
-                {/* Guidance handled via submit validation toast */}
+                <div
+                  className="address-hint"
+                  style={{
+                    fontSize: '.8rem',
+                    marginBottom: '.5rem',
+                    color: needsAttention ? '#e74c3c' : '#555',
+                    padding: needsAttention ? '0.25rem 0.5rem' : 0,
+                    borderRadius: '4px',
+                  }}
+                >
+                  {needsAttention
+                    ? 'Provide all fields if adding an address, or leave all blank. Partial address not accepted.'
+                    : 'Things look stokey!'}
+                </div>
                 <div className="form-group">
                   <label htmlFor="addressLine1">Street Address</label>
                   <input
