@@ -12,7 +12,7 @@ import UserSales from './UserSales/UserSales.js';
 
 export default function Account() {
   const { user } = useUserStore();
-  const { profile, setShowWelcome, fetchUserProfile } = useProfileStore();
+  const { profile, address, setShowWelcome, fetchUserProfile } = useProfileStore();
 
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
@@ -53,6 +53,21 @@ export default function Account() {
 
   // Check if user has added name or image
   const hasNameOrImage = profile?.firstName || profile?.lastName || profile?.imageUrl;
+
+  // Determine if profile is complete: firstName, lastName, avatar image, and address fields
+  const hasFirstName = Boolean(profile?.firstName && String(profile.firstName).trim());
+  const hasLastName = Boolean(profile?.lastName && String(profile.lastName).trim());
+  const hasAvatar = Boolean(profile?.imageUrl && String(profile.imageUrl).trim());
+  const hasAddress = Boolean(
+    address &&
+      address.addressLine1 &&
+      address.city &&
+      address.state &&
+      address.postalCode &&
+      address.countryCode
+  );
+
+  const isProfileComplete = hasFirstName && hasLastName && hasAvatar && hasAddress;
 
   const removeWelcomeMessage = async () => {
     try {
@@ -163,9 +178,8 @@ export default function Account() {
           aria-label="Edit Settings"
           title="Edit Settings"
         >
-          <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>🌣</span>
+          <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>⚙️</span>
         </button>
-
         <div className="profile-header">
           <div className="profile-picture-section">
             {profile?.imageUrl ? (
@@ -177,6 +191,11 @@ export default function Account() {
             )}
           </div>
           <div className="profile-info">
+            {!isProfileComplete && (
+              <span className="profile-incomplete-note" role="note">
+                Account info incomplete — click the gear to update
+              </span>
+            )}
             <h1>
               {profile?.firstName || profile?.lastName
                 ? `${profile?.firstName || ''} ${profile?.lastName || ''}`
@@ -225,12 +244,6 @@ export default function Account() {
           <Tab className="account-tab" label="Auctions" />
           <Tab className="account-tab" label="Purchases" />
         </Tabs>
-
-        {/*  */}
-        {/*  */}
-
-        {/*  */}
-        {/*  */}
         <div className="tab-content-wrapper">
           {tab === 0 && (
             <div className="new-work-section">
