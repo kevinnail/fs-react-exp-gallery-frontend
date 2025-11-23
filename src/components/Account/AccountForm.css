@@ -90,6 +90,43 @@
     background-color 0.3s ease;
 }
 
+.form-group select {
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  appearance: none;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+  background-image:
+    linear-gradient(45deg, transparent 50%, white 50%),
+    linear-gradient(135deg, white 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) calc(50% - 6px),
+    calc(100% - 15px) calc(50% + 6px);
+  background-size:
+    6px 6px,
+    6px 6px;
+  background-repeat: no-repeat;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.form-group select option {
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  /* font-family: monospace !important; */
+  font-family: unset;
+  font-weight: normal;
+}
+
 .form-group input[type='text']:focus {
   outline: none;
   border-color: rgba(255, 255, 255, 0.5);

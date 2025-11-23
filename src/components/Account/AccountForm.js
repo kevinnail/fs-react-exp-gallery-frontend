@@ -265,7 +265,7 @@ export default function ProfileForm({ handleCloseForm }) {
                 transition: 'background 0.2s',
               }}
             >
-              {showAddress ? 'Hide Shipping Address' : 'Add Shipping Address'}
+              {showAddress ? 'Hide Shipping Address' : 'Add shipping address'}
             </button>
             {showAddress && (
               <div
