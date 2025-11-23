@@ -172,6 +172,16 @@ export default function AdminSales() {
     ].filter(Boolean);
     const text = lines.join('\n');
 
+    const onSuccess = () => {
+      toast.success('Address copied', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'admin-sales-address-copied',
+        autoClose: 2000,
+      });
+    };
+
     const onFail = () => {
       toast.error('Failed to copy address', {
         theme: 'colored',
@@ -188,7 +198,7 @@ export default function AdminSales() {
       window.navigator.clipboard &&
       window.navigator.clipboard.writeText
     ) {
-      window.navigator.clipboard.writeText(text).catch(onFail);
+      window.navigator.clipboard.writeText(text).then(onSuccess).catch(onFail);
     } else {
       try {
         const ta = document.createElement('textarea');
@@ -199,6 +209,7 @@ export default function AdminSales() {
         ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
+        onSuccess();
       } catch (e) {
         onFail();
       }
