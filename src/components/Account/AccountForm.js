@@ -207,28 +207,17 @@ export default function ProfileForm({ handleCloseForm }) {
     return () => window.removeEventListener('keydown', handleKey);
   }, [handleCloseForm]);
 
-  // Lock background scroll while modal is open (robust for iOS)
+  // Lock background scroll while modal is open
   useEffect(() => {
-    const scrollY = window.scrollY;
-    // store scroll position
-    document.body.dataset.scrollY = String(scrollY);
-    // lock body
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
     document.body.classList.add('modal-open');
     return () => {
       document.body.classList.remove('modal-open');
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.width = '';
-      const stored = parseInt(document.body.dataset.scrollY || '0', 10);
-      window.scrollTo(0, stored);
-      delete document.body.dataset.scrollY;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
     };
   }, []);
 

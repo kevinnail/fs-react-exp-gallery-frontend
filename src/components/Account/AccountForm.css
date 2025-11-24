@@ -1,6 +1,6 @@
 .profile-form-overlay {
   position: fixed;
-  top: 0;
+  top: 90px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -10,15 +10,13 @@
   align-items: center;
   z-index: 1000;
   backdrop-filter: blur(5px);
-  overflow-y: auto; /* allow scrolling entire overlay if needed */
-  overscroll-behavior: contain; /* prevent scroll chaining to body */
-  -webkit-overflow-scrolling: touch; /* smooth iOS scroll */
+  overflow: hidden; /* prevent overlay from having its own scroll */
 }
 
 .profile-form-container {
   background: rgba(0, 0, 0, 0.9);
   border-radius: 15px;
-  padding: 2rem;
+  padding: 1.5rem;
   max-width: 500px;
   width: 90%;
   max-height: 90vh;
@@ -68,6 +66,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding-bottom: 5rem;
 }
 
 .form-group {
@@ -234,15 +233,28 @@
   transform: none;
 }
 
-@media (max-width: 600px) {
-  .profile-form-container {
-    margin: 1rem;
-    padding: 1.5rem;
+@media (max-width: 768px) {
+  .profile-form-overlay {
+    display: block;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 0;
   }
 
-  .profile-form-overlay {
-    position: absolute;
-    top: 90px;
+  .profile-form-container {
+    position: static;
+    width: 100%;
+    max-width: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    border-radius: 0;
+    padding: 0.75rem;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0) + 1rem);
+    box-sizing: border-box;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
   }
 
   .form-actions {
@@ -258,5 +270,4 @@
 /* body scroll lock helper class */
 body.modal-open {
   overflow: hidden;
-  touch-action: none; /* reduce background touch interactions */
 }
