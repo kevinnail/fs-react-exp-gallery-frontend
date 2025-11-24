@@ -9,8 +9,10 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
     Bubblers: 0,
     Collabs: 0,
     Cups: 0,
+    Droppers: 0,
     'Dry Pieces': 0,
     Goblets: 0,
+    Jars: 0,
     'Iso Stations': 0,
     Marbles: 0,
     Pendants: 0,
@@ -20,6 +22,7 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
     'Spinner Caps': 0,
     'Terp Pearls': 0,
     Tubes: 0,
+    Vases: 0,
     Misc: 0,
   };
 
