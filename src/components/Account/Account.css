@@ -190,7 +190,6 @@ div {
 }
 
 .new-work-section {
-  margin-top: 0.75rem;
   padding-top: 0.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -422,6 +421,7 @@ div {
     margin: 0;
     padding: 0;
     border: none;
+    margin-top: 1rem;
   }
   .profile-content {
     margin: 0;

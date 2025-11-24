@@ -10,6 +10,9 @@
   align-items: center;
   z-index: 1000;
   backdrop-filter: blur(5px);
+  overflow-y: auto; /* allow scrolling entire overlay if needed */
+  overscroll-behavior: contain; /* prevent scroll chaining to body */
+  -webkit-overflow-scrolling: touch; /* smooth iOS scroll */
 }
 
 .profile-form-container {
@@ -20,6 +23,7 @@
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* enable momentum scroll inside container */
   border: 2px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
@@ -236,6 +240,11 @@
     padding: 1.5rem;
   }
 
+  .profile-form-overlay {
+    position: absolute;
+    top: 90px;
+  }
+
   .form-actions {
     flex-direction: column;
   }
@@ -244,4 +253,10 @@
   .submit-btn {
     width: 100%;
   }
+}
+
+/* body scroll lock helper class */
+body.modal-open {
+  overflow: hidden;
+  touch-action: none; /* reduce background touch interactions */
 }
