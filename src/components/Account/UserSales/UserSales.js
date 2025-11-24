@@ -97,7 +97,7 @@ export default function UserSales({ userId }) {
                       color: '#ff4444',
                       padding: '2px 6px',
                       borderRadius: '4px',
-                      fontSize: '1rem',
+                      fontSize: '1.1rem',
                       fontWeight: 'bold',
                       marginRight: '3rem',
                     }}
@@ -105,19 +105,26 @@ export default function UserSales({ userId }) {
                     Payment Needed
                   </span>
                 )}
-                {(sale.is_paid && sale.tracking_number === '0') ||
-                  (sale.tracking_number === null && (
+                {(sale.is_paid && !sale.tracking_number) ||
+                  (sale.tracking_number === '0' && (
                     <span
                       style={{
                         color: 'yellow',
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                        fontSize: '1rem',
+                        padding: '4px 6px',
+                        fontSize: '1.25rem',
                         fontWeight: 'bold',
                         marginRight: '3rem',
                       }}
                     >
-                      Paid - Shipping Soon
+                      <span
+                        style={{
+                          marginRight: '1.5rem',
+                          color: 'green',
+                        }}
+                      >
+                        Paid{' '}
+                      </span>{' '}
+                      Shipping Soon
                     </span>
                   ))}
                 {sale.tracking_number && sale.tracking_number !== '0' && (
@@ -129,6 +136,8 @@ export default function UserSales({ userId }) {
                       fontSize: '1rem',
                       fontWeight: 'bold',
                       marginRight: '3rem',
+                      display: 'block',
+                      marginBottom: '.5rem',
                     }}
                   >
                     Shipped
