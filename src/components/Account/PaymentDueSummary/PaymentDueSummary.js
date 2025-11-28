@@ -8,6 +8,8 @@ export default function PaymentDueSummary({ userId }) {
   const [wonAuctions, setWonAuctions] = useState([]);
   const [sales, setSales] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+  const [copiedCashApp, setCopiedCashApp] = useState(false);
 
   const navigate = useNavigate();
 
@@ -15,14 +17,25 @@ export default function PaymentDueSummary({ userId }) {
     let isMounted = true;
     const load = async () => {
       try {
-        const [auctionsResp, salesResp] = await Promise.all([
-          userId ? getUserAuctions(userId) : Promise.resolve({ wonAuctions: [] }),
-          getUserSales(),
-        ]);
+        let auctionsResp = { wonAuctions: [] };
+        if (userId) {
+          auctionsResp = await getUserAuctions(userId);
+        }
+
+        const salesResp = await getUserSales();
 
         if (!isMounted) return;
-        const rawWon = Array.isArray(auctionsResp?.wonAuctions) ? auctionsResp.wonAuctions : [];
-        const rawSales = Array.isArray(salesResp) ? salesResp : [];
+
+        let rawWon = [];
+        if (auctionsResp && Array.isArray(auctionsResp.wonAuctions)) {
+          rawWon = auctionsResp.wonAuctions;
+        }
+
+        let rawSales = [];
+        if (Array.isArray(salesResp)) {
+          rawSales = salesResp;
+        }
+
         setWonAuctions(rawWon);
         setSales(rawSales);
       } catch (e) {
@@ -46,7 +59,10 @@ export default function PaymentDueSummary({ userId }) {
     const purchaseSubtotal = unpaidPurchases.reduce((sum, s) => sum + (Number(s.price) || 0), 0);
 
     const itemCount = unpaidWins.length + unpaidPurchases.length;
-    const shipping = itemCount > 0 ? 9 + Math.max(0, itemCount - 1) * 1 : 0;
+    let shipping = 0;
+    if (itemCount > 0) {
+      shipping = 9 + Math.max(0, itemCount - 1) * 1;
+    }
     const total = auctionSubtotal + purchaseSubtotal + shipping;
 
     return {
@@ -69,31 +85,72 @@ export default function PaymentDueSummary({ userId }) {
     navigate('/messages');
   };
 
+  // HARD CODED LINKS -- ALWAYS SHOW
+  const VENMO_URL = 'https://venmo.com/Kevin-Nail-1';
+  const CASHAPP_HANDLE = '$stresslessglass';
+  const ZELLE_HANDLE = 'fumalicious@gmail.com';
+  const ZELLE_NAME = 'Kevin Nail';
+
+  const handleCopyZelle = () => {
+    let text = '';
+    if (ZELLE_NAME) {
+      text = `${ZELLE_NAME} — ${ZELLE_HANDLE}`;
+    } else {
+      text = `${ZELLE_HANDLE}`;
+    }
+    try {
+      if (typeof window !== 'undefined' && window.navigator && window.navigator.clipboard) {
+        window.navigator.clipboard.writeText(text).then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        });
+      }
+    } catch (e) {
+      // no-op; clipboard not available
+    }
+  };
+
   const handlePrintInvoice = () => {
     const win = window.open('', '_blank');
     const date = new Date().toLocaleDateString();
 
     // Build a combined rows list preserving order: auctions then purchases
     const rows = [];
-    unpaidData.unpaidWins.forEach((a) =>
+    unpaidData.unpaidWins.forEach((a) => {
+      let date = null;
+      if (a.closedAt) {
+        date = new Date(a.closedAt);
+      }
       rows.push({
         type: 'Auction',
         label: a.title || `Auction #${a.auctionId}`,
         amount: Number(a.finalBid) || 0,
-        date: a.closedAt ? new Date(a.closedAt) : null,
-      })
-    );
-    unpaidData.unpaidPurchases.forEach((s) =>
+        date,
+      });
+    });
+
+    unpaidData.unpaidPurchases.forEach((s) => {
+      let date = null;
+      if (s.created_at) {
+        date = new Date(s.created_at);
+      }
       rows.push({
         type: 'Purchase',
         label: s.post_title || `Post #${s.post_id}`,
         amount: Number(s.price) || 0,
-        date: s.created_at ? new Date(s.created_at) : null,
-      })
-    );
+        date,
+      });
+    });
 
     // Compute per-item shipping allocation: first $9, rest $1
-    const shippingPerItem = rows.map((_, i) => (i === 0 ? 9 : 1));
+    const shippingPerItem = [];
+    for (let i = 0; i < rows.length; i += 1) {
+      if (i === 0) {
+        shippingPerItem.push(9);
+      } else {
+        shippingPerItem.push(1);
+      }
+    }
 
     const tableRowsHtml = rows
       .map((r, i) => {
@@ -217,7 +274,97 @@ export default function PaymentDueSummary({ userId }) {
             </span>
             {` `}if you need my payment info or have any questions! Thank you!
           </p>
+
+          {/* Quick Pay options */}
+          <div style={{ margin: '0.5rem 0 1rem 0' }}>
+            <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>Quick Pay Options</div>
+            <ZelleBlock
+              zelleName={ZELLE_NAME}
+              zelleHandle={ZELLE_HANDLE}
+              copied={copied}
+              onCopy={handleCopyZelle}
+            />
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.5rem',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                marginBottom: '1rem',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {' '}
+                <code style={{ padding: '2px 6px', background: '#222', borderRadius: '4px' }}>
+                  {'click to pay with Venmo'}
+                </code>
+                <a
+                  className="pay-now-btn"
+                  href={VENMO_URL}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Pay via Venmo
+                </a>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <code style={{ padding: '2px 6px', background: '#222', borderRadius: '4px' }}>
+                  {CASHAPP_HANDLE}
+                </code>
+                <button
+                  className="pay-now-btn"
+                  onClick={() => {
+                    if (
+                      typeof window !== 'undefined' &&
+                      window.navigator &&
+                      window.navigator.clipboard
+                    ) {
+                      window.navigator.clipboard.writeText(CASHAPP_HANDLE).then(() => {
+                        setCopiedCashApp(true);
+                        setTimeout(() => setCopiedCashApp(false), 1500);
+                      });
+                    }
+                  }}
+                >
+                  Copy Cash App
+                </button>
+                {copiedCashApp ? <span style={{ color: 'yellow' }}>Copied!</span> : null}
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function ZelleBlock({ zelleName, zelleHandle, copied, onCopy }) {
+  let zelleText = '';
+  if (zelleName) {
+    zelleText = `${zelleName} — ${zelleHandle}`;
+  } else {
+    zelleText = `${zelleHandle}`;
+  }
+
+  let copiedNode = null;
+  if (copied) {
+    copiedNode = <span style={{ color: 'yellow' }}>Copied!</span>;
+  }
+
+  return (
+    <div style={{ marginBottom: '0.5rem' }}>
+      <div style={{ marginBottom: '0.25rem' }}>Preferred: Zelle — always free at most banks.</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <code style={{ padding: '2px 6px', background: '#222', borderRadius: '4px' }}>
+          {zelleText}
+        </code>
+        <button className="pay-now-btn" onClick={onCopy}>
+          Copy Zelle info
+        </button>
+        {copiedNode}
       </div>
     </div>
   );
