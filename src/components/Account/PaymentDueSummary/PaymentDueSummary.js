@@ -223,6 +223,29 @@ export default function PaymentDueSummary({ userId }) {
     win.document.close();
   };
 
+  const handleOpenVenmo = (e) => {
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+    if (typeof window === 'undefined') return;
+    const handle = (VENMO_HANDLE || '').replace(/^@/, '');
+    const deep = `venmo://paycharge?txn=pay&recipients=${encodeURIComponent(handle)}`;
+    const web = VENMO_URL || `https://venmo.com/${handle}`;
+    const start = Date.now();
+
+    const fallback = () => {
+      if (Date.now() - start < 2000) {
+        window.open(web, '_blank', 'noopener,noreferrer');
+      }
+    };
+
+    const timer = setTimeout(fallback, 800);
+    try {
+      window.location.href = deep;
+    } catch (_err) {
+      clearTimeout(timer);
+      window.open(web, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <div className="payment-due-summary">
       <div className="user-auctions-summary">
@@ -323,9 +346,12 @@ export default function PaymentDueSummary({ userId }) {
                       minWidth: '120px',
                       textAlign: 'center',
                     }}
-                    href={VENMO_URL}
+                    href={
+                      VENMO_URL || `https://venmo.com/${(VENMO_HANDLE || '').replace(/^@/, '')}`
+                    }
                     target="_blank"
                     rel="noreferrer noopener"
+                    onClick={handleOpenVenmo}
                   >
                     Pay via Venmo
                   </a>
