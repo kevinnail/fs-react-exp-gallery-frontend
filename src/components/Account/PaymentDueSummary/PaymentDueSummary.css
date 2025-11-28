@@ -78,8 +78,9 @@
   font-weight: 600;
   cursor: pointer;
   margin-top: 6px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   transition: opacity 0.15s ease;
+  min-width: 120px;
 }
 
 .pay-now-btn:hover {

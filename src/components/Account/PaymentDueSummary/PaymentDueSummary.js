@@ -85,11 +85,11 @@ export default function PaymentDueSummary({ userId }) {
     navigate('/messages');
   };
 
-  // HARD CODED LINKS -- ALWAYS SHOW
-  const VENMO_URL = 'https://venmo.com/Kevin-Nail-1';
-  const CASHAPP_HANDLE = '$stresslessglass';
-  const ZELLE_HANDLE = 'fumalicious@gmail.com';
-  const ZELLE_NAME = 'Kevin Nail';
+  const VENMO_URL = process.env.REACT_APP_VENMO_URL;
+  const VENMO_HANDLE = process.env.REACT_APP_VENMO_HANDLE;
+  const CASHAPP_HANDLE = process.env.REACT_APP_CASHAPP_HANDLE;
+  const ZELLE_HANDLE = process.env.REACT_APP_ZELLE_HANDLE;
+  const ZELLE_NAME = process.env.REACT_APP_ZELLE_NAME;
 
   const handleCopyZelle = () => {
     let text = '';
@@ -273,7 +273,7 @@ export default function PaymentDueSummary({ userId }) {
 
           {/* Quick Pay options as cards */}
           <div className="quick-pay-section">
-            <div className="quick-pay-header">Quick Pay Options</div>
+            <div className="quick-pay-header">Easy Pay Options</div>
 
             {/* Zelle Card */}
             <div className="quick-pay-card zelle">
@@ -281,12 +281,17 @@ export default function PaymentDueSummary({ userId }) {
                 Z
               </div>
               <div className="quick-pay-content">
-                <div className="quick-pay-title">Zelle</div>
-                <div className="quick-pay-subtitle">Preferred — always free at most banks.</div>
+                <div className="quick-pay-title">
+                  Zelle{' '}
+                  <span style={{ fontWeight: '300' }}>
+                    {ZELLE_NAME} - {ZELLE_HANDLE}
+                  </span>
+                </div>
+
+                <div className="quick-pay-subtitle">
+                  Preferred — instant & always free (available at most banks)
+                </div>
                 <div className="quick-pay-row">
-                  <code className="code-chip">
-                    {ZELLE_NAME ? `${ZELLE_NAME} — ${ZELLE_HANDLE}` : `${ZELLE_HANDLE}`}
-                  </code>
                   <button className="pay-now-btn" onClick={handleCopyZelle}>
                     Copy Zelle info
                   </button>
@@ -301,11 +306,23 @@ export default function PaymentDueSummary({ userId }) {
                 V
               </div>
               <div className="quick-pay-content">
-                <div className="quick-pay-title">Venmo</div>
+                <div className="quick-pay-title">
+                  Venmo
+                  <span style={{ fontWeight: '300' }}>
+                    {`  `}
+                    {VENMO_HANDLE}
+                  </span>
+                </div>
                 <div className="quick-pay-row">
-                  <code className="code-chip">Kevin-Nail-1</code>
                   <a
                     className="pay-now-btn"
+                    style={{
+                      textDecoration: 'none',
+                      fontSize: '.9rem',
+                      padding: '2px ',
+                      minWidth: '120px',
+                      textAlign: 'center',
+                    }}
                     href={VENMO_URL}
                     target="_blank"
                     rel="noreferrer noopener"
@@ -322,9 +339,13 @@ export default function PaymentDueSummary({ userId }) {
                 $
               </div>
               <div className="quick-pay-content">
-                <div className="quick-pay-title">Cash App</div>
+                <div className="quick-pay-title">
+                  Cash App
+                  <span style={{ fontWeight: '300' }}>
+                    {`  `}${CASHAPP_HANDLE}
+                  </span>
+                </div>
                 <div className="quick-pay-row">
-                  <code className="code-chip">{CASHAPP_HANDLE}</code>
                   <button
                     className="pay-now-btn"
                     onClick={() => {
