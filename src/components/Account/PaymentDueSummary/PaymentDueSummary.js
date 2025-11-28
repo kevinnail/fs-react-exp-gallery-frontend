@@ -283,7 +283,7 @@ export default function PaymentDueSummary({ userId }) {
               <div className="quick-pay-content">
                 <div className="quick-pay-title">
                   Zelle{' '}
-                  <span style={{ fontWeight: '300' }}>
+                  <span style={{ fontWeight: '300', fontSize: '1rem' }}>
                     {ZELLE_NAME} - {ZELLE_HANDLE}
                   </span>
                 </div>
@@ -308,7 +308,7 @@ export default function PaymentDueSummary({ userId }) {
               <div className="quick-pay-content">
                 <div className="quick-pay-title">
                   Venmo
-                  <span style={{ fontWeight: '300' }}>
+                  <span style={{ fontWeight: '300', fontSize: '1rem' }}>
                     {`  `}
                     {VENMO_HANDLE}
                   </span>
@@ -341,7 +341,7 @@ export default function PaymentDueSummary({ userId }) {
               <div className="quick-pay-content">
                 <div className="quick-pay-title">
                   Cash App
-                  <span style={{ fontWeight: '300' }}>
+                  <span style={{ fontWeight: '300', fontSize: '1rem' }}>
                     {`  `}${CASHAPP_HANDLE}
                   </span>
                 </div>
