@@ -155,7 +155,7 @@ export default function PaymentDueSummary({ userId }) {
       `</div>` +
       '<div class="footer">' +
       '<p>Payment Due!</p>' +
-      '<p>Zelle, Venmo, Cash App, or CC/Debit via emailed invoice.</p>' +
+      '<p>Zelle, Venmo, or Cash App.</p>' +
       '<p>Thank you for supporting Stress Less Glass!</p>' +
       '</div>' +
       '<script>window.onload = () => window.print();</script>' +
@@ -210,8 +210,8 @@ export default function PaymentDueSummary({ userId }) {
           </div>
 
           <p>
-            I can take Zelle, Venmo, Cash App, or CC/Debit via invoice through email. Contact me
-            through{' '}
+            I can take Zelle, Venmo, Cash App- just manual transactions, no shopping cart (yet!).
+            Contact me through{' '}
             <span onClick={handleMsgNav} style={{ cursor: 'pointer', textDecoration: 'underline' }}>
               Messages
             </span>
