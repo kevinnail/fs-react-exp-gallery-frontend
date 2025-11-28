@@ -271,125 +271,83 @@ export default function PaymentDueSummary({ userId }) {
             {` `}if you have any questions or problems!
           </p>
 
-          {/* Quick Pay options */}
-          <div style={{ margin: '0.5rem 0 1rem 0', backgroundColor: 'black', padding: '.5rem' }}>
-            <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>Quick Pay Options</div>
-            <ZelleBlock
-              zelleName={ZELLE_NAME}
-              zelleHandle={ZELLE_HANDLE}
-              copied={copied}
-              onCopy={handleCopyZelle}
-            />
-            <div
-              style={{
-                marginBottom: '1rem',
-              }}
-            >
-              <div
-                style={{
-                  display: 'grid',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {' '}
-                <code style={{ padding: '2px 6px', background: '#222', borderRadius: '4px' }}>
-                  {'Kevin-Nail-1'}
-                </code>
-                <a
-                  className="pay-now-btn"
-                  style={{
-                    width: '122px',
-                    fontWeight: 'bold',
-                    textDecoration: 'none',
-                    textAlign: 'center',
-                  }}
-                  href={VENMO_URL}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Pay via Venmo
-                </a>
+          {/* Quick Pay options as cards */}
+          <div className="quick-pay-section">
+            <div className="quick-pay-header">Quick Pay Options</div>
+
+            {/* Zelle Card */}
+            <div className="quick-pay-card zelle">
+              <div className="quick-pay-thumb" aria-hidden>
+                Z
+              </div>
+              <div className="quick-pay-content">
+                <div className="quick-pay-title">Zelle</div>
+                <div className="quick-pay-subtitle">Preferred — always free at most banks.</div>
+                <div className="quick-pay-row">
+                  <code className="code-chip">
+                    {ZELLE_NAME ? `${ZELLE_NAME} — ${ZELLE_HANDLE}` : `${ZELLE_HANDLE}`}
+                  </code>
+                  <button className="pay-now-btn" onClick={handleCopyZelle}>
+                    Copy Zelle info
+                  </button>
+                  {copied ? <span className="copied-indicator">Copied!</span> : null}
+                </div>
               </div>
             </div>
 
-            <div
-              style={{
-                display: 'flex',
-                gap: '0.5rem',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <div
-                style={{
-                  display: 'grid',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <code style={{ padding: '2px 6px', background: '#222', borderRadius: '4px' }}>
-                  {CASHAPP_HANDLE}
-                </code>
-                <button
-                  className="pay-now-btn"
-                  onClick={() => {
-                    if (
-                      typeof window !== 'undefined' &&
-                      window.navigator &&
-                      window.navigator.clipboard
-                    ) {
-                      window.navigator.clipboard.writeText(CASHAPP_HANDLE).then(() => {
-                        setCopiedCashApp(true);
-                        setTimeout(() => setCopiedCashApp(false), 1500);
-                      });
-                    }
-                  }}
-                >
-                  Copy Cash App
-                </button>
-                {copiedCashApp ? <span style={{ color: 'yellow' }}>Copied!</span> : null}
+            {/* Venmo Card */}
+            <div className="quick-pay-card venmo">
+              <div className="quick-pay-thumb" aria-hidden>
+                V
+              </div>
+              <div className="quick-pay-content">
+                <div className="quick-pay-title">Venmo</div>
+                <div className="quick-pay-row">
+                  <code className="code-chip">Kevin-Nail-1</code>
+                  <a
+                    className="pay-now-btn"
+                    href={VENMO_URL}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Pay via Venmo
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Cash App Card */}
+            <div className="quick-pay-card cashapp">
+              <div className="quick-pay-thumb" aria-hidden>
+                $
+              </div>
+              <div className="quick-pay-content">
+                <div className="quick-pay-title">Cash App</div>
+                <div className="quick-pay-row">
+                  <code className="code-chip">{CASHAPP_HANDLE}</code>
+                  <button
+                    className="pay-now-btn"
+                    onClick={() => {
+                      if (
+                        typeof window !== 'undefined' &&
+                        window.navigator &&
+                        window.navigator.clipboard
+                      ) {
+                        window.navigator.clipboard.writeText(CASHAPP_HANDLE).then(() => {
+                          setCopiedCashApp(true);
+                          setTimeout(() => setCopiedCashApp(false), 1500);
+                        });
+                      }
+                    }}
+                  >
+                    Copy Cash App
+                  </button>
+                  {copiedCashApp ? <span className="copied-indicator">Copied!</span> : null}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function ZelleBlock({ zelleName, zelleHandle, copied, onCopy }) {
-  let zelleText = '';
-  if (zelleName) {
-    zelleText = `${zelleName} — ${zelleHandle}`;
-  } else {
-    zelleText = `${zelleHandle}`;
-  }
-
-  let copiedNode = null;
-  if (copied) {
-    copiedNode = <span style={{ color: 'yellow' }}>Copied!</span>;
-  }
-
-  return (
-    <div style={{ marginBottom: '1rem' }}>
-      <div style={{ marginBottom: '0.25rem' }}>Preferred: Zelle — always free at most banks.</div>
-      <div
-        style={{
-          display: 'grid',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}
-      >
-        <code style={{ padding: '2px 6px', background: '#222', borderRadius: '4px' }}>
-          {zelleText}
-        </code>
-        <button className="pay-now-btn" onClick={onCopy}>
-          Copy Zelle info
-        </button>
-        {copiedNode}
       </div>
     </div>
   );
