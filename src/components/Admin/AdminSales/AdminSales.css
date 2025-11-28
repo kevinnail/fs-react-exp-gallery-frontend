@@ -39,6 +39,8 @@
   width: 35%;
   padding-right: 1rem;
   border-right: 1px solid #333;
+  max-height: 75dvh;
+  overflow: auto;
 }
 
 .sales-list h2 {
@@ -307,7 +309,6 @@
 }
 
 .selected-user-address {
-  border-top: 1px solid #222;
   padding-top: 0.5rem;
 }
 
