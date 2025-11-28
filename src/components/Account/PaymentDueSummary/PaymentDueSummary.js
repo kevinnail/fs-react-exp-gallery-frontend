@@ -260,23 +260,19 @@ export default function PaymentDueSummary({ userId }) {
               >
                 Print invoice
               </button>
-              <button className="pay-now-btn" onClick={handleMsgNav}>
-                Message to Pay
-              </button>
             </div>
           </div>
 
           <p>
-            I can take Zelle, Venmo, Cash App- just manual transactions, no shopping cart (yet!).
             Contact me through{' '}
             <span onClick={handleMsgNav} style={{ cursor: 'pointer', textDecoration: 'underline' }}>
               Messages
             </span>
-            {` `}if you need my payment info or have any questions! Thank you!
+            {` `}if you have any questions or problems!
           </p>
 
           {/* Quick Pay options */}
-          <div style={{ margin: '0.5rem 0 1rem 0' }}>
+          <div style={{ margin: '0.5rem 0 1rem 0', backgroundColor: 'black', padding: '.5rem' }}>
             <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>Quick Pay Options</div>
             <ZelleBlock
               zelleName={ZELLE_NAME}
@@ -286,20 +282,28 @@ export default function PaymentDueSummary({ userId }) {
             />
             <div
               style={{
-                display: 'flex',
-                gap: '0.5rem',
-                flexWrap: 'wrap',
-                alignItems: 'center',
                 marginBottom: '1rem',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div
+                style={{
+                  display: 'grid',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 {' '}
                 <code style={{ padding: '2px 6px', background: '#222', borderRadius: '4px' }}>
-                  {'click to pay with Venmo'}
+                  {'Kevin-Nail-1'}
                 </code>
                 <a
                   className="pay-now-btn"
+                  style={{
+                    width: '122px',
+                    fontWeight: 'bold',
+                    textDecoration: 'none',
+                    textAlign: 'center',
+                  }}
                   href={VENMO_URL}
                   target="_blank"
                   rel="noreferrer noopener"
@@ -309,8 +313,22 @@ export default function PaymentDueSummary({ userId }) {
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.5rem',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <div
+                style={{
+                  display: 'grid',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
                 <code style={{ padding: '2px 6px', background: '#222', borderRadius: '4px' }}>
                   {CASHAPP_HANDLE}
                 </code>
@@ -355,9 +373,16 @@ function ZelleBlock({ zelleName, zelleHandle, copied, onCopy }) {
   }
 
   return (
-    <div style={{ marginBottom: '0.5rem' }}>
+    <div style={{ marginBottom: '1rem' }}>
       <div style={{ marginBottom: '0.25rem' }}>Preferred: Zelle — always free at most banks.</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+      <div
+        style={{
+          display: 'grid',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}
+      >
         <code style={{ padding: '2px 6px', background: '#222', borderRadius: '4px' }}>
           {zelleText}
         </code>
