@@ -12,12 +12,6 @@ export default function UserAuctions({ userId }) {
 
   const navigate = useNavigate();
 
-  // calculate totals
-  const unpaidWins = wonAuctions.filter((a) => !a.isPaid);
-  const totalWon = unpaidWins.reduce((sum, a) => sum + (a.finalBid || 0), 0);
-  const shippingTotal = unpaidWins.length > 0 ? 9 + (unpaidWins.length - 1) * 1 : 0;
-  const grandTotal = totalWon + shippingTotal;
-
   const lastAuctionPaid = useAuctionEventsStore((s) => s.lastAuctionPaid);
   const lastTrackingUpdate = useAuctionEventsStore((s) => s.lastTrackingUpdate);
 
@@ -72,8 +66,6 @@ export default function UserAuctions({ userId }) {
 
     loadUserAuctions();
   }, [userId]);
-
-  const allPaid = wonAuctions.every((a) => a.isPaid === true);
 
   const handleAuctionNav = (id) => {
     navigate(`/auctions/${id}`);
@@ -238,79 +230,6 @@ export default function UserAuctions({ userId }) {
     navigate('/messages');
   };
 
-  const handlePrintInvoice = () => {
-    const win = window.open('', '_blank');
-    const date = new Date().toLocaleDateString();
-
-    const invoiceHTML =
-      '<html>' +
-      '<head>' +
-      '<title>Invoice - Stress Less Glass</title>' +
-      '<style>' +
-      'body { font-family: Arial, sans-serif; margin: 40px; color: #333; }' +
-      'h1, h2, h3 { text-align: left; }' +
-      'table { width: 100%; border-collapse: collapse; margin-top: 20px; }' +
-      'th, td { border: 1px solid #ddd; padding: 8px; text-align: left;font-size:.9rem }' +
-      'th { background: #f4f4f4; }' +
-      '.totals { text-align: right; margin-top: 30px;margin-right:3rem;width:20%;justify-self:flex-end }' +
-      '.totals p { margin: 0; }' +
-      '.footer { margin-top: 40px; text-align: center; font-size: 0.9em; }' +
-      '</style>' +
-      '</head>' +
-      '<body>' +
-      '<h1>Stress Less Glass</h1>' +
-      '<h2>Invoice</h2>' +
-      `<p><strong>Date:</strong> ${date}</p>` +
-      '<table>' +
-      '<thead><tr><th>Item</th><th>Final Bid</th><th>Closed Date</th><th>Shipping</th></tr></thead>' +
-      '<tbody>' +
-      unpaidWins
-        .map((a, i) => {
-          const shipping = i === 0 ? 9 : 1;
-          return (
-            `<tr>` +
-            `<td>${a.title || `Auction #${a.auctionId}`}</td>` +
-            `<td>$${Number(a.finalBid).toLocaleString()}</td>` +
-            `<td>${new Date(a.closedAt).toLocaleString([], {
-              year: '2-digit',
-              month: '2-digit',
-              day: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit',
-            })}</td>` +
-            `<td>$${shipping.toFixed(2)}</td>` +
-            `</tr>`
-          );
-        })
-        .join('') +
-      '</tbody></table>' +
-      `<div class="totals" style="margin-top:30px;">
-    <div style="display:flex; justify-content:space-between; margin:4px 0;">
-        <p><strong>Subtotal:</strong></p>
-        <p>$${totalWon.toLocaleString()}</p>
-    </div>
-    <div style="display:flex; justify-content:space-between; margin:4px 0;">
-        <p><strong>Shipping:</strong></p>
-        <p>$${shippingTotal.toLocaleString()}</p>
-    </div>
-    <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:1.1rem;">
-        <p><strong>Total:</strong></p>
-        <p><strong>$${grandTotal.toLocaleString()}</strong></p>
-    </div>
-</div>` +
-      '<div class="footer">' +
-      '<p>Payment Due!</p>' +
-      '<p>Zelle, Venmo, Cash App, or CC/Debit via emailed invoice.</p>' +
-      '<p>Thank you for supporting Stress Less Glass!</p>' +
-      '</div>' +
-      '<script>window.onload = () => window.print();</script>' +
-      '</body>' +
-      '</html>';
-
-    win.document.write(invoiceHTML);
-    win.document.close();
-  };
-
   const handleTrackingClick = (trackingNumber) => {
     if (!trackingNumber) return;
     const url = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(trackingNumber)}`;
@@ -323,65 +242,9 @@ export default function UserAuctions({ userId }) {
         <strong>Your Auction Bids & Wins</strong>
       </span>
 
-      <div className="user-auctions-summary">
-        {wonAuctions.length > 0 && !allPaid ? (
-          <>
-            <h4>Auctions needing payment:</h4>
-            <div className="summary-details">
-              <p className="summary-details-p">
-                <span>Items won:</span> {unpaidWins.length}
-              </p>
-              <p className="summary-details-p">
-                <span>Subtotal:</span> ${totalWon.toLocaleString()}
-              </p>
-              <p className="summary-details-p">
-                <span>Shipping:</span> ${shippingTotal.toLocaleString()}
-              </p>
-              <p className="summary-total">
-                <strong>Total:</strong> ${grandTotal.toLocaleString()}
-              </p>
-            </div>
-
-            <div className="payment-info-banner">
-              <div className="payment-due">
-                <strong>Payment Due!</strong>
-
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button
-                    className="pay-now-btn"
-                    onClick={handlePrintInvoice}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    Print invoice
-                  </button>
-
-                  <button className="pay-now-btn" onClick={handleMsgNav}>
-                    Message to Pay
-                  </button>
-                </div>
-              </div>
-
-              <p>
-                I can take Zelle, Venmo, Cash App, or CC/Debit via invoice through email. Contact me
-                through{' '}
-                <span
-                  onClick={handleMsgNav}
-                  style={{ cursor: 'pointer', textDecoration: 'underline' }}
-                >
-                  {' '}
-                  Messages
-                </span>{' '}
-                if you need my payment info or have any questions! Thank you!
-              </p>
-            </div>
-          </>
-        ) : (
-          <p className="empty-msg">
-            Waiting for your item(s)? You can find your tracking number & link in the Won section
-            below.
-          </p>
-        )}
-      </div>
+      <p className="empty-msg">
+        Waiting for your item(s)? You can find your tracking number & link in the Won section below.
+      </p>
 
       <h3>Active bids</h3>
       {activeBids.length > 0 ? (
