@@ -9,6 +9,7 @@ import UserAuctions from './UserAuctions.js';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import UserSales from './UserSales/UserSales.js';
+import PaymentDueSummary from './PaymentDueSummary/PaymentDueSummary.js';
 
 export default function Account() {
   const { user } = useUserStore();
@@ -233,6 +234,9 @@ export default function Account() {
             </span>
           )}
         </div>
+
+        {/* Combined payment due summary across auctions + purchases */}
+        <PaymentDueSummary userId={user?.id} />
 
         <Tabs
           value={tab}
