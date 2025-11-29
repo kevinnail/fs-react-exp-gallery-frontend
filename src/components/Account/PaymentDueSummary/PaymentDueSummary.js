@@ -90,7 +90,6 @@ export default function PaymentDueSummary({ userId }) {
         console.warn('[PaymentDueSummary] sale-created payload missing id', data);
         return;
       }
-      console.info('[PaymentDueSummary] sale-created received, adding sale to summary', mapped.id);
       setSales((prev) => (prev.some((s) => s.id === mapped.id) ? prev : [mapped, ...prev]));
     };
     websocketService.on(SALE_CREATED, handleSaleCreated);

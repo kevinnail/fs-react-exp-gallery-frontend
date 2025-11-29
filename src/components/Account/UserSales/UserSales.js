@@ -79,9 +79,9 @@ export default function UserSales({ userId }) {
         console.warn('[UserSales] sale-created payload missing id', data);
         return;
       }
+
       // ensure sale belongs to this user
       if (mapped.user_id && userId && Number(mapped.user_id) !== Number(userId)) return;
-      console.info('[UserSales] sale-created received for user, adding sale', mapped.id);
       setSales((prev) => (prev.some((s) => s.id === mapped.id) ? prev : [mapped, ...prev]));
     };
     websocketService.on(SALE_CREATED, handleSaleCreated);
