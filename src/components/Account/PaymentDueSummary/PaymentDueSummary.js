@@ -3,6 +3,7 @@ import { getUserAuctions } from '../../../services/fetch-auctions.js';
 import { getUserSales } from '../../../services/fetch-sales.js';
 import { useNavigate } from 'react-router-dom';
 import './PaymentDueSummary.css';
+import { useAuctionEventsStore } from '../../../stores/auctionEventsStore.js';
 
 export default function PaymentDueSummary({ userId }) {
   const [wonAuctions, setWonAuctions] = useState([]);
@@ -12,6 +13,7 @@ export default function PaymentDueSummary({ userId }) {
   const [copiedCashApp, setCopiedCashApp] = useState(false);
 
   const navigate = useNavigate();
+  const lastAuctionPaid = useAuctionEventsStore((s) => s.lastAuctionPaid);
 
   useEffect(() => {
     let isMounted = true;
@@ -50,6 +52,15 @@ export default function PaymentDueSummary({ userId }) {
       isMounted = false;
     };
   }, [userId]);
+
+  // Live auction paid websocket update (no sales websocket logic)
+  useEffect(() => {
+    if (!lastAuctionPaid) return;
+    const { id, isPaid } = lastAuctionPaid;
+    setWonAuctions((prev) =>
+      prev.map((a) => (a.auctionId === id || a.id === id ? { ...a, isPaid } : a))
+    );
+  }, [lastAuctionPaid]);
 
   const unpaidData = useMemo(() => {
     const unpaidWins = wonAuctions.filter((a) => !a.isPaid);
