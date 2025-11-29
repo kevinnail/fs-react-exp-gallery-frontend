@@ -68,12 +68,7 @@ export default function UserSales({ userId }) {
               key={sale.id}
               className="user-sales-card"
               style={{
-                border:
-                  sale.tracking_number && sale.is_paid
-                    ? '1px solid green'
-                    : sale.is_paid
-                      ? '1px solid yellow'
-                      : '1px solid red',
+                border: sale.is_paid ? '1px solid green' : '1px solid red',
               }}
             >
               {/* IMAGE */}
@@ -105,28 +100,30 @@ export default function UserSales({ userId }) {
                     Payment Needed
                   </span>
                 )}
-                {(sale.is_paid && !sale.tracking_number) ||
-                  (sale.tracking_number === '0' && (
+                {console.log('sale', sale)}
+                {console.log('sale is paid', sale.is_paid)}
+                {console.log('sale tracking', sale.tracking_number)}
+                {sale.is_paid && (!sale.tracking_number || sale.tracking_number === '0') && (
+                  <span
+                    style={{
+                      color: 'yellow',
+                      padding: '4px 6px',
+                      fontSize: '1.25rem',
+                      fontWeight: 'bold',
+                      marginRight: '3rem',
+                    }}
+                  >
                     <span
                       style={{
-                        color: 'yellow',
-                        padding: '4px 6px',
-                        fontSize: '1.25rem',
-                        fontWeight: 'bold',
-                        marginRight: '3rem',
+                        marginRight: '1.5rem',
+                        color: 'green',
                       }}
                     >
-                      <span
-                        style={{
-                          marginRight: '1.5rem',
-                          color: 'green',
-                        }}
-                      >
-                        Paid{' '}
-                      </span>{' '}
-                      Shipping Soon
-                    </span>
-                  ))}
+                      Paid{' '}
+                    </span>{' '}
+                    Shipping Soon
+                  </span>
+                )}
                 {sale.tracking_number && sale.tracking_number !== '0' && (
                   <span
                     style={{

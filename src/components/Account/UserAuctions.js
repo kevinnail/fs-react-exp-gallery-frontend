@@ -129,7 +129,7 @@ export default function UserAuctions({ userId }) {
           <>
             <span
               style={{
-                color: '#ffbb00',
+                color: '#ff4444',
                 padding: '2px 6px',
                 borderRadius: '4px',
                 fontSize: '1rem',
@@ -139,10 +139,6 @@ export default function UserAuctions({ userId }) {
             >
               Payment Needed
             </span>
-
-            <button onClick={handleMsgNav} className="pay-now-btn">
-              Message to Pay
-            </button>
           </>
         )}
 
@@ -173,10 +169,10 @@ export default function UserAuctions({ userId }) {
           <span>Reason: </span>
           {auction.closedReason === 'buy_now' ? 'Bought instantly' : 'Expired'}
         </p>
-        {auction.isPaid && (
+        {auction.isPaid && (!auction.trackingNumber || auction.trackingNumber === '0') && (
           <span
             style={{
-              color: 'green',
+              color: 'yellow',
               padding: '2px 6px',
               borderRadius: '4px',
               fontSize: '1rem',
@@ -184,10 +180,18 @@ export default function UserAuctions({ userId }) {
               marginRight: '3rem',
             }}
           >
-            PAID
+            <span
+              style={{
+                marginRight: '1.5rem',
+                color: 'green',
+              }}
+            >
+              Paid{' '}
+            </span>{' '}
+            Shipping Soon
           </span>
         )}
-        {auction.trackingNumber && (
+        {auction.trackingNumber && auction.trackingNumber !== '0' && (
           <div
             className="tracking-link"
             onClick={() => handleTrackingClick(auction.trackingNumber)}
@@ -273,7 +277,7 @@ export default function UserAuctions({ userId }) {
               key={a.id}
               className="auction-mini-card won"
               style={{
-                border: !a.isPaid ? '1px solid yellow' : '1px solid green',
+                border: a.isPaid ? '1px solid green' : '1px solid red',
               }}
             >
               <WonCard auction={a} />
