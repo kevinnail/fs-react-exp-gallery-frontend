@@ -213,8 +213,8 @@ export default function Account() {
               Email notifications are{' '}
               {profile?.sendEmailNotifications ? (
                 <>
-                  <strong>enabled</strong> You will receive one email for new work, auctions, and
-                  tracking info.
+                  <strong>enabled</strong> You will receive emails for new messages, new work,
+                  auctions, and tracking info.
                 </>
               ) : (
                 <>
