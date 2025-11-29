@@ -120,11 +120,44 @@ export async function signInUser(email, password) {
     const data = await resp.json();
 
     if (!resp.ok) {
-      throw new Error(data.message);
+      const err = new Error(data.message || 'Failed to sign in');
+      if (data && data.code) err.code = data.code;
+      err.status = resp.status;
+      throw err;
     }
     return data;
   } catch (error) {
     console.error('Problem signing in: ', error.message);
+    throw error;
+  }
+}
+
+// Resend email verification
+export async function resendVerification(email) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/users/resend-verification`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      // No credentials required, but safe to include
+      credentials: 'include',
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await resp.json().catch(() => ({}));
+
+    if (!resp.ok) {
+      const err = new Error(data.message || 'Failed to resend verification');
+      err.status = resp.status;
+      if (data && data.code) err.code = data.code;
+      throw err;
+    }
+
+    return data; // { message }
+  } catch (error) {
+    console.error('Problem resending verification: ', error.message);
     throw error;
   }
 }
