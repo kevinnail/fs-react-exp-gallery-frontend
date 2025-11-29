@@ -119,6 +119,19 @@ class WebSocketService {
       this.socket.on('auction-paid', (data) => {
         this.emit('auction-paid', data);
       });
+      // Gallery sales (purchases) events
+      this.socket.on('sale-paid', (data) => {
+        console.debug('[WS] sale-paid event received', data);
+        this.emit('sale-paid', data);
+      });
+      this.socket.on('sale-tracking-info', (data) => {
+        console.debug('[WS] sale-tracking-info event received', data);
+        this.emit('sale-tracking-info', data);
+      });
+      this.socket.on('sale-created', (data) => {
+        console.debug('[WS] sale-created event received', data);
+        this.emit('sale-created', data);
+      });
       //
     } catch (error) {
       console.error('Error initializing WebSocket:', error);
