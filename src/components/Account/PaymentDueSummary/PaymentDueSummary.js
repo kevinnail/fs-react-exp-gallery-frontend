@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getUserAuctions } from '../../../services/fetch-auctions.js';
 import { getUserSales } from '../../../services/fetch-sales.js';
+import websocketService from '../../../services/websocket.js';
+import { SALE_PAID, SALE_TRACKING_INFO, SALE_CREATED } from '../../../services/salesEvents.js';
 import { useNavigate } from 'react-router-dom';
 import './PaymentDueSummary.css';
 import { useAuctionEventsStore } from '../../../stores/auctionEventsStore.js';
@@ -52,6 +54,52 @@ export default function PaymentDueSummary({ userId }) {
       isMounted = false;
     };
   }, [userId]);
+
+  // Real-time purchase updates (paid status & tracking)
+  useEffect(() => {
+    const handleSalePaid = (data) => {
+      if (!data || typeof data.saleId === 'undefined') return;
+      setSales((prev) =>
+        prev.map((s) => (s.id === data.saleId ? { ...s, is_paid: data.isPaid } : s))
+      );
+    };
+    const handleSaleTracking = (data) => {
+      if (!data || typeof data.saleId === 'undefined') return;
+      setSales((prev) =>
+        prev.map((s) => (s.id === data.saleId ? { ...s, tracking_number: data.trackingNumber } : s))
+      );
+    };
+    websocketService.on(SALE_PAID, handleSalePaid);
+    websocketService.on(SALE_TRACKING_INFO, handleSaleTracking);
+    const handleSaleCreated = (data) => {
+      const payload = data?.sale || data;
+      if (!payload) return;
+      const mapped = {
+        id: payload.id ?? payload.saleId,
+        post_id: payload.post_id ?? payload.postId,
+        user_id: payload.user_id ?? payload.userId,
+        price: payload.price,
+        tracking_number: payload.tracking_number ?? payload.trackingNumber ?? '0',
+        is_paid: payload.is_paid ?? payload.isPaid ?? false,
+        created_at: payload.created_at,
+        post_title: payload.post_title,
+        post_image_url: payload.post_image_url,
+        buyer_email: payload.buyer_email,
+      };
+      if (!mapped.id) {
+        console.warn('[PaymentDueSummary] sale-created payload missing id', data);
+        return;
+      }
+      console.info('[PaymentDueSummary] sale-created received, adding sale to summary', mapped.id);
+      setSales((prev) => (prev.some((s) => s.id === mapped.id) ? prev : [mapped, ...prev]));
+    };
+    websocketService.on(SALE_CREATED, handleSaleCreated);
+    return () => {
+      websocketService.off(SALE_PAID, handleSalePaid);
+      websocketService.off(SALE_TRACKING_INFO, handleSaleTracking);
+      websocketService.off(SALE_CREATED, handleSaleCreated);
+    };
+  }, []);
 
   // Live auction paid websocket update (no sales websocket logic)
   useEffect(() => {
