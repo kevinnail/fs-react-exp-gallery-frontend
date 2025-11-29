@@ -87,7 +87,7 @@ export default function PaymentDueSummary({ userId }) {
         buyer_email: payload.buyer_email,
       };
       if (!mapped.id) {
-        console.warn('[PaymentDueSummary] sale-created payload missing id', data);
+        console.error('[PaymentDueSummary] sale-created payload missing id', data);
         return;
       }
       setSales((prev) => (prev.some((s) => s.id === mapped.id) ? prev : [mapped, ...prev]));

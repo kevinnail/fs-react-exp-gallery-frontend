@@ -76,7 +76,7 @@ export default function UserSales({ userId }) {
         buyer_email: payload.buyer_email,
       };
       if (!mapped.id) {
-        console.warn('[UserSales] sale-created payload missing id', data);
+        console.error('[UserSales] sale-created payload missing id', data);
         return;
       }
 

@@ -230,10 +230,6 @@ export default function UserAuctions({ userId }) {
     );
   }
 
-  const handleMsgNav = () => {
-    navigate('/messages');
-  };
-
   const handleTrackingClick = (trackingNumber) => {
     if (!trackingNumber) return;
     const url = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(trackingNumber)}`;
