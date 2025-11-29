@@ -202,8 +202,10 @@ export default function PostForm({
               <option value="Bubblers">Bubblers</option>
               <option value="Collabs">Collabs</option>
               <option value="Cups">Cups</option>
+              <option value="Droppers">Droppers</option>
               <option value="Dry Pieces">Dry Pieces</option>
               <option value="Goblets">Goblets</option>
+              <option value="Jars">Jars</option>
               <option value="Iso Stations">Iso Stations</option>
               <option value="Marbles">Marbles</option>
               <option value="Pendants">Pendants</option>
@@ -213,6 +215,7 @@ export default function PostForm({
               <option value="Spinner Caps">Spinner Caps</option>
               <option value="Terp Pearls">Terp Pearls</option>
               <option value="Tubes">Tubes</option>
+              <option value="Vases">Vases</option>
               <option value="Misc">Misc</option>
             </select>
           </Box>
@@ -334,7 +337,7 @@ export default function PostForm({
           </Box>
           {thumbs}
           <Box className="btn-container">
-            <button className="submit-btn" type="submit">
+            <button className="submit-btn-post" type="submit">
               {<img className="upload-icon " src="/upload.png" alt="upload" />}
             </button>
           </Box>

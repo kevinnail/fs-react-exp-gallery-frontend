@@ -13,6 +13,16 @@ export default function AuctionDetail() {
 
   const navigate = useNavigate();
 
+  // Simplest back logic: if there is no referrer (direct entry like email link), go home.
+  // Otherwise rely on browser history.
+  const handleBack = () => {
+    if (document.referrer) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
+
   const lastAuctionExtended = useAuctionEventsStore((s) => s.lastAuctionExtended);
   useEffect(() => {
     if (!lastAuctionExtended) return;
@@ -65,7 +75,7 @@ export default function AuctionDetail() {
     <div className="messages-container">
       <div className="messages-content">
         <button
-          onClick={() => navigate(-1)}
+          onClick={handleBack}
           style={{
             background: 'none',
             border: 'none',

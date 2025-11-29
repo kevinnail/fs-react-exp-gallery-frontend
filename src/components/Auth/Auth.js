@@ -3,7 +3,7 @@ import { Link, NavLink, useParams, useNavigate, Navigate } from 'react-router-do
 import { useUserStore } from '../../stores/userStore.js';
 import './Auth.css';
 import { authUser } from '../../services/auth.js';
-import { getUser } from '../../services/fetch-utils.js';
+import { getUser, resendVerification } from '../../services/fetch-utils.js';
 import Loading from '../Loading/Loading.js';
 import { toast } from 'react-toastify';
 import AgreementModal from './AgreementModal.js';
@@ -27,6 +27,7 @@ export default function Auth() {
   const { posts, galleryLoading } = useGalleryPosts();
   const [recentImages, setRecentImages] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
+  const [shouldOfferResend, setShouldOfferResend] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -55,24 +56,28 @@ export default function Auth() {
         draggablePercent: 60,
         autoClose: 5000,
       });
+      setShouldOfferResend(false);
     } else if (params.get('verify') === 'false') {
+      const code = params.get('code');
+      let message = 'Invalid or expired verification link.';
+      if (code === 'TOKEN_EXPIRED') message = 'Verification link expired.';
+      if (code === 'TOKEN_INVALIDATED')
+        message = 'A newer verification link was issued; this one is invalid.';
+      if (code === 'USER_NOT_FOUND') message = 'Account not found for this verification link.';
+
       toast.error(
         <div>
-          <p>Invalid or expired verification link.</p>
-          <p>
-            Please try again. If that fails, please contact me on{' '}
-            <a style={{ textDecoration: 'none' }} href="http://www.instagram.com/stresslessglass">
-              Instagram
-            </a>
-          </p>
+          <p>{message}</p>
+          <p>You can request a new verification email below.</p>
         </div>,
         {
           theme: 'colored',
           draggable: true,
           draggablePercent: 60,
-          autoClose: false,
+          autoClose: 8000,
         }
       );
+      setShouldOfferResend(true);
     }
   }, []);
 
@@ -244,11 +249,11 @@ export default function Auth() {
       const data = await getUser();
 
       if (!data?.user?.isVerified) {
-        toast.info('Please check your email to verify account!', {
+        toast.info('Please check your email to verify your account!', {
           theme: 'colored',
           draggable: true,
           draggablePercent: 60,
-          autoClose: false,
+          autoClose: 6000,
         });
         setLoading(false);
         return;
@@ -269,7 +274,7 @@ export default function Auth() {
       }
 
       if (type === 'sign-up') {
-        toast.success('Account created successfully', {
+        toast.success('Account created. Check your email to verify your account.', {
           theme: 'colored',
           draggable: true,
           draggablePercent: 60,
@@ -278,12 +283,52 @@ export default function Auth() {
       }
     } catch (e) {
       console.error(e);
-      toast.error(e.message, {
-        theme: 'colored',
-        draggable: true,
-        draggablePercent: 60,
-        autoClose: 5000,
-      });
+      if (e?.code === 'EMAIL_NOT_VERIFIED' || e?.status === 403) {
+        setShouldOfferResend(true);
+        const normalizedEmail = email.trim();
+        const onResend = async () => {
+          try {
+            await resendVerification(normalizedEmail);
+            toast.success('If an account exists, a new verification email has been sent.', {
+              theme: 'colored',
+              autoClose: 5000,
+            });
+          } catch (err) {
+            if (err?.status === 429) {
+              toast.warn('Too many requests. Please try again later.', {
+                theme: 'colored',
+                autoClose: 6000,
+              });
+            } else {
+              toast.error(err.message || 'Failed to resend verification.', {
+                theme: 'colored',
+              });
+            }
+          }
+        };
+
+        toast.info(
+          <div>
+            <p>Email not verified.</p>
+            <button className="button-auth" onClick={onResend}>
+              Resend verification email
+            </button>
+          </div>,
+          {
+            theme: 'colored',
+            draggable: true,
+            draggablePercent: 60,
+            autoClose: false,
+          }
+        );
+      } else {
+        toast.error(e.message, {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: 5000,
+        });
+      }
       setLoading(false);
     }
   };
@@ -492,6 +537,42 @@ export default function Auth() {
                 <button className="button-auth" onClick={isSignIn ? submitAuth : handleSignupClick}>
                   {isSignIn ? 'Sign In' : 'Sign Up'}
                 </button>
+                {isSignIn && shouldOfferResend && (
+                  <button
+                    className="button-auth"
+                    style={{ marginTop: '8px', backgroundColor: '#444' }}
+                    onClick={async () => {
+                      const normalizedEmail = email.trim();
+                      if (!normalizedEmail) {
+                        toast.info('Enter your email above, then click resend.', {
+                          theme: 'dark',
+                          autoClose: 4000,
+                        });
+                        return;
+                      }
+                      try {
+                        await resendVerification(normalizedEmail);
+                        toast.success(
+                          'If an account exists, a new verification email has been sent.',
+                          { theme: 'colored', autoClose: 5000 }
+                        );
+                      } catch (err) {
+                        if (err?.status === 429) {
+                          toast.warn('Too many requests. Please try again later.', {
+                            theme: 'colored',
+                            autoClose: 6000,
+                          });
+                        } else {
+                          toast.error(err.message || 'Failed to resend verification.', {
+                            theme: 'colored',
+                          });
+                        }
+                      }
+                    }}
+                  >
+                    Resend verification email
+                  </button>
+                )}
                 <AgreementModal
                   isOpen={isAgreementOpen}
                   onAgree={handleAgree}

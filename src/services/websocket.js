@@ -119,6 +119,16 @@ class WebSocketService {
       this.socket.on('auction-paid', (data) => {
         this.emit('auction-paid', data);
       });
+      // Gallery sales (purchases) events
+      this.socket.on('sale-paid', (data) => {
+        this.emit('sale-paid', data);
+      });
+      this.socket.on('sale-tracking-info', (data) => {
+        this.emit('sale-tracking-info', data);
+      });
+      this.socket.on('sale-created', (data) => {
+        this.emit('sale-created', data);
+      });
       //
     } catch (error) {
       console.error('Error initializing WebSocket:', error);

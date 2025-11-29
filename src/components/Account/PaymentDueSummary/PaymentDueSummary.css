@@ -1,0 +1,180 @@
+.payment-due-summary {
+  margin-top: 1rem;
+}
+
+/* Mirror visual language from auctions summary */
+.user-auctions-summary {
+  border: 1px solid rgba(255, 255, 255, 0.297);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: white;
+  background-color: black;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  text-align: left;
+}
+
+.user-auctions-summary h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 0.25rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.summary-details {
+}
+
+.summary-details-p {
+  font-size: 0.9rem;
+  padding: 0 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  margin: 0.25rem 0;
+}
+
+.summary-total {
+  padding: 0 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 0.5rem;
+  font-weight: 600;
+  font-size: 1.3rem !important;
+}
+
+.payment-info-banner {
+  margin-top: 1rem;
+  background: rgb(71, 71, 71);
+  border: 1px solid rgb(246, 255, 0);
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  padding: 0 1rem;
+  font-size: 1.2rem;
+  margin: 0;
+  text-align: left;
+}
+
+.payment-info-banner strong {
+  color: rgb(246, 255, 0);
+  text-shadow: 0 0 6px black;
+}
+
+.payment-due {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.pay-now-btn {
+  background: rgb(255, 255, 255);
+  color: black;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 6px;
+  font-size: 0.8rem;
+  transition: opacity 0.15s ease;
+  min-width: 120px;
+}
+
+.pay-now-btn:hover {
+  opacity: 0.85;
+}
+
+/* Quick Pay cards */
+.quick-pay-section {
+  margin: 0.5rem 0 1rem 0;
+}
+
+.quick-pay-header {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.quick-pay-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  margin-bottom: 0.6rem;
+}
+
+.quick-pay-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  background: #1f1f1f;
+  color: #fff;
+}
+
+.quick-pay-card.zelle .quick-pay-thumb {
+  background: #6a1b9a; /* purple-ish */
+}
+.quick-pay-card.venmo .quick-pay-thumb {
+  background: #3d95ce; /* venmo blue */
+}
+.quick-pay-card.cashapp .quick-pay-thumb {
+  background: #00c244; /* cash app green */
+}
+
+.quick-pay-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.quick-pay-title {
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.quick-pay-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 0.35rem;
+}
+
+.quick-pay-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.code-chip {
+  padding: 2px 6px;
+  background: #222;
+  border-radius: 4px;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+  font-size: 0.85rem;
+}
+
+.copied-indicator {
+  color: rgb(246, 255, 0);
+}
+
+@media (max-width: 768px) {
+  .payment-info-banner {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.95rem;
+  }
+  .quick-pay-card {
+    padding: 0.6rem;
+  }
+}

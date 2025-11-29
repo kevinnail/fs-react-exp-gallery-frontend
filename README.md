@@ -69,6 +69,13 @@ Built for performance, scalability, and smooth interaction across gallery browsi
 - Outbid, win, and auction-ended alerts.
 - Live badge counters via WebSockets and Zustand store.
 
+### 5. Unified Payment Summary
+
+- Customers see a single consolidated "Payment Due" summary in Account that aggregates unpaid auction wins and gallery purchases.
+- Combined shipping is applied ($9 first item, $1 each additional) across both sources.
+- Actions include printing a combined invoice and messaging to complete payment.
+- Component: `src/components/Account/PaymentDueSummary/PaymentDueSummary.js`.
+
 ---
 
 ## 🧱 Database Schema (Simplified)
@@ -89,6 +96,7 @@ All keys use `ON DELETE CASCADE`. Indexed for read-heavy operations.
 
 - Unit and integration coverage across backend routes.
 - Test runner:
+
   ```bash
   npm test -- -u --runInBand --detectOpenHandles --forceExit
   ```

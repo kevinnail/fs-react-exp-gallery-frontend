@@ -196,13 +196,6 @@ export default function ProfileForm({ handleCloseForm }) {
     }
   };
 
-  // Close on clicking outside modal content
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      handleCloseForm();
-    }
-  };
-
   // Close on Escape key
   useEffect(() => {
     const handleKey = (e) => {
@@ -214,8 +207,22 @@ export default function ProfileForm({ handleCloseForm }) {
     return () => window.removeEventListener('keydown', handleKey);
   }, [handleCloseForm]);
 
+  // Lock background scroll while modal is open
+  useEffect(() => {
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
+    return () => {
+      document.body.classList.remove('modal-open');
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
+    };
+  }, []);
+
   return (
-    <div className="profile-form-overlay" onClick={handleOverlayClick}>
+    <div className="profile-form-overlay">
       <div className="profile-form-container">
         <div className="profile-form-header">
           <h2>Edit Profile</h2>

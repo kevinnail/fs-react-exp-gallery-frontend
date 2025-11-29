@@ -9,16 +9,17 @@ import UserAuctions from './UserAuctions.js';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import UserSales from './UserSales/UserSales.js';
+import PaymentDueSummary from './PaymentDueSummary/PaymentDueSummary.js';
 
 export default function Account() {
   const { user } = useUserStore();
   const { profile, address, setShowWelcome, fetchUserProfile } = useProfileStore();
-
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
   const navigate = useNavigate();
-
   const [tab, setTab] = useState(0);
+
+  const currentSpecialDiscount = 0.5; //!  Change to 0.7 by 12-1-25 =========================================================
 
   const handleTabChange = (e, newValue) => {
     setTab(newValue);
@@ -234,6 +235,9 @@ export default function Account() {
           )}
         </div>
 
+        {/* Combined payment due summary across auctions + purchases */}
+        <PaymentDueSummary userId={user?.id} />
+
         <Tabs
           value={tab}
           onChange={handleTabChange}
@@ -253,8 +257,10 @@ export default function Account() {
                 </span>
                 <span style={{ display: 'block', textAlign: 'left' }}>
                   <strong>50% OFF</strong> of the new work for all new sign ups
-                  <strong style={{ color: 'yellow' }}> until the end of November!</strong>
-                  This extends to GlassPass and Etsy just message me.
+                  <strong style={{ color: 'yellow' }}> until the end of November!{`  `}</strong>
+                  This extends to GlassPass and Etsy just message me- the piece should be posted
+                  here, go to that page, click the &quot;Message Kevin about this piece&quot; button
+                  up top and we&apos;ll get it sorted out for you!
                 </span>
                 <br />
                 <span style={{ display: 'block', textAlign: 'left' }}>
@@ -295,7 +301,7 @@ export default function Account() {
                             </span>
                             <i className="fa fa-arrow-right" aria-hidden="true"></i>
                             <span style={{ marginLeft: '.25rem' }}>
-                              ${(post.price * 0.7).toFixed(0)}
+                              ${(post.price * currentSpecialDiscount).toFixed(0)}
                             </span>
                           </span>
                         </p>

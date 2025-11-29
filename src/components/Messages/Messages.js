@@ -36,6 +36,11 @@ export default function Messages() {
   const [typingTimeout, setTypingTimeout] = useState(null);
   const messagesListRef = useRef(null);
   const navigate = useNavigate();
+  // Detect touch/coarse pointer devices (mobile/tablet)
+  const isCoarsePointer =
+    typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(pointer: coarse)').matches;
 
   const loadMessages = async () => {
     try {
@@ -447,8 +452,11 @@ export default function Messages() {
                 disabled={sending}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault(); // stop newline
-                    handleSendMessage(e); // submit
+                    // On mobile/tablet, allow default newline instead of submitting
+                    if (isCoarsePointer) return;
+                    // Desktop: Enter submits (Shift+Enter inserts newline)
+                    e.preventDefault();
+                    handleSendMessage(e);
                   }
                 }}
               />

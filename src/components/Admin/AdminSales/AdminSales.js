@@ -104,6 +104,101 @@ export default function AdminSales() {
     window.open(url, '_blank');
   };
 
+  // Copy helper for currently selected sale's buyer address
+  const handleCopyCurrentSaleAddress = () => {
+    if (!currentSale) return;
+    // try to resolve buyer user from loaded users by email
+    const buyerEmail = (currentSale.buyer_email || '').toLowerCase();
+    const buyerUser = users.find(
+      (u) => (u.email || u.user_email || '').toLowerCase() === buyerEmail
+    );
+
+    const profile = buyerUser?.profile || {};
+    const address = buyerUser?.address;
+
+    if (!address) {
+      toast.error('No address on file to copy.', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'admin-sales-current-copy-no-address',
+        autoClose: 3500,
+      });
+      return;
+    }
+
+    const name = [
+      profile.firstName || currentSale.buyer_first_name,
+      profile.lastName || currentSale.buyer_last_name,
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+
+    const countryCode = (address.countryCode || 'US').toUpperCase();
+    const lines = [
+      name,
+      address.addressLine1,
+      address.addressLine2,
+      `${address.city}, ${address.state} ${address.postalCode}`,
+      countryCode !== 'US' ? countryCode : null,
+    ].filter(Boolean);
+    const text = lines.join('\n');
+
+    const onSuccess = () => {
+      toast.success('Address copied', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'admin-sales-current-address-copied',
+        autoClose: 2000,
+      });
+    };
+
+    const onFail = () => {
+      toast.error('Failed to copy address', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'admin-sales-current-address-copy-fail',
+        autoClose: 3000,
+      });
+    };
+
+    if (
+      typeof window !== 'undefined' &&
+      window.navigator &&
+      window.navigator.clipboard &&
+      window.navigator.clipboard.writeText
+    ) {
+      window.navigator.clipboard.writeText(text).then(onSuccess).catch(onFail);
+    } else {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.readOnly = true;
+        ta.style.position = 'fixed';
+        ta.style.top = '-1000px';
+        document.body.appendChild(ta);
+        ta.select();
+        // Clipboard API not available; instruct manual copy
+        toast.info('Clipboard not available. Press Ctrl+C to copy.', {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'admin-sales-address-copy-manual',
+          autoClose: 3500,
+        });
+        // Clean up the temporary element
+        setTimeout(() => {
+          document.body.removeChild(ta);
+        }, 4000);
+      } catch (e) {
+        onFail();
+      }
+    }
+  };
+
   useEffect(() => {
     loadSales();
   }, []);
@@ -203,13 +298,21 @@ export default function AdminSales() {
       try {
         const ta = document.createElement('textarea');
         ta.value = text;
+        ta.readOnly = true;
         ta.style.position = 'fixed';
         ta.style.top = '-1000px';
         document.body.appendChild(ta);
         ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        onSuccess();
+        toast.info('Clipboard not available. Press Ctrl+C to copy.', {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'admin-sales-current-address-copy-manual',
+          autoClose: 3500,
+        });
+        setTimeout(() => {
+          document.body.removeChild(ta);
+        }, 4000);
       } catch (e) {
         onFail();
       }
@@ -610,6 +713,45 @@ export default function AdminSales() {
                     <label>Buyer:</label>
                     <span>{currentSale.buyer_first_name}</span>
                     <span>{currentSale.buyer_last_name?.slice(0, 1)}.</span>
+                  </div>
+
+                  <div className="sales-detail-row" style={{ alignItems: 'flex-start' }}>
+                    <label>Address:</label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
+                      {/* Resolve buyer user to show address */}
+                      {(() => {
+                        const buyerEmail = (currentSale.buyer_email || '').toLowerCase();
+                        const buyerUser = users.find(
+                          (u) => (u.email || u.user_email || '').toLowerCase() === buyerEmail
+                        );
+                        const address = buyerUser?.address;
+                        if (!address) {
+                          return <div className="address-missing">No shipping address on file</div>;
+                        }
+                        return (
+                          <div className="selected-user-address">
+                            <div className="selected-user-address-actions">
+                              <button
+                                type="button"
+                                className="copy-address-button"
+                                onClick={handleCopyCurrentSaleAddress}
+                                disabled={!address}
+                              >
+                                Copy
+                              </button>
+                            </div>
+                            <div className="address-lines">
+                              <div>{address.addressLine1}</div>
+                              {address.addressLine2 ? <div>{address.addressLine2}</div> : null}
+                              <div>
+                                {address.city}, {address.state} {address.postalCode}
+                              </div>
+                              <div>{address.countryCode || 'US'}</div>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </div>
                   </div>
 
                   <div className="sales-detail-row">
