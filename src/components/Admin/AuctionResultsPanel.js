@@ -42,16 +42,17 @@ export default function AuctionResultsPanel() {
   let resolvedUser = null;
   if (winner) {
     for (let i = 0; i < users.length; i += 1) {
-      const u = users[i];
-      if (winner.id && Number(u.id) === Number(winner.id)) {
-        resolvedUser = u;
+      const user = users[i];
+
+      if (winner.id && Number(user.id) === Number(winner.userId)) {
+        resolvedUser = user;
         break;
       }
       if (
         winner.email &&
-        (u.email || u.user_email || '').toLowerCase() === winner.email.toLowerCase()
+        (user.email || user.user_email || '').toLowerCase() === winner.email.toLowerCase()
       ) {
-        resolvedUser = u;
+        resolvedUser = user;
         break;
       }
     }
