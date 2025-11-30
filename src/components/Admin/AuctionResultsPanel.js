@@ -215,7 +215,8 @@ export default function AuctionResultsPanel() {
           })
         );
 
-        setAuctions(withResults);
+        // setAuctions(withResults);
+        setAuctions(withResults.filter((a) => a.topBid));
       } catch (e) {
         console.error('Error loading auctions:', e);
         toast.error(`${e.message}` || 'Error loading auctions', {
