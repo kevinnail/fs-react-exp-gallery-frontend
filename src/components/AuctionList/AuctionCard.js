@@ -342,24 +342,26 @@ export default function AuctionCard({ auction }) {
             ) : (
               <div>
                 <p className="bidding-closed">Bidding is CLOSED</p>
-                <span style={{ fontSize: '.9rem' }}>Winner:</span>
+                {highBidder && <span style={{ fontSize: '.9rem' }}>Winner:</span>}
                 <div className="bid-entry">
-                  <span
-                    style={{
-                      fontSize: '.9rem',
-                      display: 'flex',
-                      gap: '10px',
-                      alignItems: 'center',
-                    }}
-                  >
-                    {' '}
-                    <img
-                      src={auctionResults?.profile?.imageUrl}
-                      alt={auctionResults?.profile?.firstName}
-                      className="bid-avatar"
-                    />
-                    {auctionResults?.profile?.firstName}
-                  </span>
+                  {highBidder && (
+                    <span
+                      style={{
+                        fontSize: '.9rem',
+                        display: 'flex',
+                        gap: '10px',
+                        alignItems: 'center',
+                      }}
+                    >
+                      {' '}
+                      <img
+                        src={auctionResults?.profile?.imageUrl}
+                        alt={auctionResults?.profile?.firstName}
+                        className="bid-avatar"
+                      />
+                      {auctionResults?.profile?.firstName}
+                    </span>
+                  )}
 
                   <span style={{ fontSize: '.9rem', fontWeight: 'normal' }}>
                     {auctionResults?.reason === 'buy_now' ? 'Buy It Now' : 'Time Expired'}
