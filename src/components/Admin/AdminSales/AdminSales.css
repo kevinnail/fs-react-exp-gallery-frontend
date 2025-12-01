@@ -341,7 +341,8 @@
   cursor: not-allowed;
 }
 
-.search-email-button {
+.search-email-button,
+.search-post-button {
   background: #222;
   color: #fff;
   border: 1px solid #444;
@@ -349,8 +350,11 @@
   padding: 2px 8px;
   border-radius: 4px;
   cursor: pointer;
+  height: 2rem;
 }
-.search-email-button:hover {
+
+.search-email-button,
+.search-post-button:hover {
   background: #333;
 }
 
