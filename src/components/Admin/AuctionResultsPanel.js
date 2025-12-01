@@ -296,8 +296,6 @@ export default function AuctionResultsPanel() {
   //
   //
 
-  // Shipping links are plain anchors to USPS — no JS navigation helper needed.
-
   return (
     <aside className="auction-results-panel">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
