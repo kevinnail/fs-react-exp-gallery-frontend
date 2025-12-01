@@ -305,11 +305,6 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.selected-user-address {
-  padding-top: 0.5rem;
 }
 
 .address-missing {
@@ -323,6 +318,7 @@
 }
 
 .copy-address-button {
+  position: absolute;
   background: #222;
   color: #fff;
   border: 1px solid #444;
@@ -330,6 +326,8 @@
   padding: 2px 6px;
   border-radius: 4px;
   cursor: pointer;
+  height: 2rem;
+  width: 5rem;
 }
 
 .copy-address-button:hover:not(:disabled) {
@@ -351,13 +349,17 @@
   border-radius: 4px;
   cursor: pointer;
   height: 2rem;
+  width: 5rem;
 }
 
 .search-email-button,
 .search-post-button:hover {
   background: #333;
 }
-
+.search-email-button-mobile,
+.search-post-button-mobile {
+  display: none;
+}
 /*
 
 ^================== Responsive begin ======================= 
@@ -365,6 +367,36 @@
 */
 
 @media (max-width: 768px) {
+  .search-email-button,
+  .search-post-button {
+    display: none;
+  }
+
+  .mobile-button-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .search-email-button-mobile,
+  .search-post-button-mobile {
+    display: unset;
+    background: #222;
+    color: #fff;
+    border: 1px solid #444;
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 2rem;
+  }
+
+  .search-email-button-mobile:hover,
+  .search-post-button-mobile:hover {
+    background: #333;
+  }
+
   .sales-layout {
     flex-direction: column;
   }

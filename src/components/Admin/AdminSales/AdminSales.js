@@ -491,7 +491,6 @@ export default function AdminSales() {
               {isCreatingSale ? (
                 <div className="sales-detail">
                   <h2>Create New Sale</h2>
-
                   {/* Customer search */}
                   <div className="sales-detail-row" style={{ alignItems: 'flex-start' }}>
                     <label>Find Customer:</label>
@@ -547,7 +546,6 @@ export default function AdminSales() {
                       )}
                     </div>
                   </div>
-
                   {/* Selected customer summary */}
                   {selectedUser && (
                     <div className="selected-user-card">
@@ -603,7 +601,6 @@ export default function AdminSales() {
                       </div>
                     </div>
                   )}
-
                   <div className="sales-detail-row">
                     <label>Buyer Email:</label>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
@@ -624,7 +621,6 @@ export default function AdminSales() {
                       </button>
                     </div>
                   </div>
-
                   <div className="sales-detail-row">
                     <label style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
                       Piece ID:
@@ -774,7 +770,6 @@ export default function AdminSales() {
                       </div>
                     </div>
                   )}
-
                   <div className="sales-detail-row">
                     <label>Price:</label>
                     <input
@@ -784,7 +779,6 @@ export default function AdminSales() {
                       onChange={(e) => setNewPrice(e.target.value)}
                     />
                   </div>
-
                   <div className="sales-detail-row">
                     <label>Tracking Number:</label>
                     <input
@@ -794,11 +788,28 @@ export default function AdminSales() {
                       onChange={(e) => setNewTracking(e.target.value)}
                     />
                   </div>
+                  <div className="mobile-button-wrapper">
+                    <button
+                      type="button"
+                      onClick={handleSearchByEmail}
+                      className="search-email-button-mobile"
+                      aria-label="Use email to find user"
+                    >
+                      Find User
+                    </button>{' '}
+                    <button
+                      type="button"
+                      onClick={() => setShowPostModal(true)}
+                      className="search-post-button-mobile"
+                      aria-label="Click to find post"
+                    >
+                      Find Post
+                    </button>
+                  </div>
 
                   <button className="save-tracking-button" onClick={handleCreateSale}>
                     Save Sale
                   </button>
-
                   <button className="cancel-button" onClick={() => setIsCreatingSale(false)}>
                     Cancel
                   </button>
