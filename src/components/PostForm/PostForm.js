@@ -140,7 +140,7 @@ export default function PostForm({
         link: sellingLink,
       };
 
-      // Upload new images to Cloudinary and get their URLs + post details
+      // Upload new images to S3 and get their URLs + post details
       const newPost = {
         ...(await uploadImagesAndCreatePost(files, formFunctionMode)),
         ...postDetails,

@@ -3,6 +3,7 @@ import {
   deleteById,
   deleteImage,
   getAdditionalImageUrlsPublicIds,
+  softDeleteGalleryPost,
 } from '../../services/fetch-utils.js';
 import './PostCard.css';
 import { useState } from 'react';
@@ -34,6 +35,7 @@ export default function PostCard({
   const navigate = useNavigate();
 
   const [deletedRowId, setDeletedRowId] = useState(null);
+  const [hardDelete, setHardDelete] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -45,24 +47,29 @@ export default function PostCard({
   // Determine whether to show discounted price or not
   const isDiscounted = discountedPrice && parseFloat(discountedPrice) < parseFloat(originalPrice);
 
-  // delete the post
+  // delete or soft delete the post
   const handleDelete = async () => {
     try {
       setDeletedRowId(id);
-      // grab urls out of my database
-      const postUrls = await getAdditionalImageUrlsPublicIds(id);
-
-      // delete all images from cloudinary
-      for (let i = 0; i < postUrls.length; i++) {
-        await deleteImage(postUrls[i].public_id, postUrls[i].resource_type);
+      if (hardDelete) {
+        // grab urls out of my database
+        const postUrls = await getAdditionalImageUrlsPublicIds(id);
+        // delete all images from S3
+        for (let i = 0; i < postUrls.length; i++) {
+          await deleteImage(postUrls[i].public_id, postUrls[i].resource_type);
+        }
+        // delete the post from my database
+        await deleteById(id);
+        // delete the post from state, so it doesn't show up on the page
+        const updatedPosts = posts.filter((post) => post.id !== id);
+        setPosts(updatedPosts);
+      } else {
+        // soft delete
+        await softDeleteGalleryPost(id);
+        // update post in state to isDeleted = true
+        const updatedPosts = posts.map((p) => (p.id === id ? { ...p, isDeleted: true } : p));
+        setPosts(updatedPosts);
       }
-
-      // delete the post from my database
-      await deleteById(id);
-
-      // delete the post from state, so it doesn't show up on the page
-      const updatedPosts = posts.filter((post) => post.id !== id);
-      setPosts(updatedPosts);
     } catch (e) {
       console.error('Error deleting post:', e.message);
       toast.error(`Error deleting post: ${e.message}`, {
@@ -72,6 +79,8 @@ export default function PostCard({
         toastId: 'postCard-1',
         autoClose: false,
       });
+    } finally {
+      setDeletedRowId(false);
     }
   };
 
@@ -86,17 +95,24 @@ export default function PostCard({
   const handleConfirmDelete = async () => {
     await handleDelete();
     handleCloseDialog();
+    setHardDelete(false);
   };
 
   const handleEditPost = () => {
     navigate(`/admin/${id}`);
   };
 
+  // Visual indicator for soft-deleted posts
+  const isSoftDeleted = post.isDeleted;
   return (
     <Box
-      className={`post ${id === deletedRowId ? 'grayed-out' : ''}`}
+      className={`post ${id === deletedRowId ? 'grayed-out' : ''} ${isSoftDeleted ? 'soft-deleted' : ''}`}
       key={id}
-      sx={{ backgroundColor: post.hide ? 'rgb(35, 35, 35)' : '', boxShadow: '0 0 2px #ccc' }}
+      sx={{
+        backgroundColor: post.hide ? 'rgb(35, 35, 35)' : isSoftDeleted ? '#330f0f3a' : '',
+        boxShadow: isSoftDeleted ? '0 0 8px 2px #ff000061' : '0 0 2px #ccc',
+        border: isSoftDeleted ? '2px solid #ff000054' : '',
+      }}
     >
       <Link to={`/${id}`}>
         {image_url ? (
@@ -200,13 +216,25 @@ export default function PostCard({
         <DialogTitle id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Deleting this post will remove it permanently. This action cannot be undone.
+            {hardDelete
+              ? 'Hard delete will permanently remove this post and all images. This action cannot be undone.'
+              : 'Soft delete will hide this post from the gallery but retain its record for sales and user history.'}
           </DialogContentText>
+          <Box sx={{ mt: 2 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input
+                type="checkbox"
+                checked={hardDelete}
+                onChange={() => setHardDelete((v) => !v)}
+                style={{ marginRight: '8px' }}
+              />
+              Hard Delete (permanent)
+            </label>
+          </Box>
         </DialogContent>
         <DialogActions>
           {!isDeleting ? (
             <Box>
-              {' '}
               <Button onClick={handleCloseDialog} color="primary" sx={{ fontSize: '1rem' }}>
                 Cancel
               </Button>

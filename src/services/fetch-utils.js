@@ -321,7 +321,28 @@ export async function deleteById(post_id) {
       credentials: 'include',
     });
     const msg = await resp.json();
+    if (!resp.ok) {
+      throw new Error(msg.message || 'Failed to delete post');
+    }
+    return msg;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
+// soft delete gallery post
+export async function softDeleteGalleryPost(post_id) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/admin/delete/${post_id}`, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+    const msg = await resp.json();
     return msg;
   } catch (error) {
     console.error(error);

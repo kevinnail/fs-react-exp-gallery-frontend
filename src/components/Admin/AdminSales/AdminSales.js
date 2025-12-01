@@ -9,6 +9,7 @@ import {
   updateSalePaidStatus,
 } from '../../../services/fetch-sales.js';
 import { getAllUsers } from '../../../services/fetch-utils.js';
+import { usePosts } from '../../../hooks/usePosts.js';
 
 export default function AdminSales() {
   const location = useLocation();
@@ -22,12 +23,33 @@ export default function AdminSales() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserResults, setShowUserResults] = useState(false);
   const [prefillApplied, setPrefillApplied] = useState(false);
+  const { posts } = usePosts();
+
+  // Modal state for finding post
+  const [showPostModal, setShowPostModal] = useState(false);
 
   // state for creating a sale
   const [newBuyerEmail, setNewBuyerEmail] = useState('');
   const [newPieceId, setNewPieceId] = useState('');
   const [newPrice, setNewPrice] = useState('');
   const [newTracking, setNewTracking] = useState('');
+  // Helper for selecting a post from modal
+  const getPostPrice = (post) => {
+    if (
+      post.discountedPrice !== null &&
+      post.discountedPrice !== undefined &&
+      !Number.isNaN(post.discountedPrice)
+    ) {
+      return post.discountedPrice;
+    }
+    return post.price;
+  };
+
+  const handleSelectPost = (post) => {
+    setNewPieceId(post.id);
+    setNewPrice(String(getPostPrice(post)));
+    setShowPostModal(false);
+  };
 
   // state for editing tracking on existing sale
   const [trackingInput, setTrackingInput] = useState('');
@@ -469,7 +491,6 @@ export default function AdminSales() {
               {isCreatingSale ? (
                 <div className="sales-detail">
                   <h2>Create New Sale</h2>
-
                   {/* Customer search */}
                   <div className="sales-detail-row" style={{ alignItems: 'flex-start' }}>
                     <label>Find Customer:</label>
@@ -525,7 +546,6 @@ export default function AdminSales() {
                       )}
                     </div>
                   </div>
-
                   {/* Selected customer summary */}
                   {selectedUser && (
                     <div className="selected-user-card">
@@ -581,7 +601,6 @@ export default function AdminSales() {
                       </div>
                     </div>
                   )}
-
                   <div className="sales-detail-row">
                     <label>Buyer Email:</label>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
@@ -591,29 +610,166 @@ export default function AdminSales() {
                         value={newBuyerEmail}
                         onChange={(e) => setNewBuyerEmail(e.target.value)}
                       />
-                      {newBuyerEmail && (
-                        <button
-                          type="button"
-                          onClick={handleSearchByEmail}
-                          className="search-email-button"
-                          aria-label="Use email to find user"
-                        >
-                          Find User
-                        </button>
-                      )}
+
+                      <button
+                        type="button"
+                        onClick={handleSearchByEmail}
+                        className="search-email-button"
+                        aria-label="Use email to find user"
+                      >
+                        Find User
+                      </button>
                     </div>
                   </div>
-
                   <div className="sales-detail-row">
-                    <label>Piece ID:</label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
+                      Piece ID:
+                    </label>
                     <input
                       type="number"
                       className="tracking-input"
                       value={newPieceId}
                       onChange={(e) => setNewPieceId(e.target.value)}
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPostModal(true)}
+                      className="search-post-button"
+                      aria-label="Click to find post"
+                    >
+                      Find Post
+                    </button>
                   </div>
-
+                  {/* Post Finder Modal */}
+                  {showPostModal && (
+                    <div
+                      className="find-post-modal"
+                      style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        background: 'rgba(0,0,0,0.45)',
+                        zIndex: 1000,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <div
+                        style={{
+                          background: '#1a1a1aff',
+                          borderRadius: '8px',
+                          padding: '2rem',
+                          maxHeight: '80vh',
+                          overflowY: 'auto',
+                          minWidth: '320px',
+                          maxWidth: '95vw',
+                          boxShadow: '0 2px 16px rgba(0,0,0,0.18)',
+                          position: 'relative',
+                        }}
+                      >
+                        <button
+                          style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            fontSize: '1.2em',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => setShowPostModal(false)}
+                          aria-label="Close post finder"
+                        >
+                          ×
+                        </button>
+                        <h3 style={{ marginTop: 0 }}>Select a Post</h3>
+                        <div
+                          style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+                            gap: '1rem',
+                            marginTop: '1rem',
+                          }}
+                        >
+                          {(() => {
+                            if (posts && posts.length > 0) {
+                              return posts.map((post) => {
+                                const price = getPostPrice(post);
+                                let imageSrc = '';
+                                if (post.image_url) {
+                                  imageSrc = post.image_url;
+                                } else if (post.imageUrl) {
+                                  imageSrc = post.imageUrl;
+                                }
+                                return (
+                                  <div
+                                    key={post.id}
+                                    className="find-post-card"
+                                    style={{
+                                      border: '1px solid #ccc',
+                                      borderRadius: '6px',
+                                      padding: '0.5rem ',
+                                      cursor: 'pointer',
+                                      background: '#0f0f0fff',
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      alignItems: 'center',
+                                      transition: 'box-shadow 0.2s',
+                                      maxWidth: '300px',
+                                    }}
+                                    onClick={() => handleSelectPost(post)}
+                                    tabIndex={0}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') handleSelectPost(post);
+                                    }}
+                                  >
+                                    <img
+                                      src={imageSrc}
+                                      alt={post.title}
+                                      style={{
+                                        width: '90px',
+                                        height: '90px',
+                                        objectFit: 'cover',
+                                        borderRadius: '4px',
+                                        background: '#eee',
+                                      }}
+                                    />
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        fontWeight: 600,
+                                        fontSize: '1em',
+                                        textAlign: 'center',
+                                        margin: '.25em',
+                                        // width: '100%',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                      }}
+                                    >
+                                      {post.title}
+                                      <div style={{ fontSize: '.95em', color: '#555' }}>
+                                        ID: {post.id}
+                                      </div>
+                                      <div style={{ fontSize: '.95em', color: '#555' }}>
+                                        ${price}
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              });
+                            } else {
+                              return <div>No posts found.</div>;
+                            }
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   <div className="sales-detail-row">
                     <label>Price:</label>
                     <input
@@ -623,7 +779,6 @@ export default function AdminSales() {
                       onChange={(e) => setNewPrice(e.target.value)}
                     />
                   </div>
-
                   <div className="sales-detail-row">
                     <label>Tracking Number:</label>
                     <input
@@ -633,11 +788,28 @@ export default function AdminSales() {
                       onChange={(e) => setNewTracking(e.target.value)}
                     />
                   </div>
+                  <div className="mobile-button-wrapper">
+                    <button
+                      type="button"
+                      onClick={handleSearchByEmail}
+                      className="search-email-button-mobile"
+                      aria-label="Use email to find user"
+                    >
+                      Find User
+                    </button>{' '}
+                    <button
+                      type="button"
+                      onClick={() => setShowPostModal(true)}
+                      className="search-post-button-mobile"
+                      aria-label="Click to find post"
+                    >
+                      Find Post
+                    </button>
+                  </div>
 
                   <button className="save-tracking-button" onClick={handleCreateSale}>
                     Save Sale
                   </button>
-
                   <button className="cancel-button" onClick={() => setIsCreatingSale(false)}>
                     Cancel
                   </button>
