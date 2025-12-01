@@ -54,7 +54,7 @@ export default function PostCard({
       if (hardDelete) {
         // grab urls out of my database
         const postUrls = await getAdditionalImageUrlsPublicIds(id);
-        // delete all images from cloudinary
+        // delete all images from S3
         for (let i = 0; i < postUrls.length; i++) {
           await deleteImage(postUrls[i].public_id, postUrls[i].resource_type);
         }
@@ -79,6 +79,8 @@ export default function PostCard({
         toastId: 'postCard-1',
         autoClose: false,
       });
+    } finally {
+      setDeletedRowId(false);
     }
   };
 
