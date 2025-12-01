@@ -329,6 +329,25 @@ export async function deleteById(post_id) {
   }
 }
 
+// soft delete gallery post (PATCH)
+export async function softDeleteGalleryPost(post_id) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/admin/delete/${post_id}`, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+    const msg = await resp.json();
+    return msg;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 // edit post called from EditPost
 export async function updatePost(id, post) {
   try {
