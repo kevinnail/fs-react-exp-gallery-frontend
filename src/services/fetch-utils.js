@@ -321,7 +321,9 @@ export async function deleteById(post_id) {
       credentials: 'include',
     });
     const msg = await resp.json();
-
+    if (!resp.ok) {
+      throw new Error(msg.message || 'Failed to delete post');
+    }
     return msg;
   } catch (error) {
     console.error(error);
@@ -329,7 +331,7 @@ export async function deleteById(post_id) {
   }
 }
 
-// soft delete gallery post (PATCH)
+// soft delete gallery post
 export async function softDeleteGalleryPost(post_id) {
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/admin/delete/${post_id}`, {
