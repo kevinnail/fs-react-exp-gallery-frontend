@@ -1,4 +1,3 @@
-import React from 'react';
 import './AuctionResultsPanelSimple.css';
 import { getAdminAuctions } from '../../services/fetch-auctions.js';
 import { useEffect, useState } from 'react';
