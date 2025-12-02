@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import { getBids } from '../../services/fetch-bids.js';
+import { getBids } from '../../../services/fetch-bids.js';
 import {
   getAdminAuctions,
   markAuctionPaid,
   updateAuctionTracking,
-} from '../../services/fetch-auctions.js';
+} from '../../../services/fetch-auctions.js';
 import './AuctionResultsPanel.css';
 import { toast } from 'react-toastify';
-import websocketService from '../../services/websocket.js';
-import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
+import websocketService from '../../../services/websocket.js';
+import { useAuctionEventsStore } from '../../../stores/auctionEventsStore.js';
 import { useNavigate } from 'react-router-dom';
-import Loading from '../Loading/Loading.js';
-import { getAllUsers } from '../../services/fetch-utils.js';
+import Loading from '../../Loading/Loading.js';
+import { getAllUsers } from '../../../services/fetch-utils.js';
 
 export default function AuctionResultsPanel() {
   const [auctions, setAuctions] = useState([]);
