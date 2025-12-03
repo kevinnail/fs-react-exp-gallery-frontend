@@ -7,7 +7,7 @@ Built for performance, scalability, and smooth interaction across gallery browsi
 
 ---
 
-## 🧩 Overview
+## Overview
 
 **Stress Less Glass** combines a professional art portfolio with business management tools:
 
@@ -19,7 +19,7 @@ Built for performance, scalability, and smooth interaction across gallery browsi
 
 ---
 
-## ⚙️ Architecture
+## Architecture
 
 | Layer        | Tech                                                     |
 | ------------ | -------------------------------------------------------- |
@@ -32,7 +32,7 @@ Built for performance, scalability, and smooth interaction across gallery browsi
 
 ---
 
-## 🧠 Core Systems
+## Core Systems
 
 ### 1. Gallery, Profiles, and Admin Dashboard
 
@@ -69,9 +69,16 @@ Built for performance, scalability, and smooth interaction across gallery browsi
 - Outbid, win, and auction-ended alerts.
 - Live badge counters via WebSockets and Zustand store.
 
+### 5. Unified Payment Summary
+
+- Customers see a single consolidated "Payment Due" summary in Account that aggregates unpaid auction wins and gallery purchases.
+- Combined shipping is applied ($9 first item, $1 each additional) across both sources.
+- Actions include printing a combined invoice and messaging to complete payment.
+- Component: `src/components/Account/PaymentDueSummary/PaymentDueSummary.js`.
+
 ---
 
-## 🧱 Database Schema (Simplified)
+## Database Schema (Simplified)
 
 - **users_admin** – Authenticated users and admins
 - **profiles** – Linked user details and avatars
@@ -85,10 +92,11 @@ All keys use `ON DELETE CASCADE`. Indexed for read-heavy operations.
 
 ---
 
-## 🧪 Testing & CI
+## Testing & CI
 
 - Unit and integration coverage across backend routes.
 - Test runner:
+
   ```bash
   npm test -- -u --runInBand --detectOpenHandles --forceExit
   ```

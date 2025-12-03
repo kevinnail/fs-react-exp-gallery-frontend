@@ -15,11 +15,15 @@ import {
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AuctionResultsPanel from './AuctionResultsPanel.js';
+import AuctionResultsPanelSimple from './AuctionResultsPanelSimple.js';
 
 export default function Admin() {
   const { posts, loading, setPosts } = usePosts();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  // Admin filter state for post visibility
+  const [showRegular, setShowRegular] = useState(true);
+  const [showHidden, setShowHidden] = useState(true);
+  const [showDeleted, setShowDeleted] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   const theme = useTheme();
@@ -37,10 +41,13 @@ export default function Admin() {
     return <Loading />;
   }
 
-  // Filter posts based on selected category
-  const filteredPosts = posts.filter(
-    (post) => !selectedCategory || post.category === selectedCategory
-  );
+  // Filter posts based on selected category and admin visibility controls
+  const filteredPosts = posts.filter((post) => {
+    if (selectedCategory && post.category !== selectedCategory) return false;
+    if (post.isDeleted) return showDeleted;
+    if (post.hide) return showHidden;
+    return showRegular;
+  });
 
   // Calculate pagination values
   const indexOfLastPost = currentPage * postsPerPage;
@@ -151,30 +158,66 @@ export default function Admin() {
     <>
       <div className="admin-container">
         <aside className="admin-panel">
-          <section className="admin-panel-section">{!isMobile && <AuctionResultsPanel />}</section>
+          <section className="admin-panel-section">
+            {!isMobile && <AuctionResultsPanelSimple />}
+          </section>
         </aside>
 
-        <div className="list-container">
-          {posts.length === 0 ? (
-            <div className="loading">
-              <h1>No posts yet!</h1>
-            </div>
-          ) : (
-            <>
-              {currentPosts.map((post) => (
-                <PostCard
-                  key={post.id}
-                  id={post.id}
-                  post={post}
-                  setPosts={setPosts}
-                  posts={posts}
-                  originalPrice={post.originalPrice}
-                  discountedPrice={post.discountedPrice}
-                />
-              ))}
-              <PaginationControls />
-            </>
-          )}
+        <div>
+          {/* Admin filter controls */}
+          <Box
+            sx={{
+              top: isMobile ? '100px' : 0,
+            }}
+            className="admin-filter-controls"
+          >
+            <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <input
+                type="checkbox"
+                checked={showRegular}
+                onChange={() => setShowRegular((v) => !v)}
+              />
+              Regular
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <input
+                type="checkbox"
+                checked={showHidden}
+                onChange={() => setShowHidden((v) => !v)}
+              />
+              Hidden
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <input
+                type="checkbox"
+                checked={showDeleted}
+                onChange={() => setShowDeleted((v) => !v)}
+              />
+              Deleted
+            </label>
+          </Box>
+          <div className="list-container">
+            {posts.length === 0 ? (
+              <div className="loading">
+                <h1>No posts yet!</h1>
+              </div>
+            ) : (
+              <>
+                {currentPosts.map((post) => (
+                  <PostCard
+                    key={post.id}
+                    id={post.id}
+                    post={post}
+                    setPosts={setPosts}
+                    posts={posts}
+                    originalPrice={post.originalPrice}
+                    discountedPrice={post.discountedPrice}
+                  />
+                ))}
+                <PaginationControls />
+              </>
+            )}
+          </div>
         </div>
 
         <Box
@@ -225,6 +268,7 @@ export default function Admin() {
             <Accordion
               defaultExpanded={isDesktop ? false : true}
               sx={{
+                zIndex: '10',
                 backgroundColor: 'rgb(40, 40, 40)',
                 border: 'none',
                 '&.MuiAccordion-root': {
@@ -240,12 +284,12 @@ export default function Admin() {
             >
               {(isMobile || isDesktop) && (
                 <AccordionSummary expandIcon={<ExpandMoreIcon htmlColor="#fff" />}>
-                  <Typography>Auction Results</Typography>
+                  <Typography>Active Auctions</Typography>
                 </AccordionSummary>
               )}
 
               <AccordionDetails sx={{ padding: 0, backgroundColor: 'black' }}>
-                <AuctionResultsPanel />
+                <AuctionResultsPanelSimple />
               </AccordionDetails>
             </Accordion>
           )}

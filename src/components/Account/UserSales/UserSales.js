@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import './UserSales.css';
 import { getUserSales } from '../../../services/fetch-sales.js';
+import websocketService from '../../../services/websocket.js';
+import { SALE_PAID, SALE_TRACKING_INFO, SALE_CREATED } from '../../../services/salesEvents.js';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -31,6 +33,61 @@ export default function UserSales({ userId }) {
     };
 
     load();
+  }, [userId]);
+
+  // Real-time updates for purchases (paid + tracking)
+  useEffect(() => {
+    const handleSalePaid = (data) => {
+      if (!data || typeof data.saleId === 'undefined') return; // ignore incomplete
+      setSales((prev) =>
+        prev.map((s) => (s.id === data.saleId ? { ...s, is_paid: data.isPaid } : s))
+      );
+    };
+    const handleSaleTracking = (data) => {
+      if (!data || typeof data.saleId === 'undefined') return;
+      setSales((prev) =>
+        prev.map((s) => (s.id === data.saleId ? { ...s, tracking_number: data.trackingNumber } : s))
+      );
+    };
+    websocketService.on(SALE_PAID, handleSalePaid);
+    websocketService.on(SALE_TRACKING_INFO, handleSaleTracking);
+    return () => {
+      websocketService.off(SALE_PAID, handleSalePaid);
+      websocketService.off(SALE_TRACKING_INFO, handleSaleTracking);
+    };
+  }, [userId]);
+
+  // Real-time sale creation
+  useEffect(() => {
+    const handleSaleCreated = (data) => {
+      const payload = data?.sale || data;
+      if (!payload) return;
+      // Map backend fields to frontend sale shape
+      const mapped = {
+        id: payload.id ?? payload.saleId,
+        post_id: payload.post_id ?? payload.postId,
+        user_id: payload.user_id ?? payload.userId,
+        price: payload.price,
+        tracking_number: payload.tracking_number ?? payload.trackingNumber ?? '0',
+        is_paid: payload.is_paid ?? payload.isPaid ?? false,
+        created_at: payload.created_at,
+        post_title: payload.post_title,
+        post_image_url: payload.post_image_url,
+        buyer_email: payload.buyer_email,
+      };
+      if (!mapped.id) {
+        console.error('[UserSales] sale-created payload missing id', data);
+        return;
+      }
+
+      // ensure sale belongs to this user
+      if (mapped.user_id && userId && Number(mapped.user_id) !== Number(userId)) return;
+      setSales((prev) => (prev.some((s) => s.id === mapped.id) ? prev : [mapped, ...prev]));
+    };
+    websocketService.on(SALE_CREATED, handleSaleCreated);
+    return () => {
+      websocketService.off(SALE_CREATED, handleSaleCreated);
+    };
   }, [userId]);
 
   const handleTrackingClick = (trackingNumber) => {
@@ -68,12 +125,7 @@ export default function UserSales({ userId }) {
               key={sale.id}
               className="user-sales-card"
               style={{
-                border:
-                  sale.tracking_number && sale.is_paid
-                    ? '1px solid green'
-                    : sale.is_paid
-                      ? '1px solid yellow'
-                      : '1px solid red',
+                border: sale.is_paid ? '1px solid green' : '1px solid red',
               }}
             >
               {/* IMAGE */}
@@ -97,7 +149,7 @@ export default function UserSales({ userId }) {
                       color: '#ff4444',
                       padding: '2px 6px',
                       borderRadius: '4px',
-                      fontSize: '1rem',
+                      fontSize: '1.1rem',
                       fontWeight: 'bold',
                       marginRight: '3rem',
                     }}
@@ -105,21 +157,28 @@ export default function UserSales({ userId }) {
                     Payment Needed
                   </span>
                 )}
-                {(sale.is_paid && sale.tracking_number === '0') ||
-                  (sale.tracking_number === null && (
+
+                {sale.is_paid && (!sale.tracking_number || sale.tracking_number === '0') && (
+                  <span
+                    style={{
+                      color: 'yellow',
+                      padding: '4px 6px',
+                      fontSize: '1.25rem',
+                      fontWeight: 'bold',
+                      marginRight: '3rem',
+                    }}
+                  >
                     <span
                       style={{
-                        color: 'yellow',
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                        fontSize: '1rem',
-                        fontWeight: 'bold',
-                        marginRight: '3rem',
+                        marginRight: '1.5rem',
+                        color: 'green',
                       }}
                     >
-                      Paid - Shipping Soon
-                    </span>
-                  ))}
+                      Paid{' '}
+                    </span>{' '}
+                    Shipping Soon
+                  </span>
+                )}
                 {sale.tracking_number && sale.tracking_number !== '0' && (
                   <span
                     style={{
@@ -129,6 +188,8 @@ export default function UserSales({ userId }) {
                       fontSize: '1rem',
                       fontWeight: 'bold',
                       marginRight: '3rem',
+                      display: 'block',
+                      marginBottom: '.5rem',
                     }}
                   >
                     Shipped

@@ -21,7 +21,9 @@ export function useGalleryPosts() {
     const fetchData = async () => {
       try {
         const data = await fetchGalleryPosts();
-        const randomizedData = shuffleArray(data);
+        // Exclude posts that are soft deleted
+        const filteredData = data.filter((post) => !post.isDeleted);
+        const randomizedData = shuffleArray(filteredData);
 
         setPosts(randomizedData);
         setGalleryLoading(false);

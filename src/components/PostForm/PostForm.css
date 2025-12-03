@@ -96,8 +96,8 @@ body {
   margin-bottom: 50px;
 }
 
-.submit-btn {
-  background-color: rgb(176, 176, 253, 0.5);
+.submit-btn-post {
+  background-color: #577eff53;
   box-sizing: border-box;
   border: 1px solid black;
   border-radius: 50%;
@@ -106,6 +106,7 @@ body {
   cursor: pointer;
   margin-top: 50px;
 }
+
 .submit-btn:active {
   background-color: rgba(163, 163, 231, 0.5);
   box-shadow: inset 2px 2px 5px #d3c9ff;
@@ -292,6 +293,9 @@ option {
   justify-content: center;
 }
 
+.labels-form-inputs {
+  display: block;
+}
 .labels-form-inputs {
   display: block;
 }

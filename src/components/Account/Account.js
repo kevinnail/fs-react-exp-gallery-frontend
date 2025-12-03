@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
-import {
-  fetchUserProfile,
-  fetchGalleryPosts,
-  markWelcomeMessageFalse,
-} from '../../services/fetch-utils.js';
+import { fetchGalleryPosts, markWelcomeMessageFalse } from '../../services/fetch-utils.js';
 import ProfileForm from './AccountForm.js';
 import './Account.css';
 import { useProfileStore } from '../../stores/profileStore.js';
@@ -13,31 +9,25 @@ import UserAuctions from './UserAuctions.js';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import UserSales from './UserSales/UserSales.js';
+import PaymentDueSummary from './PaymentDueSummary/PaymentDueSummary.js';
 
 export default function Account() {
   const { user } = useUserStore();
-  const { profile, setProfile, setShowWelcome } = useProfileStore();
-
+  const { profile, address, setShowWelcome, fetchUserProfile } = useProfileStore();
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
   const navigate = useNavigate();
-
   const [tab, setTab] = useState(0);
+
+  const currentSpecialDiscount = 0.5; //!  Change to 0.7 by 12-1-25 =========================================================
 
   const handleTabChange = (e, newValue) => {
     setTab(newValue);
   };
 
   useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const profileData = await fetchUserProfile();
-        setProfile(profileData);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      }
-    };
-    loadProfile();
+    // Use store method so both profile & address get populated
+    fetchUserProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -64,6 +54,21 @@ export default function Account() {
 
   // Check if user has added name or image
   const hasNameOrImage = profile?.firstName || profile?.lastName || profile?.imageUrl;
+
+  // Determine if profile is complete: firstName, lastName, avatar image, and address fields
+  const hasFirstName = Boolean(profile?.firstName && String(profile.firstName).trim());
+  const hasLastName = Boolean(profile?.lastName && String(profile.lastName).trim());
+  const hasAvatar = Boolean(profile?.imageUrl && String(profile.imageUrl).trim());
+  const hasAddress = Boolean(
+    address &&
+      address.addressLine1 &&
+      address.city &&
+      address.state &&
+      address.postalCode &&
+      address.countryCode
+  );
+
+  const isProfileComplete = hasFirstName && hasLastName && hasAvatar && hasAddress;
 
   const removeWelcomeMessage = async () => {
     try {
@@ -174,9 +179,8 @@ export default function Account() {
           aria-label="Edit Settings"
           title="Edit Settings"
         >
-          <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>🌣</span>
+          <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>⚙️</span>
         </button>
-
         <div className="profile-header">
           <div className="profile-picture-section">
             {profile?.imageUrl ? (
@@ -188,6 +192,11 @@ export default function Account() {
             )}
           </div>
           <div className="profile-info">
+            {!isProfileComplete && (
+              <span className="profile-incomplete-note" role="note">
+                Account info incomplete — click the gear to update
+              </span>
+            )}
             <h1>
               {profile?.firstName || profile?.lastName
                 ? `${profile?.firstName || ''} ${profile?.lastName || ''}`
@@ -204,8 +213,8 @@ export default function Account() {
               Email notifications are{' '}
               {profile?.sendEmailNotifications ? (
                 <>
-                  <strong>enabled</strong> You will receive one email for new work, auctions, and
-                  tracking info.
+                  <strong>enabled</strong> You will receive emails for new messages, new work,
+                  auctions, and tracking info.
                 </>
               ) : (
                 <>
@@ -226,6 +235,9 @@ export default function Account() {
           )}
         </div>
 
+        {/* Combined payment due summary across auctions + purchases */}
+        <PaymentDueSummary userId={user?.id} />
+
         <Tabs
           value={tab}
           onChange={handleTabChange}
@@ -236,12 +248,6 @@ export default function Account() {
           <Tab className="account-tab" label="Auctions" />
           <Tab className="account-tab" label="Purchases" />
         </Tabs>
-
-        {/*  */}
-        {/*  */}
-
-        {/*  */}
-        {/*  */}
         <div className="tab-content-wrapper">
           {tab === 0 && (
             <div className="new-work-section">
@@ -251,8 +257,10 @@ export default function Account() {
                 </span>
                 <span style={{ display: 'block', textAlign: 'left' }}>
                   <strong>50% OFF</strong> of the new work for all new sign ups
-                  <strong style={{ color: 'yellow' }}> until the end of November!</strong>
-                  This extends to GlassPass and Etsy just message me.
+                  <strong style={{ color: 'yellow' }}> until the end of November!{`  `}</strong>
+                  This extends to GlassPass and Etsy just message me- the piece should be posted
+                  here, go to that page, click the &quot;Message Kevin about this piece&quot; button
+                  up top and we&apos;ll get it sorted out for you!
                 </span>
                 <br />
                 <span style={{ display: 'block', textAlign: 'left' }}>
@@ -293,7 +301,7 @@ export default function Account() {
                             </span>
                             <i className="fa fa-arrow-right" aria-hidden="true"></i>
                             <span style={{ marginLeft: '.25rem' }}>
-                              ${(post.price * 0.7).toFixed(0)}
+                              ${(post.price * currentSpecialDiscount).toFixed(0)}
                             </span>
                           </span>
                         </p>

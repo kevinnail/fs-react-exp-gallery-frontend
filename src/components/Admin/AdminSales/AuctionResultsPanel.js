@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
-import { getBids } from '../../services/fetch-bids.js';
+import { getBids } from '../../../services/fetch-bids.js';
 import {
   getAdminAuctions,
   markAuctionPaid,
   updateAuctionTracking,
-} from '../../services/fetch-auctions.js';
+} from '../../../services/fetch-auctions.js';
 import './AuctionResultsPanel.css';
 import { toast } from 'react-toastify';
-import websocketService from '../../services/websocket.js';
-import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
+import websocketService from '../../../services/websocket.js';
+import { useAuctionEventsStore } from '../../../stores/auctionEventsStore.js';
 import { useNavigate } from 'react-router-dom';
-import Loading from '../Loading/Loading.js';
+import Loading from '../../Loading/Loading.js';
+import { getAllUsers } from '../../../services/fetch-utils.js';
 
 export default function AuctionResultsPanel() {
   const [auctions, setAuctions] = useState([]);
@@ -20,6 +21,113 @@ export default function AuctionResultsPanel() {
   const [trackingAuctionId, setTrackingAuctionId] = useState(null);
   const [trackingInput, setTrackingInput] = useState('');
   const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const [copyToastId] = useState('auction-tracking-copy-address');
+
+  // Resolve current auction winner and address for tracking modal
+  let selectedAuction = null;
+  if (trackingAuctionId) {
+    selectedAuction = auctions.find((x) => x.id === trackingAuctionId) || null;
+  }
+
+  let winner = null;
+  if (selectedAuction) {
+    if (selectedAuction.winner) {
+      winner = selectedAuction.winner;
+    } else if (selectedAuction.topBid && selectedAuction.topBid.user) {
+      winner = selectedAuction.topBid.user;
+    }
+  }
+
+  let resolvedUser = null;
+  if (winner) {
+    for (let i = 0; i < users.length; i += 1) {
+      const user = users[i];
+
+      if (winner.id && Number(user.id) === Number(winner.userId)) {
+        resolvedUser = user;
+        break;
+      }
+      if (
+        winner.email &&
+        (user.email || user.user_email || '').toLowerCase() === winner.email.toLowerCase()
+      ) {
+        resolvedUser = user;
+        break;
+      }
+    }
+  }
+
+  let address = null;
+  if (resolvedUser && resolvedUser.address) {
+    address = resolvedUser.address;
+  }
+  const profile = resolvedUser?.profile || {};
+  const displayName =
+    `${profile.firstName || winner?.firstName || ''} ${profile.lastName || winner?.lastName || ''}`.trim();
+
+  const copyAddressText = () => {
+    if (!address) return;
+    const countryCode = (address.countryCode || 'US').toUpperCase();
+    const lines = [
+      displayName || resolvedUser?.email || resolvedUser?.user_email || '',
+      address.addressLine1,
+      address.addressLine2,
+      `${address.city}, ${address.state} ${address.postalCode}`,
+      countryCode !== 'US' ? countryCode : null,
+    ].filter(Boolean);
+    const text = lines.join('\n');
+
+    const onSuccess = () => {
+      toast.success('Address copied', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: copyToastId,
+        autoClose: 2000,
+      });
+    };
+    const onFail = () => {
+      toast.error('Failed to copy address', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: copyToastId,
+        autoClose: 3000,
+      });
+    };
+
+    if (
+      typeof window !== 'undefined' &&
+      window.navigator &&
+      window.navigator.clipboard &&
+      window.navigator.clipboard.writeText
+    ) {
+      window.navigator.clipboard.writeText(text).then(onSuccess).catch(onFail);
+    } else {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.readOnly = true;
+        ta.style.position = 'fixed';
+        ta.style.top = '-1000px';
+        document.body.appendChild(ta);
+        ta.select();
+        toast.info('Clipboard not available. Press Ctrl+C to copy.', {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: copyToastId,
+          autoClose: 3500,
+        });
+        setTimeout(() => {
+          document.body.removeChild(ta);
+        }, 4000);
+      } catch (e) {
+        onFail();
+      }
+    }
+  };
 
   const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
 
@@ -87,6 +195,8 @@ export default function AuctionResultsPanel() {
     const loadData = async () => {
       try {
         const allAuctions = await getAdminAuctions();
+        const users = await getAllUsers();
+        setUsers(Array.isArray(users) ? users : []);
 
         // hydrate each auction with top bid + bidder if available
         const withResults = await Promise.all(
@@ -105,7 +215,8 @@ export default function AuctionResultsPanel() {
           })
         );
 
-        setAuctions(withResults);
+        // setAuctions(withResults);
+        setAuctions(withResults.filter((a) => a.topBid));
       } catch (e) {
         console.error('Error loading auctions:', e);
         toast.error(`${e.message}` || 'Error loading auctions', {
@@ -185,8 +296,6 @@ export default function AuctionResultsPanel() {
   //
   //
 
-  // Shipping links are plain anchors to USPS — no JS navigation helper needed.
-
   return (
     <aside className="auction-results-panel">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -232,7 +341,8 @@ export default function AuctionResultsPanel() {
               key={a.id}
               className={`auction-result-item ${isClosed ? 'closed' : 'active-auction'}`}
             >
-              {image || !image ? (
+              {/* Remove long ternary for image rendering */}
+              {image && (
                 <div style={{ display: 'grid' }}>
                   <img
                     src={image}
@@ -260,9 +370,8 @@ export default function AuctionResultsPanel() {
                     </a>
                   )}
                 </div>
-              ) : (
-                <div className="auction-result-thumb placeholder" />
               )}
+              {!image && <div className="auction-result-thumb placeholder" />}
 
               <div className="auction-result-info">
                 {isClosed && (
@@ -349,13 +458,62 @@ export default function AuctionResultsPanel() {
               background: '#222',
               padding: '20px',
               borderRadius: '8px',
-              width: '300px',
+              width: '320px',
               display: 'flex',
               flexDirection: 'column',
               gap: '12px',
             }}
           >
             <h4 style={{ margin: 0 }}>Enter Tracking</h4>
+
+            <div
+              style={{
+                background: '#1a1a1a',
+                border: '1px solid #333',
+                borderRadius: '6px',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+              }}
+            >
+              <div
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+              >
+                <strong style={{ fontSize: '0.9rem' }}>Shipping Address</strong>
+                <button
+                  onClick={copyAddressText}
+                  disabled={!address}
+                  style={{
+                    padding: '4px 8px',
+                    background: address ? '#444' : '#333',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: address ? 'pointer' : 'not-allowed',
+                    color: 'white',
+                    fontSize: '0.8rem',
+                  }}
+                >
+                  Copy
+                </button>
+              </div>
+
+              {address ? (
+                <div style={{ lineHeight: 1.4 }}>
+                  <div>{displayName || 'Unknown'}</div>
+                  <div>{address.addressLine1}</div>
+                  {address.addressLine2 ? <div>{address.addressLine2}</div> : null}
+                  <div>
+                    {address.city}, {address.state} {address.postalCode}
+                  </div>
+                  <div>{address.countryCode || 'US'}</div>
+                </div>
+              ) : (
+                <div style={{ color: '#ccc', fontStyle: 'italic' }}>
+                  No shipping address on file
+                </div>
+              )}
+            </div>
 
             <input
               type="text"

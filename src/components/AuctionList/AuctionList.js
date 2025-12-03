@@ -41,7 +41,11 @@ function AuctionPreviewItem({ auction, onClick }) {
   }, [auction?.endTime]);
 
   const hasEnded = !auction.isActive;
-  const highBid = auction.currentBid || auction.startPrice;
+
+  const highBid =
+    auction.currentBid && auction.currentBid > 0
+      ? `$${auction.currentBid}`
+      : `Starts at $${auction.startPrice}`;
 
   return (
     <div className="auction-preview-item" onClick={onClick}>
@@ -53,7 +57,7 @@ function AuctionPreviewItem({ auction, onClick }) {
           </>
         ) : (
           <>
-            <div style={{ fontWeight: 'bold', fontSize: '1rem', color: '#ffd500' }}>${highBid}</div>
+            <div style={{ fontWeight: 'bold', fontSize: '1rem', color: '#ffd500' }}>{highBid}</div>
             <div style={{ fontSize: '.9rem', opacity: 0.9, color: '#ffd500' }}>{timeLeft}</div>
           </>
         )}

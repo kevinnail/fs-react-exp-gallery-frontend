@@ -120,11 +120,44 @@ export async function signInUser(email, password) {
     const data = await resp.json();
 
     if (!resp.ok) {
-      throw new Error(data.message);
+      const err = new Error(data.message || 'Failed to sign in');
+      if (data && data.code) err.code = data.code;
+      err.status = resp.status;
+      throw err;
     }
     return data;
   } catch (error) {
     console.error('Problem signing in: ', error.message);
+    throw error;
+  }
+}
+
+// Resend email verification
+export async function resendVerification(email) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/users/resend-verification`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      // No credentials required, but safe to include
+      credentials: 'include',
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await resp.json().catch(() => ({}));
+
+    if (!resp.ok) {
+      const err = new Error(data.message || 'Failed to resend verification');
+      err.status = resp.status;
+      if (data && data.code) err.code = data.code;
+      throw err;
+    }
+
+    return data; // { message }
+  } catch (error) {
+    console.error('Problem resending verification: ', error.message);
     throw error;
   }
 }
@@ -161,8 +194,8 @@ export async function fetchUserProfile() {
     });
 
     if (resp.ok) {
-      const profile = await resp.json();
-      return profile;
+      const result = await resp.json();
+      return result;
     } else if (resp.status === 401 || resp.status === 403) {
       return null;
     } else {
@@ -288,7 +321,28 @@ export async function deleteById(post_id) {
       credentials: 'include',
     });
     const msg = await resp.json();
+    if (!resp.ok) {
+      throw new Error(msg.message || 'Failed to delete post');
+    }
+    return msg;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
+// soft delete gallery post
+export async function softDeleteGalleryPost(post_id) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/admin/delete/${post_id}`, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+    const msg = await resp.json();
     return msg;
   } catch (error) {
     console.error(error);
@@ -712,5 +766,67 @@ export async function markWelcomeMessageFalse(userId) {
   } catch (e) {
     console.error('An error occurred:', e);
     throw e;
+  }
+}
+
+// New: PUT profile (profile + optional address), returns { profile, address }
+export async function putProfile({
+  firstName,
+  lastName,
+  imageUrl,
+  sendEmailNotifications,
+  addressLine1,
+  addressLine2,
+  city,
+  state,
+  postalCode,
+  countryCode,
+}) {
+  try {
+    const body = {
+      firstName: firstName ?? null,
+      lastName: lastName ?? null,
+      imageUrl: imageUrl ?? null,
+      sendEmailNotifications,
+    };
+
+    // Only attach address fields if caller provided them (all-or-nothing handled upstream)
+    if (
+      addressLine1 !== undefined ||
+      addressLine2 !== undefined ||
+      city !== undefined ||
+      state !== undefined ||
+      postalCode !== undefined ||
+      countryCode !== undefined
+    ) {
+      Object.assign(body, {
+        addressLine1,
+        addressLine2: addressLine2 ?? '',
+        city,
+        state,
+        postalCode,
+        countryCode: countryCode || 'US',
+      });
+    }
+
+    const response = await fetch(`${BASE_URL}/api/v1/profile`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to update profile');
+    }
+
+    return data; // { profile, address }
+  } catch (error) {
+    console.error('Error putting profile:', error);
+    throw error;
   }
 }

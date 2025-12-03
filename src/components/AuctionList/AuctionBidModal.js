@@ -69,9 +69,10 @@ export default function AuctionBidModal({
           {(() => {
             const hasBids = highestBid > 0;
             const minBid = hasBids ? highestBid : auction.startPrice;
-            const comparisonText = hasBids
-              ? `greater than $${highestBid}`
-              : `equal to or greater than $${auction.startPrice}`;
+            const comparisonText =
+              hasBids || auction.startPrice === 0
+                ? `greater than $${highestBid}`
+                : `equal to or greater than $${auction.startPrice}`;
 
             return (
               <>
