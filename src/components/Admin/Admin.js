@@ -15,7 +15,7 @@ import {
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AuctionResultsPanel from './AuctionResultsPanel.js';
+import AuctionResultsPanelSimple from './AuctionResultsPanelSimple.js';
 
 export default function Admin() {
   const { posts, loading, setPosts } = usePosts();
@@ -158,7 +158,9 @@ export default function Admin() {
     <>
       <div className="admin-container">
         <aside className="admin-panel">
-          <section className="admin-panel-section">{!isMobile && <AuctionResultsPanel />}</section>
+          <section className="admin-panel-section">
+            {!isMobile && <AuctionResultsPanelSimple />}
+          </section>
         </aside>
 
         <div>
@@ -282,12 +284,12 @@ export default function Admin() {
             >
               {(isMobile || isDesktop) && (
                 <AccordionSummary expandIcon={<ExpandMoreIcon htmlColor="#fff" />}>
-                  <Typography>Auction Results</Typography>
+                  <Typography>Active Auctions</Typography>
                 </AccordionSummary>
               )}
 
               <AccordionDetails sx={{ padding: 0, backgroundColor: 'black' }}>
-                <AuctionResultsPanel />
+                <AuctionResultsPanelSimple />
               </AccordionDetails>
             </Accordion>
           )}

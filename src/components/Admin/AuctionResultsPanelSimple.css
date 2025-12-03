@@ -1,0 +1,32 @@
+.auction-results-panel-simple {
+  background: #232323;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+.auction-results-list-simple {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.auction-result-item-simple {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  background: #181818;
+  border-radius: 6px;
+  padding: 0 0.75rem 0 0;
+}
+.auction-result-thumb-simple {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #333;
+}
+.auction-result-bid-simple {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
