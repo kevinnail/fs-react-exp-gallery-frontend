@@ -227,7 +227,7 @@ export default function AuctionCard({ auction }) {
     }
   };
 
-  const highBidder = bids[0]?.userId !== undefined && bids[0]?.userId === user?.id;
+  const highBidder = bids[0]?.userId !== undefined;
 
   return (
     <>
