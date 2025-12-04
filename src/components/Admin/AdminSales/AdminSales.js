@@ -8,19 +8,20 @@ export default function AdminSales() {
 
   return (
     <div className="admin-sales-wrapper">
+      <h2 style={{ margin: '0.25rem', textAlign: 'center' }}>Sales</h2>
       <div className="admin-sales-tabs">
         <button
           className={activeTab === 'gallery' ? 'active' : ''}
           onClick={() => setActiveTab('gallery')}
         >
-          Gallery Sales
+          Gallery
         </button>
 
         <button
           className={activeTab === 'auctions' ? 'active' : ''}
           onClick={() => setActiveTab('auctions')}
         >
-          Auction Results
+          Auction
         </button>
       </div>
 
