@@ -10,6 +10,43 @@ import { useMessaging } from '../../hooks/useWebSocket.js';
 import './AdminInbox.css';
 
 export default function AdminInbox() {
+  // User search state
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [error, setError] = useState(null);
+  const [startingConversation, setStartingConversation] = useState(false);
+  const [startError, setStartError] = useState(null);
+
+  // Search users API call
+  const handleSearch = async (e) => {
+    // TODO: Replace with actual user search logic using your preferred method
+    e.preventDefault();
+    setIsSearching(true);
+    setError(null);
+    // Simulate search result for UI only
+    setTimeout(() => {
+      setSearchResults([
+        { id: 1, name: 'Test User', email: 'test@example.com' },
+        { id: 2, name: 'Sample User', email: 'sample@example.com' },
+      ]);
+      setIsSearching(false);
+    }, 500);
+  };
+
+  // Start conversation API call
+  const handleStartConversation = async () => {
+    setStartingConversation(true);
+    setStartError(null);
+    // Simulate starting a conversation for UI only
+    setTimeout(() => {
+      window.alert('Conversation started!');
+      setSearchResults([]);
+      setSearchTerm('');
+      loadConversations(true);
+      setStartingConversation(false);
+    }, 500);
+  };
   const navigate = useNavigate();
   const { isAdmin } = useUserStore();
   const {
@@ -417,67 +454,200 @@ export default function AdminInbox() {
           <p>Customer conversations and messages</p>
         </div>
 
+        {/* User Search and Start Conversation */}
+        <div className="admin-inbox-user-search" style={{ marginBottom: '1rem' }}>
+          <form onSubmit={handleSearch}>
+            <input
+              type="text"
+              placeholder="Search users by name or email..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }}
+              disabled={isSearching}
+              style={{ marginRight: '0.5rem' }}
+            />
+            <button type="submit" disabled={isSearching || !searchTerm}>
+              Search
+            </button>
+          </form>
+          {error && <div style={{ color: 'red' }}>{error}</div>}
+          {searchResults.length > 0 && (
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {searchResults.map((user) => {
+                return (
+                  <li key={user.id} style={{ marginBottom: '0.5rem' }}>
+                    <span>
+                      {user.name} ({user.email})
+                    </span>
+                    <button
+                      style={{ marginLeft: '1rem' }}
+                      onClick={() => {
+                        handleStartConversation(user.id);
+                      }}
+                      disabled={startingConversation}
+                    >
+                      Start Conversation
+                    </button>
+                  </li>
+                );
+              })}
+              {searchResults.map((user) => (
+                <li key={user.id} style={{ marginBottom: '0.5rem' }}>
+                  <span>
+                    {user.name} ({user.email})
+                  </span>
+                  <button
+                    style={{ marginLeft: '1rem' }}
+                    onClick={() => {
+                      handleStartConversation(user.id);
+                    }}
+                    disabled={startingConversation}
+                  >
+                    Start Conversation
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          {startError && <div style={{ color: 'red' }}>{startError}</div>}
+        </div>
+
         <div className="inbox-layout">
           <div className="conversations-list">
             <h2>Conversations</h2>
-            {loading ? (
+            {/* Loading state */}
+            {loading && (
               <div className="loading-conversations">
                 <p>Loading conversations...</p>
               </div>
-            ) : conversations.length === 0 ? (
+            )}
+            {/* No conversations state */}
+            {!loading && conversations.length === 0 && (
               <div className="no-conversations">
                 <p>No conversations yet</p>
               </div>
-            ) : (
+            )}
+            {/* Conversations list */}
+            {!loading && conversations.length > 0 && (
               <div className="conversation-items">
-                {conversations.map((conversation) => (
-                  <div
-                    key={conversation.conversation_id}
-                    className={`conversation-item ${
-                      selectedConversation === conversation.conversation_id ? 'selected' : ''
-                    }`}
-                    onClick={() => loadConversationMessages(conversation.conversation_id)}
-                  >
-                    <div className="conversation-header">
-                      <div className="conversation-header-content">
-                        <div className="conversation-header-content-wrapper">
-                          {conversation.image_url ? (
-                            <img
-                              src={conversation.image_url}
-                              alt="Customer avatar"
-                              className="conversation-avatar"
-                            />
-                          ) : (
-                            <div className="conversation-avatar-fallback">
-                              {conversation.email
-                                ? conversation.email.charAt(0).toUpperCase()
-                                : '?'}
-                            </div>
-                          )}
-                          <div className="sender-info-wrapper">
-                            {' '}
-                            <span className="sender-name">
-                              {conversation.first_name}{' '}
+                {conversations.map((conversation) => {
+                  var isSelected = selectedConversation === conversation.conversation_id;
+                  var itemClass = 'conversation-item' + (isSelected ? ' selected' : '');
+                  return (
+                    <div
+                      key={conversation.conversation_id}
+                      className={itemClass}
+                      onClick={() => {
+                        loadConversationMessages(conversation.conversation_id);
+                      }}
+                    >
+                      <div className="conversation-header">
+                        <div className="conversation-header-content">
+                          <div className="conversation-header-content-wrapper">
+                            {/* Avatar or fallback */}
+                            {(() => {
+                              if (conversation.image_url) {
+                                return (
+                                  <img
+                                    src={conversation.image_url}
+                                    alt="Customer avatar"
+                                    className="conversation-avatar"
+                                  />
+                                );
+                              } else {
+                                return (
+                                  <div className="conversation-avatar-fallback">
+                                    {conversation.email
+                                      ? conversation.email.charAt(0).toUpperCase()
+                                      : '?'}
+                                  </div>
+                                );
+                              }
+                            })()}
+                            <div className="sender-info-wrapper">
                               <span className="sender-name">
-                                {conversation.last_name?.slice(0, 1)}
+                                {conversation.first_name}{' '}
+                                <span className="sender-name">
+                                  {conversation.last_name ? conversation.last_name.slice(0, 1) : ''}
+                                </span>
                               </span>
-                            </span>
-                            <span className="sender-email">{conversation.email}</span>
+                              <span className="sender-email">{conversation.email}</span>
+                            </div>
                           </div>
+                          {/* Unread badge */}
+                          {(() => {
+                            if (conversation.unread_count > 0) {
+                              return (
+                                <span className="admin-unread-badge">
+                                  {conversation.unread_count}
+                                </span>
+                              );
+                            }
+                            return null;
+                          })()}
                         </div>
-
-                        {conversation.unread_count > 0 && (
-                          <span className="admin-unread-badge">{conversation.unread_count}</span>
-                        )}
+                      </div>
+                      <div className="conversation-meta">
+                        <span className="last-message-time">
+                          {formatDate(conversation.last_message_at)}
+                        </span>
                       </div>
                     </div>
-                    <div className="conversation-meta">
-                      <span className="last-message-time">
-                        {formatDate(conversation.last_message_at)}
-                      </span>
+                  );
+                })}
+                {conversations.map((conversation) => {
+                  var isSelected = selectedConversation === conversation.conversation_id;
+                  var itemClass = 'conversation-item' + (isSelected ? ' selected' : '');
+                  return (
+                    <div
+                      key={conversation.conversation_id}
+                      className={itemClass}
+                      onClick={() => {
+                        loadConversationMessages(conversation.conversation_id);
+                      }}
+                    >
+                      <div className="conversation-header">
+                        <div className="conversation-header-content">
+                          <div className="conversation-header-content-wrapper">
+                            {/* Avatar or fallback */}
+                            {conversation.image_url ? (
+                              <img
+                                src={conversation.image_url}
+                                alt="Customer avatar"
+                                className="conversation-avatar"
+                              />
+                            ) : (
+                              <div className="conversation-avatar-fallback">
+                                {conversation.email
+                                  ? conversation.email.charAt(0).toUpperCase()
+                                  : '?'}
+                              </div>
+                            )}
+                            <div className="sender-info-wrapper">
+                              <span className="sender-name">
+                                {conversation.first_name}{' '}
+                                <span className="sender-name">
+                                  {conversation.last_name ? conversation.last_name.slice(0, 1) : ''}
+                                </span>
+                              </span>
+                              <span className="sender-email">{conversation.email}</span>
+                            </div>
+                          </div>
+                          {/* Unread badge */}
+                          {conversation.unread_count > 0 ? (
+                            <span className="admin-unread-badge">{conversation.unread_count}</span>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="conversation-meta">
+                        <span className="last-message-time">
+                          {formatDate(conversation.last_message_at)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
