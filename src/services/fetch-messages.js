@@ -25,6 +25,32 @@ export async function sendMessage(messageContent) {
   }
 }
 
+// Admin sends a new message (creates new conversation)
+export async function adminStartConversation(userId, messageContent) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/messages/admin/start`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId, messageContent }),
+      credentials: 'include',
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      throw new Error(data.error || data.message || 'Failed to start conversation');
+    }
+
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 // Customer gets their own messages
 export async function getMyMessages() {
   try {
