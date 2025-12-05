@@ -1,54 +1,41 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import {
+  adminStartConversation,
   getConversationById,
   getConversations,
   markMessageAsReadFetchCall,
 } from '../../services/fetch-messages.js';
 import { useMessaging } from '../../hooks/useWebSocket.js';
 import './AdminInbox.css';
+import { getAllUsers } from '../../services/fetch-utils.js';
 
 export default function AdminInbox() {
-  // User search state
+  const { setUnreadMessageCount } = useUserStore();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState(null);
   const [startingConversation, setStartingConversation] = useState(false);
   const [startError, setStartError] = useState(null);
-
-  // Search users API call
-  const handleSearch = async (e) => {
-    // TODO: Replace with actual user search logic using your preferred method
-    e.preventDefault();
-    setIsSearching(true);
-    setError(null);
-    // Simulate search result for UI only
-    setTimeout(() => {
-      setSearchResults([
-        { id: 1, name: 'Test User', email: 'test@example.com' },
-        { id: 2, name: 'Sample User', email: 'sample@example.com' },
-      ]);
-      setIsSearching(false);
-    }, 500);
-  };
-
-  // Start conversation API call
-  const handleStartConversation = async () => {
-    setStartingConversation(true);
-    setStartError(null);
-    // Simulate starting a conversation for UI only
-    setTimeout(() => {
-      window.alert('Conversation started!');
-      setSearchResults([]);
-      setSearchTerm('');
-      loadConversations(true);
-      setStartingConversation(false);
-    }, 500);
-  };
   const navigate = useNavigate();
   const { isAdmin } = useUserStore();
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [showMobileModal, setShowMobileModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
+  const [newReply, setNewReply] = useState('');
+  const [typingTimeout, setTypingTimeout] = useState(null);
+  const [pendingNewConversationUser, setPendingNewConversationUser] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [debouncedTerm, setDebouncedTerm] = useState('');
+  const [showUserResults, setShowUserResults] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const messagesListRef = useRef(null);
+
   const {
     socket,
     isConnected,
@@ -64,15 +51,58 @@ export default function AdminInbox() {
     stopTyping,
   } = useMessaging();
 
-  const { setUnreadMessageCount } = useUserStore();
+  useEffect(() => {
+    const getData = async () => {
+      const res = await getAllUsers();
 
-  const [selectedConversation, setSelectedConversation] = useState(null);
-  const [showMobileModal, setShowMobileModal] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [sending, setSending] = useState(false);
-  const [newReply, setNewReply] = useState('');
-  const [typingTimeout, setTypingTimeout] = useState(null);
-  const messagesListRef = useRef(null);
+      setUsers(res || []);
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setDebouncedTerm(searchTerm.trim());
+    }, 300);
+    return () => clearTimeout(t);
+  }, [searchTerm]);
+
+  const handleSelectUser = (user) => {
+    setSelectedUser(user);
+    setShowUserResults(false);
+    setSearchTerm('');
+    setSearchResults([]);
+    handleStartConversation(user);
+  };
+
+  const filteredUsers = useMemo(() => {
+    if (!debouncedTerm) return [];
+    const term = debouncedTerm.toLowerCase();
+    return users
+      .filter((u) => {
+        const email = (u.email || u.user_email || '').toLowerCase();
+        const firstName = (u.profile?.firstName || u.first_name || '').toLowerCase();
+        const lastName = (u.profile?.lastName || u.last_name || '').toLowerCase();
+        const name = `${firstName} ${lastName}`.trim();
+        return email.includes(term) || name.includes(term);
+      })
+      .slice(0, 10);
+  }, [users, debouncedTerm]);
+
+  // Search users API call
+  const handleSearchInput = (value) => {
+    setSearchTerm(value);
+    setShowUserResults(true);
+  };
+
+  // Start conversation
+  const handleStartConversation = (user) => {
+    // user is an object like { id, name, email } from searchResults
+
+    setPendingNewConversationUser(user);
+    setSelectedConversation(null);
+    setMessages([]);
+  };
 
   const loadConversations = async (forceReload = false) => {
     try {
@@ -195,24 +225,63 @@ export default function AdminInbox() {
 
   const handleSendReply = async (e) => {
     e.preventDefault();
-    if (!newReply.trim() || sending || !selectedConversation) return;
+    if (!newReply.trim() || sending) return;
 
     try {
       setSending(true);
 
-      socket.emit('send_message', {
-        conversationId: selectedConversation,
-        messageContent: newReply,
-      });
+      // Case 1- existing conversation: behave exactly like today
+      if (selectedConversation) {
+        socket.emit('send_message', {
+          conversationId: selectedConversation,
+          messageContent: newReply,
+        });
 
-      //clear state
-      setNewReply('');
+        setNewReply('');
+        stopTyping(selectedConversation);
+        await loadConversations(true);
+        return;
+      }
 
-      // Stop typing indicator
-      stopTyping(selectedConversation);
+      // Case 2- no selectedConversation, but admin chose a user from search:
+      // this is the "new conversation" case we want to mimic Messages.js for
+      if (pendingNewConversationUser) {
+        const targetUserId = pendingNewConversationUser.id;
 
-      // Refresh conversations to update unread counts and last message time
-      await loadConversations(true);
+        // Step 1- REST create conversation+first message (adminStartConversation)
+        const response = await adminStartConversation(targetUserId, newReply);
+        console.log('newReply', newReply);
+
+        // response should look like your Message model- including conversationId, userId, isFromAdmin, id
+
+        const convId = response.conversationId;
+
+        // Step 2- WebSocket emit to mimic Messages.js
+        if (socket && isConnected && convId) {
+          socket.emit('send_message', {
+            conversationId: convId,
+            messageContent: newReply,
+            isFromAdmin: response.isFromAdmin,
+            userId: response.userId,
+            messageId: response.id,
+          });
+        }
+
+        // Step 3- join conversation room and load it into UI
+        if (isConnected && convId) {
+          joinConversation(convId);
+        }
+
+        await loadConversations(true);
+        await loadConversationMessages(convId);
+
+        setSelectedConversation(convId);
+        setPendingNewConversationUser(null);
+        setNewReply('');
+        return;
+      }
+
+      // No selectedConversation and no pendingNewConversationUser- nothing to send
     } catch (error) {
       console.error('Error sending reply:', error);
     } finally {
@@ -456,42 +525,59 @@ export default function AdminInbox() {
 
         {/* User Search and Start Conversation */}
         <div className="admin-inbox-user-search" style={{ marginBottom: '1rem' }}>
-          <form onSubmit={handleSearch}>
+          <div style={{ position: 'relative' }}>
             <input
               type="text"
               placeholder="Search users by name or email..."
               value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-              }}
-              disabled={isSearching}
-              style={{ marginRight: '0.5rem' }}
+              onChange={(e) => handleSearchInput(e.target.value)}
+              onFocus={() => setShowUserResults(true)}
+              className="tracking-input"
+              style={{ width: '250px' }}
             />
-            <button type="submit" disabled={isSearching || !searchTerm}>
-              Search
-            </button>
-          </form>
+
+            {showUserResults && debouncedTerm && (
+              <div className="user-search-results" role="listbox">
+                {filteredUsers.length === 0 ? (
+                  <div className="user-result-item empty">No users found</div>
+                ) : (
+                  filteredUsers.map((u) => (
+                    <div
+                      key={u.id}
+                      className="user-result-item"
+                      role="option"
+                      onClick={() => handleSelectUser(u)}
+                    >
+                      {u.profile?.imageUrl || u.profile?.image_url ? (
+                        <img
+                          src={u.profile.imageUrl || u.profile.image_url}
+                          alt="avatar"
+                          className="user-avatar"
+                        />
+                      ) : (
+                        <div className="user-avatar-fallback">
+                          {(u.profile?.firstName || u.email || u.user_email || '?')
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+                      )}
+
+                      <div className="user-meta">
+                        <div className="user-name">
+                          {(u.profile?.firstName || 'Unknown') + ' ' + (u.profile?.lastName || '')}
+                        </div>
+                        <div className="user-email">{u.email || u.user_email}</div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+
           {error && <div style={{ color: 'red' }}>{error}</div>}
           {searchResults.length > 0 && (
             <ul style={{ listStyle: 'none', padding: 0 }}>
-              {searchResults.map((user) => {
-                return (
-                  <li key={user.id} style={{ marginBottom: '0.5rem' }}>
-                    <span>
-                      {user.name} ({user.email})
-                    </span>
-                    <button
-                      style={{ marginLeft: '1rem' }}
-                      onClick={() => {
-                        handleStartConversation(user.id);
-                      }}
-                      disabled={startingConversation}
-                    >
-                      Start Conversation
-                    </button>
-                  </li>
-                );
-              })}
               {searchResults.map((user) => (
                 <li key={user.id} style={{ marginBottom: '0.5rem' }}>
                   <span>
@@ -500,7 +586,7 @@ export default function AdminInbox() {
                   <button
                     style={{ marginLeft: '1rem' }}
                     onClick={() => {
-                      handleStartConversation(user.id);
+                      handleStartConversation(user);
                     }}
                     disabled={startingConversation}
                   >
@@ -531,71 +617,6 @@ export default function AdminInbox() {
             {/* Conversations list */}
             {!loading && conversations.length > 0 && (
               <div className="conversation-items">
-                {conversations.map((conversation) => {
-                  var isSelected = selectedConversation === conversation.conversation_id;
-                  var itemClass = 'conversation-item' + (isSelected ? ' selected' : '');
-                  return (
-                    <div
-                      key={conversation.conversation_id}
-                      className={itemClass}
-                      onClick={() => {
-                        loadConversationMessages(conversation.conversation_id);
-                      }}
-                    >
-                      <div className="conversation-header">
-                        <div className="conversation-header-content">
-                          <div className="conversation-header-content-wrapper">
-                            {/* Avatar or fallback */}
-                            {(() => {
-                              if (conversation.image_url) {
-                                return (
-                                  <img
-                                    src={conversation.image_url}
-                                    alt="Customer avatar"
-                                    className="conversation-avatar"
-                                  />
-                                );
-                              } else {
-                                return (
-                                  <div className="conversation-avatar-fallback">
-                                    {conversation.email
-                                      ? conversation.email.charAt(0).toUpperCase()
-                                      : '?'}
-                                  </div>
-                                );
-                              }
-                            })()}
-                            <div className="sender-info-wrapper">
-                              <span className="sender-name">
-                                {conversation.first_name}{' '}
-                                <span className="sender-name">
-                                  {conversation.last_name ? conversation.last_name.slice(0, 1) : ''}
-                                </span>
-                              </span>
-                              <span className="sender-email">{conversation.email}</span>
-                            </div>
-                          </div>
-                          {/* Unread badge */}
-                          {(() => {
-                            if (conversation.unread_count > 0) {
-                              return (
-                                <span className="admin-unread-badge">
-                                  {conversation.unread_count}
-                                </span>
-                              );
-                            }
-                            return null;
-                          })()}
-                        </div>
-                      </div>
-                      <div className="conversation-meta">
-                        <span className="last-message-time">
-                          {formatDate(conversation.last_message_at)}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
                 {conversations.map((conversation) => {
                   var isSelected = selectedConversation === conversation.conversation_id;
                   var itemClass = 'conversation-item' + (isSelected ? ' selected' : '');
@@ -741,9 +762,60 @@ export default function AdminInbox() {
                   </div>
                 </form>
               </>
+            ) : pendingNewConversationUser ? (
+              <>
+                {/* Header for new conversation */}
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '.5rem',
+                    padding: '.5rem',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  <span>New conversation with:</span>
+                  <span>{pendingNewConversationUser.first_name}</span>
+                  <span>{pendingNewConversationUser.last_name}</span>
+                  <span>({pendingNewConversationUser.email})</span>
+                </div>
+
+                {/* No messages yet- just the reply form */}
+                <div className="messages-list" ref={messagesListRef}>
+                  <p style={{ padding: '.5rem' }}>
+                    No messages yet- your first message will start this chat.
+                  </p>
+                </div>
+
+                {/* Typing and connection status can stay if you want or omit for new */}
+                <form onSubmit={handleSendReply} className="reply-form">
+                  <div className="input-container">
+                    <textarea
+                      value={newReply}
+                      onChange={handleTyping}
+                      placeholder="Type your first message..."
+                      className="reply-input"
+                      rows="3"
+                      disabled={sending}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendReply(e);
+                        }
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={!newReply.trim() || sending}
+                      className="reply-button"
+                    >
+                      {sending ? 'Sending...' : 'Send'}
+                    </button>
+                  </div>
+                </form>
+              </>
             ) : (
               <div className="no-conversation-selected">
-                <p>Select a conversation to view messages</p>
+                <p>Select a conversation or start a new one from search</p>
               </div>
             )}
           </div>
