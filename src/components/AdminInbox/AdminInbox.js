@@ -16,7 +16,7 @@ export default function AdminInbox() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [messageUserId, setMessageUserId] = useState(false);
   const [error, setError] = useState(null);
   const [startingConversation, setStartingConversation] = useState(false);
   const [startError, setStartError] = useState(null);
@@ -107,47 +107,55 @@ export default function AdminInbox() {
   const loadConversations = async (forceReload = false) => {
     try {
       setLoading(true);
-      const conversationsData = await getConversations();
+      const rawConversationsData = await getConversations();
+      // Only keep customer entries (not admin)
+      let conversationsData = rawConversationsData.filter((convo) => convo.user_id !== '1');
 
       // If getConversations returns conversation summaries, use them directly
       if (conversationsData && conversationsData.length > 0) {
         // Check if the data structure is already conversation summaries
         const firstItem = conversationsData[0];
+
         if (firstItem.conversation_id && firstItem.email) {
           // Data is already in conversation format
+          // Only show customer entries
+          const customerConversations = conversationsData.filter((c) => c.user_id !== '1');
           if (forceReload || conversations.length === 0) {
-            setConversations(conversationsData);
+            setConversations(customerConversations);
           }
         } else {
           // Data is in message format, need to group by conversation
           const conversationMap = new Map();
 
           conversationsData.forEach((message) => {
-            const convId = Number(message.conversation_id);
-            if (!conversationMap.has(convId)) {
-              // Look for any message in this conversation that has a non-admin email
-              const customerMessage = conversationsData.find(
-                (m) => Number(m.conversation_id) === convId && m.email && !m.isFromAdmin
-              );
-              const customerEmail = customerMessage?.email || 'Unknown Customer';
-              conversationMap.set(convId, {
-                conversation_id: convId,
-                email: customerEmail,
-                firstName: message.first_name,
-                lastName: message.last_name,
-                image_url: message.image_url,
-                message_count: 0,
-                last_message_at: message.sentAt,
-                unread_count: 0,
-              });
-            }
-            const conv = conversationMap.get(convId);
-            conv.message_count++;
-            if (new Date(message.sentAt) > new Date(conv.last_message_at)) {
-              conv.last_message_at = message.sentAt;
-            }
-            if (!message.isRead && !message.isFromAdmin) {
-              conv.unread_count++;
+            // Only group customer messages
+            if (message.user_id !== '1') {
+              const convId = Number(message.conversation_id);
+              if (!conversationMap.has(convId)) {
+                // Look for any message in this conversation that has a non-admin email
+                const customerMessage = conversationsData.find(
+                  (m) => Number(m.conversation_id) === convId && m.email && !m.isFromAdmin
+                );
+                const customerEmail = customerMessage?.email || 'Unknown Customer';
+                conversationMap.set(convId, {
+                  conversation_id: convId,
+                  email: customerEmail,
+                  firstName: message.first_name,
+                  lastName: message.last_name,
+                  image_url: message.image_url,
+                  message_count: 0,
+                  last_message_at: message.sentAt,
+                  unread_count: 0,
+                });
+              }
+              const conv = conversationMap.get(convId);
+              conv.message_count++;
+              if (new Date(message.sentAt) > new Date(conv.last_message_at)) {
+                conv.last_message_at = message.sentAt;
+              }
+              if (!message.isRead && !message.isFromAdmin) {
+                conv.unread_count++;
+              }
             }
           });
 
@@ -167,7 +175,6 @@ export default function AdminInbox() {
       setLoading(false);
     }
   };
-
   // Mobile check helper
   const isMobile = () =>
     typeof window !== 'undefined' &&
@@ -180,7 +187,7 @@ export default function AdminInbox() {
 
       setMessages(messageData);
       setSelectedConversation(conversationId);
-
+      setMessageUserId(messageData[0].userId);
       // On mobile, open messages in full-screen modal
       if (isMobile()) {
         setShowMobileModal(true);
@@ -235,6 +242,7 @@ export default function AdminInbox() {
         socket.emit('send_message', {
           conversationId: selectedConversation,
           messageContent: newReply,
+          userId: messageUserId,
         });
 
         setNewReply('');
@@ -250,7 +258,6 @@ export default function AdminInbox() {
 
         // Step 1- REST create conversation+first message (adminStartConversation)
         const response = await adminStartConversation(targetUserId, newReply);
-        console.log('newReply', newReply);
 
         // response should look like your Message model- including conversationId, userId, isFromAdmin, id
 
