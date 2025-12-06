@@ -18,7 +18,7 @@ export default function AuctionCard({ auction }) {
 
   const id = Number(auction.id);
   const { user, isAdmin } = useUserStore();
-  const { profile } = useProfileStore();
+  const { profile, address } = useProfileStore();
 
   const [selectedImage, setSelectedImage] = useState(auction.imageUrls[0]);
   const [bids, setBids] = useState([]);
@@ -193,8 +193,53 @@ export default function AuctionCard({ auction }) {
       !lastName?.trim() ||
       !imageUrl?.trim()
     ) {
+      toast.warn(
+        <span style={{ fontSize: '.9rem' }}>
+          Please complete your profile (name and avatar) before bidding or buying. Thank you!
+        </span>,
+        {
+          theme: 'dark',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: false,
+        }
+      );
+      navigate('/account');
+      return false;
+    }
+
+    // Address scrutiny
+
+    if (!address) {
+      toast.warn(
+        <span style={{ fontSize: '.9rem' }}>
+          Please complete your address before bidding or buying by clicking the gear icon for
+          settings in your Account page. Thank you!
+        </span>,
+        {
+          theme: 'dark',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: false,
+        }
+      );
+      navigate('/account');
+      return false;
+    }
+    const { addressLine1, city, state, postalCode, countryCode } = address;
+    if (
+      !addressLine1?.trim() ||
+      !city?.trim() ||
+      !state?.trim() ||
+      !postalCode?.trim() ||
+      !countryCode?.trim()
+    ) {
       toast.info(
-        `Please complete your profile (name and avatar) before bidding or buying. Thank you!`,
+        <span style={{ fontSize: '.9rem' }}>
+          Please complete your address (all required fields) before bidding or buying by clicking
+          the gear for settings in your Account page. Thank you!
+        </span>,
+
         {
           theme: 'dark',
           draggable: true,
@@ -213,6 +258,7 @@ export default function AuctionCard({ auction }) {
     if (!user) {
       return handleNavAuth();
     }
+
     if (checkProfileCompletion()) {
       setShowBidModal(true);
     }
