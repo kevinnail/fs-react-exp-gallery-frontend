@@ -290,19 +290,18 @@ export default function AuctionResultsPanel() {
     );
   }
 
-  const activeTotal = auctions
-    .filter((a) => a.isActive)
-    .reduce((sum, a) => sum + (a.topBid?.bidAmount || 0), 0);
-  //
-  //
+  // Calculate total owed to admin: auctions with a winner, not paid
+  const totalOwed = auctions
+    .filter((auction) => auction.winner && !auction.isPaid)
+    .reduce((sum, auction) => sum + (auction.topBid?.bidAmount || 0), 0);
 
   return (
     <aside className="auction-results-panel">
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h3>Auctions</h3>
-        <div>
-          <span>active bids total:</span>
-          <span style={{ color: '#9f9' }}> ${activeTotal.toLocaleString()}</span>
+      <div style={{ display: 'block' }}>
+        <h3 style={{ margin: 0, padding: 0 }}>Auctions</h3>
+        <div style={{ marginBottom: '.25rem' }}>
+          <span style={{ fontSize: '1.25rem' }}>Unpaid Total:</span>
+          <span style={{ color: '#9f9' }}> ${totalOwed.toLocaleString()}</span>
         </div>
       </div>
       <div className="auction-results-list">

@@ -1,17 +1,41 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import {
+  adminStartConversation,
   getConversationById,
   getConversations,
   markMessageAsReadFetchCall,
 } from '../../services/fetch-messages.js';
 import { useMessaging } from '../../hooks/useWebSocket.js';
 import './AdminInbox.css';
+import { getAllUsers } from '../../services/fetch-utils.js';
 
 export default function AdminInbox() {
+  const { setUnreadMessageCount } = useUserStore();
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [messageUserId, setMessageUserId] = useState(false);
+  const [error, setError] = useState(null);
+  const [startingConversation, setStartingConversation] = useState(false);
+  const [startError, setStartError] = useState(null);
   const navigate = useNavigate();
   const { isAdmin } = useUserStore();
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [showMobileModal, setShowMobileModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
+  const [newReply, setNewReply] = useState('');
+  const [typingTimeout, setTypingTimeout] = useState(null);
+  const [pendingNewConversationUser, setPendingNewConversationUser] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [debouncedTerm, setDebouncedTerm] = useState('');
+  const [showUserResults, setShowUserResults] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const messagesListRef = useRef(null);
+
   const {
     socket,
     isConnected,
@@ -27,60 +51,111 @@ export default function AdminInbox() {
     stopTyping,
   } = useMessaging();
 
-  const { setUnreadMessageCount } = useUserStore();
+  useEffect(() => {
+    const getData = async () => {
+      const res = await getAllUsers();
 
-  const [selectedConversation, setSelectedConversation] = useState(null);
-  const [showMobileModal, setShowMobileModal] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [sending, setSending] = useState(false);
-  const [newReply, setNewReply] = useState('');
-  const [typingTimeout, setTypingTimeout] = useState(null);
-  const messagesListRef = useRef(null);
+      setUsers(res || []);
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setDebouncedTerm(searchTerm.trim());
+    }, 300);
+    return () => clearTimeout(t);
+  }, [searchTerm]);
+
+  const handleSelectUser = (user) => {
+    setSelectedUser(user);
+    setShowUserResults(false);
+    setSearchTerm('');
+    setSearchResults([]);
+    handleStartConversation(user);
+  };
+
+  const filteredUsers = useMemo(() => {
+    if (!debouncedTerm) return [];
+    const term = debouncedTerm.toLowerCase();
+    return users
+      .filter((u) => {
+        const email = (u.email || u.user_email || '').toLowerCase();
+        const firstName = (u.profile?.firstName || u.first_name || '').toLowerCase();
+        const lastName = (u.profile?.lastName || u.last_name || '').toLowerCase();
+        const name = `${firstName} ${lastName}`.trim();
+        return email.includes(term) || name.includes(term);
+      })
+      .slice(0, 10);
+  }, [users, debouncedTerm]);
+
+  // Search users API call
+  const handleSearchInput = (value) => {
+    setSearchTerm(value);
+    setShowUserResults(true);
+  };
+
+  // Start conversation
+  const handleStartConversation = (user) => {
+    // user is an object like { id, name, email } from searchResults
+
+    setPendingNewConversationUser(user);
+    setSelectedConversation(null);
+    setMessages([]);
+  };
 
   const loadConversations = async (forceReload = false) => {
     try {
       setLoading(true);
-      const conversationsData = await getConversations();
+      const rawConversationsData = await getConversations();
+      // Only keep customer entries (not admin)
+      let conversationsData = rawConversationsData.filter((convo) => convo.user_id !== '1');
 
       // If getConversations returns conversation summaries, use them directly
       if (conversationsData && conversationsData.length > 0) {
         // Check if the data structure is already conversation summaries
         const firstItem = conversationsData[0];
+
         if (firstItem.conversation_id && firstItem.email) {
           // Data is already in conversation format
+          // Only show customer entries
+          const customerConversations = conversationsData.filter((c) => c.user_id !== '1');
           if (forceReload || conversations.length === 0) {
-            setConversations(conversationsData);
+            setConversations(customerConversations);
           }
         } else {
           // Data is in message format, need to group by conversation
           const conversationMap = new Map();
 
           conversationsData.forEach((message) => {
-            const convId = Number(message.conversation_id);
-            if (!conversationMap.has(convId)) {
-              // Look for any message in this conversation that has a non-admin email
-              const customerMessage = conversationsData.find(
-                (m) => Number(m.conversation_id) === convId && m.email && !m.isFromAdmin
-              );
-              const customerEmail = customerMessage?.email || 'Unknown Customer';
-              conversationMap.set(convId, {
-                conversation_id: convId,
-                email: customerEmail,
-                firstName: message.first_name,
-                lastName: message.last_name,
-                image_url: message.image_url,
-                message_count: 0,
-                last_message_at: message.sentAt,
-                unread_count: 0,
-              });
-            }
-            const conv = conversationMap.get(convId);
-            conv.message_count++;
-            if (new Date(message.sentAt) > new Date(conv.last_message_at)) {
-              conv.last_message_at = message.sentAt;
-            }
-            if (!message.isRead && !message.isFromAdmin) {
-              conv.unread_count++;
+            // Only group customer messages
+            if (message.user_id !== '1') {
+              const convId = Number(message.conversation_id);
+              if (!conversationMap.has(convId)) {
+                // Look for any message in this conversation that has a non-admin email
+                const customerMessage = conversationsData.find(
+                  (m) => Number(m.conversation_id) === convId && m.email && !m.isFromAdmin
+                );
+                const customerEmail = customerMessage?.email || 'Unknown Customer';
+                conversationMap.set(convId, {
+                  conversation_id: convId,
+                  email: customerEmail,
+                  firstName: message.first_name,
+                  lastName: message.last_name,
+                  image_url: message.image_url,
+                  message_count: 0,
+                  last_message_at: message.sentAt,
+                  unread_count: 0,
+                });
+              }
+              const conv = conversationMap.get(convId);
+              conv.message_count++;
+              if (new Date(message.sentAt) > new Date(conv.last_message_at)) {
+                conv.last_message_at = message.sentAt;
+              }
+              if (!message.isRead && !message.isFromAdmin) {
+                conv.unread_count++;
+              }
             }
           });
 
@@ -100,7 +175,6 @@ export default function AdminInbox() {
       setLoading(false);
     }
   };
-
   // Mobile check helper
   const isMobile = () =>
     typeof window !== 'undefined' &&
@@ -113,7 +187,7 @@ export default function AdminInbox() {
 
       setMessages(messageData);
       setSelectedConversation(conversationId);
-
+      setMessageUserId(messageData[0].userId);
       // On mobile, open messages in full-screen modal
       if (isMobile()) {
         setShowMobileModal(true);
@@ -158,24 +232,63 @@ export default function AdminInbox() {
 
   const handleSendReply = async (e) => {
     e.preventDefault();
-    if (!newReply.trim() || sending || !selectedConversation) return;
+    if (!newReply.trim() || sending) return;
 
     try {
       setSending(true);
 
-      socket.emit('send_message', {
-        conversationId: selectedConversation,
-        messageContent: newReply,
-      });
+      // Case 1- existing conversation: behave exactly like today
+      if (selectedConversation) {
+        socket.emit('send_message', {
+          conversationId: selectedConversation,
+          messageContent: newReply,
+          userId: messageUserId,
+        });
 
-      //clear state
-      setNewReply('');
+        setNewReply('');
+        stopTyping(selectedConversation);
+        await loadConversations(true);
+        return;
+      }
 
-      // Stop typing indicator
-      stopTyping(selectedConversation);
+      // Case 2- no selectedConversation, but admin chose a user from search:
+      // this is the "new conversation" case we want to mimic Messages.js for
+      if (pendingNewConversationUser) {
+        const targetUserId = pendingNewConversationUser.id;
 
-      // Refresh conversations to update unread counts and last message time
-      await loadConversations(true);
+        // Step 1- REST create conversation+first message (adminStartConversation)
+        const response = await adminStartConversation(targetUserId, newReply);
+
+        // response should look like your Message model- including conversationId, userId, isFromAdmin, id
+
+        const convId = response.conversationId;
+
+        // Step 2- WebSocket emit to mimic Messages.js
+        if (socket && isConnected && convId) {
+          socket.emit('send_message', {
+            conversationId: convId,
+            messageContent: newReply,
+            isFromAdmin: response.isFromAdmin,
+            userId: response.userId,
+            messageId: response.id,
+          });
+        }
+
+        // Step 3- join conversation room and load it into UI
+        if (isConnected && convId) {
+          joinConversation(convId);
+        }
+
+        await loadConversations(true);
+        await loadConversationMessages(convId);
+
+        setSelectedConversation(convId);
+        setPendingNewConversationUser(null);
+        setNewReply('');
+        return;
+      }
+
+      // No selectedConversation and no pendingNewConversationUser- nothing to send
     } catch (error) {
       console.error('Error sending reply:', error);
     } finally {
@@ -417,67 +530,152 @@ export default function AdminInbox() {
           <p>Customer conversations and messages</p>
         </div>
 
+        {/* User Search and Start Conversation */}
+        <div className="admin-inbox-user-search" style={{ marginBottom: '1rem' }}>
+          <div style={{ position: 'relative' }}>
+            <input
+              type="text"
+              placeholder="Search users by name or email..."
+              value={searchTerm}
+              onChange={(e) => handleSearchInput(e.target.value)}
+              onFocus={() => setShowUserResults(true)}
+              className="tracking-input"
+              style={{ width: '250px' }}
+            />
+
+            {showUserResults && debouncedTerm && (
+              <div className="user-search-results" role="listbox">
+                {filteredUsers.length === 0 ? (
+                  <div className="user-result-item empty">No users found</div>
+                ) : (
+                  filteredUsers.map((u) => (
+                    <div
+                      key={u.id}
+                      className="user-result-item"
+                      role="option"
+                      onClick={() => handleSelectUser(u)}
+                    >
+                      {u.profile?.imageUrl || u.profile?.image_url ? (
+                        <img
+                          src={u.profile.imageUrl || u.profile.image_url}
+                          alt="avatar"
+                          className="user-avatar"
+                        />
+                      ) : (
+                        <div className="user-avatar-fallback">
+                          {(u.profile?.firstName || u.email || u.user_email || '?')
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+                      )}
+
+                      <div className="user-meta">
+                        <div className="user-name">
+                          {(u.profile?.firstName || 'Unknown') + ' ' + (u.profile?.lastName || '')}
+                        </div>
+                        <div className="user-email">{u.email || u.user_email}</div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+
+          {error && <div style={{ color: 'red' }}>{error}</div>}
+          {searchResults.length > 0 && (
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {searchResults.map((user) => (
+                <li key={user.id} style={{ marginBottom: '0.5rem' }}>
+                  <span>
+                    {user.name} ({user.email})
+                  </span>
+                  <button
+                    style={{ marginLeft: '1rem' }}
+                    onClick={() => {
+                      handleStartConversation(user);
+                    }}
+                    disabled={startingConversation}
+                  >
+                    Start Conversation
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          {startError && <div style={{ color: 'red' }}>{startError}</div>}
+        </div>
+
         <div className="inbox-layout">
           <div className="conversations-list">
             <h2>Conversations</h2>
-            {loading ? (
+            {/* Loading state */}
+            {loading && (
               <div className="loading-conversations">
                 <p>Loading conversations...</p>
               </div>
-            ) : conversations.length === 0 ? (
+            )}
+            {/* No conversations state */}
+            {!loading && conversations.length === 0 && (
               <div className="no-conversations">
                 <p>No conversations yet</p>
               </div>
-            ) : (
+            )}
+            {/* Conversations list */}
+            {!loading && conversations.length > 0 && (
               <div className="conversation-items">
-                {conversations.map((conversation) => (
-                  <div
-                    key={conversation.conversation_id}
-                    className={`conversation-item ${
-                      selectedConversation === conversation.conversation_id ? 'selected' : ''
-                    }`}
-                    onClick={() => loadConversationMessages(conversation.conversation_id)}
-                  >
-                    <div className="conversation-header">
-                      <div className="conversation-header-content">
-                        <div className="conversation-header-content-wrapper">
-                          {conversation.image_url ? (
-                            <img
-                              src={conversation.image_url}
-                              alt="Customer avatar"
-                              className="conversation-avatar"
-                            />
-                          ) : (
-                            <div className="conversation-avatar-fallback">
-                              {conversation.email
-                                ? conversation.email.charAt(0).toUpperCase()
-                                : '?'}
-                            </div>
-                          )}
-                          <div className="sender-info-wrapper">
-                            {' '}
-                            <span className="sender-name">
-                              {conversation.first_name}{' '}
+                {conversations.map((conversation) => {
+                  var isSelected = selectedConversation === conversation.conversation_id;
+                  var itemClass = 'conversation-item' + (isSelected ? ' selected' : '');
+                  return (
+                    <div
+                      key={conversation.conversation_id}
+                      className={itemClass}
+                      onClick={() => {
+                        loadConversationMessages(conversation.conversation_id);
+                      }}
+                    >
+                      <div className="conversation-header">
+                        <div className="conversation-header-content">
+                          <div className="conversation-header-content-wrapper">
+                            {/* Avatar or fallback */}
+                            {conversation.image_url ? (
+                              <img
+                                src={conversation.image_url}
+                                alt="Customer avatar"
+                                className="conversation-avatar"
+                              />
+                            ) : (
+                              <div className="conversation-avatar-fallback">
+                                {conversation.email
+                                  ? conversation.email.charAt(0).toUpperCase()
+                                  : '?'}
+                              </div>
+                            )}
+                            <div className="sender-info-wrapper">
                               <span className="sender-name">
-                                {conversation.last_name?.slice(0, 1)}
+                                {conversation.first_name}{' '}
+                                <span className="sender-name">
+                                  {conversation.last_name ? conversation.last_name.slice(0, 1) : ''}
+                                </span>
                               </span>
-                            </span>
-                            <span className="sender-email">{conversation.email}</span>
+                              <span className="sender-email">{conversation.email}</span>
+                            </div>
                           </div>
+                          {/* Unread badge */}
+                          {conversation.unread_count > 0 ? (
+                            <span className="admin-unread-badge">{conversation.unread_count}</span>
+                          ) : null}
                         </div>
-
-                        {conversation.unread_count > 0 && (
-                          <span className="admin-unread-badge">{conversation.unread_count}</span>
-                        )}
+                      </div>
+                      <div className="conversation-meta">
+                        <span className="last-message-time">
+                          {formatDate(conversation.last_message_at)}
+                        </span>
                       </div>
                     </div>
-                    <div className="conversation-meta">
-                      <span className="last-message-time">
-                        {formatDate(conversation.last_message_at)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -571,9 +769,60 @@ export default function AdminInbox() {
                   </div>
                 </form>
               </>
+            ) : pendingNewConversationUser ? (
+              <>
+                {/* Header for new conversation */}
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '.5rem',
+                    padding: '.5rem',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  <span>New conversation with:</span>
+                  <span>{pendingNewConversationUser.first_name}</span>
+                  <span>{pendingNewConversationUser.last_name}</span>
+                  <span>({pendingNewConversationUser.email})</span>
+                </div>
+
+                {/* No messages yet- just the reply form */}
+                <div className="messages-list" ref={messagesListRef}>
+                  <p style={{ padding: '.5rem' }}>
+                    No messages yet- your first message will start this chat.
+                  </p>
+                </div>
+
+                {/* Typing and connection status can stay if you want or omit for new */}
+                <form onSubmit={handleSendReply} className="reply-form">
+                  <div className="input-container">
+                    <textarea
+                      value={newReply}
+                      onChange={handleTyping}
+                      placeholder="Type your first message..."
+                      className="reply-input"
+                      rows="3"
+                      disabled={sending}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendReply(e);
+                        }
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={!newReply.trim() || sending}
+                      className="reply-button"
+                    >
+                      {sending ? 'Sending...' : 'Send'}
+                    </button>
+                  </div>
+                </form>
+              </>
             ) : (
               <div className="no-conversation-selected">
-                <p>Select a conversation to view messages</p>
+                <p>Select a conversation or start a new one from search</p>
               </div>
             )}
           </div>
