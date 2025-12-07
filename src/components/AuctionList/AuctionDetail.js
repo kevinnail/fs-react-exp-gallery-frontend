@@ -16,11 +16,7 @@ export default function AuctionDetail() {
   // Simplest back logic: if there is no referrer (direct entry like email link), go home.
   // Otherwise rely on browser history.
   const handleBack = () => {
-    if (!document.referrer) {
-      navigate(-1);
-    } else {
-      navigate('/');
-    }
+    navigate(-1);
   };
 
   const lastAuctionExtended = useAuctionEventsStore((s) => s.lastAuctionExtended);
