@@ -830,3 +830,27 @@ export async function putProfile({
     throw error;
   }
 }
+
+export async function swapAuctionOrPost(type, id) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/admin/swap/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ type }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to swap data');
+    }
+
+    return data;
+  } catch (error) {
+    console.error(`Error swapping data for ${type}: `, error);
+    throw error;
+  }
+}
