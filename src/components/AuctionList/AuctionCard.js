@@ -281,7 +281,7 @@ export default function AuctionCard({ auction }) {
     try {
       await swapAuctionOrPost('auction', id);
       setShowSwapModal(false);
-      navigate('/auctions');
+      navigate('/auctions/archive');
       toast.success('Auction successfully swapped to gallery post.', {
         theme: 'colored',
         toastId: 'auction-swap-success',
