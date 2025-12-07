@@ -281,6 +281,7 @@ export default function AuctionCard({ auction }) {
     try {
       await swapAuctionOrPost('auction', id);
       setShowSwapModal(false);
+      navigate('/auctions');
       toast.success('Auction successfully swapped to gallery post.', {
         theme: 'colored',
         toastId: 'auction-swap-success',
@@ -308,6 +309,7 @@ export default function AuctionCard({ auction }) {
   const handleCloseSwapModal = () => {
     setShowSwapModal(false);
   };
+
   // Simple Swap Confirmation Modal
   function SwapConfirmationModal({ isOpen, onConfirm, onCancel }) {
     if (!isOpen) return null;
@@ -322,10 +324,10 @@ export default function AuctionCard({ auction }) {
           <div
             style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}
           >
-            <button className="confirm-btn" onClick={onConfirm}>
+            <button className="swap-confirm-btn" onClick={onConfirm}>
               Confirm
             </button>
-            <button className="cancel-btn" onClick={onCancel}>
+            <button className="swap-cancel-btn" onClick={onCancel}>
               Cancel
             </button>
           </div>

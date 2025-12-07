@@ -104,3 +104,31 @@
 .bidding-closed {
   font-weight: bold;
 }
+
+.swap-confirm-btn,
+.swap-cancel-btn {
+  position: relative;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.swap-confirm-btn:hover,
+.swap-cancel-btn:hover {
+  background-color: #555;
+}
+
+.swap-confirm-btn:active,
+.swap-cancel-btn:active {
+  transform: scale(0.95);
+}

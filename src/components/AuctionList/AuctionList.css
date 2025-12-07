@@ -179,7 +179,8 @@
 
 .view-bids-btn:hover,
 .add-edit-auctions:hover,
-.edit-auction-icon-btn:hover {
+.edit-auction-icon-btn:hover,
+.swap-auction-icon-btn:hover {
   background: rgba(0, 0, 0, 0.15);
   color: #fff;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
@@ -188,7 +189,8 @@
 
 .view-bids-btn:active,
 .add-edit-auctions:active,
-.edit-auction-icon-btn:active {
+.edit-auction-icon-btn:active,
+.swap-auction-icon-btn:active {
   transform: scale(0.98);
 }
 
