@@ -172,12 +172,16 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
             <TableCell style={{ textAlign: 'center' }}>{totalInventoryCount}</TableCell>
             <TableCell style={{ textAlign: 'right' }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Regular</span>
-                <span>${Number(regularTotal.toFixed(2)).toLocaleString()}</span>
+                <span style={{ fontSize: '.9rem' }}>Regular</span>
+                <span style={{ fontSize: '.9rem' }}>
+                  ${Number(regularTotal.toFixed(2)).toLocaleString()}
+                </span>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span> Discount</span>
-                <span>${Number(discountedTotal.toFixed(2)).toLocaleString()}</span>
+                <span style={{ fontSize: '.9rem' }}> Discount</span>
+                <span style={{ fontSize: '.9rem' }}>
+                  ${Number(discountedTotal.toFixed(2)).toLocaleString()}
+                </span>
               </Box>
             </TableCell>
           </TableRow>
@@ -188,12 +192,16 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
             <TableCell style={{ textAlign: 'center' }}>{numSoldItems}</TableCell>
             <TableCell style={{ textAlign: 'right' }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Regular</span>
-                <span>${Number(soldRegularTotal.toFixed(2)).toLocaleString()}</span>
+                <span style={{ fontSize: '.9rem' }}>Regular</span>
+                <span style={{ fontSize: '.9rem' }}>
+                  ${Number(soldRegularTotal.toFixed(2)).toLocaleString()}
+                </span>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span> Discount</span>
-                <span>${Number(soldDiscountedTotal.toFixed(2)).toLocaleString()}</span>
+                <span style={{ fontSize: '.9rem' }}> Discount</span>
+                <span style={{ fontSize: '.9rem' }}>
+                  ${Number(soldDiscountedTotal.toFixed(2)).toLocaleString()}
+                </span>
               </Box>
             </TableCell>
           </TableRow>
@@ -206,12 +214,16 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
             </TableCell>
             <TableCell style={{ textAlign: 'right' }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Regular</span>
-                <span>${Number(forSaleRegularTotal.toFixed(2)).toLocaleString()}</span>
+                <span style={{ fontSize: '.9rem' }}>Regular</span>
+                <span style={{ fontSize: '.9rem' }}>
+                  ${Number(forSaleRegularTotal.toFixed(2)).toLocaleString()}
+                </span>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span> Discount</span>
-                <span>${Number(forSaleDiscountedTotal.toFixed(2)).toLocaleString()}</span>
+                <span style={{ fontSize: '.9rem' }}> Discount</span>
+                <span style={{ fontSize: '.9rem' }}>
+                  ${Number(forSaleDiscountedTotal.toFixed(2)).toLocaleString()}
+                </span>
               </Box>
             </TableCell>
           </TableRow>
