@@ -19,7 +19,7 @@ export default function Account() {
   const navigate = useNavigate();
   const [tab, setTab] = useState(0);
 
-  const currentSpecialDiscount = 0.3; //^  Adjust as needed =========================================================
+  const currentSpecialDiscount = 0.7; //^  Adjust as needed =========================================================
 
   const handleTabChange = (e, newValue) => {
     setTab(newValue);
