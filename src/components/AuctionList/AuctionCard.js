@@ -14,6 +14,13 @@ import ConfirmBINModal from './ConfirmBINModal';
 import AuctionRulesModal from './AuctionRulesModal.js';
 
 export default function AuctionCard({ auction }) {
+  // Helper to check if user is restricted
+  const isUserRestricted = () => {
+    const restrictedUsers = (process.env.REACT_APP_RESTRICTED_USER_ID || '')
+      .split(',')
+      .map((id) => id.trim());
+    return user && restrictedUsers.includes(String(user.id));
+  };
   const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
   const lastBuyNowId = useAuctionEventsStore((s) => s.lastBuyNowId);
 
@@ -260,7 +267,16 @@ export default function AuctionCard({ auction }) {
     if (!user) {
       return handleNavAuth();
     }
-
+    if (isUserRestricted()) {
+      toast.error('Your account is restricted from bidding.', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-list-restricted',
+        autoClose: false,
+      });
+      return;
+    }
     if (checkProfileCompletion()) {
       setShowBidModal(true);
     }
@@ -269,6 +285,16 @@ export default function AuctionCard({ auction }) {
   const handleBuyNowClick = () => {
     if (!user) {
       return handleNavAuth();
+    }
+    if (isUserRestricted()) {
+      toast.error('Your account is restricted from buying.', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-list-restricted-bin',
+        autoClose: false,
+      });
+      return;
     }
     if (checkProfileCompletion()) {
       setShowConfirmBIN(true);
