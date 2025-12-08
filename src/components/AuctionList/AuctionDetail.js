@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getAuctions } from '../../services/fetch-auctions.js';
 import AuctionCard from './AuctionCard.js';
 import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
+import Loading from '../Loading/Loading.js';
 
 export default function AuctionDetail() {
   const { id } = useParams();
@@ -16,11 +17,7 @@ export default function AuctionDetail() {
   // Simplest back logic: if there is no referrer (direct entry like email link), go home.
   // Otherwise rely on browser history.
   const handleBack = () => {
-    if (!document.referrer) {
-      navigate(-1);
-    } else {
-      navigate('/');
-    }
+    navigate(-1);
   };
 
   const lastAuctionExtended = useAuctionEventsStore((s) => s.lastAuctionExtended);
@@ -51,11 +48,22 @@ export default function AuctionDetail() {
     };
   }, [auctionId]);
 
+  // Delayed redirect to /auctions if auction not found and not loading
+  useEffect(() => {
+    if (!loading && !auction) {
+      const timeout = setTimeout(() => {
+        navigate('/auctions');
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [auction, loading, navigate]);
+
   if (loading) {
     return (
       <div className="messages-container">
         <div className="messages-content">
           <p>Loading auction...</p>
+          <Loading />
         </div>
       </div>
     );
@@ -65,7 +73,9 @@ export default function AuctionDetail() {
     return (
       <div className="messages-container">
         <div className="messages-content">
-          <p>Not found.</p>
+          <p>Not found</p>
+          <p>Redirecting in 3 seconds...</p>
+          <Loading />
         </div>
       </div>
     );

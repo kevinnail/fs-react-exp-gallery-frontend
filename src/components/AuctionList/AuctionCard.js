@@ -2,6 +2,7 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { buyItNow, getBids } from '../../services/fetch-bids.js';
+import { swapAuctionOrPost } from '../../services/fetch-utils.js';
 import { useUserStore } from '../../stores/userStore.js';
 import { toast } from 'react-toastify';
 import { useProfileStore } from '../../stores/profileStore.js';
@@ -13,6 +14,12 @@ import ConfirmBINModal from './ConfirmBINModal';
 import AuctionRulesModal from './AuctionRulesModal.js';
 
 export default function AuctionCard({ auction }) {
+  const isUserRestricted = () => {
+    const restrictedUsers = (process.env.REACT_APP_RESTRICTED_USER_ID || '')
+      .split(',')
+      .map((id) => id.trim());
+    return user && restrictedUsers.includes(String(user.id));
+  };
   const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
   const lastBuyNowId = useAuctionEventsStore((s) => s.lastBuyNowId);
 
@@ -36,6 +43,7 @@ export default function AuctionCard({ auction }) {
   const lastAuctionExtended = useAuctionEventsStore((s) => s.lastAuctionExtended);
 
   const [showRules, setShowRules] = useState(false);
+  const [showSwapModal, setShowSwapModal] = useState(false);
 
   // set up listener for websocket auction end event
   useEffect(() => {
@@ -258,7 +266,16 @@ export default function AuctionCard({ auction }) {
     if (!user) {
       return handleNavAuth();
     }
-
+    if (isUserRestricted()) {
+      toast.error('Your account is restricted from bidding.', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-list-restricted',
+        autoClose: false,
+      });
+      return;
+    }
     if (checkProfileCompletion()) {
       setShowBidModal(true);
     }
@@ -268,12 +285,81 @@ export default function AuctionCard({ auction }) {
     if (!user) {
       return handleNavAuth();
     }
+    if (isUserRestricted()) {
+      toast.error('Your account is restricted from buying.', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-list-restricted-bin',
+        autoClose: false,
+      });
+      return;
+    }
     if (checkProfileCompletion()) {
       setShowConfirmBIN(true);
     }
   };
 
   const highBidder = bids[0]?.userId !== undefined;
+
+  const handleSwap = async () => {
+    try {
+      await swapAuctionOrPost('auction', id);
+      setShowSwapModal(false);
+      navigate('/auctions/archive');
+      toast.success('Auction successfully swapped to gallery post.', {
+        theme: 'colored',
+        toastId: 'auction-swap-success',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 4000,
+      });
+      // Optionally, trigger UI update or navigation here
+    } catch (err) {
+      setShowSwapModal(false);
+      toast.error('Error swapping auction. Please try again.', {
+        theme: 'colored',
+        toastId: 'auction-swap-error',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 6000,
+      });
+    }
+  };
+
+  const handleOpenSwapModal = () => {
+    setShowSwapModal(true);
+  };
+
+  const handleCloseSwapModal = () => {
+    setShowSwapModal(false);
+  };
+
+  // Simple Swap Confirmation Modal
+  function SwapConfirmationModal({ isOpen, onConfirm, onCancel }) {
+    if (!isOpen) return null;
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <h3>Confirm Swap</h3>
+          <p>
+            Are you sure you want to swap this auction to a gallery post? This action cannot be
+            undone.
+          </p>
+          <div
+            style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}
+          >
+            <button className="swap-confirm-btn" onClick={onConfirm}>
+              Confirm
+            </button>
+            <button className="swap-cancel-btn" onClick={onCancel}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -307,9 +393,14 @@ export default function AuctionCard({ auction }) {
             }}
           >
             {user && isAdmin && (
-              <button className="edit-auction-icon-btn" onClick={handleEdit}>
-                ✎
-              </button>
+              <>
+                <button className="swap-auction-icon-btn" onClick={handleOpenSwapModal}>
+                  ↳↰
+                </button>
+                <button className="edit-auction-icon-btn" onClick={handleEdit}>
+                  ✎
+                </button>
+              </>
             )}
           </div>
 
@@ -502,6 +593,11 @@ export default function AuctionCard({ auction }) {
         }}
       />
       <AuctionRulesModal isOpen={showRules} onClose={() => setShowRules(false)} />
+      <SwapConfirmationModal
+        isOpen={showSwapModal}
+        onConfirm={handleSwap}
+        onCancel={handleCloseSwapModal}
+      />
     </>
   );
 }

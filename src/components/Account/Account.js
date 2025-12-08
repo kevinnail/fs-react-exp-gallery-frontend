@@ -19,7 +19,7 @@ export default function Account() {
   const navigate = useNavigate();
   const [tab, setTab] = useState(0);
 
-  const currentSpecialDiscount = 0.5; //!  Change to 0.7 by 12-1-25 =========================================================
+  const currentSpecialDiscount = 0.7; //^  Adjust as needed =========================================================
 
   const handleTabChange = (e, newValue) => {
     setTab(newValue);
@@ -255,17 +255,10 @@ export default function Account() {
                 <span style={{ display: 'block', textAlign: 'center' }}>
                   <strong>Current Special:</strong>
                 </span>
-                <span style={{ display: 'block', textAlign: 'left' }}>
-                  <strong>50% OFF</strong> of the new work for all new sign ups
-                  <strong style={{ color: 'yellow' }}> until the end of November!{`  `}</strong>
-                  This extends to GlassPass and Etsy just message me- the piece should be posted
-                  here, go to that page, click the &quot;Message Kevin about this piece&quot; button
-                  up top and we&apos;ll get it sorted out for you!
-                </span>
-                <br />
-                <span style={{ display: 'block', textAlign: 'left' }}>
-                  After the sign up special ends, all new work will be discounted for 2 weeks after
-                  it&apos;s posted.
+
+                <span style={{ display: 'block', textAlign: 'center' }}>
+                  All new work is <strong>discounted 30% </strong>
+                  for 2 weeks after it&apos;s posted.
                 </span>
               </span>
 

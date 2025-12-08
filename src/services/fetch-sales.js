@@ -79,7 +79,7 @@ export async function updateSaleTracking(postId, trackingNumber) {
 
 export async function updateSalePaidStatus(id, isPaid) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/admin/pay-status/${id}`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/admin/sale-pay-status/${id}`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
