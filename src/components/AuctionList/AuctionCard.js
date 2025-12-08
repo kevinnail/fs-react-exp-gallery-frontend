@@ -14,7 +14,6 @@ import ConfirmBINModal from './ConfirmBINModal';
 import AuctionRulesModal from './AuctionRulesModal.js';
 
 export default function AuctionCard({ auction }) {
-  // Helper to check if user is restricted
   const isUserRestricted = () => {
     const restrictedUsers = (process.env.REACT_APP_RESTRICTED_USER_ID || '')
       .split(',')
