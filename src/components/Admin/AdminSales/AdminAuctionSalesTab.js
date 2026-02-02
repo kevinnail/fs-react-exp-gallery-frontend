@@ -1,4 +1,3 @@
-import React from 'react';
 import AuctionResultsPanel from './AuctionResultsPanel.js';
 
 export default function AdminAuctionSalesTab() {
