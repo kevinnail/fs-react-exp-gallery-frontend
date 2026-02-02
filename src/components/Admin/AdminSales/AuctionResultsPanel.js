@@ -303,6 +303,25 @@ export default function AuctionResultsPanel() {
           <span style={{ fontSize: '1.25rem' }}>Unpaid Total:</span>
           <span style={{ color: '#9f9' }}> ${totalOwed.toLocaleString()}</span>
         </div>
+        <div style={{ marginBottom: '.25rem' }}>
+          <span style={{ fontSize: '1.25rem', border: '2x solid yellow', padding: '0 4px' }}>
+            {auctions.filter((auction) => !auction.trackingNumber).length > 0
+              ? 'Need to ship! '
+              : ''}
+          </span>
+          <span
+            style={{
+              color:
+                auctions.filter((auction) => !auction.trackingNumber).length > 0
+                  ? 'yellow'
+                  : '#9f9',
+            }}
+          >
+            {auctions.filter((auction) => !auction.trackingNumber).length > 0
+              ? 'SHIPPING REQUIRED ' && auctions.filter((auction) => !auction.trackingNumber).length
+              : 'All clear '}
+          </span>
+        </div>
       </div>
       <div className="auction-results-list">
         {auctions.map((a) => {
@@ -339,6 +358,10 @@ export default function AuctionResultsPanel() {
             <div
               key={a.id}
               className={`auction-result-item ${isClosed ? 'closed' : 'active-auction'}`}
+              style={{
+                border: a.trackingNumber ? '' : '2px solid yellow',
+                backgroundColor: a.trackingNumber ? '' : '#222',
+              }}
             >
               {/* Remove long ternary for image rendering */}
               {image && (
