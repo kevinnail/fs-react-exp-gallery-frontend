@@ -1,16 +1,15 @@
-const BASE_URL = process.env.REACT_APP_HOME_URL;
+import { fetchWithAuth } from './fetchWithAuth';
 
 // Customer sends a new message (creates new conversation)
 export async function sendMessage(messageContent) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/messages`, {
+    const resp = await fetchWithAuth('/api/v1/messages', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ messageContent }),
-      credentials: 'include',
     });
 
     const data = await resp.json();
@@ -28,14 +27,13 @@ export async function sendMessage(messageContent) {
 // Admin sends a new message (creates new conversation)
 export async function adminStartConversation(userId, messageContent) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/messages/admin/start`, {
+    const resp = await fetchWithAuth('/api/v1/messages/admin/start', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ userId, messageContent }),
-      credentials: 'include',
     });
 
     const data = await resp.json();
@@ -54,13 +52,12 @@ export async function adminStartConversation(userId, messageContent) {
 // Customer gets their own messages
 export async function getMyMessages() {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/messages/my-messages`, {
+    const resp = await fetchWithAuth('/api/v1/messages/my-messages', {
       method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      credentials: 'include',
     });
 
     const data = await resp.json();
@@ -78,14 +75,13 @@ export async function getMyMessages() {
 // Customer replies to existing conversation
 export async function replyToConversation(conversationId, messageContent) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/messages/conversations/${conversationId}/reply`, {
+    const resp = await fetchWithAuth(`/api/v1/messages/conversations/${conversationId}/reply`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ messageContent, isFromAdmin: false }),
-      credentials: 'include',
     });
 
     const data = await resp.json();
@@ -103,13 +99,12 @@ export async function replyToConversation(conversationId, messageContent) {
 // Admin gets all conversations (for admin panel)
 export async function getConversations() {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/messages/conversations`, {
+    const resp = await fetchWithAuth('/api/v1/messages/conversations', {
       method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      credentials: 'include',
     });
 
     const data = await resp.json();
@@ -128,13 +123,12 @@ export async function getConversations() {
 // Admin gets specific conversation
 export async function getConversationById(conversationId) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/messages/conversations/${conversationId}`, {
+    const resp = await fetchWithAuth(`/api/v1/messages/conversations/${conversationId}`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      credentials: 'include',
     });
 
     const data = await resp.json();
@@ -152,13 +146,12 @@ export async function getConversationById(conversationId) {
 // Admin gets all messages (legacy endpoint)
 export async function getAllMessages() {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/messages`, {
+    const resp = await fetchWithAuth('/api/v1/messages', {
       method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      credentials: 'include',
     });
 
     const data = await resp.json();
@@ -176,13 +169,12 @@ export async function getAllMessages() {
 // Admin marks message as read
 export async function markMessageAsReadFetchCall(messageId) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/messages/${messageId}/read`, {
+    const resp = await fetchWithAuth(`/api/v1/messages/${messageId}/read`, {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      credentials: 'include',
     });
 
     const data = await resp.json();
@@ -200,14 +192,13 @@ export async function markMessageAsReadFetchCall(messageId) {
 // Admin replies to conversation
 export async function addAdminReply(conversationId, messageContent) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/messages/conversations/${conversationId}/reply`, {
+    const resp = await fetchWithAuth(`/api/v1/messages/conversations/${conversationId}/reply`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ messageContent, isFromAdmin: true }),
-      credentials: 'include',
     });
 
     const data = await resp.json();
@@ -225,13 +216,12 @@ export async function addAdminReply(conversationId, messageContent) {
 // Admin deletes a message
 export async function deleteMessage(messageId) {
   try {
-    const resp = await fetch(`${BASE_URL}/api/v1/messages/${messageId}`, {
+    const resp = await fetchWithAuth(`/api/v1/messages/${messageId}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      credentials: 'include',
     });
 
     const data = await resp.json();
