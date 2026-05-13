@@ -300,7 +300,14 @@ export default function AuctionCard({ auction }) {
     }
   };
 
-  const highBidder = bids[0]?.userId !== undefined;
+  const highestBidderUserId = bids[0]?.userId;
+  const hasHighBidder = highestBidderUserId !== undefined && highestBidderUserId !== null;
+  const isCurrentUserHighBidder =
+    user?.id !== undefined &&
+    user?.id !== null &&
+    hasHighBidder &&
+    String(highestBidderUserId) === String(user.id);
+
 
   const handleSwap = async () => {
     try {
@@ -466,9 +473,9 @@ export default function AuctionCard({ auction }) {
                   type="button"
                   onClick={handleBidClick}
                   className="bid-btn"
-                  style={{ background: highBidder ? 'green' : '' }}
+                  style={{ background: isCurrentUserHighBidder ? 'green' : '' }}
                 >
-                  {highBidder ? "You're the high bidder" : 'Place Bid'}
+                  {isCurrentUserHighBidder ? "You're the high bidder" : 'Place Bid'}
                 </button>
                 {auction.buyNowPrice && (
                   <button type="button" onClick={handleBuyNowClick} className="buy-btn">
@@ -479,9 +486,9 @@ export default function AuctionCard({ auction }) {
             ) : (
               <div>
                 <p className="bidding-closed">Bidding is CLOSED</p>
-                {highBidder && <span style={{ fontSize: '.9rem' }}>Winner:</span>}
+                {hasHighBidder && <span style={{ fontSize: '.9rem' }}>Winner:</span>}
                 <div className="bid-entry">
-                  {highBidder && (
+                  {hasHighBidder && (
                     <span
                       style={{
                         fontSize: '.9rem',
