@@ -645,6 +645,28 @@ export async function bulkPostEdit(action, percentage = 0) {
   }
 }
 
+export async function sendMassEmail({ subject, message }) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/admin/mass-email`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ subject, message }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to send mass email');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('An error occurred:', error);
+    throw error;
+  }
+}
+
 export async function getSiteMessage() {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/main-gallery/home-message`, {
