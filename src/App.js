@@ -11,6 +11,7 @@ import MainPostDetail from './components/MainPostDetail/MainPostDetail.js';
 import AboutMe from './components/AboutMe/AboutMe.js';
 import SearchResults from './components/SearchResults/SearchResults.js';
 import DiscountForm from './components/DiscountForm/DiscountForm.js';
+import MassEmailForm from './components/MassEmailForm/MassEmailForm.js';
 import Account from './components/Account/Account.js';
 import Messages from './components/Messages/Messages.js';
 import AdminInbox from './components/AdminInbox/AdminInbox.js';
@@ -223,6 +224,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <DiscountForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/email"
+              element={
+                <ProtectedRoute>
+                  <MassEmailForm />
                 </ProtectedRoute>
               }
             />
