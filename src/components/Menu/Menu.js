@@ -196,6 +196,14 @@ export default function Menu({ handleClick, closeMenu }) {
               >
                 Users
               </NavLink>
+              <NavLink
+                className="menu-new-link"
+                to="/admin/email"
+                title="Email Customers"
+                onClick={handleLinkClick}
+              >
+                Email
+              </NavLink>
               <button
                 className="menu-new-link download-button"
                 title="Download Inventory CSV"
