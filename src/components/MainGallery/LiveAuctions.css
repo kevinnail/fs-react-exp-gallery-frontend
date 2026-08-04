@@ -1,0 +1,211 @@
+/* Live auctions — the top band of the front page.
+ *
+ * Small, additive cards: they sit above the hero so they are the first
+ * thing seen, but they stay a strip rather than taking the whole
+ * screen. This is the only place on the page that gets a frame and the
+ * accent colour, because "ends in 00:17:53" has to stop the scroll.
+ */
+
+.slg-live {
+  padding: 1.5rem 0 2rem;
+  border-bottom: 1px solid var(--slg-edge-soft);
+}
+
+.slg-live .slg-section-head {
+  margin-bottom: 1rem;
+}
+
+.slg-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--slg-flame);
+  align-self: center;
+  flex: 0 0 auto;
+  animation: slg-pulse 2s ease-in-out infinite;
+}
+
+@keyframes slg-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(255, 106, 31, 0.5);
+  }
+  50% {
+    opacity: 0.65;
+    box-shadow: 0 0 0 5px rgba(255, 106, 31, 0);
+  }
+}
+
+/* ---------- rail and panning ----------
+   The track holds one or two identical sets of lots. When the lots
+   overflow, a duplicate set is added and the track slides exactly one
+   set width, which loops seamlessly. Each set carries its own trailing
+   gap so the -50% translate lands on an exact repeat. */
+
+.slg-lot-rail {
+  overflow-x: auto;
+  padding: 0 var(--slg-gutter) 0.5rem;
+  scrollbar-width: thin;
+}
+
+/* While the rail pans itself, a scrollbar is redundant furniture. */
+.slg-lot-rail--panning {
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+.slg-lot-rail--panning::-webkit-scrollbar {
+  display: none;
+}
+
+.slg-lot-track {
+  display: flex;
+  width: max-content;
+}
+
+.slg-lot-track--panning {
+  animation-name: slg-pan;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  /* animation-duration is set inline, from the measured set width */
+}
+
+/* Stop the pan while someone is trying to click or tab to a lot. */
+.slg-lot-track--panning:hover,
+.slg-lot-track--panning:focus-within {
+  animation-play-state: paused;
+}
+
+@keyframes slg-pan {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.slg-lot-set {
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+/* ---------- the small lot card ---------- */
+
+.slg-lot {
+  flex: 0 0 auto;
+  width: 190px;
+  display: grid;
+  /* Clock pinned to the bottom so a lot with no photo or a short title
+     still lines its countdown up with its neighbours. */
+  grid-template-rows: auto auto auto 1fr;
+  gap: 0.2rem;
+  padding: 0.5rem 0.5rem 0.65rem;
+  text-decoration: none;
+  color: var(--slg-ink);
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge);
+  transition: background 200ms ease, border-color 200ms ease;
+}
+
+.slg-lot:hover,
+.slg-lot:focus-visible {
+  background: var(--slg-lift-hover);
+  border-color: var(--slg-flame);
+}
+
+/* Fixed height on the box, not the image, so a lot whose photo is
+   missing still holds the card's shape. */
+.slg-lot-image {
+  height: 130px;
+  overflow: hidden;
+  background: var(--slg-void);
+}
+
+.slg-lot-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.slg-lot-image--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slg-dim);
+  background: var(--slg-void);
+}
+
+.slg-lot:hover .slg-lot-image img,
+.slg-lot:focus-visible .slg-lot-image img {
+  transform: scale(1.04);
+}
+
+.slg-lot-name {
+  margin: 0.4rem 0 0;
+  font-family: var(--slg-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slg-lot-meta {
+  margin: 0;
+  font-family: var(--slg-body);
+  font-size: 0.75rem;
+  color: var(--slg-dim);
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slg-lot-meta strong {
+  color: var(--slg-ink);
+  font-weight: 500;
+}
+
+.slg-lot-clock {
+  font-family: var(--slg-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--slg-flame);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slg-live-dot {
+    animation: none;
+  }
+
+  /* No auto-pan — so hand the scrollbar back, or the overflowing lots
+     become unreachable. */
+  .slg-lot-track--panning {
+    animation: none;
+  }
+
+  .slg-lot-rail--panning {
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .slg-lot-rail--panning::-webkit-scrollbar {
+    display: initial;
+  }
+
+  .slg-lot,
+  .slg-lot-image img {
+    transition-duration: 1ms;
+  }
+}
