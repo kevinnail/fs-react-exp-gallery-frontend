@@ -1,8 +1,13 @@
-import js from '@eslint/js';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
+// CommonJS on purpose: package.json has no "type": "module", and ESLint 8's
+// flat config only resolves `eslint.config.js` (no .mjs), so ESM here loads
+// only by Node's fallback reparse — which warns in CI and fails outright on
+// Node versions without it.
+const js = require('@eslint/js');
+const react = require('eslint-plugin-react');
+const reactHooks = require('eslint-plugin-react-hooks');
 
-export default [
+module.exports = [
+  { ignores: ['build/**', 'coverage/**'] },
   js.configs.recommended,
   {
     files: ['**/*.{js,jsx}'],
@@ -21,6 +26,7 @@ export default [
         URLSearchParams: 'readonly',
         FileReader: 'readonly',
         IntersectionObserver: 'readonly',
+        ResizeObserver: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
         setInterval: 'readonly',
@@ -47,13 +53,32 @@ export default [
     rules: {
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': 'warn',
+      // Dead constants/imports are real bloat and stay flagged. Unused
+      // useState setters are not — a component often only needs the value.
+      'no-unused-vars': [
+        'warn',
+        {
+          destructuredArrayIgnorePattern: '^set[A-Z]',
+          argsIgnorePattern: '^_',
+        },
+      ],
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
     },
     settings: {
       react: {
         version: 'detect',
+      },
+    },
+  },
+  {
+    // This file itself runs in Node as CommonJS, not as a browser ES module.
+    files: ['eslint.config.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        require: 'readonly',
+        module: 'writable',
       },
     },
   },

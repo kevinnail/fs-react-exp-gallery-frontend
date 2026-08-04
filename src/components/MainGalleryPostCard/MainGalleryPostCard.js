@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
-import '../GalleryPostCard/GalleryPostCard.css';
+import './MainGalleryPostCard.css';
 
 export default function MainGalleryPostCard({
   id,
@@ -18,159 +18,86 @@ export default function MainGalleryPostCard({
   const [isLoaded, setIsLoaded] = useState(false);
   const containerRef = useRef(null);
 
-  // Determine whether to show discounted price or not
   const isDiscounted = discountedPrice && parseFloat(discountedPrice) < parseFloat(originalPrice);
 
-  // Handle image load to update state
-  const handleImageLoad = () => {
-    setIsLoaded(true);
-  };
+  // Video posts store a matching .jpg poster frame alongside the .mp4.
+  const posterFor = (source) => (source.endsWith('.mp4') ? `${source.slice(0, -4)}.jpg` : source);
 
-  // Get the correct image source
-  const getImageSource = () => {
-    if (image_url) {
-      return image_url.endsWith('.mp4') ? `${image_url.slice(0, -4)}.jpg` : image_url;
-    } else if (additionalImagesGallery && additionalImagesGallery.length > 0) {
-      const additionalSrc = additionalImagesGallery[0].image_url;
-      return additionalSrc.endsWith('.mp4') ? `${additionalSrc.slice(0, -4)}.jpg` : additionalSrc;
-    }
-    return '';
-  };
+  const additionalSource = additionalImagesGallery?.[0]?.image_url;
+  const imageSource = image_url
+    ? posterFor(image_url)
+    : additionalSource
+      ? posterFor(additionalSource)
+      : '';
 
-  // Set up intersection observer for lazy loading
+  // A post can exist with no photo attached yet. An empty `src` would
+  // re-request the page itself and never fire onLoad, leaving the
+  // skeleton shimmering forever — so render a still placeholder.
+  const hasImage = Boolean(imageSource);
+
+  // Only request the image once the card is near the viewport.
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        // If container is in view
         if (entries[0].isIntersecting) {
           setIsVisible(true);
           observer.disconnect();
         }
       },
-      {
-        rootMargin: '100px',
-        threshold: 0.1,
-      }
+      { rootMargin: '200px', threshold: 0.01 }
     );
 
-    // Store the current value of the ref in a variable
     const currentRef = containerRef.current;
-
     if (currentRef) {
       observer.observe(currentRef);
     }
 
-    return () => {
-      // Use the stored value in the cleanup function
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-      observer.disconnect();
-    };
-  }, [containerRef]);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="gallery-display-container" key={id}>
-      <Link className="gallery-display a-gallery" to={`/${id}`} title={`${title}`}>
-        <div
-          style={{
-            position: 'absolute',
-            alignSelf: 'flex-start',
-            zIndex: 10, // Add z-index to ensure it's above other elements
-          }}
-        >
-          {sold ? <img src="/sold.png" /> : ''}
-        </div>
+    <Link
+      className={`slg-piece${sold ? ' slg-piece--sold' : ''}`}
+      to={`/${id}`}
+      title={title}
+      ref={containerRef}
+    >
+      <div className="slg-piece-frame">
+        {sold ? <span className="slg-badge">Sold</span> : null}
+        {!sold && isDiscounted ? <span className="slg-badge slg-badge--sale">Sale</span> : null}
 
-        <div
-          ref={containerRef}
-          className="lazy-image-container"
-          style={{ position: 'relative', width: '100%' }}
-        >
-          {/* Always render placeholder, hide when image is loaded */}
-          <div
-            className="image-placeholder"
-            style={{
-              width: '100%',
-              paddingBottom: '100%', // Maintain aspect ratio
-              backgroundColor: '#333',
-              borderRadius: '5px',
-              display: isLoaded ? 'none' : 'block',
-            }}
-          ></div>
+        {hasImage ? (
+          <>
+            {isLoaded ? null : <span className="slg-piece-skeleton" aria-hidden="true" />}
+            {isVisible ? (
+              <img
+                src={imageSource}
+                alt={title}
+                style={{ opacity: isLoaded ? 1 : 0 }}
+                onLoad={() => setIsLoaded(true)}
+              />
+            ) : null}
+          </>
+        ) : (
+          <span className="slg-piece-placeholder">No photo yet</span>
+        )}
+      </div>
 
-          {/* Always render the image element, but only set the src when visible */}
-          <img
-            className="gallery-img"
-            src={isVisible ? getImageSource() : ''}
-            alt={title}
-            style={{
-              display: 'block',
-              opacity: isLoaded ? 1 : 0,
-              transition: 'opacity 0.3s ease-in-out',
-              position: isLoaded ? 'relative' : 'absolute', // Position it absolutely when not loaded
-              top: 0,
-              left: 0,
-            }}
-            onLoad={handleImageLoad}
-          />
-        </div>
-
-        <div className="gallery-detail-container">
-          <span className="gallery-title">
-            {title.length > 20 ? title.slice(0, 20) + '...' : title}
-          </span>
-          <span className="gallery-desc">{description}</span>
-          <div className="price-category-wrapper">
-            <span className="gallery-price">
-              {sold ? (
-                <>
-                  {isDiscounted ? (
-                    <>
-                      <span
-                        style={{
-                          textDecoration: 'line-through',
-                          color: 'red',
-                        }}
-                      >
-                        <span>${originalPrice}</span>
-                      </span>
-                    </>
-                  ) : (
-                    <span
-                      style={{
-                        textDecoration: 'line-through',
-                      }}
-                    >
-                      ${price}
-                    </span>
-                  )}
-                </>
-              ) : (
-                <>
-                  {isDiscounted ? (
-                    <>
-                      <span className="gallery-on-sale">ON SALE! </span>
-                      <span
-                        style={{
-                          textDecoration: 'line-through',
-                          marginRight: '10px',
-                          color: 'red',
-                        }}
-                      >
-                        ${originalPrice}
-                      </span>
-                      <span>${Math.floor(discountedPrice)}</span>
-                    </>
-                  ) : (
-                    <span>${price}</span>
-                  )}
-                </>
-              )}
-            </span>
-          </div>
-        </div>
-      </Link>
-    </div>
+      <div className="slg-piece-meta">
+        <span className="slg-piece-name">{title}</span>
+        <span className="slg-piece-desc">{description}</span>
+        <span className="slg-piece-price">
+          {sold ? (
+            <span className="slg-was">${isDiscounted ? originalPrice : price}</span>
+          ) : isDiscounted ? (
+            <>
+              <span className="slg-was">${originalPrice}</span>${Math.floor(discountedPrice)}
+            </>
+          ) : (
+            <>${price}</>
+          )}
+        </span>
+      </div>
+    </Link>
   );
 }

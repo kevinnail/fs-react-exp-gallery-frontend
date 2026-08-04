@@ -32,7 +32,6 @@ export default function AdminInbox() {
   const [users, setUsers] = useState([]);
   const [debouncedTerm, setDebouncedTerm] = useState('');
   const [showUserResults, setShowUserResults] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
 
   const messagesListRef = useRef(null);
 
@@ -68,7 +67,6 @@ export default function AdminInbox() {
   }, [searchTerm]);
 
   const handleSelectUser = (user) => {
-    setSelectedUser(user);
     setShowUserResults(false);
     setSearchTerm('');
     setSearchResults([]);

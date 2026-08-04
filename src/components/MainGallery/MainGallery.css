@@ -1,0 +1,136 @@
+/* Front page shell and shared section primitives.
+ *
+ * Front-page only — the admin gallery keeps Gallery.css.
+ */
+
+.slg-page {
+  /* Clears the fixed header rather than each section guessing at it. */
+  padding-top: var(--slg-header-height);
+  background: var(--slg-void);
+  color: var(--slg-ink);
+  font-family: var(--slg-body);
+  text-align: left;
+}
+
+/* ---------- site message ----------
+   Kevin's admin message is an announcement, not a headline, so it gets
+   one quiet line above the fold instead of the whole top of the page. */
+
+.slg-notice {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0.6rem var(--slg-gutter);
+  background: var(--slg-lift);
+  border-bottom: 1px solid var(--slg-edge-soft);
+}
+
+.slg-notice p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--slg-dim);
+}
+
+/* ---------- section headings ---------- */
+
+.slg-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0 var(--slg-gutter);
+  margin-bottom: 1.75rem;
+}
+
+.slg-section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0;
+  font-family: var(--slg-display);
+  font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--slg-ink);
+}
+
+.slg-count {
+  font-family: var(--slg-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--slg-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.slg-eyebrow {
+  margin: 0;
+  font-family: var(--slg-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--slg-dim);
+}
+
+.slg-text-link {
+  padding-bottom: 2px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: var(--slg-dim);
+  border-bottom: 1px solid var(--slg-edge);
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.slg-text-link:hover,
+.slg-text-link:focus-visible {
+  color: var(--slg-ink);
+  border-color: var(--slg-ink);
+}
+
+/* ---------- gallery grid ---------- */
+
+.slg-gallery {
+  padding: 4rem 0 5rem;
+}
+
+.slg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 3rem 1.75rem;
+  padding: 0 var(--slg-gutter);
+}
+
+.slg-empty {
+  margin: 0;
+  padding: 0 var(--slg-gutter);
+  font-size: 0.9375rem;
+  color: var(--slg-dim);
+}
+
+/* ---------- focus ---------- */
+
+.slg-page a:focus-visible,
+.slg-page button:focus-visible {
+  outline: 2px solid var(--slg-flame);
+  outline-offset: 4px;
+}
+
+@media (max-width: 599px) {
+  /* Two up on phones — scanning inventory beats one giant photo per
+     screen. */
+  .slg-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1rem;
+  }
+}
+
+@media (min-width: 700px) {
+  .slg-grid {
+    gap: 3.5rem 2rem;
+  }
+}

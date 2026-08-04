@@ -1,7 +1,13 @@
 import ReactDOM from 'react-dom/client';
+import './styles/tokens.css';
 import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
+
+// Tab-title cue so a local dev tab is never mistaken for the prod tab sitting next to it.
+if (process.env.NODE_ENV === 'development') {
+  document.title = `DEV - ${document.title}`;
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

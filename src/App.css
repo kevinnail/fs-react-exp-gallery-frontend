@@ -6,8 +6,10 @@
   /* height: 100%; */
 }
 
+/* Was `url(/public/ocean.jpg)`, which CRA serves at `/ocean.jpg` — the
+   `/public` prefix 404s, so the page has had no background at all. */
 html {
-  background-image: url(/public/ocean.jpg);
+  background-color: #000000;
 }
 html,
 body {
