@@ -1,0 +1,157 @@
+/* Front-page gallery card.
+ *
+ * Deliberately has no frame: the photo's black background is the
+ * page's black background, so pieces sit on the page rather than in
+ * boxes. Cohesion comes from the grid rhythm and the type, not from
+ * borders. State (sold, on sale) is the only thing allowed to add a
+ * visible mark.
+ *
+ * This file is front-page only — the admin gallery keeps
+ * GalleryPostCard.css.
+ */
+
+.slg-piece {
+  display: block;
+  text-decoration: none;
+  color: var(--slg-ink);
+}
+
+/* The frame holds the square, not the image, so the grid keeps its
+   rhythm before photos arrive and for posts that have none. */
+.slg-piece-frame {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--slg-void);
+}
+
+.slg-piece-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 300ms ease;
+}
+
+.slg-piece-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slg-dim);
+  background: var(--slg-lift);
+}
+
+.slg-piece:hover .slg-piece-frame img,
+.slg-piece:focus-visible .slg-piece-frame img {
+  transform: scale(1.04);
+}
+
+/* Skeleton holds the exact square the image will occupy, so nothing
+   on the page shifts as photos arrive. */
+.slg-piece-skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #0d0f13 25%, #191d23 50%, #0d0f13 75%);
+  background-size: 200% 100%;
+  animation: slg-skeleton 1.5s linear infinite;
+}
+
+@keyframes slg-skeleton {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.slg-piece-meta {
+  display: grid;
+  gap: 0.15rem;
+  padding-top: 0.85rem;
+}
+
+.slg-piece-name {
+  font-family: var(--slg-body);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--slg-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slg-piece-desc {
+  font-family: var(--slg-body);
+  font-size: 0.8125rem;
+  color: var(--slg-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slg-piece-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  padding-top: 0.2rem;
+  font-family: var(--slg-body);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Struck price is secondary information, so it reads as dim rather
+   than as an error in red. */
+.slg-was {
+  color: var(--slg-dim);
+  font-weight: 400;
+  text-decoration: line-through;
+}
+
+.slg-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  padding: 0.3rem 0.55rem;
+  font-family: var(--slg-body);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slg-ink);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--slg-edge);
+}
+
+.slg-badge--sale {
+  color: var(--slg-flame);
+  border-color: var(--slg-flame);
+}
+
+.slg-piece--sold .slg-piece-frame img {
+  opacity: 0.42;
+}
+
+.slg-piece--sold .slg-piece-name,
+.slg-piece--sold .slg-piece-price {
+  color: var(--slg-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slg-piece-frame img {
+    transition-duration: 1ms;
+  }
+
+  .slg-piece-skeleton {
+    animation: none;
+  }
+}
