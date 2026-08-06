@@ -65,7 +65,6 @@ export default function MainPostDetail() {
     setIsLoaded(false);
   }, [currentIndex]);
 
-
   useEffect(() => {
     if (!lightboxIsOpen) return undefined;
 
