@@ -3,17 +3,7 @@ import './Loading.css';
 
 const randomBetween = (minimum, maximum) => minimum + Math.random() * (maximum - minimum);
 
-/**
- * The horizontal drift, the vertical drift, the approach and the spin
- * each get their own duration, and the two drift periods are drawn from ranges that
- * cannot line up. Two crossed oscillations at unrelated periods trace a
- * Lissajous path, which wanders for minutes before it ever repeats — so
- * it reads as free float rather than as a loop.
- *
- * The negative delays are what make each mount different: the animation
- * starts already part-way through, so the marble enters from a new
- * point on a new path every time this component appears.
- */
+
 function randomDrift() {
   const horizontalSeconds = randomBetween(7, 11);
   const verticalSeconds = randomBetween(4.5, 6.5);

@@ -1,20 +1,3 @@
-/* Loading state — one marble, turning and adrift.
- *
- * Four transforms, four elements, so none of them fight each other:
- * the outer box carries the horizontal drift, the next the vertical
- * drift, the next the approach — scale standing in for distance — and
- * the image itself the spin. Their durations are randomised per mount
- * in Loading.js, so the marble never enters the same way twice.
- *
- * Scale crossed with lateral drift is the whole illusion: the marble
- * reads as travelling toward and away from the viewer rather than
- * growing and shrinking in place, because it is also moving sideways
- * while it does it.
- *
- * All three animate `transform` only, which the browser hands to the
- * compositor — no layout, no paint, no per-frame JavaScript.
- */
-
 .slg-loading {
   display: flex;
   flex-direction: column;
@@ -34,11 +17,6 @@
   width: 100%;
   flex: 1 1 auto;
 }
-
-/* ---------- drift ----------
-   `alternate` with an ease-in-out turns each axis into a pendulum that
-   slows at the extremes, and the negative delay drops the marble in
-   part-way through its swing. Crossed periods do the rest. */
 
 .slg-loading-drift-x {
   animation: slg-drift-x var(--slg-drift-x-duration) ease-in-out infinite alternate;
@@ -68,23 +46,12 @@
   }
 }
 
-/* ---------- approach ----------
-   Distance, faked with scale. The range is deliberately extreme — a
-   tenth of size out to double — so the far end is a speck and the near
-   end overruns the frame. `ease-in` on the way out and `ease-out` on
-   the way back is what a real approach looks like: slow while it is
-   distant, then quick as it arrives. Opacity drops off with distance so
-   the far end recedes into the page rather than sitting on top of it. */
-
 .slg-loading-approach {
   animation: slg-approach var(--slg-approach-duration) cubic-bezier(0.55, 0, 0.45, 1) infinite
     alternate;
   animation-delay: var(--slg-approach-delay);
 }
 
-/* Fallbacks throughout: if the randomised properties never reach this
-   element the animation still runs at a sane range, rather than
-   collapsing to no scale at all and looking broken. */
 @keyframes slg-approach {
   from {
     transform: scale(var(--slg-far, 0.08));
@@ -95,10 +62,6 @@
     opacity: 1;
   }
 }
-
-/* ---------- the marble ----------
-   A full 360 so the graphic's imperfect symmetry never shows a seam at
-   the loop point. */
 
 .slg-loading-marble {
   display: block;
@@ -143,9 +106,6 @@
   }
 }
 
-/* Motion is the entire point of this component, so the reduced-motion
-   pass slows everything down and shortens the drift rather than
-   freezing the page — a still loader is the failure this replaced. */
 @media (prefers-reduced-motion: reduce) {
   .slg-loading-field {
     --slg-drift-x: 40px;
@@ -157,9 +117,6 @@
     animation-duration: 18s;
   }
 
-  /* Scale is the point of this loader, so it survives here — pulled in
-     at both ends and slowed right down, but still plainly travelling.
-     Flattening it to nothing is what makes the page look dead. */
   .slg-loading-approach {
     --slg-far: 0.4;
     --slg-near: 1.4;
