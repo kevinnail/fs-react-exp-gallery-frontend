@@ -21,7 +21,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
-      - run: npx eslint .
+      - run: npm run lint
+      - run: npm run format:check
       - run: npm test -- --passWithNoTests
         env:
           CI: true
