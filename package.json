@@ -31,7 +31,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "netlify dev"
+    "dev": "netlify dev",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,css,json}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,css,json}\""
   },
   "browserslist": {
     "production": [
