@@ -1,5 +1,12 @@
 {
-  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react-hooks/recommended"],
+  "root": true,
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier"
+  ],
+  "ignorePatterns": ["build/", "coverage/", "node_modules/"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "ecmaFeatures": {
@@ -14,67 +21,30 @@
     "jest": true,
     "node": true
   },
-  "globals": {
-    "QUnit": false,
-    "before": false,
-    "cy": false
-  },
   "rules": {
+    "no-undef": "error",
     "eqeqeq": ["error", "always"],
     "no-console": ["warn", { "allow": ["info", "error"] }],
-    "indent": [
-      "error",
-      2,
-      {
-        "SwitchCase": 1,
-        "ignoreComments": true
-      }
-    ],
-    "quotes": [
-      "error",
-      "single",
-      {
-        "avoidEscape": true,
-        "allowTemplateLiterals": true
-      }
-    ],
-    "no-multi-spaces": [
-      "error",
-      {
-        "ignoreEOLComments": true
-      }
-    ],
     "new-cap": "error",
+    "prefer-const": "error",
+    "no-var": "error",
+    "object-shorthand": ["error", "always"],
+    "prefer-arrow-callback": "error",
     "no-redeclare": [
       "error",
       {
         "builtinGlobals": true
       }
     ],
-    "semi": ["error", "always"],
-    "space-in-parens": ["error"],
-    "space-infix-ops": "error",
-    "object-curly-spacing": ["error", "always"],
-    "comma-spacing": "error",
-    "space-before-function-paren": [
-      "error",
-      {
-        "asyncArrow": "always",
-        "anonymous": "never",
-        "named": "never"
-      }
-    ],
-    "keyword-spacing": [
-      "error",
-      {
-        "before": true,
-        "after": true
-      }
-    ],
-    "array-bracket-spacing": "error",
     "react/prop-types": "off",
-    "no-unused-vars": ["warn"],
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "no-unused-vars": [
+      "warn",
+      {
+        "destructuredArrayIgnorePattern": "^set[A-Z]",
+        "argsIgnorePattern": "^_"
+      }
+    ]
   },
   "settings": {
     "react": {
