@@ -1,222 +1,383 @@
-.active {
-  box-shadow: 0 0 10px 2px;
-  color: white;
+/* About page.
+ *
+ * Same ground as the front page: pure black, no boxes, type doing the
+ * work. Where the front page alternates hero → grid, this page
+ * alternates image and copy down the screen so nothing reads as the
+ * same block repeated. Photos bleed to the page edge on the side they
+ * sit on, so the page has a left/right rhythm instead of one centred
+ * column of text.
+ */
+
+.slg-about {
+  padding-top: var(--slg-header-height);
+  padding-bottom: 5rem;
+  background: var(--slg-void);
+  color: var(--slg-ink);
+  font-family: var(--slg-body);
+  text-align: left;
 }
 
-.about-me-div {
+/* ---------- shared type ---------- */
+
+.slg-about-eyebrow {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--slg-dim);
+}
+
+.slg-about-lead {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--slg-ink);
+}
+
+.slg-about-text {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--slg-dim);
+}
+
+/* ---------- buttons ---------- */
+
+.slg-about-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.slg-about-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  padding: 0 1.5rem;
+  font-family: var(--slg-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--slg-ink);
+  background: var(--slg-ink);
+  color: #000000;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.slg-about-button:hover,
+.slg-about-button:focus-visible {
+  background: transparent;
+  color: var(--slg-ink);
+}
+
+.slg-about-button--quiet {
+  background: transparent;
+  color: var(--slg-dim);
+  border-color: var(--slg-edge);
+}
+
+.slg-about-button--quiet:hover,
+.slg-about-button--quiet:focus-visible {
+  background: transparent;
+  color: var(--slg-ink);
+  border-color: var(--slg-ink);
+}
+
+/* ---------- hero ---------- */
+
+.slg-about-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+.slg-about-hero-copy {
+  order: 2;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  height: 100%;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 2.5rem var(--slg-gutter) 1rem;
+}
+
+.slg-about-title {
+  margin: 0;
+  font-family: var(--slg-display);
+  font-size: clamp(2.75rem, 9vw, 5rem);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  color: var(--slg-ink);
+  text-wrap: balance;
+}
+
+.slg-about-hero-figure {
+  order: 1;
+  margin: 0;
+  overflow: hidden;
+}
+
+.slg-about-hero-figure img {
+  display: block;
   width: 100%;
-
-  letter-spacing: 1.5px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: 65% 30%;
+  animation: slg-about-bloom 1000ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-.about-me-div-adjust {
-  margin: 16px 0;
-}
-
-@keyframes ocean {
-  0% {
-    background-position: 0% 50%;
+@keyframes slg-about-bloom {
+  from {
+    opacity: 0;
+    transform: scale(1.03);
   }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-.about-me-h1 {
-  font-family: 'shadows into light', cursive;
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-  padding: 10px 40px;
-  color: #ffffff;
-  border-radius: 5px;
-  box-shadow: 0 0 10px 0 grey;
-  background-color: black;
-  margin-top: 0.5rem;
-}
+/* ---------- alternating bands ---------- */
 
-.me {
-  width: 40%;
-  max-width: 250px;
-  border: 2px solid #7777f3;
-  border-radius: 15px;
-  box-shadow: 0 0 10px 0 grey;
-  margin: -100px 0 20px 0;
-}
-
-.about-me-p {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  text-align: left;
-  padding: 15px 40px;
-  color: #ffffff;
-  background-color: black;
-  box-shadow: 0 0 10px 0 grey;
-  backdrop-filter: blur(5px) saturate(100%) contrast(100%) brightness(30%);
-  width: 400px;
-  margin: 0.75rem;
-}
-
-.about-me-link {
-  display: inline-block;
-  color: #7777f3;
-  text-shadow: 0px 0px 1px #ffffff;
-}
-
-.about-me-link-container {
+.slg-about-band {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  justify-items: center;
-  align-items: center;
-  width: 100%;
-  margin: 40px 0 0 0;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+  padding-top: 4rem;
 }
 
-.about-me-link-sub-container {
-  grid-column: 1/5;
+.slg-about-band-copy {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0 var(--slg-gutter);
+}
+
+.slg-about-band-title {
+  margin: 0;
+  font-family: var(--slg-display);
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: var(--slg-ink);
+}
+
+.slg-about-band-figure {
+  margin: 0;
+  overflow: hidden;
+}
+
+.slg-about-band-figure img {
+  display: block;
   width: 100%;
-  margin-top: 75px;
-}
-
-.about-me-img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.link-logo {
-  width: 50px;
-  height: 50px;
-  border: 1px solid #7777f3;
-  box-shadow: 0 0 10px 0 grey;
-  margin: 0 10px;
-  border-radius: 15px;
-}
-
-/* rotate cube*/
-.scene3 {
-  width: 150px;
-  height: 150px;
-  position: relative;
-  top: 0px;
-  left: 0px;
-  z-index: -1;
-}
-
-.cube3 {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  transform-style: preserve-3d;
-  animation: rotate3 90s infinite linear;
-  z-index: -1;
-}
-
-.face3 {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  border: 2px solid black;
-  background-color: black;
-  box-sizing: border-box;
-  box-shadow: 0px 0px 5px 0px rgb(255, 255, 255);
-  z-index: 1;
-}
-
-.front3 {
-  transform: rotateY(0deg) rotateZ(90deg) translateZ(75px);
-  background-image: url('/public/drumset.jpeg');
-}
-
-.bgVideo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  aspect-ratio: 1;
   object-fit: cover;
 }
 
-.back3 {
-  transform: rotateY(180deg) rotateZ(270deg) translateZ(75px);
-  background-image: url('/public/action-2.jpg');
+/* A code screenshot cropped square loses the code, so this one is
+   contained rather than covered. */
+.slg-about-band-figure--code img {
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge);
 }
 
-.right3 {
-  transform: rotateY(90deg) translateZ(75px);
-  background-image: url('/public/comet.jpg');
+.slg-about-band-figure--portrait img {
+  aspect-ratio: 4 / 5;
+  object-position: center 25%;
 }
 
-.left3 {
-  transform: rotateY(-90deg) rotateZ(90deg) translateZ(75px);
-  background-image: url('/public/mt.jpeg');
+/* ---------- stack chips ----------
+   A recruiter scans before they read, so the stack gets its own line of
+   sight rather than being buried in a sentence. */
+
+.slg-about-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.top3 {
-  transform: rotateX(90deg) rotateZ(270deg) translateZ(75px);
-  background-image: url('/public/mushrooms.JPG');
+.slg-about-stack li {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--slg-dim);
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge);
 }
 
-.bottom3 {
-  transform: rotateX(-90deg) rotateZ(270deg) translateZ(75px);
-  background-image: url('/public/knaildriver4.jpg');
+/* ---------- pursuits tile grid ---------- */
+
+.slg-about-band-figure--grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
 }
-.about-icon-adapt {
+
+.slg-about-tile {
   position: relative;
-  top: 50px;
+  display: block;
+  overflow: hidden;
 }
 
-@keyframes rotate3 {
-  0% {
-    transform: rotateX(60deg) rotateY(360deg) rotateZ(0deg) translateX(0px) translateY(-30px)
-      scaleX(0.8) scaleY(0.8) scaleZ(0.8);
-  }
+.slg-about-tile img {
+  aspect-ratio: 1;
+}
 
-  33% {
-    transform: rotateX(540deg) rotateY(0deg) rotateZ(0deg) translateX(100px) translateY(0px)
-      scaleX(0.8) scaleY(0.8) scaleZ(0.8);
-  }
+.slg-about-tile-caption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 1.75rem 0.75rem 0.6rem;
+  font-size: 0.6875rem;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  color: var(--slg-ink);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+}
 
-  66% {
-    transform: rotateX(20deg) rotateY(540deg) rotateZ(0deg) translateX(0px) translateY(0px)
-      scaleX(1.5) scaleY(1.5) scaleZ(1.5);
-  }
+/* ---------- elsewhere ---------- */
 
-  100% {
-    transform: rotateX(60deg) rotateY(0deg) rotateZ(360deg) translateX(0px) translateY(-30px)
-      scaleX(0.8) scaleY(0.8) scaleZ(0.8);
+.slg-about-elsewhere {
+  padding: 4.5rem var(--slg-gutter) 0;
+}
+
+.slg-about-elsewhere-title {
+  margin: 0 0 1.75rem;
+  font-family: var(--slg-display);
+  font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--slg-ink);
+}
+
+.slg-about-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slg-about-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem;
+  text-decoration: none;
+  color: var(--slg-dim);
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge);
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.slg-about-link:hover,
+.slg-about-link:focus-visible {
+  background: var(--slg-lift-hover);
+  border-color: var(--slg-ink);
+  color: var(--slg-ink);
+}
+
+.slg-about-link img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.slg-about-link span {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- focus ---------- */
+
+.slg-about a:focus-visible,
+.slg-about button:focus-visible {
+  outline: 2px solid var(--slg-flame);
+  outline-offset: 4px;
+}
+
+@media (max-width: 599px) {
+  .slg-about-actions .slg-about-button {
+    flex: 1 1 100%;
   }
 }
 
-@media (min-width: 768px) {
-  .about-me-p {
-    width: 800px;
+@media (min-width: 900px) {
+  .slg-about-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: var(--slg-gutter);
+    min-height: 58vh;
   }
 
-  .link-logo {
-    width: 100px;
-    height: 100px;
+  .slg-about-hero-copy {
+    order: 1;
+    gap: 1.5rem;
+    padding: 2rem 0 2rem var(--slg-gutter);
   }
 
-  .me {
-    margin: -150px 0 20px 0;
+  .slg-about-hero-figure {
+    order: 2;
+    height: 58vh;
   }
 
-  .about-me-link-sub-container {
-    margin-top: 95px;
+  .slg-about-hero-figure img {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  /* Image bleeds to the outside edge, copy sits on the inside — and the
+     modifier swaps which side that is, band to band. */
+  .slg-about-band {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--slg-gutter);
+    padding-top: 6rem;
+  }
+
+  .slg-about-band-copy {
+    padding-right: var(--slg-gutter);
+    padding-left: 0;
+  }
+
+  .slg-about-band--reverse .slg-about-band-figure {
+    order: 2;
+  }
+
+  .slg-about-band--reverse .slg-about-band-copy {
+    order: 1;
+    padding-left: var(--slg-gutter);
+    padding-right: 0;
+  }
+
+  .slg-about-tile-caption {
+    font-size: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slg-about-hero-figure img {
+    animation: none;
   }
 }
