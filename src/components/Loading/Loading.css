@@ -90,7 +90,7 @@
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.28em;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   text-indent: 0.28em; /* balances the trailing letter-space */
   color: var(--slg-dim);
   animation: slg-loading-fade 3.4s ease-in-out infinite;
