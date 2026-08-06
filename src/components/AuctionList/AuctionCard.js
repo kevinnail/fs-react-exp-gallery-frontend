@@ -308,7 +308,6 @@ export default function AuctionCard({ auction }) {
     hasHighBidder &&
     String(highestBidderUserId) === String(user.id);
 
-
   const handleSwap = async () => {
     try {
       await swapAuctionOrPost('auction', id);
