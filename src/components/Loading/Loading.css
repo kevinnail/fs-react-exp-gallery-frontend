@@ -1,8 +1,134 @@
-.loading-image {
-  width: 30%;
-  animation: rotate1 10s linear infinite;
-  box-shadow: 0px 0px 15px #5b36ff83;
+.slg-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  min-height: 60vh;
+  padding: var(--slg-header-height) 1rem 2rem;
+  background: var(--slg-void);
+  overflow: hidden; /* drift amplitude is generous; never spill sideways */
+}
+
+.slg-loading-field {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+.slg-loading-drift-x {
+  animation: slg-drift-x var(--slg-drift-x-duration) ease-in-out infinite alternate;
+  animation-delay: var(--slg-drift-x-delay);
+}
+
+.slg-loading-drift-y {
+  animation: slg-drift-y var(--slg-drift-y-duration) ease-in-out infinite alternate;
+  animation-delay: var(--slg-drift-y-delay);
+}
+
+@keyframes slg-drift-x {
+  from {
+    transform: translateX(calc(var(--slg-drift-x) * -1));
+  }
+  to {
+    transform: translateX(var(--slg-drift-x));
+  }
+}
+
+@keyframes slg-drift-y {
+  from {
+    transform: translateY(calc(var(--slg-drift-y) * -1));
+  }
+  to {
+    transform: translateY(var(--slg-drift-y));
+  }
+}
+
+.slg-loading-approach {
+  animation: slg-approach var(--slg-approach-duration) cubic-bezier(0.55, 0, 0.45, 1) infinite
+    alternate;
+  animation-delay: var(--slg-approach-delay);
+}
+
+@keyframes slg-approach {
+  from {
+    transform: scale(var(--slg-far, 0.08));
+    opacity: 0.4;
+  }
+  to {
+    transform: scale(var(--slg-near, 2.2));
+    opacity: 1;
+  }
+}
+
+.slg-loading-marble {
+  display: block;
+  width: clamp(64px, 15vw, 130px);
+  aspect-ratio: 1;
   border-radius: 50%;
-  position: relative;
-  top: 100px;
+  object-fit: contain;
+  animation: slg-marble-spin var(--slg-spin-duration) linear infinite;
+  animation-direction: var(--slg-spin-direction);
+}
+
+@keyframes slg-marble-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- label ---------- */
+
+.slg-loading-label {
+  margin: 0;
+  font-family: var(--slg-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  text-indent: 0.28em; /* balances the trailing letter-space */
+  color: var(--slg-dim);
+  animation: slg-loading-fade 3.4s ease-in-out infinite;
+}
+
+@keyframes slg-loading-fade {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slg-loading-field {
+    --slg-drift-x: 40px;
+    --slg-drift-y: 20px;
+  }
+
+  .slg-loading-drift-x,
+  .slg-loading-drift-y {
+    animation-duration: 18s;
+  }
+
+  .slg-loading-approach {
+    --slg-far: 0.4;
+    --slg-near: 1.4;
+
+    animation-duration: 22s;
+  }
+
+  .slg-loading-marble {
+    animation-duration: 30s;
+  }
+
+  .slg-loading-label {
+    animation-duration: 7s;
+  }
 }

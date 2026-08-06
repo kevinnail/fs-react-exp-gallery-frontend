@@ -1,332 +1,277 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Modal from 'react-modal';
-import { useSwipeable } from 'react-swipeable'; // Add this import
-Modal.setAppElement('#root'); // If your app is using #root as the main container
-import '../PostDetail/PostDetail.css';
+import { useSwipeable } from 'react-swipeable';
+import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Loading from '../Loading/Loading.js';
+import './MainPostDetail.css';
+
+Modal.setAppElement('#root');
+
+const GLASSPASS_LOGO =
+  'https://stress-less-glass.s3.us-west-2.amazonaws.com/stress-less-glass-assets/glasspass_logo.PNG';
+const ETSY_LOGO =
+  'https://stress-less-glass.s3.us-west-2.amazonaws.com/stress-less-glass-assets/etsy_logo.PNG';
+const INSTAGRAM_LOGO = '/IG.png';
+
+// Video posts store a matching .jpg poster frame alongside the .mp4.
+const posterFor = (source) => (source?.endsWith('.mp4') ? source.replace('.mp4', '.jpg') : source);
+
+function storeFor(sellingLink) {
+  const platform = sellingLink?.toLowerCase() ?? '';
+
+  if (platform.includes('etsy')) {
+    return { name: 'Etsy', logo: ETSY_LOGO, isAuction: false };
+  }
+  if (platform.includes('instagram')) {
+    return { name: 'Instagram', logo: INSTAGRAM_LOGO, isAuction: true };
+  }
+  return { name: 'GlassPass', logo: GLASSPASS_LOGO, isAuction: false };
+}
 
 export default function MainPostDetail() {
   const { id } = useParams();
   const { postDetail, imageUrls, loading } = useGalleryPost(id);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  // Always render the image src in detail view; placeholder only for initial load
-  const containerRef = useRef(null);
   const navigate = useNavigate();
 
-  const glasspassLogoLink =
-    'https://stress-less-glass.s3.us-west-2.amazonaws.com/stress-less-glass-assets/glasspass_logo.PNG';
-  const etsyLogoLink =
-    'https://stress-less-glass.s3.us-west-2.amazonaws.com/stress-less-glass-assets/etsy_logo.PNG';
-  const instagramLogoLink = '/IG.png';
+  const store = storeFor(postDetail?.selling_link);
 
-  let sellingLogoLink = glasspassLogoLink;
-  let store = 'GlassPass';
-
-  const platform = postDetail?.selling_link?.toLowerCase();
-  if (platform?.includes('etsy')) {
-    sellingLogoLink = etsyLogoLink;
-    store = 'Etsy';
-  } else if (platform?.includes('instagram')) {
-    sellingLogoLink = instagramLogoLink;
-    store = 'Instagram';
-    // eslint-disable-next-line
-    isInstagram = true;
-  }
-
-  // console.log('postDetail?', postDetail?);
-  // Determine whether to show discounted price or not
   const originalPrice = parseFloat(postDetail?.originalPrice);
   const discountedPrice = parseFloat(postDetail?.discountedPrice);
-  const isDiscounted = discountedPrice && discountedPrice < originalPrice;
+  const isDiscounted = Boolean(discountedPrice) && discountedPrice < originalPrice;
 
-  const handleThumbnailClick = (index) => {
-    setCurrentIndex(index);
-  };
+  const currentSource = imageUrls[currentIndex];
+  const isVideo = Boolean(currentSource?.endsWith('.mp4'));
 
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
+  const showPrevious = useCallback(() => {
+    setCurrentIndex((previous) => (previous > 0 ? previous - 1 : previous));
+  }, []);
 
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-  const handlePrevious = () => {
-    setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : prevIndex));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex < imageUrls.length - 1 ? prevIndex + 1 : prevIndex));
-  };
+  const showNext = useCallback(() => {
+    setCurrentIndex((previous) => (previous < imageUrls.length - 1 ? previous + 1 : previous));
+  }, [imageUrls.length]);
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: handleNext,
-    onSwipedRight: handlePrevious,
+    onSwipedLeft: showNext,
+    onSwipedRight: showPrevious,
   });
 
-  const handleCategoryClick = () => {
-    navigate(`/search?q=${postDetail?.category}`);
-  };
-
-  // reset image loaded state when index changes
+  // The main image fades in per slide, so the placeholder has to come
+  // back whenever the selection changes.
   useEffect(() => {
     setIsLoaded(false);
   }, [currentIndex]);
 
-  const getImageSource = (src) => {
-    if (!src) return '';
-    return src.endsWith('.mp4') ? src.replace('.mp4', '.jpg') : src;
+
+  useEffect(() => {
+    if (!lightboxIsOpen) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'ArrowLeft') showPrevious();
+      if (event.key === 'ArrowRight') showNext();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxIsOpen, showPrevious, showNext]);
+
+  const handleMessageClick = () => {
+    navigate('/messages', {
+      state: {
+        pieceMetadata: {
+          id: postDetail?.id,
+          title: postDetail?.title,
+          category: postDetail?.category,
+          price: postDetail?.price,
+          discountedPrice: postDetail?.discountedPrice,
+          imageUrl: imageUrls?.[0],
+          url: window.location.href,
+        },
+      },
+    });
   };
 
-  // show loading spinner while waiting for posts to load
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
 
   return (
-    <>
-      <div className="post-detail-div-wrapper">
-        <section className="message-button-wrapper">
-          {' '}
-          <button
-            className="message-about-piece-button"
-            onClick={() =>
-              navigate('/messages', {
-                state: {
-                  pieceMetadata: {
-                    id: postDetail?.id,
-                    title: postDetail?.title,
-                    category: postDetail?.category,
-                    price: postDetail?.price,
-                    discountedPrice: postDetail?.discountedPrice,
-                    imageUrl: imageUrls?.[0],
-                    url: window.location.href,
-                  },
-                },
-              })
-            }
+    <main className="slg-detail">
+      <div className="slg-detail-bar">
+        <button className="slg-detail-back" onClick={() => navigate(-1)}>
+          ← Back
+        </button>
+      </div>
+
+      <div className="slg-detail-layout">
+        <div className="slg-detail-stage">
+          <figure
+            className={`slg-detail-figure${isVideo ? '' : ' slg-detail-figure--zoomable'}`}
+            onClick={() => (currentSource ? setLightboxIsOpen(true) : null)}
           >
-            {' '}
-            💬 Message Kevin about this piece
-          </button>
-        </section>
-        <div className="detail-top-container">
-          <div className="post-detail-div">
-            <section className="title-container">
-              <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                <button
-                  onClick={() => navigate(-1)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#fff',
-                    fontSize: '0.9rem',
-                    cursor: 'pointer',
-                    padding: '.5rem',
-                    justifySelf: 'start',
-                  }}
-                >
-                  ← Back
-                </button>
-              </div>
-              <div>
-                <h1 className="detail-title">{postDetail?.title}</h1>
-              </div>
-            </section>
-            <section className="title-cat-container">
-              <div>
-                <span className="category-label">Category:</span>
-                <span className="new-link category-span" onClick={handleCategoryClick}>
-                  {postDetail?.category}
-                </span>
-              </div>
-              <div className="price-details">
-                {postDetail?.sold ? (
-                  <>
-                    <span style={{ marginRight: '1rem' }}>SOLD</span>
-                    <span
-                      style={{
-                        textDecoration: 'line-through',
-                        marginRight: '10px',
-                        color: 'red',
-                      }}
-                    >
-                      {isDiscounted ? (
-                        <>
-                          <span style={{ textDecoration: 'line-through' }}>
-                            ${postDetail?.originalPrice}
-                          </span>
-                        </>
-                      ) : (
-                        <span style={{ textDecoration: 'line-through' }}>${postDetail?.price}</span>
-                      )}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    {isDiscounted ? (
-                      <>
-                        <span className="detail-on-sale">ON SALE! </span>
-                        <span
-                          style={{
-                            textDecoration: 'line-through',
-                            marginRight: '10px',
-                            color: 'red',
-                          }}
-                        >
-                          ${postDetail?.originalPrice}
-                        </span>
-                        <span>${Number(postDetail?.discountedPrice).toFixed(2)}</span>
-                      </>
-                    ) : (
-                      <span>${postDetail?.price}</span>
-                    )}
-                  </>
-                )}
-              </div>
-            </section>
-            <div className="gallery-container">
-              <div
-                style={{
-                  position: 'absolute',
-                  alignSelf: 'flex-start',
-                  zIndex: '5000',
-                }}
-              >
-                {postDetail?.sold ? <img src="/sold.png" /> : ''}
-              </div>
-              {imageUrls[currentIndex]?.endsWith('.mp4') ? (
-                <video className="gallery-video" controls>
-                  <source src={imageUrls[currentIndex]} type="video/mp4" />
-                </video>
-              ) : (
-                <>
-                  <div
-                    ref={containerRef}
-                    className="lazy-image-container"
-                    style={{ position: 'relative', width: '100%' }}
-                  >
-                    <div
-                      className="place-holder"
-                      style={{
-                        width: '100%',
-                        paddingBottom: '100%',
-                        backgroundColor: '#333',
-                        borderRadius: '5px',
-                        display: isLoaded ? 'none' : 'block',
-                      }}
-                    ></div>
-                    {imageUrls[currentIndex] && (
-                      <img
-                        className="gallery-image"
-                        src={getImageSource(imageUrls[currentIndex])}
-                        alt={`post-${currentIndex}`}
-                        onClick={openModal}
-                        onLoad={() => setIsLoaded(true)}
-                        style={{
-                          display: 'block',
-                          opacity: isLoaded ? 1 : 0,
-                          transition: 'opacity 0.3s ease-in-out',
-                          position: isLoaded ? 'relative' : 'absolute',
-                          top: 0,
-                          left: 0,
-                        }}
-                      />
-                    )}
-                  </div>
-                </>
-              )}
-              <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
-                className="modal"
-                overlayClassName="overlay2"
-              >
-                {imageUrls[currentIndex]?.endsWith('.mp4') ? (
-                  <video className="modal-video" controls>
-                    <source src={imageUrls[currentIndex]} type="video/mp4" />
-                  </video>
-                ) : (
-                  <img
-                    className="modal-image"
-                    src={imageUrls[currentIndex]?.replace('.mp4', '.jpg')}
-                    alt={`modal-post-${currentIndex}`}
-                    {...swipeHandlers}
-                  />
-                )}
-                <button className="modal-close" onClick={closeModal}>
-                  &#10006;
-                </button>
-                {currentIndex > 0 && (
-                  <button className="modal-navigation previous" onClick={handlePrevious}></button>
-                )}
-                {currentIndex < imageUrls.length - 1 && (
-                  <button className="modal-navigation next" onClick={handleNext}></button>
-                )}
-              </Modal>
-            </div>
-            <div className="thumbnail-container">
-              {imageUrls.map((imageUrl, index) => (
+            {postDetail?.sold ? <span className="slg-detail-sold">Sold</span> : null}
+
+            {isVideo ? (
+              <video controls>
+                <source src={currentSource} type="video/mp4" />
+              </video>
+            ) : currentSource ? (
+              <>
+                {isLoaded ? null : <span className="slg-detail-skeleton" aria-hidden="true" />}
                 <img
-                  key={index}
-                  className={`thumbnail-gallery ${index === currentIndex ? 'active' : ''}`}
-                  src={imageUrl.endsWith('.mp4') ? imageUrl.replace('.mp4', '.jpg') : imageUrl}
-                  alt={`thumbnail-gallery-${index}`}
-                  onClick={() => handleThumbnailClick(index)}
+                  src={posterFor(currentSource)}
+                  alt={postDetail?.title}
+                  style={{ opacity: isLoaded ? 1 : 0 }}
+                  onLoad={() => setIsLoaded(true)}
                 />
+              </>
+            ) : null}
+          </figure>
+
+          {imageUrls.length > 1 ? (
+            <div className="slg-detail-thumbs">
+              {imageUrls.map((imageUrl, index) => (
+                <button
+                  key={imageUrl}
+                  className={`slg-detail-thumb${
+                    index === currentIndex ? ' slg-detail-thumb--active' : ''
+                  }`}
+                  onClick={() => setCurrentIndex(index)}
+                  aria-label={`Show image ${index + 1} of ${imageUrls.length}`}
+                >
+                  <img src={posterFor(imageUrl)} alt="" />
+                </button>
               ))}
             </div>
-            <section className="desc-price-container">
-              <span className="desc-details">{postDetail?.description}</span>
-            </section>
-            <section className="selling-link-wrapper">
-              <a href={`${postDetail?.selling_link}`} target="_blank" rel="noopener noreferrer">
-                <div>
-                  {postDetail.selling_link && (
-                    <div className="inner-selling-link">
-                      {' '}
-                      <span className={'selling-link-span'}>
-                        {platform?.includes('instagram') ? (
-                          `Up for auction on ${store}!`
-                        ) : (
-                          <>
-                            <span className="shimmer">Available</span> on {store}!
-                          </>
-                        )}
-                      </span>
-                      <img
-                        className="selling-logo-link"
-                        src={sellingLogoLink}
-                        alt="Link to shopping cart"
-                      />
-                    </div>
-                  )}
-                </div>
-              </a>
-            </section>
+          ) : null}
 
-            <section className="detail-contact-wrapper">
-              <span className="detail-contact-text">Contact: </span>
-              <div className="detail-contact-img-link-wrapper">
-                {' '}
-                <a href={'mailto:kevin@kevinnail.com'}>
-                  <img className="site-msg-link-ig" width={'48px'} src="/email.png" />
-                </a>
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href="https://www.instagram.com/stresslessglass"
-                >
-                  <img width={'48px'} src="/IG.png" />
-                </a>
-              </div>
-            </section>
-          </div>
+          {!isVideo && currentSource ? (
+            <span className="slg-detail-zoom-hint">Tap the photo to enlarge</span>
+          ) : null}
         </div>
+
+        <aside className="slg-detail-rail">
+          {postDetail?.category ? (
+            <button
+              className="slg-detail-eyebrow"
+              onClick={() => navigate(`/search?q=${postDetail.category}`)}
+            >
+              {postDetail.category}
+            </button>
+          ) : null}
+
+          <h1 className="slg-detail-title">{postDetail?.title}</h1>
+
+          <p className="slg-detail-price">
+            {postDetail?.sold ? (
+              <>
+                <span className="slg-detail-sold-flag">Sold</span>
+                <span className="slg-detail-was">
+                  ${isDiscounted ? postDetail?.originalPrice : postDetail?.price}
+                </span>
+              </>
+            ) : isDiscounted ? (
+              <>
+                <span className="slg-detail-sale-flag">On sale</span>
+                <span className="slg-detail-was">${postDetail?.originalPrice}</span>$
+                {discountedPrice.toFixed(2)}
+              </>
+            ) : (
+              <>${postDetail?.price}</>
+            )}
+          </p>
+
+          {postDetail?.description ? (
+            <p className="slg-detail-desc">{postDetail.description}</p>
+          ) : null}
+
+          <div className="slg-detail-rule" />
+
+          <div className="slg-detail-actions">
+            <button className="slg-detail-button" onClick={handleMessageClick}>
+              Message Kevin
+            </button>
+
+            {postDetail?.selling_link ? (
+              <a
+                className="slg-detail-button slg-detail-button--quiet"
+                href={postDetail.selling_link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img className="slg-detail-store-logo" src={store.logo} alt="" />
+                {store.isAuction ? `Bid on ${store.name}` : `Buy on ${store.name}`}
+              </a>
+            ) : null}
+          </div>
+
+          <div className="slg-detail-contact">
+            <span className="slg-detail-contact-label">Contact</span>
+            <a href="mailto:kevin@kevinnail.com" aria-label="Email Kevin">
+              <img src="/email.png" alt="" />
+            </a>
+            <a
+              href="https://www.instagram.com/stresslessglass"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Stress Less Glass on Instagram"
+            >
+              <img src="/IG.png" alt="" />
+            </a>
+          </div>
+        </aside>
       </div>
-    </>
+
+      <Modal
+        isOpen={lightboxIsOpen}
+        onRequestClose={() => setLightboxIsOpen(false)}
+        className="slg-lightbox"
+        overlayClassName="slg-lightbox-overlay"
+        contentLabel={postDetail?.title}
+      >
+        {isVideo ? (
+          <video controls>
+            <source src={currentSource} type="video/mp4" />
+          </video>
+        ) : (
+          <img src={posterFor(currentSource)} alt={postDetail?.title} {...swipeHandlers} />
+        )}
+
+        <button
+          className="slg-lightbox-close"
+          onClick={() => setLightboxIsOpen(false)}
+          aria-label="Close"
+        >
+          &#10006;
+        </button>
+
+        {currentIndex > 0 ? (
+          <button
+            className="slg-lightbox-nav slg-lightbox-nav--previous"
+            onClick={showPrevious}
+            aria-label="Previous image"
+          >
+            ‹
+          </button>
+        ) : null}
+
+        {currentIndex < imageUrls.length - 1 ? (
+          <button
+            className="slg-lightbox-nav slg-lightbox-nav--next"
+            onClick={showNext}
+            aria-label="Next image"
+          >
+            ›
+          </button>
+        ) : null}
+
+        {imageUrls.length > 1 ? (
+          <span className="slg-lightbox-counter">
+            {currentIndex + 1} / {imageUrls.length}
+          </span>
+        ) : null}
+      </Modal>
+    </main>
   );
 }
