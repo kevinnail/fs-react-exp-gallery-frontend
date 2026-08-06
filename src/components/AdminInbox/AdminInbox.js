@@ -107,7 +107,7 @@ export default function AdminInbox() {
       setLoading(true);
       const rawConversationsData = await getConversations();
       // Only keep customer entries (not admin)
-      let conversationsData = rawConversationsData.filter((convo) => convo.user_id !== '1');
+      const conversationsData = rawConversationsData.filter((convo) => convo.user_id !== '1');
 
       // If getConversations returns conversation summaries, use them directly
       if (conversationsData && conversationsData.length > 0) {
@@ -623,8 +623,8 @@ export default function AdminInbox() {
             {!loading && conversations.length > 0 && (
               <div className="conversation-items">
                 {conversations.map((conversation) => {
-                  var isSelected = selectedConversation === conversation.conversation_id;
-                  var itemClass = 'conversation-item' + (isSelected ? ' selected' : '');
+                  const isSelected = selectedConversation === conversation.conversation_id;
+                  const itemClass = 'conversation-item' + (isSelected ? ' selected' : '');
                   return (
                     <div
                       key={conversation.conversation_id}
