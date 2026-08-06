@@ -3,7 +3,6 @@ import './Loading.css';
 
 const randomBetween = (minimum, maximum) => minimum + Math.random() * (maximum - minimum);
 
-
 function randomDrift() {
   const horizontalSeconds = randomBetween(7, 11);
   const verticalSeconds = randomBetween(4.5, 6.5);
