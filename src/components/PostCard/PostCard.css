@@ -1,331 +1,321 @@
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-* {
-  box-sizing: border-box;
-}
-.mobile-title-desk {
-  display: none;
-}
-.mobile-title {
-  display: block;
-}
-.admin-container {
+/* One post in the admin list.
+ *
+ * A data row, not a card: hairline separators on the page's own black,
+ * so a screen of thirty pieces reads as a list to scan rather than
+ * thirty boxes to parse. The only things allowed to add colour are
+ * state — sold, hidden, deleted — and the destructive control.
+ *
+ * The page-level rules that used to live in this file (.admin-container,
+ * .list-container, .admin-panel) are in Admin.css now.
+ */
+
+.slg-row {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-  box-sizing: border-box;
-  height: calc(100vh - 90px);
-  padding: 90px 0 0 0;
-}
-
-.admin-panel {
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.list-container {
-  display: flex;
-  flex-direction: column;
-  justify-items: flex-start;
-  align-items: flex-start;
-  margin: 1px auto;
-  padding: 100px 0 0 0rem;
-  height: 90vh;
-  background: linear-gradient(
-    270deg,
-    rgba(89, 89, 89, 0.458),
-    rgba(40, 40, 40, 0.532),
-    rgba(21, 21, 21, 0.577)
-  );
-  background-color: rgba(0, 0, 0, 0.51);
-  position: relative;
-  width: 100%;
-  height: calc(100vh - 90px);
-  overflow-y: auto;
-}
-
-@keyframes ocean {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.post {
-  width: 100%;
-  height: 55px;
-  background-color: rgb(15, 15, 15);
-  display: flex;
-  justify-content: space-between;
-  grid-template-columns: 60px 150px 100px 1fr 1fr;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  grid-template-areas:
+    'thumb identity actions'
+    'thumb price    actions'
+    'thumb state    actions';
   align-items: center;
-  justify-items: self-start;
-  padding: 0 10px 0px 0px;
-  box-sizing: border-box;
-  border: 1px solid black;
-  white-space: nowrap;
-  color: white;
-  box-shadow: 5px 5px 35px 20px rgba(0, 0, 0, 0.486);
+  gap: 0.15rem 0.85rem;
+  /* The left inset is the margin the deleted-state bar is drawn in —
+     without it the thumbnail sits flush on the row edge and covers it. */
+  padding: 0.7rem 0 0.7rem 8px;
+  border-bottom: 1px solid var(--slg-edge-soft);
+  transition: background 160ms ease;
 }
 
-.admin-prod-img {
-  width: 55px;
-  height: 55px;
-  object-fit: cover;
-  object-position: center;
+.slg-row:hover {
+  background: var(--slg-lift);
 }
 
-.delete-button,
-.edit-button {
-  width: 30px;
-  height: 30px;
-  object-fit: cover;
-  object-position: center;
-  margin: 0 5px;
-}
-
-.admin-prod-btn-cont {
-  justify-self: flex-end;
-  display: block;
-  margin: 0px 0;
-}
-
-.grid-s1 {
-  grid-column-start: 1;
-  font-weight: bold;
-}
-.grid-s2 {
-  grid-column-start: 2;
-  font-weight: bold;
-}
-.grid-s3 {
-  grid-column-start: 3;
-  font-weight: bold;
-}
-.grid-s4 {
-  grid-column-start: 4;
-  font-weight: bold;
-}
-.grid-s5 {
-  grid-column-start: 5;
-  font-weight: bold;
-}
-.grid-s6 {
-  grid-column-start: 6;
-  font-weight: bold;
-}
-.grid-s7 {
-  grid-column-start: 7;
-  font-weight: bold;
-}
-
-.grid-e1 {
-  grid-column-end: 1;
-  font-weight: bold;
-}
-.grid-e2 {
-  grid-column-end: 2;
-  font-weight: bold;
-}
-.grid-e3 {
-  grid-column-end: 3;
-  font-weight: bold;
-}
-.grid-e4 {
-  grid-column-end: 4;
-  font-weight: bold;
-}
-.grid-e5 {
-  grid-column-end: 5;
-  font-weight: bold;
-}
-.grid-e6 {
-  grid-column-end: 6;
-  font-weight: bold;
-}
-.grid-e7 {
-  grid-column-end: 7;
-  font-weight: bold;
-}
-
-.desc-desk,
-.cat-desk {
-  display: none;
-  white-space: nowrap;
-}
-
-.grayed-out {
-  opacity: 0.5;
+/* Mid-delete: visible but inert, so a double tap can't fire the request
+   twice. */
+.slg-row--busy {
+  opacity: 0.4;
   pointer-events: none;
 }
 
-.sold-highlight {
-  color: rgb(0, 153, 23);
-  position: relative;
-  /* top: -10px; */
+/* ---------- thumbnail ---------- */
+
+.slg-row-thumb {
+  grid-area: thumb;
+  align-self: start;
+  display: block;
+  width: 52px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--slg-lift);
 }
 
-.hide-highlight {
-  color: rgb(255, 153, 0);
-  position: relative;
-  /* top: 10px; */
+.slg-row-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/*
-/  
- / 
-  @media BEGIN =================================================
-  
-  
-  */
-@media (min-width: 414px) {
+/* ---------- identity ---------- */
+
+.slg-row-identity {
+  grid-area: identity;
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
 }
 
-@media (min-width: 768px) {
-  .sold-highlight {
-    display: none;
-  }
-
-  .post {
-    width: 100%;
-    height: 100px;
-    display: grid;
-    grid-template-columns: 120px 300px 75px auto;
-    align-items: flex-start;
-    padding: 0 10px 0px 0px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    white-space: nowrap;
-  }
-  .admin-prod-btn-cont {
-    justify-self: flex-end;
-    display: block;
-    margin: 16px 0;
-  }
-  .admin-prod-img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  .list-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(auto-fill, 100px);
-    flex-wrap: wrap;
-    justify-items: flex-start;
-    align-items: flex-start;
-    margin: 0px auto;
-    padding: 0 0rem;
-    gap: 5px;
-    top: 50px;
-  }
-
-  .mobile-title-desk {
-    display: block;
-    max-width: 300px;
-    height: 100px;
-    overflow: hidden;
-    white-space: normal;
-  }
-  .mobile-title {
-    display: none;
-  }
-  .cat-desk {
-    display: unset;
-    justify-self: center;
-  }
-  .delete-button,
-  .edit-button {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    object-position: center;
-    margin: 5px 5px;
-  }
+/* Wraps to two lines rather than being cut to 14 characters in JS. A
+   title the admin can't read is a row they have to open to identify. */
+.slg-row-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--slg-ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-@media (min-width: 1024px) {
-  .admin-panel {
-    display: block;
+.slg-row-category {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--slg-dim);
+}
+
+/* ---------- price ---------- */
+
+.slg-row-price {
+  grid-area: price;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.slg-row-now {
+  font-weight: 500;
+  color: var(--slg-ink);
+}
+
+/* Struck-through already says "not this price" — doing it in red as well
+   read as an error on every discounted row. */
+.slg-row-was {
+  color: var(--slg-dim);
+  text-decoration: line-through;
+}
+
+/* ---------- state tags ---------- */
+
+.slg-row-state {
+  grid-area: state;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+/* Most rows have no state at all, so the track collapses rather than
+   leaving an empty line under every price. */
+.slg-row-state:empty {
+  display: none;
+}
+
+.slg-tag {
+  padding: 0.15rem 0.4rem;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--slg-dim);
+  border: 1px solid var(--slg-edge);
+}
+
+.slg-tag--sold {
+  color: #7fb08a;
+  border-color: #3f6f4a;
+}
+
+.slg-tag--deleted {
+  color: var(--slg-alert);
+  border-color: var(--slg-alert);
+}
+
+/* A hidden post is still live inventory, so it dims rather than shouting.
+   A deleted one is the exception that earns a mark in the margin. */
+.slg-row--hidden .slg-row-thumb img {
+  opacity: 0.45;
+}
+
+.slg-row--sold .slg-row-title,
+.slg-row--sold .slg-row-now {
+  color: var(--slg-dim);
+}
+
+.slg-row--deleted {
+  box-shadow: inset 2px 0 0 var(--slg-alert);
+}
+
+.slg-row--deleted .slg-row-thumb img {
+  opacity: 0.3;
+}
+
+.slg-row--deleted .slg-row-title {
+  color: var(--slg-dim);
+  text-decoration: line-through;
+}
+
+/* ---------- actions ---------- */
+
+.slg-row-actions {
+  grid-area: actions;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.slg-row-action {
+  min-width: 60px;
+  min-height: 34px;
+  padding: 0 0.6rem;
+  font-family: var(--slg-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--slg-dim);
+  background: transparent;
+  border: 1px solid var(--slg-edge);
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.slg-row-action:hover:not(:disabled) {
+  color: var(--slg-ink);
+  border-color: var(--slg-ink);
+}
+
+.slg-row-action--danger:hover:not(:disabled) {
+  color: #000000;
+  background: var(--slg-alert);
+  border-color: var(--slg-alert);
+}
+
+.slg-row-action:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.slg-row a:focus-visible,
+.slg-row button:focus-visible {
+  outline: 2px solid var(--slg-flame);
+  outline-offset: 2px;
+}
+
+/* ---------- delete confirm ----------
+   The dialog is still MUI's; these are the controls inside it, restyled
+   so a destructive confirm doesn't look like a stock blue text button. */
+
+.slg-dialog-check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+  font-family: var(--slg-body);
+  font-size: 0.8125rem;
+  color: var(--slg-ink);
+  cursor: pointer;
+}
+
+.slg-dialog-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--slg-alert);
+  cursor: pointer;
+}
+
+.slg-dialog-button {
+  min-height: 42px;
+  padding: 0 1.1rem;
+  font-family: var(--slg-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--slg-dim);
+  background: transparent;
+  border: 1px solid var(--slg-edge);
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.slg-dialog-button:hover {
+  color: var(--slg-ink);
+  border-color: var(--slg-ink);
+}
+
+.slg-dialog-button--confirm {
+  color: #000000;
+  background: var(--slg-ink);
+  border-color: var(--slg-ink);
+}
+
+.slg-dialog-button--confirm:hover {
+  color: var(--slg-ink);
+  background: transparent;
+}
+
+.slg-dialog-button--danger {
+  background: var(--slg-alert);
+  border-color: var(--slg-alert);
+}
+
+.slg-dialog-button--danger:hover {
+  color: var(--slg-alert);
+}
+
+.slg-dialog-button:focus-visible {
+  outline: 2px solid var(--slg-flame);
+  outline-offset: 2px;
+}
+
+.slg-dialog-status {
+  padding: 0 1.1rem;
+  font-family: var(--slg-body);
+  font-size: 0.8125rem;
+  color: var(--slg-dim);
+}
+
+/* ---------- wider screens ----------
+   One row, real columns, so the list scans down a price column and a
+   state column instead of down a stack of small paragraphs. */
+
+@media (min-width: 900px) {
+  .slg-row {
+    grid-template-columns: 64px minmax(0, 1fr) 110px 150px auto;
+    grid-template-areas: 'thumb identity price state actions';
+    gap: 1rem;
+    padding: 0.6rem 0 0.6rem 8px;
   }
 
-  .admin-container {
-    grid-template-columns: 200px 1fr;
-    grid-template-rows: 1fr;
+  .slg-row-thumb {
+    width: 64px;
+    align-self: center;
   }
 
-  .admin-panel-section {
-    display: grid;
-    justify-items: center;
-    align-items: flex-start;
-    padding: 0 0rem;
-    background-color: black;
-    background-color: #00000083;
-    border: 1px solid #0026a153;
-    height: 100%;
-    box-sizing: border-box;
-    margin-top: 50px;
-    overflow: auto;
-    max-height: 89vh;
+  .slg-row-title {
+    font-size: 0.9375rem;
+    -webkit-line-clamp: 1;
   }
 
-  .signout-button-adapt {
-    width: 120px;
-  }
-
-  .new-link,
-  .signout-button {
+  .slg-row-state:empty {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
   }
 
-  .new-link:hover,
-  .signout-button:hover {
-    background-color: #ccc;
-    transform: scale(1);
-    background: linear-gradient(to bottom right, white, grey, black, grey, white);
-    background-size: 150% 150%;
-  }
-  .new-link:active,
-  .signout-button:active {
-    transform: scale(1);
-    transition: 250ms;
-    color: black;
-    background-size: 400% 400%;
-  }
-}
-
-@media (min-width: 1200px) {
-  .admin-panel-section {
-    margin-top: 0px;
-  }
-
-  .admin-container {
-    grid-template-columns: 350px 1fr 350px;
-  }
-  .list-container {
-    top: 0px;
-  }
-}
-
-@media (min-width: 1800px) {
-  .desc-desk {
-    display: block;
-    white-space: normal;
-    overflow: hidden;
-    width: 250px;
-    height: 65px;
+  .slg-row-actions {
+    grid-auto-flow: column;
+    gap: 0.4rem;
   }
 }
