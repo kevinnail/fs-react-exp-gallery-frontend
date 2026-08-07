@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import { useSwipeable } from 'react-swipeable';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Loading from '../Loading/Loading.js';
+import ShareButton from '../ShareButton/ShareButton.js';
 import './MainPostDetail.css';
 
 Modal.setAppElement('#root');
@@ -101,6 +102,13 @@ export default function MainPostDetail() {
         <button className="slg-detail-back" onClick={() => navigate(-1)}>
           ← Back
         </button>
+
+        <ShareButton
+          imageUrl={currentSource}
+          title={postDetail?.title}
+          text={postDetail?.title}
+          className="slg-detail-share--bar"
+        />
       </div>
 
       <div className="slg-detail-layout">
@@ -199,6 +207,14 @@ export default function MainPostDetail() {
               </a>
             ) : null}
           </div>
+
+          <ShareButton
+            imageUrl={currentSource}
+            title={postDetail?.title}
+            text={postDetail?.title}
+            variant="full"
+            className="slg-detail-share--rail"
+          />
 
           <div className="slg-detail-contact">
             <span className="slg-detail-contact-label">Contact</span>

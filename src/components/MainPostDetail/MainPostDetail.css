@@ -38,6 +38,14 @@
   color: var(--slg-ink);
 }
 
+.slg-detail-share--bar {
+  margin-left: auto;
+}
+
+.slg-detail-share--rail {
+  display: none;
+}
+
 /* ---------- layout ---------- */
 
 .slg-detail-layout {
@@ -465,6 +473,14 @@
     position: sticky;
     top: calc(var(--slg-header-height) + 1.5rem);
     padding: 0;
+  }
+
+  .slg-detail-share--bar {
+    display: none;
+  }
+
+  .slg-detail-share--rail {
+    display: inline-flex;
   }
 }
 

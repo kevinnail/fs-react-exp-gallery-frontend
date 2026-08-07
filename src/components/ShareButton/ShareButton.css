@@ -1,0 +1,41 @@
+.slg-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  font-family: var(--slg-body);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--slg-dim);
+  cursor: pointer;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.slg-share:hover,
+.slg-share:focus-visible {
+  color: var(--slg-ink);
+}
+
+/* Sits in the top bar on mobile, beside the back link. */
+.slg-share--compact {
+  padding: 0.4rem 0;
+  font-size: 0.8125rem;
+}
+
+/* Sits in the detail rail on desktop, grouped with the piece's own actions. */
+.slg-share--full {
+  gap: 0.5rem;
+  align-self: flex-start;
+  height: 38px;
+  padding: 0 0.9rem 0 0.75rem;
+  border: 1px solid var(--slg-edge-soft);
+  font-size: 0.8125rem;
+}
+
+.slg-share--full:hover,
+.slg-share--full:focus-visible {
+  border-color: var(--slg-ink);
+}
