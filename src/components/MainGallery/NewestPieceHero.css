@@ -63,13 +63,16 @@
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   text-decoration: none;
   border: 1px solid var(--slg-ink);
   background: var(--slg-ink);
   color: #000000;
   cursor: pointer;
-  transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
 }
 
 .slg-button:hover,
@@ -95,6 +98,19 @@
   order: 1;
   margin: 0;
   overflow: hidden;
+}
+
+/* The link is only a hit area — it carries no look of its own, so the
+   photo still reads as the page rather than as a button. */
+.slg-hero-figure-link {
+  display: block;
+  height: 100%;
+  text-decoration: none;
+}
+
+.slg-hero-figure-link:focus-visible {
+  outline: 2px solid var(--slg-ink);
+  outline-offset: -4px;
 }
 
 .slg-hero-figure img {

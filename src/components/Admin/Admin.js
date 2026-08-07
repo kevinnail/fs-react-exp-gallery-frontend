@@ -75,7 +75,7 @@ export default function Admin() {
     if (totalPages <= 1) return null;
 
     // Logic for which page numbers to display
-    let displayedPageNumbers = [];
+    const displayedPageNumbers = [];
 
     if (isMobile) {
       // For mobile: Show fewer buttons (maximum of 3) to prevent overflow

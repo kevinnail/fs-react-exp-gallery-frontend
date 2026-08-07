@@ -108,7 +108,9 @@
   color: var(--slg-ink);
   background: var(--slg-lift);
   border: 1px solid var(--slg-edge);
-  transition: background 200ms ease, border-color 200ms ease;
+  transition:
+    background 200ms ease,
+    border-color 200ms ease;
 }
 
 .slg-lot:hover,
@@ -139,7 +141,7 @@
   justify-content: center;
   font-size: 0.6875rem;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   color: var(--slg-dim);
   background: var(--slg-void);
 }

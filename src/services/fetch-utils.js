@@ -475,7 +475,7 @@ export const deleteImage = async (public_id, resource_type) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ public_id: public_id, resource_type: resource_type }),
+      body: JSON.stringify({ public_id, resource_type }),
     });
     const result = await response.json();
 
@@ -495,7 +495,7 @@ export const deleteImageData = async (id, public_id) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ public_id: public_id }),
+      body: JSON.stringify({ public_id }),
     });
     const result = await response.json();
 
@@ -749,8 +749,8 @@ export async function updateProfileWithImage(
       },
       body: JSON.stringify({
         image_url: imageUrl,
-        firstName: firstName,
-        lastName: lastName,
+        firstName,
+        lastName,
         sendEmailNotifications,
       }),
       credentials: 'include',

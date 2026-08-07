@@ -2,7 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import './AboutMe.css';
 
 const ELSEWHERE_LINKS = [
+  { href: 'https://www.kevinnail.com', logo: '/kcn-icon.png', label: 'Main Site' },
   { href: 'https://www.instagram.com/stresslessglass/', logo: '/logo-sq-180.png', label: 'Glass' },
+  { href: 'https://www.github.com/kevinnail', logo: '/github.jpg', label: 'Code' },
   {
     href: 'https://www.instagram.com/kevinnail_music/',
     logo: '/drumming-icon.png',
@@ -14,8 +16,6 @@ const ELSEWHERE_LINKS = [
     label: 'Mushrooms',
   },
   { href: 'https://www.linkedin.com/in/kevinnail', logo: '/li.png', label: 'LinkedIn' },
-  { href: 'https://www.github.com/kevinnail', logo: '/github.jpg', label: 'Code' },
-  { href: 'https://www.kevinnail.com', logo: '/kcn-icon.png', label: 'Dev portfolio' },
 ];
 
 const STACK = [
@@ -176,7 +176,7 @@ export default function AboutMe() {
 
       <section className="slg-about-band slg-about-band--reverse" aria-labelledby="slg-about-hello">
         <figure className="slg-about-band-figure slg-about-band-figure--portrait">
-          <img src="/action-1.jpg" className='portrait' alt="Kevin Nail" />
+          <img src="/action-1.jpg" className="portrait" alt="Kevin Nail" />
         </figure>
         <div className="slg-about-band-copy">
           <p className="slg-about-eyebrow">Get in touch</p>

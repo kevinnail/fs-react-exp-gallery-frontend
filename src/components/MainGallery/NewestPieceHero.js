@@ -1,19 +1,19 @@
 import { Link } from 'react-router-dom';
 import './NewestPieceHero.css';
 
-function coverImageFor(post) {
+const coverImageFor = (post) => {
   const source = post.image_url;
   if (!source) return '';
   // Video posts store a matching .jpg poster frame alongside the .mp4.
   return source.endsWith('.mp4') ? `${source.slice(0, -4)}.jpg` : source;
-}
+};
 
 /**
  * The hero is the newest unsold piece, shown at scale with no frame.
  * The photo's black background is the page's black background, so the
  * glass reads as floating in the page itself.
  */
-export default function NewestPieceHero({ post, availableCount }) {
+const NewestPieceHero = ({ post, availableCount }) => {
   if (!post) return null;
 
   const { id, title, description, price, discountedPrice, originalPrice } = post;
@@ -48,9 +48,18 @@ export default function NewestPieceHero({ post, availableCount }) {
         </div>
       </div>
 
+      {/* The photo navigates to the same place the button does. A Link
+          rather than an onClick handler so it keeps keyboard focus,
+          middle-click and open-in-new-tab. */}
       <figure className="slg-hero-figure">
-        {coverImage ? <img src={coverImage} alt={title} /> : null}
+        {coverImage ? (
+          <Link className="slg-hero-figure-link" to={`/${id}`} aria-label={`View ${title}`}>
+            <img src={coverImage} alt={title} />
+          </Link>
+        ) : null}
       </figure>
     </section>
   );
-}
+};
+
+export default NewestPieceHero;
