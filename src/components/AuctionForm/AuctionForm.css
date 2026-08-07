@@ -1,223 +1,33 @@
-/* Auction form — still on the legacy form styling.
+/* New / edit auction form.
  *
- * These rules used to live in PostForm.css and reach AuctionForm and
- * DiscountForm through CRA's global stylesheet. PostForm has since been
- * rebuilt on the design tokens, so the legacy versions moved here to
- * keep this form rendering as it did. When the auction form gets the
- * same treatment, this whole block goes away.
+ * Layout, fields and controls all come from styles/forms.css. This file
+ * is only what's specific to an auction: the closing-time field and the
+ * live-auction warning.
  */
 
-.form-wrapper {
-  letter-spacing: 1.5px;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
+/* Without an explicit colour-scheme the browser paints the native
+   date/time picker and its calendar indicator for a light page, which
+   renders as a black-on-black glyph the admin can't see. */
+.slg-input[type='datetime-local'] {
+  color-scheme: dark;
 }
 
-.new-post-form {
-  color: white;
-  background-color: rgba(0, 0, 0, 0.507);
-  min-width: 350px;
-  width: 100%;
-  height: calc(100vh - 90px);
-  box-sizing: border-box;
-  border: 1px solid #0026a153;
-  display: grid;
-  gap: 10px;
-  grid-template-rows: auto;
-  justify-items: center;
-  overflow: auto;
-}
-
-#form-title-header {
-  font-size: 1.8rem;
-  font-weight: bold;
+/* Editing a running auction changes terms people have already bid
+   against, so the form says so instead of looking identical to the
+   create form. */
+.slg-auction-warning {
+  display: flex;
+  gap: 0.6rem;
   margin: 0;
-  padding: 0;
-  justify-self: center;
-  font-family: 'Shadows Into Light', cursive;
-  letter-spacing: 2px;
-  color: #ffffff;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--slg-ink);
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-flame);
 }
 
-.labels-form-inputs {
-  display: block;
-}
-
-.image-input {
-  box-sizing: border-box;
-  width: 300px;
-  background-color: rgb(255, 254, 254);
-  font-size: large;
-  border-radius: 5px;
-  font-family: 'Courier New', Courier, monospace;
-  letter-spacing: 2px;
-  font-weight: bold;
-  padding: 5px;
-}
-
-.shadow-border {
-  border-top: 2px solid black;
-  border-left: 2px solid black;
-  border-right: 2px solid rgb(127, 127, 127);
-  border-bottom: 2px solid rgb(127, 127, 127);
-}
-
-.description {
-  box-sizing: border-box;
-  max-width: 300px;
-  max-height: 75px;
-  min-width: 300px;
-  min-height: 75px;
-  background-color: rgb(255, 255, 255);
-  font-size: large;
-  position: relative;
-  border-radius: 5px;
-  padding: 5px;
-}
-
-.price-in-form {
-  display: grid;
-  justify-content: center;
-}
-
-.form-wrapper .price-input {
-  text-align: right;
-  justify-self: flex-end;
-}
-
-.dropzone {
-  margin-top: 20px;
-}
-
-.file-upload-label {
-  border: 2px solid white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  background-color: rgb(20, 20, 20);
-  border-color: #577eff53;
-}
-
-.file-upload-label:hover {
-  cursor: pointer;
-}
-
-.thumbnails-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  width: 280px;
-  padding: 10px;
-  border-radius: 0.5rem;
-  background-color: rgba(245, 245, 220, 0.557);
-  border: 1px solid #5b36ff59;
-  margin-top: 20px;
-  height: 250px;
-  overflow-y: scroll;
-  align-items: flex-start;
-}
-
-.thumbnail-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-.thumbnail {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-.delete-button-form {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: rgb(253, 34, 34);
-  color: white;
-  font-weight: bold;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 3px solid rgb(165, 167, 197);
-  cursor: pointer;
-  font-size: 14px;
-  display: block;
-  padding: 0px;
-  box-shadow: inset 0px 0px 0px 2px white;
-  box-sizing: border-box;
-}
-
-.btn-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: -30px;
-  margin-bottom: 50px;
-}
-
-.submit-btn {
-  background-color: #577eff53;
-  box-sizing: border-box;
-  border: 1px solid black;
-  border-radius: 50%;
-  padding: 5px 5px 3px 5px;
-  box-shadow: 2px 2px 4px 0 black;
-  cursor: pointer;
-  margin-top: 50px;
-  width: unset;
-}
-
-@media (min-width: 768px) {
-  .new-post-form {
-    width: 700px;
-    grid-template-rows: 75px 75px 75px 75px 75px 75px 75px 75px 75px;
-    grid-template-columns: 1fr 1fr;
-    padding: 20px;
-    justify-items: center;
-    margin-top: 0.5rem;
-  }
-
-  #form-title-header {
-    grid-row: 1;
-    grid-column: 1 / 3;
-  }
-
-  .desk-title-input {
-    grid-row: 3;
-    grid-column: 1;
-  }
-
-  .desk-desc-input {
-    grid-row: 6;
-    grid-column: 1;
-    height: 100%;
-  }
-
-  .description {
-    max-height: 600px;
-    height: 250px;
-  }
-
-  .thumbnails-container {
-    grid-row: 6;
-    grid-column: 2;
-    min-height: 250px;
-  }
-
-  .dropzone {
-    grid-row: 5;
-    grid-column: 2;
-  }
-
-  .btn-container {
-    grid-row: 9;
-    grid-column: 1 / 3;
-    margin-top: 50px;
-  }
+.slg-auction-warning strong {
+  font-weight: 600;
+  color: var(--slg-flame);
 }
