@@ -1,450 +1,489 @@
-html,
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  box-sizing: border-box;
+/* New / edit gallery post form.
+ *
+ * A working screen, not a display page, so it breaks from the front
+ * page in one way only: controls are allowed to have a visible edge,
+ * because an input the admin can't find the boundary of is a worse
+ * problem than a box on a black page.
+ *
+ * Everything else is shared with the rest of the site — pure black
+ * ground, no radius, Gruppo for the title, Archivo for the rest, flame
+ * reserved for focus and for the destructive control.
+ *
+ * On a phone the fields run the full width of the page inside a tight
+ * gutter. The old form pinned every control to 300px and centred it,
+ * which left dead margin on both sides of a 390px screen.
+ */
+
+.slg-form-page {
+  padding-top: var(--slg-header-height);
+  padding-bottom: 4rem;
+  background: var(--slg-void);
+  color: var(--slg-ink);
+  font-family: var(--slg-body);
+  text-align: left;
 }
 
-.new-post-form {
-  color: white;
-  background-color: rgba(0, 0, 0, 0.507);
-  min-width: 350px;
-  width: 100%;
-  height: calc(100vh - 90px);
-  box-sizing: border-box;
-  border: 1px solid #5b36ff83;
-  box-sizing: border-box;
+.slg-form-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.75rem var(--slg-gutter-tight) 1.5rem;
+}
+
+.slg-form-title {
+  margin: 0;
+  font-family: var(--slg-display);
+  font-size: clamp(1.75rem, 7vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--slg-ink);
+}
+
+/* ---------- layout ---------- */
+
+.slg-form {
   display: grid;
-  gap: 10px;
-  grid-template-rows: auto;
-  justify-items: center;
-  overflow: auto;
+  gap: 2.5rem;
+  padding: 0 var(--slg-gutter-tight);
 }
 
-.form-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: white;
-  font-family: 'Shadows Into Light', cursive;
-  letter-spacing: 2px;
+.slg-form-column {
+  display: grid;
+  gap: 1.25rem;
+  align-content: start;
 }
 
-.image-input {
-  box-sizing: border-box;
-  width: 300px;
-  background-color: rgb(255, 254, 254);
-  font-size: large;
-  border-radius: 5px;
-  font-family: 'Courier New', Courier, monospace;
-  letter-spacing: 2px;
-  font-weight: bold;
-  padding: 5px;
+/* Two short numeric fields read better beside each other than stacked,
+   even on the narrowest phone. */
+.slg-form-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
 }
 
-.shadow-border {
-  border-top: 2px solid black;
-  border-left: 2px solid black;
-  border-right: 2px solid rgb(127, 127, 127);
-  border-bottom: 2px solid rgb(127, 127, 127);
-}
-
-#form-title-header {
-  font-size: 1.8rem;
-  font-weight: bold;
+.slg-form-group-label {
   margin: 0;
-  padding: 0;
-  justify-self: center;
-  font-family: 'Shadows Into Light', cursive;
-  letter-spacing: 2px;
+  padding-bottom: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--slg-dim);
+  border-bottom: 1px solid var(--slg-edge-soft);
 }
 
-.file-upload-btn {
-  background-color: rgb(176, 176, 253);
-  box-sizing: border-box;
-  padding: 10px;
-  width: 300px;
-  margin: auto;
-  font-size: 1rem;
-  border-radius: 5px;
-  font-family: 'Shadows Into Light', cursive;
-  letter-spacing: 2px;
-}
-.form-comp:hover {
-  background-color: rgb(127, 127, 127);
+/* ---------- fields ---------- */
+
+.slg-field {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
 }
 
-.description {
-  box-sizing: border-box;
-  max-width: 300px;
-  max-height: 75px;
-  min-width: 300px;
-  min-height: 75px;
-  background-color: rgb(255, 255, 255);
-  font-size: large;
-  position: relative;
-  border-radius: 5px;
-  padding: 5px;
-}
-
-.btn-container {
-  width: 100%;
+.slg-field-label {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--slg-dim);
 }
 
-.submit-btn-post {
-  background-color: #577eff53;
-  box-sizing: border-box;
-  border: 1px solid black;
-  border-radius: 50%;
-  padding: 5px 5px 3px 5px;
-  box-shadow: 2px 2px 4px 0 black;
+/* Counts up against a maxLength the admin can otherwise only discover
+   by having their typing silently stop. */
+.slg-field-count {
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--slg-dim);
+}
+
+.slg-field-count--full {
+  color: var(--slg-flame);
+}
+
+.slg-input,
+.slg-select,
+.slg-textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0 0.75rem;
+  font-family: var(--slg-body);
+  font-size: 1rem; /* 16px — anything smaller and iOS zooms on focus */
+  color: var(--slg-ink);
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge);
+  border-radius: 0;
+  appearance: none;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.slg-input,
+.slg-select {
+  height: 48px; /* comfortable thumb target */
+}
+
+.slg-textarea {
+  min-height: 150px;
+  padding: 0.75rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.slg-input::placeholder,
+.slg-textarea::placeholder {
+  color: #5b626c;
+}
+
+.slg-input:hover,
+.slg-select:hover,
+.slg-textarea:hover {
+  background: var(--slg-lift-hover);
+}
+
+.slg-input:focus,
+.slg-select:focus,
+.slg-textarea:focus {
+  outline: none;
+  border-color: var(--slg-ink);
+  background: var(--slg-lift-hover);
+}
+
+.slg-select {
+  /* Room for the chevron drawn below. */
+  padding-right: 2.25rem;
   cursor: pointer;
-  margin-top: 50px;
 }
 
-.submit-btn:active {
-  background-color: rgba(163, 163, 231, 0.5);
-  box-shadow: inset 2px 2px 5px #d3c9ff;
+.slg-select-wrap {
   position: relative;
-  left: 1px;
-  top: 1px;
+  display: grid;
 }
 
-.new-post-icon {
-  width: 35px;
-  height: 35px;
-  margin-left: 10px;
-}
-option {
-  font-family: 'Shadows Into Light', cursive;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.loading {
-  animation: scaleAnimation 6s infinite;
-  width: 30%;
-  min-width: 200px;
-  margin: auto;
-  border-radius: 20px;
-  color: #5b36ff;
-  font-family: 'Shadows Into Light', cursive;
-  letter-spacing: 2px;
-  font-weight: bold;
-  text-shadow: 0px 0px 10px rgba(0, 255, 26, 0.495);
+.slg-select-wrap::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  width: 7px;
+  height: 7px;
+  margin-top: -5px;
+  border-right: 1px solid var(--slg-dim);
+  border-bottom: 1px solid var(--slg-dim);
+  transform: rotate(45deg);
+  pointer-events: none;
 }
 
-@keyframes scaleAnimation {
-  0%,
-  100% {
-    transform: scale(0.5);
-    opacity: 0.2;
-  }
-  50% {
-    transform: scale(1);
-    opacity: 1;
-  }
+.slg-select option {
+  color: var(--slg-ink);
+  background: #0d0f13;
 }
-.loading-div {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: 0px auto;
-  padding: 0 0rem;
-  letter-spacing: 1.5px;
+
+/* Money fields carry their unit in the frame rather than in the
+   placeholder, so the unit survives the admin typing. */
+.slg-input-money {
   position: relative;
-  width: 100%;
+  display: grid;
 }
 
-.loading-div-wrapper {
-  height: calc(100vh - 90px);
+.slg-input-money::before {
+  content: '$';
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: var(--slg-dim);
+  pointer-events: none;
 }
 
-.thumbnail {
-  width: 60px;
-  margin: 5px;
-  border-radius: 5px;
+.slg-input-money .slg-input {
+  padding-left: 1.85rem;
+  font-variant-numeric: tabular-nums;
 }
-.thumbnails-container {
+
+/* Chrome/Safari number spinners are useless at this size and steal
+   width from the value. */
+.slg-input[type='number']::-webkit-outer-spin-button,
+.slg-input[type='number']::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.slg-input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.slg-field-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--slg-dim);
+}
+
+/* ---------- segmented toggles ----------
+   Two mutually exclusive states, so a pair of segments beats two loose
+   radio dots: the whole segment is the target and the current state is
+   readable at a glance. */
+
+.slg-segment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--slg-edge);
+}
+
+.slg-segment-option {
+  position: relative; /* anchors the visually hidden radio */
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
-  width: 280px;
-  padding: 10px;
-  border-radius: 0.5rem;
-  background-color: rgba(245, 245, 220, 0.557);
-  border: 1px solid #5b36ff59;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--slg-dim);
+  background: var(--slg-lift);
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
 }
 
-.input-with-dollar-sign {
-  padding-left: 25px;
-}
-.dollar-sign-span {
-  position: relative;
-  left: -295px;
-  top: 3px;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #5b36ff;
-  z-index: 300;
+.slg-segment-option + .slg-segment-option {
+  border-left: 1px solid var(--slg-edge);
 }
 
-.thumbnails-container {
+.slg-segment-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slg-segment-option:hover {
+  color: var(--slg-ink);
+  background: var(--slg-lift-hover);
+}
+
+.slg-segment-option--on {
+  color: #000000;
+  background: var(--slg-ink);
+}
+
+.slg-segment-option--on:hover {
+  color: #000000;
+  background: var(--slg-ink);
+}
+
+/* Keyboard focus lands on the hidden radio, so the segment has to show
+   it on the admin's behalf. */
+.slg-segment-option:focus-within {
+  outline: 2px solid var(--slg-flame);
+  outline-offset: 2px;
+}
+
+/* ---------- dropzone ---------- */
+
+.slg-dropzone {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 30px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 130px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  background: var(--slg-lift);
+  border: 1px dashed var(--slg-edge);
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
 }
 
-.thumbnail-wrapper {
+.slg-dropzone:hover {
+  background: var(--slg-lift-hover);
+  border-color: var(--slg-dim);
+}
+
+.slg-dropzone--active {
+  background: var(--slg-lift-hover);
+  border-color: var(--slg-flame);
+  border-style: solid;
+}
+
+.slg-dropzone:focus-within {
+  outline: 2px solid var(--slg-flame);
+  outline-offset: 2px;
+}
+
+.slg-dropzone-primary {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--slg-ink);
+}
+
+.slg-dropzone-secondary {
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--slg-dim);
+}
+
+/* ---------- thumbnails ---------- */
+
+.slg-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 0.6rem;
+}
+
+.slg-thumb {
   position: relative;
-  display: inline-block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge);
 }
 
-.thumbnail {
-  width: 100px;
-  height: 100px;
+.slg-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.delete-button-form {
+/* The first image is the one the gallery card and the post detail lead
+   with, so it says so rather than leaving the admin to guess the order. */
+.slg-thumb-lead {
   position: absolute;
-  top: -5px;
-  right: -5px;
-  background: rgb(253, 34, 34);
-  color: white;
-  font-weight: bold;
-  width: 28px;
-  height: 28px;
-  max-width: 28px;
-  max-height: 28px;
-  min-width: 28px;
-  min-height: 28px;
-  border-radius: 50%;
-  border: 3px solid rgb(165, 167, 197);
-  cursor: pointer;
+  bottom: 0;
+  left: 0;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--slg-ink);
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.slg-thumb-remove {
+  position: absolute;
+  top: 0;
+  right: 0;
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 14px;
-  display: block;
-  padding: 0px;
-  box-shadow: inset 0px 0px 0px 2px white;
-  box-sizing: border-box;
-}
-.form-wrapper {
-  letter-spacing: 1.5px;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-}
-
-@keyframes ocean {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.desk-price-input-wrapper {
-  position: relative;
-  left: 10px;
-}
-.form-admin-panel {
-  display: none;
-}
-
-.visually-hidden {
-  position: absolute !important;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap;
-}
-
-.file-upload-label {
-  border: 2px solid white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  background-color: rgb(20, 20, 20);
-}
-.file-upload-label:hover {
-  cursor: pointer;
-}
-
-.price-in-form {
-  display: grid;
   justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-family: var(--slg-body);
+  font-size: 0.875rem;
+  line-height: 1;
+  color: var(--slg-ink);
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-left: 1px solid var(--slg-edge);
+  border-bottom: 1px solid var(--slg-edge);
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
 }
 
-.labels-form-inputs {
-  display: block;
-}
-.labels-form-inputs {
-  display: block;
+.slg-thumb-remove:hover,
+.slg-thumb-remove:focus-visible {
+  color: #000000;
+  background: var(--slg-alert);
 }
 
-.thumbnails-container {
-  margin-top: 20px;
-  height: 250px;
-  overflow-y: scroll;
+/* ---------- actions ---------- */
+
+.slg-form-actions {
   display: flex;
-  align-items: flex-start;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
 }
 
-.dropzone {
-  margin-top: 20px;
+.slg-form-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-height: 50px;
+  padding: 0 1.5rem;
+  font-family: var(--slg-body);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: #000000;
+  background: var(--slg-ink);
+  border: 1px solid var(--slg-ink);
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
 }
 
-.form-wrapper .price-input {
-  text-align: right;
-  justify-self: flex-end;
+.slg-form-button:hover,
+.slg-form-button:focus-visible {
+  color: var(--slg-ink);
+  background: transparent;
 }
 
-.radio-label {
-  color: black;
+/* ---------- focus ---------- */
+
+.slg-form-page button:focus-visible,
+.slg-form-page a:focus-visible,
+.slg-form-page input:focus-visible,
+.slg-form-page select:focus-visible,
+.slg-form-page textarea:focus-visible {
+  outline: 2px solid var(--slg-flame);
+  outline-offset: 2px;
 }
 
-.sold-radio-group,
-.hide-radio-group {
-  border: solid 1px black;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: white;
-  min-width: 300px;
-  color: black;
-}
+/* ---------- wider screens ----------
+   Details on one side, media on the other, both flowing on automatic
+   rows. The old form placed every control into a hand-numbered 75px
+   grid row, so adding a field meant renumbering the file. */
 
-/*
-
-@media rules start ======================================================
-mobile BELOW this point due to min-width parameter
-*/
-
-.btn-container {
-  margin-top: -30px;
-}
-@media (min-width: 768px) {
-  .selling-link {
-    grid-row: 4;
-    grid-column: 2;
+@media (min-width: 900px) {
+  .slg-form-head,
+  .slg-form {
+    padding-left: var(--slg-gutter);
+    padding-right: var(--slg-gutter);
   }
 
-  .image-input-button {
-    grid-row: 7;
-    grid-column: 2;
+  .slg-form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2.5rem var(--slg-gutter);
+    align-items: start;
   }
 
-  .new-post-form {
-    width: 700px;
-    grid-template-rows: 75px 75px 75px 75px 75px 75px 75px 75px 75px;
-    grid-template-columns: 1fr 1fr;
-    padding: 20px;
-    justify-items: center;
-    margin-top: 0.5rem;
+  .slg-form-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
   }
 
-  #form-title-header {
-    grid-row: 1;
-    grid-column: 1 / 3;
-  }
-
-  .desk-cat-input {
-    grid-row: 2;
-    grid-column: 1;
-  }
-
-  .desk-title-input {
-    grid-row: 3;
-    grid-column: 1;
-  }
-
-  .desk-desc-input {
-    grid-row: 6;
-    grid-column: 1;
-    height: 100%;
-  }
-
-  .desk-price-input {
-    grid-row: 2;
-    grid-column: 2;
-  }
-
-  .desk-image-input {
-    grid-row: 3;
-    grid-column: 2;
-  }
-
-  .thumbnails-container {
-    grid-row: 6;
-    grid-column: 2;
-    min-height: 250px;
-    overflow-y: scroll;
-    display: flex;
-    align-items: flex-start;
-  }
-
-  .dropzone {
-    grid-row: 5;
-    grid-column: 2;
-  }
-
-  .btn-container {
-    grid-row: 9;
-    grid-column: 1 / 3;
-    margin-top: 50px;
-  }
-
-  .description {
-    max-height: 600px;
-    height: 250px;
-  }
-
-  .sold-radio-group {
-    border: solid 1px black;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: white;
-    min-width: 300px;
-    grid-row-start: 4;
-    grid-row-end: 6;
-    grid-column: 1;
+  .slg-form-button {
+    flex: 0 0 auto;
+    min-width: 220px;
   }
 }
 
-@media (min-width: 1024px) {
-  .form-wrapper {
-    grid-template-columns: 200px 1fr;
+@media (min-width: 1400px) {
+  .slg-form,
+  .slg-form-head {
+    max-width: 1400px;
   }
-  .form-admin-panel {
-    background-color: #00000083;
-    border: 2px solid #2f00ff83;
-    padding: 10px;
-    display: block;
-    height: 100%;
-    box-sizing: border-box;
-  }
-  .form-admin-panel-section {
-    flex-wrap: wrap;
-    justify-items: flex-start;
-    align-items: flex-start;
-    margin: 5px auto;
-    padding: 0 0rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slg-form-page * {
+    transition-duration: 1ms;
   }
 }
