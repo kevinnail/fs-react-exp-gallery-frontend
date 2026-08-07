@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
-import './PostForm.css';
 import Loading from '../Loading/Loading.js';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
