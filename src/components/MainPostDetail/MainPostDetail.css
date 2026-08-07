@@ -184,13 +184,6 @@
   letter-spacing: 0.16em;
   /* text-transform: uppercase; */
   color: var(--slg-dim);
-  cursor: pointer;
-  transition: color 180ms ease;
-}
-
-.slg-detail-eyebrow:hover,
-.slg-detail-eyebrow:focus-visible {
-  color: var(--slg-ink);
 }
 
 .slg-detail-title {
