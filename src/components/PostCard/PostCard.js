@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   deleteById,
   deleteImage,
@@ -8,37 +8,24 @@ import {
 import './PostCard.css';
 import { useState } from 'react';
 import {
-  Box,
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Typography,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function PostCard({
-  id,
-  post,
-  posts,
-  image_url,
-  setPosts,
-  discountedPrice,
-  originalPrice,
-}) {
+// A video's poster frame lives beside it under the same name.
+const thumbnailFor = (mediaUrl) =>
+  mediaUrl.endsWith('.mp4') ? `${mediaUrl.slice(0, -4)}.jpg` : mediaUrl;
+
+export default function PostCard({ id, post, posts, setPosts, discountedPrice, originalPrice }) {
   const navigate = useNavigate();
 
   const [deletedRowId, setDeletedRowId] = useState(null);
   const [hardDelete, setHardDelete] = useState(false);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [openDialog, setOpenDialog] = useState(false);
   //eslint-disable-next-line
@@ -55,24 +42,26 @@ export default function PostCard({
         // grab urls out of my database
         const postUrls = await getAdditionalImageUrlsPublicIds(id);
         // delete all images from S3
-        for (let i = 0; i < postUrls.length; i++) {
-          await deleteImage(postUrls[i].public_id, postUrls[i].resource_type);
+        for (const postUrl of postUrls) {
+          await deleteImage(postUrl.public_id, postUrl.resource_type);
         }
         // delete the post from my database
         await deleteById(id);
         // delete the post from state, so it doesn't show up on the page
-        const updatedPosts = posts.filter((post) => post.id !== id);
-        setPosts(updatedPosts);
+        setPosts(posts.filter((existingPost) => existingPost.id !== id));
       } else {
         // soft delete
         await softDeleteGalleryPost(id);
         // update post in state to isDeleted = true
-        const updatedPosts = posts.map((p) => (p.id === id ? { ...p, isDeleted: true } : p));
-        setPosts(updatedPosts);
+        setPosts(
+          posts.map((existingPost) =>
+            existingPost.id === id ? { ...existingPost, isDeleted: true } : existingPost
+          )
+        );
       }
-    } catch (e) {
-      console.error('Error deleting post:', e.message);
-      toast.error(`Error deleting post: ${e.message}`, {
+    } catch (error) {
+      console.error('Error deleting post:', error.message);
+      toast.error(`Error deleting post: ${error.message}`, {
         theme: 'colored',
         draggable: true,
         draggablePercent: 60,
@@ -98,170 +87,120 @@ export default function PostCard({
     setHardDelete(false);
   };
 
-  const handleEditPost = () => {
-    navigate(`/admin/${id}`);
-  };
-
   // Visual indicator for soft-deleted posts
   const isSoftDeleted = post.isDeleted;
-  return (
-    <Box
-      className={`post ${id === deletedRowId ? 'grayed-out' : ''} ${isSoftDeleted ? 'soft-deleted' : ''}`}
-      key={id}
-      sx={{
-        backgroundColor: post.hide ? 'rgb(35, 35, 35)' : isSoftDeleted ? '#330f0f3a' : '',
-        boxShadow: isSoftDeleted ? '0 0 8px 2px #ff000061' : '0 0 2px #ccc',
-        border: isSoftDeleted ? '2px solid #ff000054' : '',
-      }}
-    >
-      <Link to={`/${id}`}>
-        {image_url ? (
-          <img
-            className="admin-prod-img"
-            src={image_url.endsWith('.mp4') ? `${image_url.slice(0, -4)}.jpg` : image_url}
-            alt="edit"
-          />
-        ) : (
-          post.image_url && (
-            <img
-              className="admin-prod-img"
-              src={
-                post.image_url.endsWith('.mp4')
-                  ? `${post.image_url.slice(0, -4)}.jpg`
-                  : post.image_url
-              }
-              alt="edit"
-            />
-          )
-        )}
-      </Link>
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateRows: '30px 30px',
-          gridTemplateColumns: '1fr',
-          paddingTop: '8px',
-        }}
-      >
-        <Box sx={{ width: isMobile ? '100px' : '' }}>
-          <Typography className="grid-s1 grid-e3 mobile-title">
-            {post.title.length > 20 ? post.title.slice(0, 14) + '...' : post.title}
-          </Typography>
-        </Box>
 
-        <Typography
-          className={isMobile ? ' sold-highlight' : ' mobile-title sold-highlight'}
-          sx={{ position: 'relative', bottom: '5px' }}
-        >
-          {post.sold ? ' SOLD ' : ''}
-        </Typography>
-        <Typography className="grid-s2 grid-e3 mobile-title-desk">
-          {post.hide ? post.title + ' (HIDDEN) ' : post.titlesdfsdf}
-        </Typography>
-        <Typography className="grid-s2 grid-e3 mobile-title-desk sold-highlight">
-          {post.sold ? 'SOLD' : ''}
-        </Typography>
-      </Box>
-      <Box sx={{ position: 'relative', top: isMobile ? '10px' : '', left: isMobile ? '10px' : '' }}>
-        {' '}
-        <Typography
-          className="grid-3"
-          style={{ display: 'grid', position: 'relative', top: isMobile ? '-4px' : '0px' }}
-        >
-          {isDiscounted ? (
-            <>
-              <Typography
-                variant="span"
-                style={{
-                  textDecoration: 'line-through',
-                  marginRight: '10px',
-                  color: 'red',
-                  position: 'relative',
-                  top: '8px',
-                }}
-              >
-                ${originalPrice}
-              </Typography>
-              <Typography variant="span">${Number(post.discountedPrice).toFixed(2)}</Typography>
-            </>
-          ) : (
-            <Typography variant="span">${post.price}</Typography>
-          )}
-        </Typography>
-      </Box>
-      <Typography className="cat-desk">{post.category}</Typography>
-      <Typography className="desc-desk">{post.description}</Typography>
-      <Box className="admin-prod-btn-cont grid-7">
-        <Button
-          onClick={handleEditPost}
-          sx={{ fontSize: '1rem', color: '#2f44ff', textShadow: '0 0 1px #444' }}
+  const rowClassNames = [
+    'slg-row',
+    id === deletedRowId ? 'slg-row--busy' : '',
+    isSoftDeleted ? 'slg-row--deleted' : '',
+    post.hide ? 'slg-row--hidden' : '',
+    post.sold ? 'slg-row--sold' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <li className={rowClassNames}>
+      <Link className="slg-row-thumb" to={`/${id}`} aria-label={`View ${post.title}`}>
+        {post.image_url ? <img src={thumbnailFor(post.image_url)} alt="" /> : null}
+      </Link>
+
+      <div className="slg-row-identity">
+        <span className="slg-row-title">{post.title}</span>
+        <span className="slg-row-category">{post.category}</span>
+      </div>
+
+      <div className="slg-row-price">
+        {isDiscounted ? (
+          <>
+            <span className="slg-row-was">${originalPrice}</span>
+            <span className="slg-row-now">${Number(post.discountedPrice).toFixed(2)}</span>
+          </>
+        ) : (
+          <span className="slg-row-now">${post.price}</span>
+        )}
+      </div>
+
+      <div className="slg-row-state">
+        {post.sold && <span className="slg-tag slg-tag--sold">Sold</span>}
+        {post.hide && <span className="slg-tag">Hidden</span>}
+        {isSoftDeleted && <span className="slg-tag slg-tag--deleted">Deleted</span>}
+      </div>
+
+      <div className="slg-row-actions">
+        <button
+          type="button"
+          className="slg-row-action"
+          onClick={() => navigate(`/admin/${id}`)}
           disabled={post.restricted ? post.restricted : false}
         >
           Edit
-        </Button>
-
-        <Button
+        </button>
+        <button
+          type="button"
+          className="slg-row-action slg-row-action--danger"
           onClick={handleOpenDialog}
-          sx={{ fontSize: '1rem', color: '#2f44ff', textShadow: '0 0 1px #444' }}
         >
           Delete
-        </Button>
-      </Box>{' '}
+        </button>
+      </div>
+
       <Dialog
         open={openDialog}
         onClose={isDeleting ? undefined : handleCloseDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={{
+          sx: {
+            backgroundColor: 'var(--slg-lift)',
+            backgroundImage: 'none',
+            border: '1px solid var(--slg-edge)',
+            borderRadius: 0,
+            fontFamily: 'var(--slg-body)',
+          },
+        }}
       >
-        <DialogTitle id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title" sx={{ fontFamily: 'var(--slg-display)' }}>
+          {hardDelete ? 'Delete this post permanently?' : 'Hide this post from the gallery?'}
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="alert-dialog-description" sx={{ fontFamily: 'var(--slg-body)' }}>
             {hardDelete
               ? 'Hard delete will permanently remove this post and all images. This action cannot be undone.'
               : 'Soft delete will hide this post from the gallery but retain its record for sales and user history.'}
           </DialogContentText>
-          <Box sx={{ mt: 2 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <input
-                type="checkbox"
-                checked={hardDelete}
-                onChange={() => setHardDelete((v) => !v)}
-                style={{ marginRight: '8px' }}
-              />
-              Hard Delete (permanent)
-            </label>
-          </Box>
+          <label className="slg-dialog-check">
+            <input
+              type="checkbox"
+              checked={hardDelete}
+              onChange={() => setHardDelete((isOn) => !isOn)}
+            />
+            Hard delete (permanent)
+          </label>
         </DialogContent>
         <DialogActions>
           {!isDeleting ? (
-            <Box>
-              <Button onClick={handleCloseDialog} color="primary" sx={{ fontSize: '1rem' }}>
+            <>
+              <button type="button" className="slg-dialog-button" onClick={handleCloseDialog}>
                 Cancel
-              </Button>
-              <Button
+              </button>
+              <button
+                type="button"
+                className={`slg-dialog-button slg-dialog-button--confirm${
+                  hardDelete ? ' slg-dialog-button--danger' : ''
+                }`}
                 onClick={handleConfirmDelete}
-                color="primary"
-                sx={{ fontSize: '1rem' }}
                 autoFocus
               >
-                Confirm
-              </Button>
-            </Box>
+                {hardDelete ? 'Delete forever' : 'Soft delete'}
+              </button>
+            </>
           ) : (
-            <Typography
-              color="primary"
-              sx={{
-                padding: '5px',
-                borderRadius: '5px',
-                width: '150px',
-                textAlign: 'center',
-              }}
-            >
-              Deleting...
-            </Typography>
+            <span className="slg-dialog-status">Deleting…</span>
           )}
         </DialogActions>
       </Dialog>
-    </Box>
+    </li>
   );
 }

@@ -1,23 +1,33 @@
-#form-title-header {
-  color: #ffffff;
+/* New / edit auction form.
+ *
+ * Layout, fields and controls all come from styles/forms.css. This file
+ * is only what's specific to an auction: the closing-time field and the
+ * live-auction warning.
+ */
+
+/* Without an explicit colour-scheme the browser paints the native
+   date/time picker and its calendar indicator for a light page, which
+   renders as a black-on-black glyph the admin can't see. */
+.slg-input[type='datetime-local'] {
+  color-scheme: dark;
 }
 
-.new-post-form {
-  border: 1px solid #0026a153;
+/* Editing a running auction changes terms people have already bid
+   against, so the form says so instead of looking identical to the
+   create form. */
+.slg-auction-warning {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--slg-ink);
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-flame);
 }
 
-.file-upload-label {
-  border-color: #577eff53;
-}
-
-.submit-btn {
-  background-color: #577eff53;
-  box-sizing: border-box;
-  border: 1px solid black;
-  border-radius: 50%;
-  padding: 5px 5px 3px 5px;
-  box-shadow: 2px 2px 4px 0 black;
-  cursor: pointer;
-  margin-top: 50px;
-  width: unset;
+.slg-auction-warning strong {
+  font-weight: 600;
+  color: var(--slg-flame);
 }

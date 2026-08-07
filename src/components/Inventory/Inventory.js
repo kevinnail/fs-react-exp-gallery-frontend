@@ -1,235 +1,104 @@
 import './Inventory.css';
-import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { CATEGORY_NAMES, calculateInventoryTotals, formatMoney } from './inventoryTotals.js';
+
+/* Stock level, read at a glance from the count column.
+ *
+ * The old version coloured a category's whole row red at zero and purple
+ * at five or more, which put the loudest colour on the least urgent row.
+ * Now it's a single dot and only a genuinely empty category is allowed
+ * to be alarming. */
+const stockLevel = (count) => {
+  if (count === 0) return 'out';
+  if (count <= 2) return 'low';
+  return 'ok';
+};
 
 const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
-  // Categories with count tracking
-  const categories = {
-    Beads: 0,
-    'Blunt Tips': 0,
-    Bubblers: 0,
-    Collabs: 0,
-    Cups: 0,
-    Droppers: 0,
-    'Dry Pieces': 0,
-    Goblets: 0,
-    Jars: 0,
-    'Iso Stations': 0,
-    Marbles: 0,
-    Pendants: 0,
-    Recyclers: 0,
-    Rigs: 0,
-    Slides: 0,
-    'Spinner Caps': 0,
-    'Terp Pearls': 0,
-    Tubes: 0,
-    Vases: 0,
-    Misc: 0,
-  };
-
-  // Per-category totals for regular and discounted prices
-  const categoryRegularTotal = Object.keys(categories).reduce((acc, key) => {
-    acc[key] = 0;
-    return acc;
-  }, {});
-  const categoryDiscountedTotal = Object.keys(categories).reduce((acc, key) => {
-    acc[key] = 0;
-    return acc;
-  }, {});
-
-  // Overall totals for all items
-  let regularTotal = 0;
-  let discountedTotal = 0;
-
-  // Sold items totals
-  let numSoldItems = 0;
-  let soldRegularTotal = 0;
-  let soldDiscountedTotal = 0;
-
-  // Loop over posts to calculate totals
-  posts.forEach((post) => {
-    // Get prices as numbers
-    const regularPrice = parseFloat(post.price);
-    const effectivePrice = post.discountedPrice ? parseFloat(post.discountedPrice) : regularPrice;
-
-    // Update overall totals
-    regularTotal += regularPrice;
-    discountedTotal += effectivePrice;
-
-    // Update per-category totals (if category exists)
-    if (categories[post.category] !== undefined) {
-      categories[post.category]++;
-      categoryRegularTotal[post.category] += regularPrice;
-      categoryDiscountedTotal[post.category] += effectivePrice;
-    }
-
-    // Update sold items totals
-    if (post.sold) {
-      numSoldItems++;
-      soldRegularTotal += regularPrice;
-      soldDiscountedTotal += effectivePrice;
-    }
-  });
-
-  // For sale items totals (unsold items)
-  const forSaleRegularTotal = regularTotal - soldRegularTotal;
-  const forSaleDiscountedTotal = discountedTotal - soldDiscountedTotal;
-  const totalInventoryCount = Object.values(categories).reduce((a, b) => a + b, 0);
-
-  const getColor = (count) => {
-    if (count >= 5) return 'rgb(156, 112, 214)';
-    switch (count) {
-      case 4:
-        return 'rgb(129, 129, 255)';
-      case 3:
-        return 'rgb(0, 163, 63)';
-      case 2:
-        return 'rgb(216, 209, 0)';
-      case 1:
-        return 'orange';
-      case 0:
-        return 'red';
-      default:
-        return '';
-    }
-  };
+  const totals = calculateInventoryTotals(posts);
 
   return (
-    <Box
-      sx={{
-        borderWidth: '1px',
-        paddingX: (theme) => theme.spacing(2),
-        paddingY: (theme) => theme.spacing(2),
-        borderRadius: (theme) => theme.spacing(1),
-        gap: (theme) => theme.spacing(2),
-      }}
-      className="inventory-container"
-    >
-      <Typography variant="body1">Inventory Totals:</Typography>
-      <Table
-        className="inventory-table"
-        sx={{
-          borderWidth: '1px',
-          borderStyle: 'solid',
-          borderColor: (theme) => theme.palette.primary.light,
-          backgroundColor: (theme) => theme.palette.background.default,
-        }}
-      >
-        <TableHead>
-          <TableRow>
-            <TableCell component="th" style={{ width: '40%' }}>
-              Category
-            </TableCell>
-            <TableCell component="th" style={{ width: '20%' }}>
-              Total Items
-            </TableCell>
-            <TableCell component="th" style={{ width: '40%' }}>
-              Total Price (Discounted)
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Object.keys(categories).map((category) => (
-            <TableRow
-              key={category}
-              className={selectedCategory === category ? 'selectedRow' : ''}
-              onClick={() => onCategorySelect(category)}
-            >
-              <TableCell
-                style={{
-                  color: getColor(categories[category]),
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                }}
-                onClick={() => onCategorySelect(category)}
-              >
-                {category}
-              </TableCell>
-              <TableCell
-                style={{
-                  color: getColor(categories[category]),
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                }}
-                onClick={() => onCategorySelect(category)}
-              >
-                {categories[category]}
-              </TableCell>
-              <TableCell
-                style={{
-                  color: getColor(categories[category]),
-                  textAlign: 'right',
-                  cursor: 'pointer',
-                }}
-                onClick={() => onCategorySelect(category)}
-              >
-                ${Number(categoryDiscountedTotal[category].toFixed(0)).toLocaleString()}
-              </TableCell>
-            </TableRow>
-          ))}
-          {/* Overall totals */}
-          <TableRow style={{ fontWeight: 'bold' }}>
-            <TableCell style={{ textAlign: 'left' }}>Total Value</TableCell>
-            <TableCell style={{ textAlign: 'center' }}>{totalInventoryCount}</TableCell>
-            <TableCell style={{ textAlign: 'right' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '.9rem' }}>Regular</span>
-                <span style={{ fontSize: '.9rem' }}>
-                  ${Number(regularTotal.toFixed(2)).toLocaleString()}
-                </span>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '.9rem' }}> Discount</span>
-                <span style={{ fontSize: '.9rem' }}>
-                  ${Number(discountedTotal.toFixed(2)).toLocaleString()}
-                </span>
-              </Box>
-            </TableCell>
-          </TableRow>
+    <div className="slg-inventory">
+      <table className="slg-inventory-table">
+        <caption className="slg-inventory-caption">
+          Tap a category to filter the list. Values use the sale price where one is set.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col" className="slg-inventory-numeric">
+              Qty
+            </th>
+            <th scope="col" className="slg-inventory-numeric">
+              Value
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {CATEGORY_NAMES.map((categoryName) => {
+            const count = totals.countByCategory[categoryName];
 
-          {/* Sold items totals */}
-          <TableRow style={{ fontWeight: 'bold' }}>
-            <TableCell style={{ textAlign: 'left' }}>Sold Items</TableCell>
-            <TableCell style={{ textAlign: 'center' }}>{numSoldItems}</TableCell>
-            <TableCell style={{ textAlign: 'right' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '.9rem' }}>Regular</span>
-                <span style={{ fontSize: '.9rem' }}>
-                  ${Number(soldRegularTotal.toFixed(2)).toLocaleString()}
-                </span>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '.9rem' }}> Discount</span>
-                <span style={{ fontSize: '.9rem' }}>
-                  ${Number(soldDiscountedTotal.toFixed(2)).toLocaleString()}
-                </span>
-              </Box>
-            </TableCell>
-          </TableRow>
-
-          {/* For sale items totals */}
-          <TableRow style={{ fontWeight: 'bold' }}>
-            <TableCell style={{ textAlign: 'left' }}>For Sale Items</TableCell>
-            <TableCell style={{ textAlign: 'center' }}>
-              {totalInventoryCount - numSoldItems}
-            </TableCell>
-            <TableCell style={{ textAlign: 'right' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '.9rem' }}>Regular</span>
-                <span style={{ fontSize: '.9rem' }}>
-                  ${Number(forSaleRegularTotal.toFixed(2)).toLocaleString()}
-                </span>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '.9rem' }}> Discount</span>
-                <span style={{ fontSize: '.9rem' }}>
-                  ${Number(forSaleDiscountedTotal.toFixed(2)).toLocaleString()}
-                </span>
-              </Box>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </Box>
+            return (
+              <tr
+                key={categoryName}
+                className={selectedCategory === categoryName ? 'slg-inventory-row--selected' : ''}
+              >
+                <th scope="row">
+                  <button
+                    type="button"
+                    className="slg-inventory-category"
+                    aria-pressed={selectedCategory === categoryName}
+                    onClick={() => onCategorySelect(categoryName)}
+                  >
+                    <span className={`slg-inventory-dot slg-inventory-dot--${stockLevel(count)}`} />
+                    {categoryName}
+                  </button>
+                </th>
+                <td className="slg-inventory-numeric">{count}</td>
+                <td className="slg-inventory-numeric">
+                  {formatMoney(totals.discountedTotalByCategory[categoryName])}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row">All pieces</th>
+            <td className="slg-inventory-numeric">{totals.categorisedCount}</td>
+            <td className="slg-inventory-numeric">
+              <span className="slg-inventory-figure">{formatMoney(totals.discountedTotal)}</span>
+              <span className="slg-inventory-figure-note">
+                {formatMoney(totals.regularTotal)} at full price
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Sold</th>
+            <td className="slg-inventory-numeric">{totals.soldCount}</td>
+            <td className="slg-inventory-numeric">
+              <span className="slg-inventory-figure">
+                {formatMoney(totals.soldDiscountedTotal)}
+              </span>
+              <span className="slg-inventory-figure-note">
+                {formatMoney(totals.soldRegularTotal)} at full price
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">For sale</th>
+            <td className="slg-inventory-numeric">{totals.forSaleCount}</td>
+            <td className="slg-inventory-numeric">
+              <span className="slg-inventory-figure">
+                {formatMoney(totals.forSaleDiscountedTotal)}
+              </span>
+              <span className="slg-inventory-figure-note">
+                {formatMoney(totals.forSaleRegularTotal)} at full price
+              </span>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   );
 };
 

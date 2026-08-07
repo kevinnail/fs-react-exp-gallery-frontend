@@ -1,3 +1,17 @@
+/* The global box-sizing reset and full-height html/body used to be
+   declared inside PostCard.css and PostForm.css, where they reached the
+   whole app through CRA's global stylesheet. They live here now — the
+   rest of the app was already depending on them. */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  padding: 0;
+}
+
 body {
   margin: 0;
   font-family:

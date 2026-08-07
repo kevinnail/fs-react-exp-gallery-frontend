@@ -120,6 +120,21 @@
   width: 320px;
 }
 
+/* This page's actual submit control — DiscountForm.js renders
+   `.submit-btn`, not `.submit-button` below. The rule reached here from
+   PostForm.css and then AuctionForm.css via CRA's global stylesheet;
+   both of those forms have been rebuilt, so this page owns it now. */
+.submit-btn {
+  background-color: #577eff53;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 50%;
+  padding: 5px 5px 3px 5px;
+  box-shadow: 2px 2px 4px 0 black;
+  cursor: pointer;
+  margin-top: 50px;
+}
+
 .submit-button {
   width: 100%;
   padding: 14px;

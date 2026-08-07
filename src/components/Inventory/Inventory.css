@@ -1,75 +1,140 @@
-.inventory-container {
-  margin-top: 20px;
-  margin: 10px 10px 0 10px;
-  border: none;
+/* Inventory by category.
+ *
+ * A dense numeric table, so it gets hairline separators rather than a
+ * grid of borders: the columns already align, and boxing every cell was
+ * fighting the numbers for attention.
+ */
+
+.slg-inventory {
+  overflow-x: auto;
 }
-.inventory-container {
-  margin: 0;
-}
-.inventory-table {
+
+.slg-inventory-table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid black;
-  background-color: 'yellow' !important;
+  font-family: var(--slg-body);
+  font-size: 0.8125rem;
+  color: var(--slg-ink);
 }
 
-.inventory-table th,
-.inventory-table td {
-  border: 1px solid black;
-  padding: 8px;
+.slg-inventory-caption {
+  padding: 0 0 0.85rem;
   text-align: left;
-  padding: 0 10px;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--slg-dim);
 }
 
-.inventory-table .MuiTableBody-root .MuiTableRow-root:not(:last-child):hover {
-  box-shadow: 0 0 0 2px #beb3f283 inset;
-  background-color: #0026a153;
-}
-.selectedRow {
-  box-shadow: 0 0 0 2px #785eee inset;
-  background-color: #0026a153;
+.slg-inventory-table th,
+.slg-inventory-table td {
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  font-weight: 400;
+  border-bottom: 1px solid var(--slg-edge-soft);
 }
 
-.large-size-inventory {
-  background-color: rgb(15, 15, 15);
-  position: absolute;
+.slg-inventory-table thead th {
+  padding-bottom: 0.6rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--slg-dim);
+  border-bottom: 1px solid var(--slg-edge);
+}
+
+.slg-inventory-numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.slg-inventory-table thead th.slg-inventory-numeric {
+  text-align: right;
+}
+
+/* The category name is the control, so it fills the cell rather than
+   relying on a click handler bolted to the row. */
+.slg-inventory-category {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
   width: 100%;
-  border: 1px solid #0026a153;
-}
-/*
-  
-  
-  @media BEGIN================================
-  
-  
-  */
-
-@media (min-width: 1200px) {
-  .large-size-inventory {
-    position: relative;
-  }
+  padding: 0.15rem 0;
+  font-family: var(--slg-body);
+  font-size: 0.8125rem;
+  text-align: left;
+  color: var(--slg-ink);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 160ms ease;
 }
 
-/*  END 1024px----------------------------------------------------------  
-
-
-
-
-1600px -----------------------------------------------------------------
-*/
-@media (min-width: 1600px) {
-  .inventory-table th,
-  .inventory-table td {
-    border: 1px solid black;
-    padding: 2px;
-    text-align: left;
-  }
-  .large-size-inventory {
-    position: unset;
-    top: unset;
-    width: unset;
-  }
+.slg-inventory-category:hover {
+  color: var(--slg-flame);
 }
-/* END 1600px----------------------------------------------------------  
 
-*/
+.slg-inventory-dot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--slg-dim);
+}
+
+.slg-inventory-dot--ok {
+  background: #3f6f4a;
+}
+
+.slg-inventory-dot--low {
+  background: #8a7530;
+}
+
+.slg-inventory-dot--out {
+  background: var(--slg-alert);
+}
+
+.slg-inventory-table tbody tr:hover {
+  background: var(--slg-lift-hover);
+}
+
+.slg-inventory-row--selected {
+  background: var(--slg-lift-hover);
+  box-shadow: inset 2px 0 0 var(--slg-flame);
+}
+
+.slg-inventory-row--selected .slg-inventory-category {
+  color: var(--slg-flame);
+}
+
+/* ---------- footer totals ---------- */
+
+.slg-inventory-table tfoot th,
+.slg-inventory-table tfoot td {
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  vertical-align: top;
+  border-bottom: none;
+}
+
+.slg-inventory-table tfoot tr:first-child th,
+.slg-inventory-table tfoot tr:first-child td {
+  border-top: 1px solid var(--slg-edge);
+}
+
+.slg-inventory-table tfoot th {
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.slg-inventory-figure {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.slg-inventory-figure-note {
+  display: block;
+  padding-top: 0.15rem;
+  font-size: 0.6875rem;
+  color: var(--slg-dim);
+}

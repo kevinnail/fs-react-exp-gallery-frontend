@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../Loading/Loading.js';
@@ -8,6 +7,9 @@ import './AuctionForm.css';
 import { createAuction, getAuctionDetail, updateAuction } from '../../services/fetch-auctions.js';
 import { uploadAuctionImagesToS3 } from '../../services/fetch-auctions.js';
 import { useNavigate, useParams } from 'react-router-dom';
+
+const TITLE_MAX_LENGTH = 80;
+const DESCRIPTION_MAX_LENGTH = 400;
 
 export default function AuctionForm() {
   const [title, setTitle] = useState('');
@@ -61,7 +63,7 @@ export default function AuctionForm() {
     setFiles((prev) => [...prev, ...newFiles]);
   };
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxFiles: 10,
     accept: {
@@ -135,118 +137,216 @@ export default function AuctionForm() {
     }
   };
 
+  const removeExistingImage = (indexToRemove) => {
+    setExistingImages((previous) =>
+      previous.filter((_unused, imageIndex) => imageIndex !== indexToRemove)
+    );
+  };
+
+  const removeNewFile = (indexToRemove) => {
+    setFiles((previous) => previous.filter((_unused, fileIndex) => fileIndex !== indexToRemove));
+  };
+
   if (loading) return <Loading />;
 
-  return (
-    <Box className="form-wrapper">
-      <form className="new-post-form" onSubmit={handleSubmit}>
-        {id ? (
-          <h1 id="form-title-header">Edit Auction</h1>
-        ) : (
-          <h1 id="form-title-header">New Auction</h1>
-        )}
-        <Box className="desk-title-input">
-          <span className="labels-form-inputs">Title</span>
-          <input
-            required
-            maxLength={80}
-            placeholder="Enter auction title"
-            className="image-input"
-            type="text"
-            value={title || ''}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </Box>
-        <Box className="desk-desc-input">
-          <span className="labels-form-inputs">Description</span>
-          <textarea
-            required
-            maxLength={400}
-            placeholder="Enter auction description"
-            className="image-input description shadow-border"
-            value={description || ''}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </Box>
-        <Box className="price-in-form">
-          <span>Start Price</span>
-          <input
-            required
-            placeholder="Enter starting bid"
-            className="image-input price-input"
-            type="number"
-            step="1"
-            value={startPrice || ''}
-            onChange={(e) => setStartPrice(e.target.value)}
-          />
-        </Box>
-        <Box className="price-in-form">
-          <span>Buy Now Price</span>
-          <input
-            placeholder="Enter buy now price (optional)"
-            className="image-input price-input"
-            type="number"
-            step="1"
-            value={buyNowPrice || ''}
-            onChange={(e) => setBuyNowPrice(e.target.value)}
-          />
-        </Box>
-        <Box className="price-in-form">
-          <span>End Time</span>
-          <input
-            required
-            className="image-input"
-            type="datetime-local"
-            value={endTime || ''}
-            onChange={(e) => setEndTime(e.target.value)}
-          />
-        </Box>
-        {/* Dropzone */}
-        <Box {...getRootProps()} className="dropzone" sx={{ marginTop: '40px' }}>
-          <input {...getInputProps()} />
-          <label className="file-upload-label">
-            {files.length === 0
-              ? 'Choose images'
-              : `${files.length} file${files.length > 1 ? 's' : ''} selected`}
-          </label>
-        </Box>
-        {/* Unified thumbnails for both existing + new images */}
-        {(existingImages.length > 0 || files.length > 0) && (
-          <Box className="thumbnails-container">
-            {[...existingImages, ...files].map((item, index) => {
-              const isFile = typeof item !== 'string';
-              const src = isFile ? item.preview : item;
+  const totalImageCount = existingImages.length + files.length;
+  const hasBids = Number(existingAuction?.currentBid) > 0;
 
-              return (
-                <Box key={isFile ? item.name : src} className="thumbnail-wrapper">
-                  <img src={src} alt={`Image ${index + 1}`} className="thumbnail" />
+  return (
+    <div className="slg-form-page">
+      {/* A div rather than a <header>: Header.css styles the bare `header`
+          element as the site's fixed nav bar. */}
+      <div className="slg-form-head">
+        <p className="slg-eyebrow">{id ? 'Auctions / Edit' : 'Auctions'}</p>
+        <h1 className="slg-form-title">{id ? 'Edit Auction' : 'New Auction'}</h1>
+      </div>
+
+      <form className="slg-form" onSubmit={handleSubmit}>
+        <div className="slg-form-column">
+          <p className="slg-form-group-label">Lot</p>
+
+          {hasBids && (
+            <p className="slg-auction-warning">
+              <strong>Live</strong>
+              <span>
+                This auction already has bids at $
+                {Number(existingAuction.currentBid).toLocaleString()}. Changing the price or closing
+                time changes terms bidders have already committed to.
+              </span>
+            </p>
+          )}
+
+          <div className="slg-field">
+            <label className="slg-field-label" htmlFor="auction-title">
+              Title
+              <span
+                className={`slg-field-count${
+                  title.length === TITLE_MAX_LENGTH ? ' slg-field-count--full' : ''
+                }`}
+              >
+                {title.length}/{TITLE_MAX_LENGTH}
+              </span>
+            </label>
+            <input
+              id="auction-title"
+              className="slg-input"
+              type="text"
+              placeholder="Enter auction title"
+              maxLength={TITLE_MAX_LENGTH}
+              value={title || ''}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="slg-field">
+            <label className="slg-field-label" htmlFor="auction-description">
+              Description
+              <span
+                className={`slg-field-count${
+                  description.length === DESCRIPTION_MAX_LENGTH ? ' slg-field-count--full' : ''
+                }`}
+              >
+                {description.length}/{DESCRIPTION_MAX_LENGTH}
+              </span>
+            </label>
+            <textarea
+              id="auction-description"
+              className="slg-textarea"
+              placeholder="Enter auction description"
+              maxLength={DESCRIPTION_MAX_LENGTH}
+              value={description || ''}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="slg-form-pair">
+            <div className="slg-field">
+              <label className="slg-field-label" htmlFor="auction-start-price">
+                Start price
+              </label>
+              <div className="slg-input-money">
+                <input
+                  id="auction-start-price"
+                  className="slg-input"
+                  type="number"
+                  step="1"
+                  placeholder="0"
+                  value={startPrice ?? ''}
+                  onChange={(e) => setStartPrice(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="slg-field">
+              <label className="slg-field-label" htmlFor="auction-buy-now-price">
+                Buy now
+              </label>
+              <div className="slg-input-money">
+                <input
+                  id="auction-buy-now-price"
+                  className="slg-input"
+                  type="number"
+                  step="1"
+                  placeholder="0"
+                  value={buyNowPrice ?? ''}
+                  onChange={(e) => setBuyNowPrice(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="slg-field">
+            <label className="slg-field-label" htmlFor="auction-end-time">
+              Closing time
+            </label>
+            <input
+              id="auction-end-time"
+              className="slg-input"
+              type="datetime-local"
+              value={endTime || ''}
+              onChange={(e) => setEndTime(e.target.value)}
+              required
+            />
+            <p className="slg-field-hint">
+              Bidding closes at this time and the winner is notified automatically.
+            </p>
+          </div>
+        </div>
+
+        <div className="slg-form-column">
+          <p className="slg-form-group-label">Images</p>
+
+          <div
+            {...getRootProps({
+              className: `slg-dropzone${isDragActive ? ' slg-dropzone--active' : ''}`,
+            })}
+          >
+            <input {...getInputProps()} />
+            <span className="slg-dropzone-primary">
+              {files.length === 0
+                ? 'Tap to choose images'
+                : `${files.length} file${files.length > 1 ? 's' : ''} added`}
+            </span>
+            <span className="slg-dropzone-secondary">JPG or PNG — up to 10</span>
+          </div>
+
+          {totalImageCount > 0 && (
+            <p className="slg-field-hint">
+              {totalImageCount} image{totalImageCount > 1 ? 's' : ''} on this auction
+            </p>
+          )}
+
+          {totalImageCount > 0 && (
+            <div className="slg-thumbs">
+              {existingImages.map((imageUrl, index) => (
+                <div key={imageUrl} className="slg-thumb">
+                  <img src={imageUrl} alt={`Current image ${index + 1}`} />
+                  {index === 0 && <span className="slg-thumb-lead">Lead</span>}
                   <button
                     type="button"
-                    className="delete-button-form"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (isFile) {
-                        setFiles((prev) =>
-                          prev.filter((_, i) => i !== index - existingImages.length)
-                        );
-                      } else {
-                        setExistingImages((prev) => prev.filter((_, i) => i !== index));
-                      }
+                    className="slg-thumb-remove"
+                    aria-label={`Remove current image ${index + 1}`}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      removeExistingImage(index);
                     }}
                   >
-                    X
+                    ✕
                   </button>
-                </Box>
-              );
-            })}
-          </Box>
-        )}
-        <Box className="btn-container">
-          <button className="submit-btn" type="submit">
-            <img className="upload-icon" src="/upload.png" alt="upload" />
+                </div>
+              ))}
+              {files.map((file, index) => (
+                <div key={file.name} className="slg-thumb">
+                  <img src={file.preview} alt={`New image ${index + 1}`} />
+                  {existingImages.length === 0 && index === 0 && (
+                    <span className="slg-thumb-lead">Lead</span>
+                  )}
+                  <button
+                    type="button"
+                    className="slg-thumb-remove"
+                    aria-label={`Remove new image ${index + 1}`}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      removeNewFile(index);
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="slg-form-actions">
+          <button className="slg-form-button" type="submit">
+            {id ? 'Save changes' : 'Create auction'}
           </button>
-        </Box>
+        </div>
       </form>
-    </Box>
+    </div>
   );
 }
