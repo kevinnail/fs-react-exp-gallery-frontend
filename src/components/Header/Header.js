@@ -37,7 +37,7 @@ export default function Header() {
         style={{
           position: 'absolute',
           top: '55px',
-          right: '75px',
+          right: '225px',
           zIndex: 9999,
           background: 'orange',
           color: 'black',
