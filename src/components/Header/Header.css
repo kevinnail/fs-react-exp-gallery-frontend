@@ -28,6 +28,12 @@ header {
   min-width: 207px;
 }
 
+/* Search sits beside the menu icon, so the row has to lay them out. */
+.header-section {
+  display: flex;
+  align-items: center;
+}
+
 .header-section p {
   margin: 0;
   padding: 0;
