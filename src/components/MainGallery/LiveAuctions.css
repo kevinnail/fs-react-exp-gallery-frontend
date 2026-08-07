@@ -3,7 +3,7 @@
  * Small, additive cards: they sit above the hero so they are the first
  * thing seen, but they stay a strip rather than taking the whole
  * screen. This is the only place on the page that gets a frame and the
- * accent colour, because "ends in 00:17:53" has to stop the scroll.
+ * accent color, because "ends in 00:17:53" has to stop the scroll.
  */
 
 .slg-live {
