@@ -1,174 +1,360 @@
-.error-state {
-  background-color: rgb(189, 0, 0);
-  color: white;
-  font-weight: bold;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  margin: 0.5rem;
-  text-align: center;
-  border: 2px solid red;
-  height: 60%;
-  width: 98%;
-  position: relative;
-  top: -80px;
-  margin: auto;
-}
-.error-span {
-  display: block;
-  padding: 0.5rem;
-  font-size: 1rem;
-  color: red;
-  font-weight: bold;
-  background-color: white;
-  margin-top: 50px;
-}
-.admin {
-  text-align: center;
-  font-weight: bold;
-  color: #2f00ff83;
-  background-color: rgb(237, 237, 102);
+/* Admin dashboard shell.
+ *
+ * Same ground and type as the front page, but this is a working screen,
+ * so it earns two things the display pages don't have: hairline-separated
+ * data rows, and controls with a visible edge.
+ *
+ * The page scrolls as one document. The old dashboard nested a
+ * `calc(100vh - 90px)` scroller inside the page, which on a phone meant
+ * two scrollbars fighting and a list you couldn't flick to the end of.
+ *
+ * The dashboard shell rules used to live in PostCard.css — a card
+ * styling the page around it. They're here now; PostCard.css is the row.
+ */
+
+.slg-admin {
+  padding-top: var(--slg-header-height);
+  padding-bottom: 4rem;
+  background: var(--slg-void);
+  color: var(--slg-ink);
+  font-family: var(--slg-body);
+  text-align: left;
 }
 
-.prod-header {
+.slg-admin-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.75rem var(--slg-gutter-tight) 1.25rem;
+}
+
+.slg-admin-title {
+  margin: 0;
+  font-family: var(--slg-display);
+  font-size: clamp(1.75rem, 7vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--slg-ink);
+}
+
+/* ---------- stat strip ----------
+   Five short numbers. They scroll sideways on a narrow phone rather than
+   reflowing into a two-by-three block that pushes the list off-screen. */
+
+.slg-admin-stats {
   display: grid;
-  grid-template-columns: repeat(11, 1fr);
-  align-items: center;
-  padding: 0 10px 0px 0px;
-  box-sizing: border-box;
-  border: 1px solid black;
-  width: 100%;
-  height: 100%;
-  margin: 0px auto;
-  padding: 0 0rem;
-  background-color: beige;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(112px, 1fr);
+  gap: 1px;
+  margin-bottom: 1.75rem;
+  padding: 0 var(--slg-gutter-tight);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-.grid-1 {
-  grid-column-start: 1;
-  font-weight: bold;
-}
-.grid-2 {
-  grid-column-start: 2;
-  font-weight: bold;
-}
-.grid-3 {
-  grid-column-start: 3;
-  font-weight: bold;
-}
-.grid-4 {
-  grid-column-start: 4;
-  font-weight: bold;
-}
-.grid-5 {
-  grid-column-start: 5;
-  font-weight: bold;
-}
-.grid-6 {
-  grid-column-start: 6;
-  font-weight: bold;
-}
-.grid-7 {
-  grid-column-start: 7;
-  font-weight: bold;
-}
-.grid-8 {
-  grid-column-start: 8;
-  font-weight: bold;
-}
-.grid-9 {
-  grid-column-start: 9;
-  font-weight: bold;
-}
-.grid-10 {
-  grid-column-start: 10;
-  font-weight: bold;
-}
-.grid-11 {
-  grid-column-start: 11;
-  font-weight: bold;
-}
-.grid-12 {
-  grid-column-start: 12;
-  font-weight: bold;
+.slg-admin-stats::-webkit-scrollbar {
+  display: none;
 }
 
-.pagination-controls {
+.slg-stat {
+  display: grid;
+  gap: 0.3rem;
+  align-content: start;
+  padding: 0.85rem 0.9rem;
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge-soft);
+}
+
+.slg-stat-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--slg-dim);
+  white-space: nowrap;
+}
+
+.slg-stat-value {
+  font-family: var(--slg-display);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--slg-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- body ---------- */
+
+.slg-admin-body {
+  display: grid;
+  gap: 2.5rem;
+  padding: 0 var(--slg-gutter-tight);
+}
+
+.slg-admin-main {
+  min-width: 0;
+}
+
+/* ---------- toolbar ---------- */
+
+.slg-admin-toolbar {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 8px;
-  margin: 24px 0;
-  width: 100%;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--slg-edge);
 }
 
-.pagination-button {
-  padding: 8px 16px;
-  border: 1px solid #2f44ff;
-  background-color: rgba(0, 0, 0, 0.507);
-  color: white;
+.slg-chips {
+  display: flex;
+  gap: 0.4rem;
+}
+
+/* A toggle, so it reads as pressed or not rather than as a checkbox the
+   admin has to aim a 13px square at with a thumb. */
+.slg-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 36px;
+  padding: 0 0.75rem;
+  font-family: var(--slg-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--slg-dim);
+  background: transparent;
+  border: 1px solid var(--slg-edge);
   cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.2s ease-in-out;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
 }
 
-.ellipsis {
-  width: 10px;
-  padding: 0 15px;
+.slg-chip:hover {
+  color: var(--slg-ink);
+  border-color: var(--slg-dim);
 }
 
-.pagination-button:hover:not(:disabled) {
-  background-color: #f0f0f0;
+.slg-chip--on {
+  color: #000000;
+  background: var(--slg-ink);
+  border-color: var(--slg-ink);
 }
 
-.pagination-button.active {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
+.slg-chip--clear {
+  color: var(--slg-flame);
+  border-color: var(--slg-flame);
 }
 
-.pagination-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+.slg-chip--clear:hover {
+  color: #000000;
+  background: var(--slg-flame);
 }
 
-.admin-inbox-button {
-  margin-top: 1rem;
+/* Pushed to the far end of the toolbar so the count sits opposite the
+   controls that change it. */
+.slg-admin-count {
+  margin: 0 0 0 auto;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--slg-dim);
+  font-variant-numeric: tabular-nums;
 }
 
-/* Floating inbox button for small screens */
-.floating-inbox-btn,
-.floating-users-btn {
-  position: fixed;
-  right: 12px;
-  bottom: 12px;
-  z-index: 1000;
-  text-decoration: none;
-  color: white;
-  background-image: linear-gradient(315deg, black, grey);
-  border-radius: 8px;
-  padding: 10px 14px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
-  border: 1px solid #2f44ff;
-  font-size: 0.95rem;
-}
-.floating-users-btn {
-  right: 12px;
-  bottom: 60px;
+/* ---------- list ---------- */
+
+.slg-admin-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.admin-filter-controls {
+.slg-admin-empty {
+  margin: 0;
+  padding: 2.5rem 0;
+  max-width: 40ch;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--slg-dim);
+}
+
+/* ---------- pager ---------- */
+
+.slg-pager {
   display: flex;
-  gap: 1;
   align-items: center;
-  justify-content: space-around;
-  background-color: black;
-  position: relative;
-  z-index: 1;
-  padding: 0.25em;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding-top: 1.75rem;
 }
 
-@media (min-width: 1024px) {
-  .floating-inbox-btn {
-    display: none;
+.slg-pager-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 0.6rem;
+  font-family: var(--slg-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--slg-dim);
+  background: transparent;
+  border: 1px solid var(--slg-edge);
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.slg-pager-button:hover:not(:disabled) {
+  color: var(--slg-ink);
+  border-color: var(--slg-dim);
+}
+
+.slg-pager-button--on {
+  color: #000000;
+  background: var(--slg-ink);
+  border-color: var(--slg-ink);
+}
+
+.slg-pager-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.slg-pager-gap {
+  padding: 0 0.15rem;
+  color: var(--slg-dim);
+}
+
+/* ---------- rail panels ---------- */
+
+.slg-admin-rail {
+  display: grid;
+  gap: 1px;
+  align-content: start;
+  min-width: 0;
+}
+
+.slg-panel {
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge-soft);
+}
+
+.slg-panel-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 48px;
+  padding: 0 0.9rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--slg-dim);
+  cursor: pointer;
+  list-style: none;
+  transition: color 160ms ease;
+}
+
+.slg-panel-summary::-webkit-details-marker {
+  display: none;
+}
+
+.slg-panel-summary:hover {
+  color: var(--slg-ink);
+}
+
+/* Chevron drawn rather than shipped as an icon font, and it rotates with
+   the panel's own open state so it needs no JS. */
+.slg-panel-summary::after {
+  content: '';
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 180ms ease;
+}
+
+.slg-panel[open] > .slg-panel-summary::after {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.slg-panel[open] > .slg-panel-summary {
+  color: var(--slg-ink);
+  border-bottom: 1px solid var(--slg-edge-soft);
+}
+
+.slg-panel-body {
+  padding: 0.9rem;
+}
+
+/* ---------- shared ---------- */
+
+.slg-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.slg-admin button:focus-visible,
+.slg-admin a:focus-visible,
+.slg-admin summary:focus-visible {
+  outline: 2px solid var(--slg-flame);
+  outline-offset: 2px;
+}
+
+/* ---------- wider screens ---------- */
+
+@media (min-width: 700px) {
+  .slg-admin-head,
+  .slg-admin-stats,
+  .slg-admin-body {
+    padding-left: var(--slg-gutter);
+    padding-right: var(--slg-gutter);
+  }
+
+  .slg-admin-stats {
+    grid-auto-columns: minmax(140px, 1fr);
+    gap: 1px;
+  }
+}
+
+/* The rail becomes a sidebar only once there's genuinely room for one.
+   Below this it's two collapsed panels under the list, which is the
+   right shape for a phone. */
+@media (min-width: 1200px) {
+  .slg-admin-body {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: var(--slg-gutter);
+    align-items: start;
+  }
+
+  .slg-admin-rail {
+    position: sticky;
+    top: calc(var(--slg-header-height) + 1.5rem);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1800px) {
+  .slg-admin-body {
+    grid-template-columns: minmax(0, 1fr) 400px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slg-admin * {
+    transition-duration: 1ms;
   }
 }
