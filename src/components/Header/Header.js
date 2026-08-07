@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
 import { signOut } from '../../services/auth.js';
 import './Header.css';
-import '../CoolSearchBox/CoolSearchBox.css';
 import Menu from '../Menu/Menu.js';
-import CoolSearchBox from '../CoolSearchBox/CoolSearchBox.js';
-import { useNavigate } from 'react-router-dom';
+import SearchBar from '../SearchBar/SearchBar.js';
 import { useNotificationStore } from '../../stores/notificationStore.js';
 
 export default function Header() {
@@ -14,7 +12,6 @@ export default function Header() {
   const unreadMessageCount = useUserStore((s) => s.unreadMessageCount);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
 
   const { unreadAuctionCount, fetchUnreadAuctions } = useNotificationStore();
   const totalUnread = unreadAuctionCount + unreadMessageCount;
@@ -70,10 +67,6 @@ export default function Header() {
     setIsMenuOpen(false);
   };
 
-  const handleSearch = async (searchTerm) => {
-    navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
-  };
-
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
@@ -111,6 +104,7 @@ export default function Header() {
           <h1 className="biz-title">Stress Less Glass </h1>{' '}
         </div>
         <div className="header-section">
+          <SearchBar />
           <div className="menu-icon-wrapper" ref={buttonRef} onClick={handleMenuClick}>
             <button
               type="button"
@@ -135,7 +129,6 @@ export default function Header() {
       >
         <Menu handleClick={handleClick} closeMenu={closeMenu} />
       </div>
-      <CoolSearchBox onSearch={handleSearch} />
     </>
   );
 }
