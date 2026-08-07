@@ -132,8 +132,46 @@
   }
 }
 
+/* Legacy pagination, previously inherited from Admin.css through CRA's
+   global stylesheet. The dashboard's pager has been rebuilt on the design
+   tokens, so this page keeps its own copy until it gets the same
+   treatment. */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0;
+  width: 100%;
+}
+
 .pagination-controls button {
   cursor: pointer;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  border: 1px solid #2f44ff;
+  background-color: rgba(0, 0, 0, 0.507);
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.pagination-button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 /* 
