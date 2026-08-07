@@ -1,32 +1,93 @@
-.auction-results-panel-simple {
-  background: #232323;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  width: 100%;
+/* Live auctions, admin side.
+ *
+ * The one place on the dashboard allowed to use the flame: an open
+ * auction is the definition of heat, and the running total is the number
+ * Kevin actually opens this page to check.
+ */
+
+.slg-live {
+  display: grid;
+  gap: 0.85rem;
 }
-.auction-results-list-simple {
+
+.slg-live-total {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.auction-result-item-simple {
-  display: flex;
+  align-items: baseline;
   justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--slg-edge);
+}
+
+.slg-live-total-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--slg-dim);
+}
+
+.slg-live-total-figure {
+  font-family: var(--slg-display);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--slg-flame);
+  font-variant-numeric: tabular-nums;
+}
+
+.slg-live-empty {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--slg-dim);
+}
+
+.slg-live-list {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slg-live-item {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.75rem;
-  background: #181818;
-  border-radius: 6px;
-  padding: 0 0.75rem 0 0;
+  padding: 0.4rem 0.5rem 0.4rem 0;
+  text-decoration: none;
+  color: var(--slg-ink);
+  transition: background 160ms ease;
 }
-.auction-result-thumb-simple {
-  width: 60px;
-  height: 60px;
+
+.slg-live-item:hover,
+.slg-live-item:focus-visible {
+  background: var(--slg-lift-hover);
+}
+
+.slg-live-thumb {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--slg-lift);
+}
+
+.slg-live-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 4px;
-  border: 1px solid #333;
 }
-.auction-result-bid-simple {
-  font-weight: bold;
-  font-size: 1.1rem;
+
+.slg-live-title {
+  font-size: 0.8125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slg-live-bid {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--slg-flame);
+  font-variant-numeric: tabular-nums;
 }
