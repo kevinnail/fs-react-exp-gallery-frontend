@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import './MainGalleryPostCard.css';
 
 export default function MainGalleryPostCard({
@@ -12,8 +11,8 @@ export default function MainGalleryPostCard({
   discountedPrice,
   originalPrice,
   sold,
+  fallbackImageUrl,
 }) {
-  const { additionalImagesGallery } = useGalleryPost(id);
   const [isVisible, setIsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const containerRef = useRef(null);
@@ -23,11 +22,10 @@ export default function MainGalleryPostCard({
   // Video posts store a matching .jpg poster frame alongside the .mp4.
   const posterFor = (source) => (source.endsWith('.mp4') ? `${source.slice(0, -4)}.jpg` : source);
 
-  const additionalSource = additionalImagesGallery?.[0]?.image_url;
   const imageSource = image_url
     ? posterFor(image_url)
-    : additionalSource
-      ? posterFor(additionalSource)
+    : fallbackImageUrl
+      ? posterFor(fallbackImageUrl)
       : '';
 
   // A post can exist with no photo attached yet. An empty `src` would
