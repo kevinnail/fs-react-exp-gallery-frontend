@@ -4,33 +4,52 @@ import PostCard from '../PostCard/PostCard.js';
 import './Admin.css';
 import Loading from '../Loading/Loading.js';
 import Inventory from '../Inventory/Inventory.js';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Button,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { calculateInventoryTotals, formatMoney } from '../Inventory/inventoryTotals.js';
 import AuctionResultsPanelSimple from './AuctionResultsPanelSimple.js';
+
+const POSTS_PER_PAGE = 15;
+
+/* Which page numbers to render.
+ *
+ * Narrow screens can't fit thirty buttons, so the run collapses to
+ * first / neighbours / last with ellipses. The old version decided this
+ * with a media query hook and kept two near-identical branches; the
+ * window is the same shape at every width, only its size differs, so
+ * CSS handles the fit and this just caps how many numbers exist.
+ */
+const buildPageWindow = (currentPage, totalPages) => {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_unused, index) => index + 1);
+  }
+
+  const pages = [1];
+  const firstNeighbour = Math.max(2, currentPage - 1);
+  const lastNeighbour = Math.min(totalPages - 1, currentPage + 1);
+
+  if (firstNeighbour > 2) pages.push('gap-before');
+
+  for (let page = firstNeighbour; page <= lastNeighbour; page += 1) {
+    pages.push(page);
+  }
+
+  if (lastNeighbour < totalPages - 1) pages.push('gap-after');
+
+  pages.push(totalPages);
+  return pages;
+};
 
 export default function Admin() {
   const { posts, loading, setPosts } = usePosts();
+  // Rolled once at mount, like the accordions this replaced: below the
+  // sidebar breakpoint the panels start collapsed so the post list isn't
+  // buried under a twenty-row table, and above it they're the rail.
+  const [railStartsOpen] = useState(() => window.matchMedia('(min-width: 1200px)').matches);
   const [selectedCategory, setSelectedCategory] = useState(null);
   // Admin filter state for post visibility
   const [showRegular, setShowRegular] = useState(true);
   const [showHidden, setShowHidden] = useState(true);
   const [showDeleted, setShowDeleted] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isDesktop = useMediaQuery(theme.breakpoints.down('lg'));
-
-  const postsPerPage = isMobile ? 9 : 7;
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
@@ -41,6 +60,8 @@ export default function Admin() {
     return <Loading />;
   }
 
+  const totals = calculateInventoryTotals(posts);
+
   // Filter posts based on selected category and admin visibility controls
   const filteredPosts = posts.filter((post) => {
     if (selectedCategory && post.category !== selectedCategory) return false;
@@ -50,251 +71,167 @@ export default function Admin() {
   });
 
   // Calculate pagination values
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
-  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+  const pageIndex = Math.min(currentPage, Math.max(totalPages, 1));
+  const indexOfLastPost = pageIndex * POSTS_PER_PAGE;
+  const currentPosts = filteredPosts.slice(indexOfLastPost - POSTS_PER_PAGE, indexOfLastPost);
+
   // Handle page changes
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
     window.scrollTo(0, 0);
   };
 
-  // Generate page numbers
-  const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    if (i < 5 && isMobile) {
-      pageNumbers.push(i);
-    } else if (!isMobile) {
-      pageNumbers.push(i);
-    }
-  }
+  const statTiles = [
+    { label: 'Pieces', value: totals.categorisedCount },
+    { label: 'For sale', value: totals.forSaleCount },
+    { label: 'Sold', value: totals.soldCount },
+    { label: 'Hidden', value: totals.hiddenCount },
+    { label: 'Stock value', value: formatMoney(totals.forSaleDiscountedTotal) },
+  ];
 
-  // Create pagination controls
-  const PaginationControls = () => {
-    if (totalPages <= 1) return null;
-
-    // Logic for which page numbers to display
-    const displayedPageNumbers = [];
-
-    if (isMobile) {
-      // For mobile: Show fewer buttons (maximum of 3) to prevent overflow
-      if (totalPages <= 3) {
-        // If 3 or fewer pages, show all
-        for (let i = 1; i <= totalPages; i++) {
-          displayedPageNumbers.push(i);
-        }
-      } else {
-        // Always include first page
-        displayedPageNumbers.push(1);
-
-        // Add ellipsis if current page is not near the beginning
-        if (currentPage > 2) {
-          displayedPageNumbers.push('...');
-        }
-
-        // Add current page if not first or last
-        if (currentPage !== 1 && currentPage !== totalPages) {
-          displayedPageNumbers.push(currentPage);
-        }
-
-        // Add ellipsis if current page is not near the end
-        if (currentPage < totalPages - 1) {
-          displayedPageNumbers.push('...');
-        }
-
-        // Always include last page
-        displayedPageNumbers.push(totalPages);
-      }
-    } else {
-      // For desktop: show all pages
-      for (let i = 1; i <= totalPages; i++) {
-        displayedPageNumbers.push(i);
-      }
-    }
-
-    return (
-      <div className="pagination-controls">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="pagination-button"
-        >
-          Previous
-        </button>
-
-        {displayedPageNumbers.map((item, index) => {
-          if (item === '...') {
-            return (
-              <span key={`ellipsis-${index}`} className="pagination-button ellipsis">
-                ...
-              </span>
-            );
-          }
-
-          return (
-            <button
-              key={item}
-              onClick={() => handlePageChange(item)}
-              className={`pagination-button ${currentPage === item ? 'active' : ''}`}
-            >
-              {item}
-            </button>
-          );
-        })}
-
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="pagination-button"
-        >
-          Next
-        </button>
-      </div>
-    );
-  };
+  const visibilityFilters = [
+    { label: 'Regular', isOn: showRegular, toggle: () => setShowRegular((isOn) => !isOn) },
+    { label: 'Hidden', isOn: showHidden, toggle: () => setShowHidden((isOn) => !isOn) },
+    { label: 'Deleted', isOn: showDeleted, toggle: () => setShowDeleted((isOn) => !isOn) },
+  ];
 
   return (
-    <>
-      <div className="admin-container">
-        <aside className="admin-panel">
-          <section className="admin-panel-section">
-            {!isMobile && <AuctionResultsPanelSimple />}
-          </section>
-        </aside>
+    <div className="slg-admin">
+      {/* A div, not a <header>: Header.css styles the bare `header`
+          element as the site's fixed nav bar, so a semantic header here
+          would be pulled out of flow and pinned behind it. */}
+      <div className="slg-admin-head">
+        <p className="slg-eyebrow">Admin</p>
+        <h1 className="slg-admin-title">Dashboard</h1>
+      </div>
 
-        <div>
-          {/* Admin filter controls */}
-          <Box
-            sx={{
-              top: isMobile ? '100px' : 0,
-            }}
-            className="admin-filter-controls"
-          >
-            <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <input
-                type="checkbox"
-                checked={showRegular}
-                onChange={() => setShowRegular((v) => !v)}
-              />
-              Regular
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <input
-                type="checkbox"
-                checked={showHidden}
-                onChange={() => setShowHidden((v) => !v)}
-              />
-              Hidden
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <input
-                type="checkbox"
-                checked={showDeleted}
-                onChange={() => setShowDeleted((v) => !v)}
-              />
-              Deleted
-            </label>
-          </Box>
-          <div className="list-container">
-            {posts.length === 0 ? (
-              <div className="loading">
-                <h1>No posts yet!</h1>
-              </div>
-            ) : (
-              <>
-                {currentPosts.map((post) => (
-                  <PostCard
-                    key={post.id}
-                    id={post.id}
-                    post={post}
-                    setPosts={setPosts}
-                    posts={posts}
-                    originalPrice={post.originalPrice}
-                    discountedPrice={post.discountedPrice}
-                  />
-                ))}
-                <PaginationControls />
-              </>
-            )}
+      <div className="slg-admin-stats">
+        {statTiles.map((tile) => (
+          <div key={tile.label} className="slg-stat">
+            <span className="slg-stat-label">{tile.label}</span>
+            <span className="slg-stat-value">{tile.value}</span>
           </div>
-        </div>
+        ))}
+      </div>
 
-        <Box
-          sx={{
-            borderWidth: '1px',
-            borderStyle: 'solid',
-          }}
-          className="large-size-inventory"
-        >
-          <Accordion
-            defaultExpanded={isDesktop ? false : true}
-            sx={{ backgroundColor: 'rgb(40, 40, 40)', border: 'none' }}
-          >
-            {(isMobile || isDesktop) && (
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                Inventory/ Category Selector
-              </AccordionSummary>
-            )}
-            <AccordionDetails sx={{ padding: '0', backgroundColor: 'black' }}>
-              <Button
-                style={{ marginTop: '0px' }}
-                disabled={!selectedCategory}
-                onClick={() => {
-                  setSelectedCategory(null);
-                  setCurrentPage(1);
-                }}
-              >
-                <Typography
-                  variant="h5"
-                  sx={{
-                    color: '#2f44ff',
-                    textShadow: '0 0 1px black',
-                  }}
+      <div className="slg-admin-body">
+        <main className="slg-admin-main">
+          <div className="slg-admin-toolbar">
+            <div className="slg-chips" role="group" aria-label="Show posts by visibility">
+              {visibilityFilters.map((filter) => (
+                <button
+                  key={filter.label}
+                  type="button"
+                  className={`slg-chip${filter.isOn ? ' slg-chip--on' : ''}`}
+                  aria-pressed={filter.isOn}
+                  onClick={filter.toggle}
                 >
-                  {selectedCategory ? 'Show All Categories' : 'Categories'}
-                </Typography>
-              </Button>
+                  {filter.label}
+                </button>
+              ))}
+            </div>
 
+            {selectedCategory && (
+              <button
+                type="button"
+                className="slg-chip slg-chip--clear"
+                onClick={() => handleCategorySelect(null)}
+              >
+                {selectedCategory}
+                <span aria-hidden="true">✕</span>
+                <span className="slg-visually-hidden">— clear category filter</span>
+              </button>
+            )}
+
+            <p className="slg-admin-count">
+              {filteredPosts.length} of {posts.length}
+            </p>
+          </div>
+
+          {currentPosts.length === 0 ? (
+            <p className="slg-admin-empty">
+              {posts.length === 0
+                ? 'No posts yet.'
+                : 'No posts match these filters. Turn a filter back on or clear the category.'}
+            </p>
+          ) : (
+            <ul className="slg-admin-list">
+              {currentPosts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  id={post.id}
+                  post={post}
+                  setPosts={setPosts}
+                  posts={posts}
+                  originalPrice={post.originalPrice}
+                  discountedPrice={post.discountedPrice}
+                />
+              ))}
+            </ul>
+          )}
+
+          {totalPages > 1 && (
+            <nav className="slg-pager" aria-label="Post list pages">
+              <button
+                type="button"
+                className="slg-pager-button"
+                onClick={() => handlePageChange(pageIndex - 1)}
+                disabled={pageIndex === 1}
+              >
+                Prev
+              </button>
+
+              {buildPageWindow(pageIndex, totalPages).map((page) =>
+                typeof page === 'string' ? (
+                  <span key={page} className="slg-pager-gap" aria-hidden="true">
+                    …
+                  </span>
+                ) : (
+                  <button
+                    key={page}
+                    type="button"
+                    className={`slg-pager-button${page === pageIndex ? ' slg-pager-button--on' : ''}`}
+                    aria-current={page === pageIndex ? 'page' : undefined}
+                    onClick={() => handlePageChange(page)}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
+
+              <button
+                type="button"
+                className="slg-pager-button"
+                onClick={() => handlePageChange(pageIndex + 1)}
+                disabled={pageIndex === totalPages}
+              >
+                Next
+              </button>
+            </nav>
+          )}
+        </main>
+
+        <aside className="slg-admin-rail">
+          <details className="slg-panel" open={railStartsOpen}>
+            <summary className="slg-panel-summary">Active auctions</summary>
+            <div className="slg-panel-body">
+              <AuctionResultsPanelSimple />
+            </div>
+          </details>
+
+          <details className="slg-panel" open={railStartsOpen}>
+            <summary className="slg-panel-summary">Inventory by category</summary>
+            <div className="slg-panel-body">
               <Inventory
                 posts={posts}
                 selectedCategory={selectedCategory}
                 onCategorySelect={handleCategorySelect}
               />
-            </AccordionDetails>
-          </Accordion>
-
-          {isMobile && (
-            <Accordion
-              defaultExpanded={isDesktop ? false : true}
-              sx={{
-                zIndex: '10',
-                backgroundColor: 'rgb(40, 40, 40)',
-                border: 'none',
-                '&.MuiAccordion-root': {
-                  margin: 0,
-                },
-                '&.Mui-expanded': {
-                  margin: 0,
-                },
-                '&:before': {
-                  display: 'none',
-                },
-              }}
-            >
-              {(isMobile || isDesktop) && (
-                <AccordionSummary expandIcon={<ExpandMoreIcon htmlColor="#fff" />}>
-                  <Typography>Active Auctions</Typography>
-                </AccordionSummary>
-              )}
-
-              <AccordionDetails sx={{ padding: 0, backgroundColor: 'black' }}>
-                <AuctionResultsPanelSimple />
-              </AccordionDetails>
-            </Accordion>
-          )}
-        </Box>
+            </div>
+          </details>
+        </aside>
       </div>
-    </>
+    </div>
   );
 }
