@@ -576,13 +576,16 @@ export const getAdditionalImageUrlsPublicIdsGallery = async (id) => {
 };
 
 export async function searchGalleryPosts(searchTerm) {
-  const resp = await fetch(`${BASE_URL}/api/v1/main-gallery/search/${searchTerm}`, {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
+  const resp = await fetch(
+    `${BASE_URL}/api/v1/main-gallery/search/${encodeURIComponent(searchTerm)}`,
+    {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }
+  );
 
   const msg = await resp.json();
   return msg;

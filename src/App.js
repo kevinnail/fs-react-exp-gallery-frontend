@@ -9,7 +9,6 @@ import EditPost from './components/EditPost/EditPost.js';
 import MainGallery from './components/MainGallery/MainGallery.js';
 import MainPostDetail from './components/MainPostDetail/MainPostDetail.js';
 import AboutMe from './components/AboutMe/AboutMe.js';
-import SearchResults from './components/SearchResults/SearchResults.js';
 import DiscountForm from './components/DiscountForm/DiscountForm.js';
 import MassEmailForm from './components/MassEmailForm/MassEmailForm.js';
 import Account from './components/Account/Account.js';
@@ -211,7 +210,6 @@ function App() {
           <Routes>
             <Route path="/auth/:type" element={<Auth />} />
             <Route path="/" element={<MainGallery />} />
-            <Route path="/search" element={<SearchResults />} />
             <Route path="/about-me" element={<AboutMe />} />
             <Route path="/auctions" element={<AuctionList />} />
             <Route path="/auctions/:id" element={<AuctionDetail />} />
