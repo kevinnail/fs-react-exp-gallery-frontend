@@ -4,9 +4,53 @@ import { uploadImagesAndCreatePost } from '../../services/fetch-utils.js';
 import './PostForm.css';
 import Loading from '../Loading/Loading.js';
 import { useDropzone } from 'react-dropzone';
-import { Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+const CATEGORIES = [
+  'Beads',
+  'Blunt Tips',
+  'Bubblers',
+  'Collabs',
+  'Cups',
+  'Droppers',
+  'Dry Pieces',
+  'Goblets',
+  'Jars',
+  'Iso Stations',
+  'Marbles',
+  'Pendants',
+  'Recyclers',
+  'Rigs',
+  'Slides',
+  'Spinner Caps',
+  'Terp Pearls',
+  'Tubes',
+  'Vases',
+  'Misc',
+];
+
+const TITLE_MAX_LENGTH = 50;
+const DESCRIPTION_MAX_LENGTH = 350;
+
+const SegmentedToggle = ({ name, value, onChange, options }) => (
+  <div className="slg-segment">
+    {options.map((option) => (
+      <label
+        key={String(option.value)}
+        className={`slg-segment-option${value === option.value ? ' slg-segment-option--on' : ''}`}
+      >
+        <input
+          type="radio"
+          name={name}
+          checked={value === option.value}
+          onChange={() => onChange(option.value)}
+        />
+        {option.label}
+      </label>
+    ))}
+  </div>
+);
 
 export default function PostForm({
   title = '',
@@ -46,7 +90,7 @@ export default function PostForm({
     );
   }, []);
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxFiles: 10,
     accept: {
@@ -60,38 +104,44 @@ export default function PostForm({
     if (loading || (files.length === 0 && currentImages.length === 0)) return null;
 
     return (
-      <Box className="thumbnails-container">
+      <div className="slg-thumbs">
         {files.map((file, index) => (
-          <Box key={file.name} className="thumbnail-wrapper">
-            <img src={file.preview} alt={`New image ${index + 1}`} className="thumbnail" />
+          <div key={file.name} className="slg-thumb">
+            <img src={file.preview} alt={`New image ${index + 1}`} />
+            {index === 0 && currentImages.length === 0 && (
+              <span className="slg-thumb-lead">Lead</span>
+            )}
             <button
               type="button"
-              className="delete-button-form"
-              onClick={(e) => {
-                e.preventDefault();
+              className="slg-thumb-remove"
+              aria-label={`Remove new image ${index + 1}`}
+              onClick={(event) => {
+                event.preventDefault();
                 handleImageDelete(index);
               }}
             >
-              X
+              ✕
             </button>
-          </Box>
+          </div>
         ))}
         {currentImages.map((url, index) => (
-          <Box key={url} className="thumbnail-wrapper">
-            <img src={url} alt={`Current image ${index + 1}`} className="thumbnail" />
+          <div key={url} className="slg-thumb">
+            <img src={url} alt={`Current image ${index + 1}`} />
+            {index === 0 && <span className="slg-thumb-lead">Lead</span>}
             <button
               type="button"
-              className="delete-button-form"
-              onClick={(e) => {
-                e.preventDefault();
+              className="slg-thumb-remove"
+              aria-label={`Remove current image ${index + 1}`}
+              onClick={(event) => {
+                event.preventDefault();
                 handleImageDelete(files.length + index);
               }}
             >
-              X
+              ✕
             </button>
-          </Box>
+          </div>
         ))}
-      </Box>
+      </div>
     );
     // eslint-disable-next-line
   }, [files, currentImages, loading]);
@@ -109,12 +159,14 @@ export default function PostForm({
   const handleImageDelete = (index) => {
     // Deleting a newly uploaded file
     if (index < files.length) {
-      setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+      setFiles((prevFiles) => prevFiles.filter((_unused, fileIndex) => fileIndex !== index));
     } else {
       // Deleting an existing image
       // Adjust the index to target the correct image in currentImages
       const currentIndex = index - files.length;
-      setCurrentImages((prevImages) => prevImages.filter((_, i) => i !== currentIndex));
+      setCurrentImages((prevImages) =>
+        prevImages.filter((_unused, imageIndex) => imageIndex !== currentIndex)
+      );
 
       // If you need to track which existing images have been deleted
       const deletedImageUrl = currentImages[currentIndex];
@@ -122,8 +174,8 @@ export default function PostForm({
     }
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
     setLoading(true);
 
     try {
@@ -151,7 +203,7 @@ export default function PostForm({
     } catch (error) {
       console.error(error);
       toast.error(
-        `Error ${formFunctionMode === 'new' ? 'creating new ' : 'editing '}post: ${e.message}`,
+        `Error ${formFunctionMode === 'new' ? 'creating new ' : 'editing '}post: ${error.message}`,
         {
           theme: 'colored',
           draggable: true,
@@ -173,176 +225,209 @@ export default function PostForm({
     return <Loading />;
   }
 
-  return (
-    <>
-      <Box
-        className="form-wrapper"
-        sx={{
-          '&.MuiBox-root': {
-            padding: 0,
-          },
-        }}
-      >
-        <form className="new-post-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
-          <h1 id="form-title-header">{newOrEdit}</h1>
-          <Box className="desk-cat-input">
-            <span className="labels-form-inputs">Category</span>
-            <select
-              id="category"
-              value={categoryInput}
-              onChange={handleCategoryChange}
-              className="image-input shadow-border"
-              required
-            >
-              <option value="" disabled>
-                Choose category
-              </option>
-              <option value="Beads">Beads</option>
-              <option value="Blunt Tips">Blunt Tips</option>
-              <option value="Bubblers">Bubblers</option>
-              <option value="Collabs">Collabs</option>
-              <option value="Cups">Cups</option>
-              <option value="Droppers">Droppers</option>
-              <option value="Dry Pieces">Dry Pieces</option>
-              <option value="Goblets">Goblets</option>
-              <option value="Jars">Jars</option>
-              <option value="Iso Stations">Iso Stations</option>
-              <option value="Marbles">Marbles</option>
-              <option value="Pendants">Pendants</option>
-              <option value="Recyclers">Recyclers</option>
-              <option value="Rigs">Rigs</option>
-              <option value="Slides">Slides</option>
-              <option value="Spinner Caps">Spinner Caps</option>
-              <option value="Terp Pearls">Terp Pearls</option>
-              <option value="Tubes">Tubes</option>
-              <option value="Vases">Vases</option>
-              <option value="Misc">Misc</option>
-            </select>
-          </Box>
-          <Box className="desk-title-input">
-            <span className="labels-form-inputs">Title</span>
+  const totalImageCount = files.length + currentImages.length;
 
+  return (
+    <div className="slg-form-page">
+      <div className="slg-form-head">
+        <p className="slg-eyebrow">{formFunctionMode === 'new' ? 'Gallery' : 'Gallery / Edit'}</p>
+        <h1 className="slg-form-title">{newOrEdit}</h1>
+      </div>
+
+      <form className="slg-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
+        <div className="slg-form-column">
+          <p className="slg-form-group-label">Details</p>
+
+          <div className="slg-field">
+            <label className="slg-field-label" htmlFor="post-category">
+              Category
+            </label>
+            <div className="slg-select-wrap">
+              <select
+                id="post-category"
+                className="slg-select"
+                value={categoryInput}
+                onChange={handleCategoryChange}
+                required
+              >
+                <option value="" disabled>
+                  Choose category
+                </option>
+                {CATEGORIES.map((categoryName) => (
+                  <option key={categoryName} value={categoryName}>
+                    {categoryName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="slg-field">
+            <label className="slg-field-label" htmlFor="post-title">
+              Title
+              <span
+                className={`slg-field-count${
+                  (titleInput || '').length === TITLE_MAX_LENGTH ? ' slg-field-count--full' : ''
+                }`}
+              >
+                {(titleInput || '').length}/{TITLE_MAX_LENGTH}
+              </span>
+            </label>
             <input
-              required
-              maxLength={50}
-              placeholder="Enter title"
-              className="image-input"
+              id="post-title"
+              className="slg-input"
               type="text"
               name="title"
+              placeholder="Enter title"
+              maxLength={TITLE_MAX_LENGTH}
               value={titleInput || ''}
-              onChange={(e) => setTitleInput(e.target.value)}
+              onChange={(event) => setTitleInput(event.target.value)}
+              required
             />
-          </Box>
-          <Box className="sold-radio-group">
-            <span className="labels-form-inputs">Sold Status</span>
-            <label className="radio-label">
-              <input
-                type="radio"
-                value="true"
-                checked={soldInput === true}
-                onChange={() => setSoldInput(true)}
-              />
-              Sold
-            </label>
-            <label className="radio-label">
-              <input
-                type="radio"
-                value="false"
-                checked={soldInput === false}
-                onChange={() => setSoldInput(false)}
-              />
-              Available
-            </label>
+          </div>
 
-            <span className="labels-form-inputs">Hide Status</span>
-            <label className="radio-label">
-              <input
-                type="radio"
-                value="true"
-                checked={hideInput === true}
-                onChange={() => setHideInput(true)}
-              />
-              Hidden
+          <div className="slg-field">
+            <label className="slg-field-label" htmlFor="post-description">
+              Description
+              <span
+                className={`slg-field-count${
+                  (descriptionInput || '').length === DESCRIPTION_MAX_LENGTH
+                    ? ' slg-field-count--full'
+                    : ''
+                }`}
+              >
+                {(descriptionInput || '').length}/{DESCRIPTION_MAX_LENGTH}
+              </span>
             </label>
-            <label className="radio-label">
-              <input
-                type="radio"
-                value="false"
-                checked={hideInput === false}
-                onChange={() => setHideInput(false)}
-              />
-              Visible
-            </label>
-          </Box>
-          <Box className="desk-desc-input">
-            <span className="labels-form-inputs"> Description</span>
             <textarea
-              required
-              maxLength={350}
-              placeholder="Enter description"
-              className="image-input description shadow-border"
+              id="post-description"
+              className="slg-textarea"
               name="description"
-              value={descriptionInput}
-              onChange={(e) => setDescriptionInput(e.target.value)}
-            />
-          </Box>
-          <Box className="price-in-form">
-            <span>Price</span>
-            {/*  Price */}
-            <input
+              placeholder="Enter description"
+              maxLength={DESCRIPTION_MAX_LENGTH}
+              value={descriptionInput || ''}
+              onChange={(event) => setDescriptionInput(event.target.value)}
               required
-              placeholder="Enter price"
-              className="image-input  price-input"
-              type="number"
-              step="1"
-              name="price"
-              value={priceInput}
-              onChange={(e) => setPriceInput(e.target.value)}
-            />{' '}
-            {/* <span className="dollar-sign-span">$</span> */}
-          </Box>
-          <Box className="price-in-form">
-            <span>Discount Price</span>
-            <input
-              placeholder="Enter discounted price"
-              className="image-input  price-input"
-              type="number"
-              step="1"
-              name="discountedPrice"
-              value={discountedPriceInput}
-              onChange={(e) => setDiscountedPriceInput(e.target.value)}
             />
-          </Box>
-          <Box className="price-in-form selling-link">
-            <span>GlassPass || Etsy || Insta Link:</span>
-            <input
-              placeholder="GP or Etsy or IG"
-              className="image-input  price-input"
-              type="text"
-              step="1"
-              name="link"
-              value={sellingLink}
-              style={{ textAlign: 'left' }}
-              onChange={(e) => setSellingLink(e.target.value)}
-            />
-          </Box>
+          </div>
 
-          <Box {...getRootProps()} className="dropzone" sx={{ marginTop: '60px' }}>
-            <input {...getInputProps()} />
-            <label className="file-upload-label">
-              {files.length === 0
-                ? 'Choose images or videos'
-                : `${files.length} file${files.length > 1 ? 's' : ''} selected`}
+          <div className="slg-form-pair">
+            <div className="slg-field">
+              <label className="slg-field-label" htmlFor="post-price">
+                Price
+              </label>
+              <div className="slg-input-money">
+                <input
+                  id="post-price"
+                  className="slg-input"
+                  type="number"
+                  step="1"
+                  name="price"
+                  placeholder="0"
+                  value={priceInput ?? ''}
+                  onChange={(event) => setPriceInput(event.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="slg-field">
+              <label className="slg-field-label" htmlFor="post-discounted-price">
+                Sale price
+              </label>
+              <div className="slg-input-money">
+                <input
+                  id="post-discounted-price"
+                  className="slg-input"
+                  type="number"
+                  step="1"
+                  name="discountedPrice"
+                  placeholder="0"
+                  value={discountedPriceInput ?? ''}
+                  onChange={(event) => setDiscountedPriceInput(event.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="slg-field">
+            <label className="slg-field-label" htmlFor="post-selling-link">
+              Selling link
             </label>
-          </Box>
+            <input
+              id="post-selling-link"
+              className="slg-input"
+              type="text"
+              name="link"
+              placeholder="GlassPass, Etsy or Instagram URL"
+              value={sellingLink ?? ''}
+              onChange={(event) => setSellingLink(event.target.value)}
+            />
+            <p className="slg-field-hint">Where a buyer completes the purchase. Optional.</p>
+          </div>
+        </div>
+
+        <div className="slg-form-column">
+          <p className="slg-form-group-label">Visibility</p>
+
+          <div className="slg-field">
+            <span className="slg-field-label">Sold status</span>
+            <SegmentedToggle
+              name="sold"
+              value={soldInput}
+              onChange={setSoldInput}
+              options={[
+                { value: false, label: 'Available' },
+                { value: true, label: 'Sold' },
+              ]}
+            />
+          </div>
+
+          <div className="slg-field">
+            <span className="slg-field-label">Gallery visibility</span>
+            <SegmentedToggle
+              name="hide"
+              value={hideInput}
+              onChange={setHideInput}
+              options={[
+                { value: false, label: 'Visible' },
+                { value: true, label: 'Hidden' },
+              ]}
+            />
+            <p className="slg-field-hint">Hidden posts stay in the admin list only.</p>
+          </div>
+
+          <p className="slg-form-group-label">Images</p>
+
+          <div
+            {...getRootProps({
+              className: `slg-dropzone${isDragActive ? ' slg-dropzone--active' : ''}`,
+            })}
+          >
+            <input {...getInputProps()} />
+            <span className="slg-dropzone-primary">
+              {files.length === 0
+                ? 'Tap to choose images'
+                : `${files.length} file${files.length > 1 ? 's' : ''} selected`}
+            </span>
+            <span className="slg-dropzone-secondary">JPG or PNG — up to 10</span>
+          </div>
+
+          {totalImageCount > 0 && (
+            <p className="slg-field-hint">
+              {totalImageCount} image{totalImageCount > 1 ? 's' : ''} on this post
+            </p>
+          )}
+
           {thumbs}
-          <Box className="btn-container">
-            <button className="submit-btn-post" type="submit">
-              {<img className="upload-icon " src="/upload.png" alt="upload" />}
-            </button>
-          </Box>
-        </form>
-      </Box>
-    </>
+        </div>
+
+        <div className="slg-form-actions">
+          <button className="slg-form-button" type="submit">
+            {formFunctionMode === 'new' ? 'Create post' : 'Save changes'}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
