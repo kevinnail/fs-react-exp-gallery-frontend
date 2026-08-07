@@ -152,12 +152,7 @@ export default function MainPostDetail() {
 
         <aside className="slg-detail-rail">
           {postDetail?.category ? (
-            <button
-              className="slg-detail-eyebrow"
-              onClick={() => navigate(`/search?q=${postDetail.category}`)}
-            >
-              {postDetail.category}
-            </button>
+            <span className="slg-detail-eyebrow">{postDetail.category}</span>
           ) : null}
 
           <h1 className="slg-detail-title">{postDetail?.title}</h1>
