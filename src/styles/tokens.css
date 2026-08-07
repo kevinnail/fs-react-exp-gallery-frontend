@@ -24,8 +24,17 @@
   /* the one accent */
   --slg-flame: #ff6a1f;
 
+  /* Destructive state only — a deleted row, a hard-delete confirm. Never
+     decorative, and never used for "on sale" (that's the flame). */
+  --slg-alert: #e5484d;
+
   /* rhythm */
   --slg-gutter: clamp(1.25rem, 4vw, 4rem);
+
+  /* Admin surfaces are dense working screens, not display pages: on a
+     phone the page gutter would eat a quarter of an input's width, so
+     they get a tighter one. */
+  --slg-gutter-tight: clamp(0.875rem, 3vw, 2rem);
   --slg-header-height: 90px; /* must track `header` in Header.css */
 
   /* families — Gruppo is the existing brand face, kept and set larger */
