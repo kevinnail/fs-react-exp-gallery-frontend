@@ -3,7 +3,7 @@
  * Every product photo is shot on pure black with a reflection under
  * the piece, so the page ground is pure black too. Images then carry
  * no frame and no radius: the photo's own background is the page, and
- * the glass is the only colour on the screen.
+ * the glass is the only color on the screen.
  *
  * The single accent is reserved for heat — live auctions and sale
  * prices. Nothing else on the page is allowed to use it.
@@ -17,7 +17,7 @@
   --slg-edge: rgba(255, 255, 255, 0.11);
   --slg-edge-soft: rgba(255, 255, 255, 0.06);
 
-  /* type colour */
+  /* type color */
   --slg-ink: #e9ebef;
   --slg-dim: #7c838e;
 
