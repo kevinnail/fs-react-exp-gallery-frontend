@@ -9,14 +9,6 @@ import AuctionResultsPanelSimple from './AuctionResultsPanelSimple.js';
 
 const POSTS_PER_PAGE = 15;
 
-/* Which page numbers to render.
- *
- * Narrow screens can't fit thirty buttons, so the run collapses to
- * first / neighbours / last with ellipses. The old version decided this
- * with a media query hook and kept two near-identical branches; the
- * window is the same shape at every width, only its size differs, so
- * CSS handles the fit and this just caps how many numbers exist.
- */
 const buildPageWindow = (currentPage, totalPages) => {
   if (totalPages <= 7) {
     return Array.from({ length: totalPages }, (_unused, index) => index + 1);
@@ -40,9 +32,6 @@ const buildPageWindow = (currentPage, totalPages) => {
 
 export default function Admin() {
   const { posts, loading, setPosts } = usePosts();
-  // Rolled once at mount, like the accordions this replaced: below the
-  // sidebar breakpoint the panels start collapsed so the post list isn't
-  // buried under a twenty-row table, and above it they're the rail.
   const [railStartsOpen] = useState(() => window.matchMedia('(min-width: 1200px)').matches);
   const [selectedCategory, setSelectedCategory] = useState(null);
   // Admin filter state for post visibility
