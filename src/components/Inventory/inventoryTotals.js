@@ -27,15 +27,22 @@ export const CATEGORY_NAMES = [
   'Misc',
 ];
 
-export const calculateInventoryTotals = (posts) => {
+const isInStock = (post, includeHidden) =>
+  !post.sold && !post.isDeleted && (includeHidden || !post.hide);
+
+export const calculateInventoryTotals = (posts, { includeHidden = false } = {}) => {
   const countByCategory = {};
   const regularTotalByCategory = {};
   const discountedTotalByCategory = {};
+  const inStockCountByCategory = {};
+  const inStockDiscountedTotalByCategory = {};
 
   for (const categoryName of CATEGORY_NAMES) {
     countByCategory[categoryName] = 0;
     regularTotalByCategory[categoryName] = 0;
     discountedTotalByCategory[categoryName] = 0;
+    inStockCountByCategory[categoryName] = 0;
+    inStockDiscountedTotalByCategory[categoryName] = 0;
   }
 
   let regularTotal = 0;
@@ -44,10 +51,14 @@ export const calculateInventoryTotals = (posts) => {
   let soldRegularTotal = 0;
   let soldDiscountedTotal = 0;
   let hiddenCount = 0;
+  let inStockCount = 0;
+  let inStockRegularTotal = 0;
+  let inStockDiscountedTotal = 0;
 
   for (const post of posts) {
     const regularPrice = parseFloat(post.price) || 0;
     const effectivePrice = post.discountedPrice ? parseFloat(post.discountedPrice) : regularPrice;
+    const inStock = isInStock(post, includeHidden);
 
     regularTotal += regularPrice;
     discountedTotal += effectivePrice;
@@ -58,6 +69,17 @@ export const calculateInventoryTotals = (posts) => {
       countByCategory[post.category] += 1;
       regularTotalByCategory[post.category] += regularPrice;
       discountedTotalByCategory[post.category] += effectivePrice;
+
+      if (inStock) {
+        inStockCountByCategory[post.category] += 1;
+        inStockDiscountedTotalByCategory[post.category] += effectivePrice;
+      }
+    }
+
+    if (inStock) {
+      inStockCount += 1;
+      inStockRegularTotal += regularPrice;
+      inStockDiscountedTotal += effectivePrice;
     }
 
     if (post.sold) {
@@ -76,10 +98,24 @@ export const calculateInventoryTotals = (posts) => {
     0
   );
 
+  const inStockCategorisedCount = Object.values(inStockCountByCategory).reduce(
+    (runningTotal, count) => runningTotal + count,
+    0
+  );
+
+  const inStockCategorisedTotal = Object.values(inStockDiscountedTotalByCategory).reduce(
+    (runningTotal, amount) => runningTotal + amount,
+    0
+  );
+
   return {
     countByCategory,
     regularTotalByCategory,
     discountedTotalByCategory,
+    inStockCountByCategory,
+    inStockDiscountedTotalByCategory,
+    inStockCategorisedCount,
+    inStockCategorisedTotal,
     categorisedCount,
     regularTotal,
     discountedTotal,
@@ -87,9 +123,9 @@ export const calculateInventoryTotals = (posts) => {
     soldRegularTotal,
     soldDiscountedTotal,
     hiddenCount,
-    forSaleCount: categorisedCount - soldCount,
-    forSaleRegularTotal: regularTotal - soldRegularTotal,
-    forSaleDiscountedTotal: discountedTotal - soldDiscountedTotal,
+    forSaleCount: inStockCount,
+    forSaleRegularTotal: inStockRegularTotal,
+    forSaleDiscountedTotal: inStockDiscountedTotal,
   };
 };
 
