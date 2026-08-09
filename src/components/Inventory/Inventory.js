@@ -1,32 +1,55 @@
+import { useState } from 'react';
 import './Inventory.css';
 import { CATEGORY_NAMES, calculateInventoryTotals, formatMoney } from './inventoryTotals.js';
 
-/* Stock level, read at a glance from the count column.
- *
- * The old version coloured a category's whole row red at zero and purple
- * at five or more, which put the loudest colour on the least urgent row.
- * Now it's a single dot and only a genuinely empty category is allowed
- * to be alarming. */
 const stockLevel = (count) => {
   if (count === 0) return 'out';
   if (count <= 2) return 'low';
   return 'ok';
 };
 
+const STOCK_LEVEL_LABELS = {
+  out: 'out of stock',
+  low: 'low stock',
+  ok: 'in stock',
+};
+
 const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
-  const totals = calculateInventoryTotals(posts);
+  const [includeHidden, setIncludeHidden] = useState(false);
+  const totals = calculateInventoryTotals(posts, { includeHidden });
 
   return (
     <div className="slg-inventory">
+      <p className="slg-inventory-caption">
+        What is on the shelf right now — sold and deleted pieces are left out. Tap a category to
+        filter the list.
+      </p>
+
+      <div className="slg-inventory-controls">
+        <button
+          type="button"
+          className={`slg-inventory-toggle${selectedCategory === null ? ' slg-inventory-toggle--on' : ''}`}
+          aria-pressed={selectedCategory === null}
+          onClick={() => onCategorySelect(null)}
+        >
+          All categories
+        </button>
+        <button
+          type="button"
+          className={`slg-inventory-toggle${includeHidden ? ' slg-inventory-toggle--on' : ''}`}
+          aria-pressed={includeHidden}
+          onClick={() => setIncludeHidden((isOn) => !isOn)}
+        >
+          Count hidden
+        </button>
+      </div>
+
       <table className="slg-inventory-table">
-        <caption className="slg-inventory-caption">
-          Tap a category to filter the list. Values use the sale price where one is set.
-        </caption>
         <thead>
           <tr>
             <th scope="col">Category</th>
             <th scope="col" className="slg-inventory-numeric">
-              Qty
+              In stock
             </th>
             <th scope="col" className="slg-inventory-numeric">
               Value
@@ -35,13 +58,17 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
         </thead>
         <tbody>
           {CATEGORY_NAMES.map((categoryName) => {
-            const count = totals.countByCategory[categoryName];
+            const count = totals.inStockCountByCategory[categoryName];
+            const level = stockLevel(count);
+            const rowClasses = [
+              `slg-inventory-row--${level}`,
+              selectedCategory === categoryName ? 'slg-inventory-row--selected' : '',
+            ]
+              .filter(Boolean)
+              .join(' ');
 
             return (
-              <tr
-                key={categoryName}
-                className={selectedCategory === categoryName ? 'slg-inventory-row--selected' : ''}
-              >
+              <tr key={categoryName} className={rowClasses}>
                 <th scope="row">
                   <button
                     type="button"
@@ -49,19 +76,28 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
                     aria-pressed={selectedCategory === categoryName}
                     onClick={() => onCategorySelect(categoryName)}
                   >
-                    <span className={`slg-inventory-dot slg-inventory-dot--${stockLevel(count)}`} />
                     {categoryName}
+                    <span className="slg-visually-hidden">— {STOCK_LEVEL_LABELS[level]}</span>
                   </button>
                 </th>
-                <td className="slg-inventory-numeric">{count}</td>
+                <td className="slg-inventory-numeric slg-inventory-count">{count}</td>
                 <td className="slg-inventory-numeric">
-                  {formatMoney(totals.discountedTotalByCategory[categoryName])}
+                  {formatMoney(totals.inStockDiscountedTotalByCategory[categoryName])}
                 </td>
               </tr>
             );
           })}
         </tbody>
         <tfoot>
+          <tr>
+            <th scope="row">In stock</th>
+            <td className="slg-inventory-numeric">{totals.inStockCategorisedCount}</td>
+            <td className="slg-inventory-numeric">
+              <span className="slg-inventory-figure">
+                {formatMoney(totals.inStockCategorisedTotal)}
+              </span>
+            </td>
+          </tr>
           <tr>
             <th scope="row">All pieces</th>
             <td className="slg-inventory-numeric">{totals.categorisedCount}</td>
@@ -85,14 +121,11 @@ const Inventory = ({ posts, onCategorySelect, selectedCategory }) => {
             </td>
           </tr>
           <tr>
-            <th scope="row">For sale</th>
-            <td className="slg-inventory-numeric">{totals.forSaleCount}</td>
+            <th scope="row">Hidden</th>
+            <td className="slg-inventory-numeric">{totals.hiddenCount}</td>
             <td className="slg-inventory-numeric">
-              <span className="slg-inventory-figure">
-                {formatMoney(totals.forSaleDiscountedTotal)}
-              </span>
               <span className="slg-inventory-figure-note">
-                {formatMoney(totals.forSaleRegularTotal)} at full price
+                {includeHidden ? 'counted above' : 'not counted above'}
               </span>
             </td>
           </tr>
