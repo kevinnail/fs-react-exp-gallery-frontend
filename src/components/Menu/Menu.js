@@ -88,7 +88,10 @@ export default function Menu({ handleClick, closeMenu }) {
             </span>
           </div>
         )}
-        <NavLink className="menu-new-link" to="/" title="Gallery" onClick={handleLinkClick}>
+        <NavLink className="menu-new-link" to="/" title="Shop" onClick={handleLinkClick}>
+          Shop
+        </NavLink>{' '}
+        <NavLink className="menu-new-link" to="/gallery" title="Gallery" onClick={handleLinkClick}>
           Gallery
         </NavLink>{' '}
         <div style={{ position: 'relative', padding: '0' }}>
