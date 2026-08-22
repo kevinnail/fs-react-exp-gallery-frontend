@@ -89,11 +89,11 @@ export default function Menu({ handleClick, closeMenu }) {
           </div>
         )}
         <NavLink className="menu-new-link" to="/" title="Shop" onClick={handleLinkClick}>
-          Shop
+          Available Work
         </NavLink>{' '}
-        <NavLink className="menu-new-link" to="/gallery" title="Gallery" onClick={handleLinkClick}>
+        {/* <NavLink className="menu-new-link" to="/gallery" title="Gallery" onClick={handleLinkClick}>
           Gallery
-        </NavLink>{' '}
+        </NavLink>{' '} */}
         <div style={{ position: 'relative', padding: '0' }}>
           <NavLink className="menu-new-link" to="/auctions" onClick={handleAuctionsClick}>
             Auctions
