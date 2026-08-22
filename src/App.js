@@ -33,7 +33,7 @@ import { useProfileStore } from './stores/profileStore.js';
 import { useMessaging } from './hooks/useWebSocket.js';
 import { getMyMessages } from './services/fetch-messages.js';
 import AdminSales from './components/Admin/AdminSales/AdminSales.js';
-import DisplayGallery from './components/DisplayGallery/DisplayGallery.js';
+// import DisplayGallery from './components/DisplayGallery/DisplayGallery.js';
 
 const mainTheme = createTheme({
   palette: {

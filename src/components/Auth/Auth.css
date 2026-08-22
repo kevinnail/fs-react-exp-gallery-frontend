@@ -702,3 +702,9 @@
 .forgot-password-link:hover {
   color: #ffffff;
 }
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

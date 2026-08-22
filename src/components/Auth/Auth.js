@@ -333,6 +333,15 @@ export default function Auth() {
     }
   };
 
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    if (isSignIn) {
+      submitAuth();
+    } else {
+      handleSignupClick();
+    }
+  };
+
   const handleSignupClick = () => {
     if (!agreedToTerms) {
       setAgreementOpen(true);
@@ -499,44 +508,55 @@ export default function Auth() {
               </div>
 
               <div className="form-inputs">
-                <div className="email-container">
-                  <input
-                    className="input-auth"
-                    type="email"
-                    placeholder="enter your email address"
-                    value={email}
-                    onChange={handleEmailChange}
-                    maxLength={101}
-                    required
-                    inputMode="email"
-                    autoComplete="email"
-                  />
-                </div>
-                <div className="password-field">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={handlePasswordChange}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        isSignIn ? submitAuth() : handleSignupClick();
-                      }
-                    }}
-                    placeholder="Password"
-                    className="input-auth"
-                  />
+                <form className="auth-form" onSubmit={handleFormSubmit}>
+                  <div className="email-container">
+                    <input
+                      className="input-auth"
+                      type="email"
+                      id="auth-email"
+                      name="email"
+                      placeholder="enter your email address"
+                      value={email}
+                      onChange={handleEmailChange}
+                      maxLength={101}
+                      required
+                      inputMode="email"
+                      autoComplete="email"
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      spellCheck={false}
+                    />
+                  </div>
+                  <div className="password-field">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      id="auth-password"
+                      name="password"
+                      value={password}
+                      onChange={handlePasswordChange}
+                      placeholder="Password"
+                      className="input-auth"
+                      autoComplete={type === 'sign-up' ? 'new-password' : 'current-password'}
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      spellCheck={false}
+                    />
 
-                  <span className="toggle-visibility" onClick={() => setShowPassword((v) => !v)}>
-                    {showPassword ? (
-                      <VisibilityOff fontSize="small" />
-                    ) : (
-                      <Visibility fontSize="small" />
-                    )}
-                  </span>
-                </div>
-                <button className="button-auth" onClick={isSignIn ? submitAuth : handleSignupClick}>
-                  {isSignIn ? 'Sign In' : 'Sign Up'}
-                </button>
+                    <span
+                      className="toggle-visibility"
+                      onClick={() => setShowPassword((wasShown) => !wasShown)}
+                    >
+                      {showPassword ? (
+                        <VisibilityOff fontSize="small" />
+                      ) : (
+                        <Visibility fontSize="small" />
+                      )}
+                    </span>
+                  </div>
+                  <button className="button-auth" type="submit">
+                    {isSignIn ? 'Sign In' : 'Sign Up'}
+                  </button>
+                </form>
                 <Link
                   className={`forgot-password-link ${type === 'sign-in' ? 'visible' : ''}`}
                   to="/auth/forgot-password"
