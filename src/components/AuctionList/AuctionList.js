@@ -154,9 +154,10 @@ export default function AuctionList() {
   }, [lastAuctionExtended]);
 
   useEffect(() => {
+    if (!user) return;
     markAuctionsRead();
     //eslint-disable-next-line
-  }, []);
+  }, [user]);
 
   if (loading) {
     return (
