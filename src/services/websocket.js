@@ -16,6 +16,10 @@ class WebSocketService {
       return this.socket;
     }
 
+    if (!useUserStore.getState().user) {
+      return null;
+    }
+
     try {
       this.socket = io(BASE_URL, {
         withCredentials: true,
