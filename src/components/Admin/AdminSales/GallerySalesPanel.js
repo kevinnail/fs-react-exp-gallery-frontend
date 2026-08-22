@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './AdminSales.css';
@@ -23,6 +23,7 @@ export default function GallerySalesPanel() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserResults, setShowUserResults] = useState(false);
   const [prefillApplied, setPrefillApplied] = useState(false);
+  const salesPanelRef = useRef(null);
   const { posts } = usePosts();
 
   // Modal state for finding post
@@ -70,6 +71,15 @@ export default function GallerySalesPanel() {
   };
 
   // handle selecting an existing sale
+  // At 768px and below the detail panel stacks under a list that is already
+  // 75dvh tall, so whatever opens there lands well below the fold
+  const revealDetailPanelOnMobile = () => {
+    if (window.matchMedia('(min-width: 769px)').matches) return;
+    requestAnimationFrame(() => {
+      salesPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
   const handleSelectSale = (saleId) => {
     setIsCreatingSale(false);
     setSelectedSale(saleId);
@@ -78,6 +88,8 @@ export default function GallerySalesPanel() {
     if (sale) {
       setTrackingInput(sale.tracking_number || '');
     }
+
+    revealDetailPanelOnMobile();
   };
 
   // handle saving tracking number
@@ -429,6 +441,7 @@ export default function GallerySalesPanel() {
                 setSelectedUser(null);
                 setSearchTerm('');
                 setDebouncedTerm('');
+                revealDetailPanelOnMobile();
               }}
             >
               Add Sale
@@ -487,7 +500,7 @@ export default function GallerySalesPanel() {
             </div>
 
             {/* Sale detail panel */}
-            <div className="sales-panel">
+            <div className="sales-panel" ref={salesPanelRef}>
               {isCreatingSale ? (
                 <div className="sales-detail">
                   <h2>Create New Sale</h2>
