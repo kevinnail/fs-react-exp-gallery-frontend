@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { usePosts } from '../../hooks/usePosts.js';
 import PostCard from '../PostCard/PostCard.js';
 import './Admin.css';
@@ -34,6 +34,7 @@ export default function Admin() {
   const { posts, loading, setPosts } = usePosts();
   const [railStartsOpen] = useState(() => window.matchMedia('(min-width: 1200px)').matches);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const mainRef = useRef(null);
   // Admin filter state for post visibility
   const [showRegular, setShowRegular] = useState(true);
   const [showHidden, setShowHidden] = useState(true);
@@ -43,6 +44,14 @@ export default function Admin() {
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     setCurrentPage(1);
+  };
+
+  // Below 1200px the inventory panel sits underneath the post list
+  const handleRailCategorySelect = (category) => {
+    handleCategorySelect(category);
+    if (!window.matchMedia('(min-width: 1200px)').matches) {
+      mainRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   if (loading) {
@@ -105,7 +114,7 @@ export default function Admin() {
       </div>
 
       <div className="slg-admin-body">
-        <main className="slg-admin-main">
+        <main className="slg-admin-main" ref={mainRef}>
           <div className="slg-admin-toolbar">
             <div className="slg-chips" role="group" aria-label="Show posts by visibility">
               {visibilityFilters.map((filter) => (
@@ -215,7 +224,7 @@ export default function Admin() {
               <Inventory
                 posts={posts}
                 selectedCategory={selectedCategory}
-                onCategorySelect={handleCategorySelect}
+                onCategorySelect={handleRailCategorySelect}
               />
             </div>
           </details>
