@@ -3,6 +3,7 @@ import './App.css';
 import { useUserStore } from './stores/userStore.js';
 import Auth from './components/Auth/Auth.js';
 import ForgotPassword from './components/ForgotPassword/ForgotPassword.js';
+import ResetPassword from './components/ResetPassword/ResetPassword.js';
 import Admin from './components/Admin/Admin.js';
 import Header from './components/Header/Header.js';
 import NewPost from './components/NewPost/NewPost.js';
@@ -210,6 +211,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <Routes>
             <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/auth/:type" element={<Auth />} />
             <Route path="/" element={<MainGallery />} />
             {/* <Route path="/gallery" element={<DisplayGallery />} /> */}
