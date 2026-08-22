@@ -611,6 +611,10 @@ export async function getGalleryPostDetail(id) {
       },
     });
 
+    if (resp.status === 404) {
+      return null;
+    }
+
     const msg = await resp.json();
     return msg;
   } catch (error) {
