@@ -682,3 +682,23 @@
     top: 200px;
   }
 }
+
+.forgot-password-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  margin-top: 10px;
+  text-decoration: underline;
+  display: block;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+
+.forgot-password-link.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.forgot-password-link:hover {
+  color: #ffffff;
+}

@@ -2,6 +2,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
 import { useUserStore } from './stores/userStore.js';
 import Auth from './components/Auth/Auth.js';
+import ForgotPassword from './components/ForgotPassword/ForgotPassword.js';
 import Admin from './components/Admin/Admin.js';
 import Header from './components/Header/Header.js';
 import NewPost from './components/NewPost/NewPost.js';
@@ -31,6 +32,7 @@ import { useProfileStore } from './stores/profileStore.js';
 import { useMessaging } from './hooks/useWebSocket.js';
 import { getMyMessages } from './services/fetch-messages.js';
 import AdminSales from './components/Admin/AdminSales/AdminSales.js';
+import DisplayGallery from './components/DisplayGallery/DisplayGallery.js';
 
 const mainTheme = createTheme({
   palette: {
@@ -208,8 +210,10 @@ function App() {
         <ToastContainer position="top-center" />
         <ThemeProvider theme={theme}>
           <Routes>
+            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
             <Route path="/auth/:type" element={<Auth />} />
             <Route path="/" element={<MainGallery />} />
+            {/* <Route path="/gallery" element={<DisplayGallery />} /> */}
             <Route path="/about-me" element={<AboutMe />} />
             <Route path="/auctions" element={<AuctionList />} />
             <Route path="/auctions/:id" element={<AuctionDetail />} />

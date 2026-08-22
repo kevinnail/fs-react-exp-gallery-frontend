@@ -537,6 +537,14 @@ export default function Auth() {
                 <button className="button-auth" onClick={isSignIn ? submitAuth : handleSignupClick}>
                   {isSignIn ? 'Sign In' : 'Sign Up'}
                 </button>
+                <Link
+                  className={`forgot-password-link ${type === 'sign-in' ? 'visible' : ''}`}
+                  to="/auth/forgot-password"
+                  tabIndex={type === 'sign-in' ? 0 : -1}
+                  aria-hidden={type !== 'sign-in'}
+                >
+                  Forgot password?
+                </Link>
                 {isSignIn && shouldOfferResend && (
                   <button
                     className="button-auth"

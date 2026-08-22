@@ -162,6 +162,35 @@ export async function resendVerification(email) {
   }
 }
 
+// Request a password reset email
+export async function requestPasswordReset(email) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/users/forgot-password`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await resp.json().catch(() => ({}));
+
+    if (!resp.ok) {
+      const err = new Error(data.message || 'Failed to request a password reset');
+      err.status = resp.status;
+      if (data && data.code) err.code = data.code;
+      throw err;
+    }
+
+    return data; // { message }
+  } catch (error) {
+    console.error('Problem requesting password reset: ', error.message);
+    throw error;
+  }
+}
+
 export async function signOutUser() {
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
