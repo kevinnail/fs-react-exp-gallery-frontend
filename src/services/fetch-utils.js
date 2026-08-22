@@ -191,6 +191,35 @@ export async function requestPasswordReset(email) {
   }
 }
 
+// Complete a password reset with the token from the emailed link
+export async function resetPassword(token, password) {
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/users/reset-password`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ token, password }),
+    });
+
+    const data = await resp.json().catch(() => ({}));
+
+    if (!resp.ok) {
+      const err = new Error(data.message || 'Failed to reset password');
+      err.status = resp.status;
+      if (data && data.code) err.code = data.code;
+      throw err;
+    }
+
+    return data; // { message }
+  } catch (error) {
+    console.error('Problem resetting password: ', error.message);
+    throw error;
+  }
+}
+
 export async function signOutUser() {
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
