@@ -22,7 +22,9 @@ export function useGalleryPost(id) {
       try {
         const data = await getGalleryPostDetail(id);
         if (!data) {
-          history.push('/');
+          setLoading(false);
+          navigate('/');
+          return;
         }
         const additionalImagesGallery = await getAdditionalImageUrlsPublicIdsGallery(id);
         const additionalImageUrlsPublicIds = additionalImagesGallery.map(
