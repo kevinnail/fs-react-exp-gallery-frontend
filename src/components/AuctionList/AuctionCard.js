@@ -400,9 +400,11 @@ export default function AuctionCard({ auction }) {
           >
             {user && isAdmin && (
               <>
-                <button className="swap-auction-icon-btn" onClick={handleOpenSwapModal}>
-                  ↳↰
-                </button>
+                {(isActive || bids.length === 0) && (
+                  <button className="swap-auction-icon-btn" onClick={handleOpenSwapModal}>
+                    ↳↰
+                  </button>
+                )}
                 <button className="edit-auction-icon-btn" onClick={handleEdit}>
                   ✎
                 </button>
