@@ -1,18 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import websocketService from '../services/websocket.js';
 import { useLocation } from 'react-router-dom';
+import { useUserStore } from '../stores/userStore.js';
 
 export const useWebSocket = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [socketId, setSocketId] = useState(null);
   const listenersRef = useRef(new Map());
+  const user = useUserStore((state) => state.user);
 
   useEffect(() => {
-    // Connect to WebSocket
+    // Connect only once there is a session; the handshake needs the cookie.
+    if (!user) return;
     if (!websocketService.socket || !websocketService.isConnected) {
       websocketService.connect();
     }
+  }, [user]);
 
+  useEffect(() => {
     // Set up connection status listener
     const handleConnection = (data) => {
       setIsConnected(data.connected);
