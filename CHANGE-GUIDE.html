@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Change Guide</title>
+<style>
+  :root {
+    --bg: #0e0f11; --panel: #16181b; --panel2: #1b1e22; --ink: #e6e8ea; --muted: #8a929b;
+    --line: #2a2e34; --accent: #4c9dff;
+    --new-bg: #0f2a19; --new-ink: #4dff8f;
+    --mod-bg: #2a2312; --mod-ink: #d8b45c;
+    --done: #2ecc71; --done-dim: #1a3a24;
+    --sidebar-width: 340px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink); background: var(--bg);
+  }
+  #app { display: grid; grid-template-columns: var(--sidebar-width) 1fr; height: 100vh; }
+  #sidebar { border-right: 1px solid var(--line); background: var(--panel); overflow-y: auto; }
+  .side-head { padding: 16px 16px 12px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--panel); z-index: 1; }
+  .side-head h1 { font-size: 15px; margin: 0 0 2px; }
+  .side-head .sub { color: var(--muted); font-size: 12px; }
+  .progress-wrap { margin-top: 12px; }
+  .progress-bar { height: 8px; background: #23272d; border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0%; background: var(--done); transition: width .2s ease; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .progress-label a { color: var(--accent); text-decoration: none; cursor: pointer; }
+  nav { padding: 8px 0 24px; }
+  .group-title { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding: 14px 16px 6px; }
+  .item {
+    display: flex; align-items: center; gap: 10px; padding: 7px 16px; cursor: pointer;
+    border-left: 3px solid transparent; user-select: none;
+  }
+  .item:hover { background: #1d2126; }
+  .item.active { background: #1b2733; border-left-color: var(--accent); }
+  .item.reviewed { border-left-color: var(--done); }
+  .item.reviewed .name { color: var(--muted); text-decoration: line-through; }
+  .item .num { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 12px; min-width: 18px; }
+  .item .name { flex: 1; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .badge { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 99px; letter-spacing: .03em; }
+  .badge.new { background: var(--new-bg); color: var(--new-ink); }
+  .badge.mod { background: var(--mod-bg); color: var(--mod-ink); }
+  .check { width: 15px; height: 15px; accent-color: var(--done); }
+  #detail { overflow-y: auto; padding: 32px 40px 110px; }
+  .card { max-width: 760px; }
+  .kicker { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  .card h2 { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 20px; margin: 4px 0 10px; word-break: break-all; }
+  .row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .field { margin: 18px 0; }
+  .field .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 4px; }
+  .field .body { font-size: 15px; }
+  .check-panel { background: #2a2312; border: 1px solid #4a3d1a; border-radius: 8px; padding: 14px 16px; }
+  .check-panel .label { color: #d8b45c; }
+  /* Check bullets: identifier at the left edge, generous gap between items, so
+     the list scans as a column of names rather than a wall of prose. */
+  .checklist { list-style: none; margin: 0; padding: 0; }
+  .checklist li { position: relative; padding-left: 20px; margin: 0 0 12px; font-size: 15px; line-height: 1.5; }
+  .checklist li:last-child { margin-bottom: 0; }
+  .checklist li::before { content: "▢"; position: absolute; left: 0; top: 0; color: #d8b45c; }
+  .skim { margin-top: 14px; padding-top: 12px; border-top: 1px solid #4a3d1a; font-size: 13.5px; color: var(--muted); }
+  .skim strong { color: #d8b45c; font-weight: 700; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: #23272d; padding: 1px 5px; border-radius: 4px; font-size: 90%; color: #d6dbe1; }
+  .nav-buttons { display: flex; gap: 10px; margin-top: 34px; flex-wrap: wrap; }
+  button {
+    font: inherit; padding: 9px 16px; border: 1px solid var(--line); background: var(--panel2);
+    border-radius: 8px; cursor: pointer; color: var(--ink);
+  }
+  button:hover { background: #23272d; }
+  button.primary { background: var(--done); color: #08130c; border-color: var(--done); font-weight: 700; }
+  button.primary:hover { filter: brightness(1.08); }
+  button:disabled { opacity: .35; cursor: default; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 18px; }
+  .hint kbd { font-family: ui-monospace, monospace; background: #23272d; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; font-size: 11px; }
+  .overview .mental { background: #12233a; border: 1px solid #244a72; border-radius: 8px; padding: 16px 18px; margin: 14px 0 26px; }
+  .overview ul { padding-left: 20px; }
+  .overview li { margin: 5px 0; }
+
+  #footerBar {
+    position: fixed; left: var(--sidebar-width); right: 0; bottom: 0; z-index: 10;
+    display: none; align-items: center; gap: 10px; flex-wrap: wrap;
+    background: var(--panel); border-top: 1px solid var(--line); padding: 14px 40px;
+  }
+  #footerBar.show { display: flex; }
+  #footerBar .hint { margin: 0 0 0 4px; }
+
+  #celebrateOverlay { position: fixed; inset: 0; z-index: 100; background: #000; }
+  #matrixCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .celebrate-content {
+    position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 20px; text-align: center;
+  }
+  .celebrate-title {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: clamp(28px, 5vw, 48px); font-weight: 800; color: #4dff8f;
+    text-shadow: 0 0 12px #2ecc71, 0 0 34px #2ecc71; letter-spacing: .1em; margin: 0;
+  }
+  .celebrate-sub {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: #8afcb4; font-size: 14px; letter-spacing: .06em; text-shadow: 0 0 8px rgba(46,204,113,.6);
+  }
+  .celebrate-content .nav-buttons { justify-content: center; }
+  .celebrate-content button {
+    background: rgba(14,15,17,.8); border: 1px solid #2ecc71; color: #4dff8f;
+  }
+  .celebrate-content button.primary { background: #2ecc71; color: #08130c; border-color: #2ecc71; }
+  .pr-panel {
+    width: min(760px, 92vw); max-height: 46vh; display: flex; flex-direction: column;
+    background: rgba(14,15,17,.82); border: 1px solid #2ecc71; border-radius: 10px;
+    box-shadow: 0 0 24px rgba(46,204,113,.22);
+    opacity: 0; animation: prFadeIn 1s ease 1.6s forwards;
+  }
+  @keyframes prFadeIn { to { opacity: 1; } }
+  .pr-panel-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 10px 14px; border-bottom: 1px solid rgba(46,204,113,.35);
+  }
+  .pr-panel-head .label {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #8afcb4;
+  }
+  .pr-panel pre {
+    margin: 0; padding: 14px 16px; overflow: auto; text-align: left;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; line-height: 1.5; color: #d6f5e2;
+    white-space: pre-wrap; word-break: break-word;
+  }
+
+  /* Mobile top bar + backdrop — hidden on desktop, shown by the media query. */
+  #mobileBar {
+    display: none; position: sticky; top: 0; z-index: 40;
+    align-items: center; gap: 12px;
+    background: var(--panel); border-bottom: 1px solid var(--line); padding: 10px 14px;
+  }
+  #mobileBar .menu-btn { font-size: 18px; line-height: 1; padding: 8px 12px; }
+  #mobileBar .m-title { flex: 1; font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #mobileBar .m-prog { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  #backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 45; }
+  #backdrop.show { display: block; }
+
+  @media (max-width: 720px) {
+    #app { display: block; height: auto; }
+    #mobileBar { display: flex; }
+    /* Sidebar becomes an off-canvas drawer so the detail pane gets the full width. */
+    #sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0; width: min(85vw, 320px);
+      transform: translateX(-100%); transition: transform .22s ease; z-index: 50;
+    }
+    #sidebar.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,.6); }
+    #detail { padding: 20px 16px 132px; }
+    .card { max-width: none; }
+    .card h2 { font-size: 17px; word-break: break-word; }
+    .row { margin-bottom: 16px; }
+    /* Footer spans full width and its buttons become large tap targets — the
+       primary way to move between files on a phone. */
+    #footerBar { left: 0; padding: 12px 16px; gap: 8px; }
+    #footerBar .hint { display: none; }
+    #footerBar button { flex: 1; padding: 12px 8px; }
+    .pr-panel { max-height: 40vh; }
+    .nav-buttons button { flex: 1; }
+  }
+</style>
+</head>
+<body>
+<div id="mobileBar">
+  <button class="menu-btn" id="menuBtn" aria-label="Toggle file list">☰</button>
+  <span class="m-title" id="m-title">Change Guide</span>
+  <span class="m-prog" id="mprog">0 / 0</span>
+</div>
+<div id="backdrop"></div>
+<div id="app">
+  <aside id="sidebar">
+    <div class="side-head">
+      <h1 id="meta-title">Change Guide</h1>
+      <div class="sub" id="meta-sub"></div>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+        <div class="progress-label"><span id="plabel">0 / 0 reviewed</span><a id="reset">reset</a></div>
+      </div>
+    </div>
+    <nav id="nav"></nav>
+  </aside>
+  <main id="detail"></main>
+</div>
+
+<div id="footerBar">
+  <button id="prevBtn">← Prev</button>
+  <button class="primary" id="markBtn">Mark reviewed → Next</button>
+  <button id="skipBtn">Skip →</button>
+  <span class="hint"><kbd>j</kbd>/<kbd>k</kbd> move · <kbd>r</kbd>/<kbd>space</kbd> toggle reviewed</span>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────────────
+const META = {
+  title: "Reset Password (frontend)",
+  sub: "uncommitted changes · Stress Less Glass FE · 4 files",
+  mentalModel: "This is the <strong>consume</strong> half of the password-reset flow the earlier PR left unbuilt. A new <code>/auth/reset-password?token=...</code> page reads the token from the URL, lets the user set a new password, and posts it through a new <code>resetPassword</code> fetch helper. If the token is missing, expired, invalid, or already used, the page shows a dedicated dead-link screen instead of the form &mdash; it never tries to distinguish those cases from each other in the UI, it just offers a link back to request a new one.",
+  fastPath: [
+    "<code>ResetPassword.js</code> — the only new logic in this change set",
+    "<code>fetch-utils.js</code> — the one new function it calls",
+  ],
+  pr: [
+    "# Add reset-password confirmation page",
+    "",
+    "## Summary",
+    "Completes the password-reset flow started in the previous PR: a `/auth/reset-password` page lets a user set a new password using the token from the emailed reset link, and shows a dedicated \"link no longer valid\" state when the token is missing, expired, invalid, or already used.",
+    "",
+    "## Changes",
+    "- **Data layer**: `src/services/fetch-utils.js` adds `resetPassword(token, password)`, POSTing to `/api/v1/users/reset-password`.",
+    "- **UI**: New `src/components/ResetPassword/ResetPassword.js` (+ `.css`) render the new-password form, client-side strength/confirm validation, and a dead-link fallback for `RESET_TOKEN_EXPIRED`/`RESET_TOKEN_INVALID`/`RESET_TOKEN_INVALIDATED`.",
+    "- **Routing**: `src/App.js` registers `/auth/reset-password`, ahead of the `/auth/:type` catch-all.",
+    "",
+    "## Testing",
+    "- No frontend test suite coverage was added for `ResetPassword.js` — flag if you want that added before merge.",
+    "- Depends on the backend's `/reset-password` endpoint (separate PR).",
+  ].join("\n"),
+};
+
+const FILES = [
+  {
+    section: "1 · Data layer",
+    path: "Stress Less Glass FE/src/services/fetch-utils.js",
+    status: "mod",
+    what: "Adds <code>resetPassword(token, password)</code>, POSTing <code>{ token, password }</code> to <code>/api/v1/users/reset-password</code> and throwing an <code>Error</code> tagged with <code>.status</code>/<code>.code</code> on a non-OK response.",
+    why: "Frontend counterpart the new <code>ResetPassword</code> page calls to consume the emailed token.",
+    check: [
+      "<code>.catch(() => ({}))</code> on the JSON parse — same guard as <code>requestPasswordReset</code> above it; confirm <code>err.code</code> still comes through cleanly on the common path where the backend does return JSON.",
+      "Nothing else in the file changed — confirm no other caller needed updating for this new endpoint.",
+    ],
+  },
+  {
+    section: "2 · UI",
+    path: "Stress Less Glass FE/src/components/ResetPassword/ResetPassword.js",
+    status: "new",
+    what: "New page at <code>/auth/reset-password?token=...</code>: reads <code>token</code> from the query string, collects and confirms a new password, calls <code>resetPassword</code>, and renders a dead-link screen for a missing token or for <code>RESET_TOKEN_EXPIRED</code>/<code>RESET_TOKEN_INVALID</code>/<code>RESET_TOKEN_INVALIDATED</code>.",
+    why: "The consume/confirm half of the reset flow the earlier <code>ForgotPassword</code> PR didn't include.",
+    check: [
+      "<code>STRONG_PASSWORD_PATTERN</code> — hand-copied here, in <code>Auth.js</code>, and in the backend's <code>validatePassword.js</code>; confirm the comment's claim that it mirrors the backend stays true if any one of the three changes.",
+      "<code>!token || isTokenDead</code> — a URL with no token at all renders the identical dead-link screen as a real invalidated token; confirm that's the intended UX rather than a distinct error state.",
+      "Password-match check runs client-side only, after the strength check; the backend's <code>reset-password</code> route never receives a confirm value, so this is purely a UX guard.",
+      "Success navigates straight to <code>/auth/sign-in</code> without signing the user in; confirm that's deliberate given <code>signInUser</code> exists elsewhere in <code>fetch-utils.js</code>.",
+    ],
+  },
+  {
+    section: "2 · UI",
+    path: "Stress Less Glass FE/src/components/ResetPassword/ResetPassword.css",
+    status: "new",
+    what: "Layout for the new page: container, card, title, copy, password field with the show/hide toggle, and back-link.",
+    why: "Standalone stylesheet for the new component, imported alongside <code>Auth.css</code> for the shared <code>.input-auth</code>/<code>.button-auth</code> classes.",
+    skim: "Whole file — plain layout CSS, nothing stateful to verify.",
+  },
+  {
+    section: "3 · Routing",
+    path: "Stress Less Glass FE/src/App.js",
+    status: "mod",
+    what: "Imports <code>ResetPassword</code> and registers <code>/auth/reset-password</code>, placed above <code>/auth/forgot-password</code> and the <code>/auth/:type</code> catch-all.",
+    why: "Wires the new page into routing so the emailed link actually resolves to something.",
+    check: [
+      "Route order — confirm <code>/auth/reset-password</code> still needs to precede <code>/auth/:type</code>, same reasoning as the existing <code>/auth/forgot-password</code> entry; three literal routes stacked above one catch-all is starting to be worth a second look.",
+    ],
+  },
+];
+
+// ── VIEWER (fixed) ────────────────────────────────────────────────────────────
+const STORAGE = "changeguide:" + META.title;
+const reviewed = new Set(JSON.parse(localStorage.getItem(STORAGE) || "[]"));
+const items = [{ type: "overview" }, ...FILES.map((f, i) => ({ type: "file", i, ...f }))];
+let current = 0;
+let celebrationShown = false;
+let matrixIntervalId = null;
+
+const base = (p) => p.split("/").pop();
+const save = () => localStorage.setItem(STORAGE, JSON.stringify([...reviewed]));
+
+function buildSidebar() {
+  document.getElementById("meta-title").textContent = META.title;
+  document.getElementById("meta-sub").textContent = META.sub;
+  document.getElementById("m-title").textContent = META.title;
+  const nav = document.getElementById("nav");
+  nav.innerHTML = "";
+
+  const ov = document.createElement("div");
+  ov.className = "item";
+  ov.dataset.idx = 0;
+  ov.innerHTML = '<span class="num">▸</span><span class="name">Start here — overview</span>';
+  ov.onclick = () => select(0);
+  nav.appendChild(ov);
+
+  let lastSection = null;
+  items.forEach((it) => {
+    if (it.type !== "file") return;
+    if (it.section !== lastSection) {
+      lastSection = it.section;
+      const g = document.createElement("div");
+      g.className = "group-title";
+      g.textContent = it.section;
+      nav.appendChild(g);
+    }
+    const idx = items.indexOf(it);
+    const el = document.createElement("div");
+    el.className = "item";
+    el.dataset.idx = idx;
+    el.innerHTML =
+      '<input type="checkbox" class="check" ' + (reviewed.has(it.path) ? "checked" : "") + ' />' +
+      '<span class="name" title="' + it.path + '">' + base(it.path) + "</span>" +
+      '<span class="badge ' + it.status + '">' + (it.status === "new" ? "NEW" : "MOD") + "</span>";
+    el.querySelector(".check").onclick = (e) => { e.stopPropagation(); toggleReviewed(it.path); };
+    el.onclick = () => select(idx);
+    nav.appendChild(el);
+  });
+  refresh();
+}
+
+function toggleReviewed(path) {
+  if (reviewed.has(path)) reviewed.delete(path); else reviewed.add(path);
+  save(); refresh();
+}
+
+function select(idx) {
+  current = Math.max(0, Math.min(items.length - 1, idx));
+  renderDetail();
+  refresh();
+  const active = document.querySelector('.item[data-idx="' + current + '"]');
+  if (active) active.scrollIntoView({ block: "nearest" });
+  closeDrawer(); // no-op on desktop; on mobile, dismiss the drawer after picking
+}
+
+function refresh() {
+  document.querySelectorAll(".item").forEach((el) => {
+    const idx = +el.dataset.idx;
+    el.classList.toggle("active", idx === current);
+    const it = items[idx];
+    if (it.type === "file") {
+      el.classList.toggle("reviewed", reviewed.has(it.path));
+      const box = el.querySelector(".check");
+      if (box) box.checked = reviewed.has(it.path);
+    }
+  });
+  const total = FILES.length;
+  const done = FILES.filter((f) => reviewed.has(f.path)).length;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById("pfill").style.width = pct + "%";
+  document.getElementById("plabel").textContent = done + " / " + total + " reviewed (" + pct + "%)";
+  document.getElementById("mprog").textContent = done + " / " + total;
+  maybeCelebrate(done, total);
+}
+
+function renderDetail() {
+  const it = items[current];
+  const d = document.getElementById("detail");
+  const footerBar = document.getElementById("footerBar");
+  if (it.type === "overview") {
+    footerBar.classList.remove("show");
+    d.innerHTML =
+      '<div class="card overview">' +
+      '<div class="kicker">Read me first</div>' +
+      "<h2>The one idea</h2>" +
+      '<div class="mental">' + META.mentalModel + "</div>" +
+      '<div class="field"><div class="label">Fastest path if short on time</div>' +
+      "<ul>" + META.fastPath.map((x) => "<li>" + x + "</li>").join("") + "</ul></div>" +
+      '<div class="hint">Move: <kbd>j</kbd>/<kbd>k</kbd> or <kbd>↑</kbd>/<kbd>↓</kbd> &nbsp;·&nbsp; ' +
+      "Mark reviewed: <kbd>r</kbd> or <kbd>space</kbd> &nbsp;·&nbsp; progress is saved in this browser.</div>" +
+      '<div class="nav-buttons"><button class="primary" onclick="select(1)">Start reviewing →</button></div>' +
+      "</div>";
+    return;
+  }
+  const isDone = reviewed.has(it.path);
+  const fileNo = it.i + 1;
+  d.innerHTML =
+    '<div class="card">' +
+    '<div class="kicker">File ' + fileNo + " of " + FILES.length + " · " + it.section + "</div>" +
+    "<h2>" + it.path + "</h2>" +
+    '<div class="row"><span class="badge ' + it.status + '">' + (it.status === "new" ? "NEW FILE" : "MODIFIED") + "</span></div>" +
+    '<div class="field"><div class="label">What changed</div><div class="body">' + it.what + "</div></div>" +
+    '<div class="field"><div class="label">Why</div><div class="body">' + it.why + "</div></div>" +
+    (it.check && it.check.length
+      ? '<div class="field check-panel"><div class="label">What to check</div>' +
+        '<ul class="checklist">' + it.check.map((point) => "<li>" + point + "</li>").join("") + "</ul>" +
+        (it.skim ? '<div class="skim"><strong>Skim:</strong> ' + it.skim + "</div>" : "") +
+        "</div>"
+      : it.skim
+      ? '<div class="field check-panel"><div class="label">Skim</div><div class="body">' + it.skim + "</div></div>"
+      : "") +
+    "</div>";
+  renderFooter(it, isDone);
+}
+
+function renderFooter(it, isDone) {
+  const footerBar = document.getElementById("footerBar");
+  footerBar.classList.add("show");
+  const prevBtn = document.getElementById("prevBtn");
+  const markBtn = document.getElementById("markBtn");
+  const skipBtn = document.getElementById("skipBtn");
+  prevBtn.disabled = current <= 1;
+  prevBtn.onclick = () => select(current - 1);
+  markBtn.textContent = isDone ? "Reviewed ✓ — Next →" : "Mark reviewed → Next";
+  markBtn.onclick = markAndNext;
+  skipBtn.disabled = current >= items.length - 1;
+  skipBtn.onclick = () => select(current + 1);
+}
+
+function markAndNext() {
+  const it = items[current];
+  if (it.type === "file") reviewed.add(it.path);
+  save();
+  if (current < items.length - 1) select(current + 1); else refresh();
+}
+
+document.getElementById("reset").onclick = () => { reviewed.clear(); save(); refresh(); renderDetail(); };
+
+document.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT") return;
+  if (e.key === "j" || e.key === "ArrowDown") { e.preventDefault(); select(current + 1); }
+  else if (e.key === "k" || e.key === "ArrowUp") { e.preventDefault(); select(current - 1); }
+  else if (e.key === "r" || e.key === " ") {
+    e.preventDefault();
+    const it = items[current];
+    if (it.type === "file") toggleReviewed(it.path);
+  }
+});
+
+// ── Mobile drawer ────────────────────────────────────────────────────────────
+const sidebar = document.getElementById("sidebar");
+const backdrop = document.getElementById("backdrop");
+function openDrawer() { sidebar.classList.add("open"); backdrop.classList.add("show"); }
+function closeDrawer() { sidebar.classList.remove("open"); backdrop.classList.remove("show"); }
+document.getElementById("menuBtn").onclick = () =>
+  sidebar.classList.contains("open") ? closeDrawer() : openDrawer();
+backdrop.onclick = closeDrawer;
+
+// ── CELEBRATION (all files reviewed) ─────────────────────────────────────────
+function maybeCelebrate(doneCount, total) {
+  if (total > 0 && doneCount === total) {
+    if (!celebrationShown) { celebrationShown = true; showCelebration(); }
+  } else {
+    celebrationShown = false;
+  }
+}
+
+function showCelebration() {
+  if (document.getElementById("celebrateOverlay")) return;
+  const overlay = document.createElement("div");
+  overlay.id = "celebrateOverlay";
+  overlay.innerHTML =
+    '<canvas id="matrixCanvas"></canvas>' +
+    '<div class="celebrate-content">' +
+    '<div class="celebrate-title">ALL FILES REVIEWED</div>' +
+    '<div class="celebrate-sub">' + FILES.length + " / " + FILES.length + " · 100% · PR summary ready to paste</div>" +
+    '<div class="pr-panel">' +
+    '<div class="pr-panel-head"><span class="label">PR description (markdown)</span>' +
+    '<button class="primary" id="copyPrBtn">Copy PR summary</button></div>' +
+    '<pre id="prText"></pre>' +
+    "</div>" +
+    '<div class="nav-buttons"><button onclick="closeCelebration()">Back to guide →</button></div>' +
+    "</div>";
+  document.body.appendChild(overlay);
+  document.getElementById("prText").textContent = META.pr;
+  document.getElementById("copyPrBtn").onclick = copyPr;
+  runMatrixRain(document.getElementById("matrixCanvas"));
+}
+
+function copyPr() {
+  const button = document.getElementById("copyPrBtn");
+  const showCopied = () => {
+    button.textContent = "Copied ✓";
+    setTimeout(() => { button.textContent = "Copy PR summary"; }, 1800);
+  };
+  const showFailed = () => { button.textContent = "Press Ctrl/Cmd+C"; };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(META.pr).then(showCopied, () => {
+      if (fallbackCopy(META.pr)) showCopied(); else showFailed();
+    });
+  } else if (fallbackCopy(META.pr)) {
+    showCopied();
+  } else {
+    showFailed();
+  }
+}
+
+function fallbackCopy(text) {
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    const copied = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    return copied;
+  } catch (error) {
+    return false;
+  }
+}
+
+function closeCelebration() {
+  const overlay = document.getElementById("celebrateOverlay");
+  if (overlay) overlay.remove();
+  if (matrixIntervalId) { clearInterval(matrixIntervalId); matrixIntervalId = null; }
+}
+
+function runMatrixRain(canvas) {
+  const context = canvas.getContext("2d");
+  const chars = "アイウエオカキクケコサシスセソタチツテト0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const fontSize = 16;
+  let columns, drops;
+
+  function size() {
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    columns = Math.floor(canvas.width / fontSize);
+    drops = new Array(columns).fill(1);
+  }
+  size();
+  window.addEventListener("resize", size);
+
+  if (matrixIntervalId) clearInterval(matrixIntervalId);
+  matrixIntervalId = setInterval(() => {
+    context.fillStyle = "rgba(0, 0, 0, 0.06)";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "#2ecc71";
+    context.font = fontSize + "px ui-monospace, monospace";
+    for (let column = 0; column < drops.length; column++) {
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      context.fillText(char, column * fontSize, drops[column] * fontSize);
+      if (drops[column] * fontSize > canvas.height && Math.random() > 0.975) drops[column] = 0;
+      drops[column]++;
+    }
+  }, 40);
+}
+
+buildSidebar();
+select(0);
+</script>
+</body>
+</html>
