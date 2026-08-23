@@ -37,7 +37,6 @@ const NotFound = () => {
               About me
             </Link>
           </div>
-          <p className="slg-404-hint">Every face of the cube is a piece. Catch one to open it.</p>
         </div>
 
         <div className="slg-404-stage">
