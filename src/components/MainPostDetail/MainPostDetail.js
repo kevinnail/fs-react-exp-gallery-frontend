@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import { useSwipeable } from 'react-swipeable';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Loading from '../Loading/Loading.js';
+import NotFound from '../NotFound/NotFound.js';
 import ShareButton from '../ShareButton/ShareButton.js';
 import './MainPostDetail.css';
 
@@ -32,7 +33,7 @@ function storeFor(sellingLink) {
 
 export default function MainPostDetail() {
   const { id } = useParams();
-  const { postDetail, imageUrls, loading } = useGalleryPost(id);
+  const { postDetail, imageUrls, loading, notFound } = useGalleryPost(id);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -95,6 +96,7 @@ export default function MainPostDetail() {
   };
 
   if (loading) return <Loading />;
+  if (notFound) return <NotFound />;
 
   return (
     <main className="slg-detail">
