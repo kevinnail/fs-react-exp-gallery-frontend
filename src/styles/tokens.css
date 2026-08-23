@@ -28,6 +28,10 @@
      decorative, and never used for "on sale" (that's the flame). */
   --slg-alert: #e5484d;
 
+  --slg-state-bad: #e5484d;
+  --slg-state-wait: #f2c94c;
+  --slg-state-good: #3fc77f;
+
   /* rhythm */
   --slg-gutter: clamp(1.25rem, 4vw, 4rem);
 

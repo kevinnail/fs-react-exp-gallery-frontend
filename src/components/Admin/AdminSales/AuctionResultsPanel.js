@@ -5,6 +5,7 @@ import {
   markAuctionPaid,
   updateAuctionTracking,
 } from '../../../services/fetch-auctions.js';
+import './AdminSales.css';
 import './AuctionResultsPanel.css';
 import { toast } from 'react-toastify';
 import websocketService from '../../../services/websocket.js';
@@ -12,8 +13,12 @@ import { useAuctionEventsStore } from '../../../stores/auctionEventsStore.js';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../Loading/Loading.js';
 import { getAllUsers } from '../../../services/fetch-utils.js';
+import SaleStages from './SaleStages.js';
+import { countCompletedStages, hasRealTracking } from './saleStatus.js';
 
-export default function AuctionResultsPanel() {
+const formatMoney = (amount) => `$${Number(amount || 0).toLocaleString()}`;
+
+const AuctionResultsPanel = () => {
   const [auctions, setAuctions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -215,7 +220,6 @@ export default function AuctionResultsPanel() {
           })
         );
 
-        // setAuctions(withResults);
         setAuctions(withResults.filter((a) => a.topBid));
       } catch (e) {
         console.error('Error loading auctions:', e);
@@ -282,307 +286,236 @@ export default function AuctionResultsPanel() {
     };
   }, []);
 
+  const handleTogglePaid = async (auctionId, currentPaid) => {
+    try {
+      await markAuctionPaid(auctionId, !currentPaid);
+
+      setAuctions((prev) =>
+        prev.map((x) => (x.id === auctionId ? { ...x, isPaid: !currentPaid } : x))
+      );
+    } catch (e) {
+      console.error('Error marking auction paid');
+      toast.error(`${e.message}` || 'Error marking auction paid', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-list-1',
+        autoClose: false,
+      });
+    }
+  };
+
   if (loading) {
-    return (
-      <aside className="auction-results-panel">
-        <Loading />
-      </aside>
-    );
+    return <Loading />;
   }
 
-  // Calculate total owed to admin: auctions with a winner, not paid
   const totalOwed = auctions
     .filter((auction) => auction.winner && !auction.isPaid)
     .reduce((sum, auction) => sum + (auction.topBid?.bidAmount || 0), 0);
 
+  const awaitingPayment = auctions.filter((auction) => !auction.isPaid).length;
+  const readyToShip = auctions.filter(
+    (auction) => auction.isPaid && !hasRealTracking(auction.trackingNumber)
+  ).length;
+
+  const statTiles = [
+    { label: 'Results', value: auctions.length },
+    { label: 'Unpaid', value: awaitingPayment, tone: awaitingPayment > 0 ? 'bad' : null },
+    { label: 'To ship', value: readyToShip, tone: readyToShip > 0 ? 'wait' : null },
+    { label: 'Owed', value: formatMoney(totalOwed), isOwed: true },
+  ];
+
   return (
-    <aside className="auction-results-panel">
-      <div style={{ display: 'block' }}>
-        <h3 style={{ margin: 0, padding: 0 }}>Auctions</h3>
-        <div style={{ marginBottom: '.25rem' }}>
-          <span style={{ fontSize: '1.25rem' }}>Unpaid Total:</span>
-          <span style={{ color: '#9f9' }}> ${totalOwed.toLocaleString()}</span>
-        </div>
-        <div style={{ marginBottom: '.25rem' }}>
-          <span style={{ fontSize: '1.25rem', border: '2x solid yellow', padding: '0 4px' }}>
-            {auctions.filter((auction) => !auction.trackingNumber).length > 0
-              ? 'Need to ship! '
-              : ''}
-          </span>
-          <span
-            style={{
-              color:
-                auctions.filter((auction) => !auction.trackingNumber).length > 0
-                  ? 'yellow'
-                  : '#9f9',
-            }}
-          >
-            {auctions.filter((auction) => !auction.trackingNumber).length > 0
-              ? 'SHIPPING REQUIRED ' && auctions.filter((auction) => !auction.trackingNumber).length
-              : 'All clear '}
-          </span>
-        </div>
-      </div>
-      <div className="auction-results-list">
-        {auctions.map((a) => {
-          const isClosed = !a.isActive;
-          const winnerName = a.winner
-            ? `${a.winner.firstName || ''} ${a.winner.lastName || ''}`.trim()
-            : '—';
-          const finalBid = a.topBid?.bidAmount ?? a.currentBid ?? a.startPrice;
-          const image = a.imageUrls?.[0];
-          const highBid = a.topBid ? a.topBid.bidAmount : 0;
-
-          const handleTogglePaid = async (auctionId, currentPaid) => {
-            try {
-              await markAuctionPaid(auctionId, !currentPaid);
-
-              setAuctions((prev) =>
-                prev.map((x) => (x.id === auctionId ? { ...x, isPaid: !currentPaid } : x))
-              );
-            } catch (e) {
-              console.error('Error marking auction paid');
-              toast.error(`${e.message}` || 'Error marking auction paid', {
-                theme: 'colored',
-                draggable: true,
-                draggablePercent: 60,
-                toastId: 'auction-list-1',
-                autoClose: false,
-              });
-            }
-          };
-          const navAuction = (auctionId) => {
-            navigate(`/auctions/${auctionId}`);
-          };
-          return (
-            <div
-              key={a.id}
-              className={`auction-result-item ${isClosed ? 'closed' : 'active-auction'}`}
-              style={{
-                border: a.trackingNumber ? '' : '2px solid yellow',
-                backgroundColor: a.trackingNumber ? '' : '#222',
-              }}
-            >
-              {/* Remove long ternary for image rendering */}
-              {image && (
-                <div style={{ display: 'grid' }}>
-                  <img
-                    src={image}
-                    alt={a.title}
-                    onClick={() => {
-                      navAuction(a.id);
-                    }}
-                    className="auction-result-thumb"
-                  />
-                  {isClosed && a.trackingNumber && (
-                    <a
-                      href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
-                        a.trackingNumber
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`View tracking for ${a.title}`}
-                    >
-                      <img
-                        alt="USPS"
-                        className="auction-result-thumb"
-                        style={{ width: '50px', height: '50px', margin: '.5rem 0 0 .25rem' }}
-                        src="../../../usps.png"
-                      />
-                    </a>
-                  )}
-                </div>
-              )}
-              {!image && <div className="auction-result-thumb placeholder" />}
-
-              <div className="auction-result-info">
-                {isClosed && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <button
-                      onClick={() => handleTogglePaid(a.id, a.isPaid)}
-                      style={{
-                        padding: '4px 8px',
-                        background: a.isPaid ? '#2a2' : '#a22',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        color: 'white',
-                        fontSize: '0.8rem',
-                        width: '40%',
-                      }}
-                    >
-                      {a.isPaid ? 'Paid' : 'Mark Paid'}
-                    </button>
-                    {a.isPaid && (
-                      <button
-                        onClick={() => openTrackingModal(a.id, a.trackingNumber)}
-                        style={{
-                          padding: '4px 8px',
-                          background: '#464646ff',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          color: 'white',
-                          fontSize: '0.8rem',
-                          width: '40%',
-                        }}
-                      >
-                        {a.trackingNumber ? `...${a.trackingNumber.slice(-4)}` : 'Tracking'}
-                      </button>
-                    )}
-                  </div>
-                )}
-
-                <h4 title={a.title}>{a.title}</h4>
-
-                <p>
-                  <span>Status:</span> {isClosed ? 'Closed' : 'Active'}
-                </p>
-
-                <p>
-                  <span>{isClosed ? 'Winner:' : 'High Bidder:'}</span>{' '}
-                  {winnerName.length < 30
-                    ? winnerName
-                    : winnerName.substring(0, 20) + '...' || 'No bids'}
-                </p>
-
-                {isClosed && (
-                  <p>
-                    <span>Owes:</span> {a.topBid ? `$${finalBid.toLocaleString()}` : '—'}
-                  </p>
-                )}
-
-                <p>
-                  <span>High Bid:</span> {highBid ? `$${highBid.toLocaleString()}` : 'No bids'}
-                </p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      {showTrackingModal && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            background: 'rgba(0,0,0,0.6)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999,
-          }}
-        >
+    <>
+      <div className="slg-sales-stats">
+        {statTiles.map((tile) => (
           <div
-            style={{
-              background: '#222',
-              padding: '20px',
-              borderRadius: '8px',
-              width: '320px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px',
-            }}
+            key={tile.label}
+            className={`slg-sales-stat${tile.tone ? ` slg-sales-stat--${tile.tone}` : ''}`}
           >
-            <h4 style={{ margin: 0 }}>Enter Tracking</h4>
-
-            <div
-              style={{
-                background: '#1a1a1a',
-                border: '1px solid #333',
-                borderRadius: '6px',
-                padding: '10px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-              }}
+            <span className="slg-sales-stat-label">{tile.label}</span>
+            <span
+              className={`slg-sales-stat-value${tile.isOwed ? ' slg-sales-stat-value--owed' : ''}`}
             >
-              <div
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-              >
-                <strong style={{ fontSize: '0.9rem' }}>Shipping Address</strong>
-                <button
-                  onClick={copyAddressText}
-                  disabled={!address}
-                  style={{
-                    padding: '4px 8px',
-                    background: address ? '#444' : '#333',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: address ? 'pointer' : 'not-allowed',
-                    color: 'white',
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  Copy
-                </button>
-              </div>
+              {tile.value}
+            </span>
+          </div>
+        ))}
+      </div>
 
+      <div className="slg-sales-body slg-sales-body--full">
+        <main className="slg-sales-main">
+          <div className="slg-sales-toolbar">
+            <h2 className="slg-sales-heading">Auction results</h2>
+            <p className="slg-sales-count">{auctions.length}</p>
+          </div>
+
+          {auctions.length === 0 ? (
+            <p className="slg-sale-empty">
+              No auctions have taken a bid yet. Results appear here once bidding starts.
+            </p>
+          ) : (
+            <ul className="slg-sale-list">
+              {auctions.map((auction) => {
+                const isClosed = !auction.isActive;
+                const winnerName = auction.winner
+                  ? `${auction.winner.firstName || ''} ${auction.winner.lastName || ''}`.trim()
+                  : '';
+                const highBid = auction.topBid ? auction.topBid.bidAmount : 0;
+                const image = auction.imageUrls?.[0];
+                const completedStages = countCompletedStages({
+                  isPaid: auction.isPaid,
+                  trackingNumber: auction.trackingNumber,
+                });
+
+                return (
+                  <li key={auction.id} className="slg-auction-row">
+                    <button
+                      type="button"
+                      className="slg-auction-piece"
+                      onClick={() => navigate(`/auctions/${auction.id}`)}
+                    >
+                      <span className="slg-sale-thumb">
+                        {image ? <img src={image} alt="" /> : null}
+                      </span>
+
+                      <span className="slg-sale-identity">
+                        <span className="slg-sale-title">{auction.title}</span>
+                        <span className="slg-sale-buyer">
+                          {isClosed ? 'Winner' : 'High bidder'}: {winnerName || 'No bids'}
+                        </span>
+                      </span>
+
+                      <span className="slg-sale-price">
+                        {highBid ? formatMoney(highBid) : 'No bids'}
+                      </span>
+                    </button>
+
+                    <div className="slg-auction-state">
+                      {isClosed ? (
+                        <SaleStages completedCount={completedStages} />
+                      ) : (
+                        <span className="slg-auction-live">Live</span>
+                      )}
+
+                      {isClosed && (
+                        <div className="slg-auction-actions">
+                          <button
+                            type="button"
+                            className={`slg-sales-button${auction.isPaid ? '' : ' slg-sales-button--primary'}`}
+                            onClick={() => handleTogglePaid(auction.id, auction.isPaid)}
+                          >
+                            {auction.isPaid ? 'Mark unpaid' : 'Mark paid'}
+                          </button>
+
+                          {auction.isPaid && (
+                            <button
+                              type="button"
+                              className="slg-sales-button"
+                              onClick={() => openTrackingModal(auction.id, auction.trackingNumber)}
+                            >
+                              {hasRealTracking(auction.trackingNumber)
+                                ? `Tracking ···${String(auction.trackingNumber).slice(-4)}`
+                                : 'Add tracking'}
+                            </button>
+                          )}
+
+                          {hasRealTracking(auction.trackingNumber) && (
+                            <a
+                              className="slg-sales-button"
+                              href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
+                                auction.trackingNumber
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Track with USPS
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </main>
+      </div>
+
+      {showTrackingModal && (
+        <div className="slg-modal-scrim">
+          <div className="slg-modal" role="dialog" aria-modal="true">
+            <div className="slg-modal-head">
+              <h2 className="slg-modal-title">Add tracking</h2>
+              <button
+                type="button"
+                className="slg-modal-close"
+                onClick={() => setShowTrackingModal(false)}
+                aria-label="Close tracking form"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="slg-user-card">
+              <span className="slg-sale-fact-label">Ship to</span>
               {address ? (
-                <div style={{ lineHeight: 1.4 }}>
-                  <div>{displayName || 'Unknown'}</div>
-                  <div>{address.addressLine1}</div>
-                  {address.addressLine2 ? <div>{address.addressLine2}</div> : null}
-                  <div>
-                    {address.city}, {address.state} {address.postalCode}
+                <div className="slg-sale-address">
+                  <div className="slg-sale-address-lines">
+                    <div>{displayName || 'Unknown'}</div>
+                    <div>{address.addressLine1}</div>
+                    {address.addressLine2 ? <div>{address.addressLine2}</div> : null}
+                    <div>
+                      {address.city}, {address.state} {address.postalCode}
+                    </div>
+                    <div>{address.countryCode || 'US'}</div>
                   </div>
-                  <div>{address.countryCode || 'US'}</div>
+                  <button type="button" className="slg-sales-button" onClick={copyAddressText}>
+                    Copy address
+                  </button>
                 </div>
               ) : (
-                <div style={{ color: '#ccc', fontStyle: 'italic' }}>
+                <p className="slg-sale-fact-value slg-sale-fact-value--missing">
                   No shipping address on file
-                </div>
+                </p>
               )}
             </div>
 
-            <input
-              type="text"
-              placeholder="USPS Tracking Number"
-              value={trackingInput}
-              onChange={(e) => setTrackingInput(e.target.value)}
-              style={{
-                padding: '8px',
-                borderRadius: '4px',
-                border: '1px solid #555',
-                background: '#111',
-                color: 'white',
-              }}
-            />
+            <div className="slg-field">
+              <label className="slg-field-label" htmlFor="slg-auction-tracking">
+                USPS tracking number
+              </label>
+              <input
+                id="slg-auction-tracking"
+                type="text"
+                className="slg-input"
+                value={trackingInput}
+                onChange={(e) => setTrackingInput(e.target.value)}
+              />
+            </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="slg-modal-actions">
               <button
+                type="button"
+                className="slg-sales-button slg-sales-button--wide"
                 onClick={() => setShowTrackingModal(false)}
-                style={{
-                  padding: '6px 12px',
-                  background: '#444',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  color: 'white',
-                }}
               >
                 Cancel
               </button>
-
               <button
+                type="button"
+                className="slg-sales-button slg-sales-button--primary slg-sales-button--wide"
                 onClick={handleSaveTracking}
-                style={{
-                  padding: '6px 12px',
-                  background: '#2a2',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  color: 'white',
-                }}
               >
-                Save
+                Save tracking
               </button>
             </div>
           </div>
         </div>
       )}
-    </aside>
+    </>
   );
-}
+};
+
+export default AuctionResultsPanel;

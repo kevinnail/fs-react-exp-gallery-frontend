@@ -3,32 +3,52 @@ import './AdminSales.css';
 import GallerySalesPanel from './GallerySalesPanel.js';
 import AuctionResultsPanel from './AuctionResultsPanel.js';
 
-export default function AdminSales() {
+const TABS = [
+  { id: 'gallery', label: 'Gallery' },
+  { id: 'auctions', label: 'Auction' },
+];
+
+const AdminSales = () => {
   const [activeTab, setActiveTab] = useState('gallery');
 
   return (
-    <div className="admin-sales-wrapper">
-      <h2 style={{ margin: '0.25rem', textAlign: 'center' }}>Sales</h2>
-      <div className="admin-sales-tabs">
-        <button
-          className={activeTab === 'gallery' ? 'active' : ''}
-          onClick={() => setActiveTab('gallery')}
-        >
-          Gallery
-        </button>
-
-        <button
-          className={activeTab === 'auctions' ? 'active' : ''}
-          onClick={() => setActiveTab('auctions')}
-        >
-          Auction
-        </button>
+    <div className="slg-sales">
+      <div className="slg-sales-head">
+        <p className="slg-eyebrow">Admin</p>
+        <h1 className="slg-sales-title">Sales</h1>
       </div>
 
-      <div className="admin-sales-tab-content">
-        {activeTab === 'gallery' && <GallerySalesPanel />}
-        {activeTab === 'auctions' && <AuctionResultsPanel />}
+      <div className="slg-sales-tabs" role="tablist" aria-label="Sales source">
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            id={`slg-sales-tab-${tab.id}`}
+            aria-selected={activeTab === tab.id}
+            aria-controls={`slg-sales-view-${tab.id}`}
+            className={`slg-sales-tab${activeTab === tab.id ? ' slg-sales-tab--on' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
+
+      {TABS.map((tab) =>
+        activeTab === tab.id ? (
+          <div
+            key={tab.id}
+            role="tabpanel"
+            id={`slg-sales-view-${tab.id}`}
+            aria-labelledby={`slg-sales-tab-${tab.id}`}
+          >
+            {tab.id === 'gallery' ? <GallerySalesPanel /> : <AuctionResultsPanel />}
+          </div>
+        ) : null
+      )}
     </div>
   );
-}
+};
+
+export default AdminSales;
