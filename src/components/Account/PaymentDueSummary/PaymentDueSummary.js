@@ -1,143 +1,20 @@
-import { useEffect, useMemo, useState } from 'react';
-import { getUserAuctions } from '../../../services/fetch-auctions.js';
-import { getUserSales } from '../../../services/fetch-sales.js';
-import websocketService from '../../../services/websocket.js';
-import { SALE_PAID, SALE_TRACKING_INFO, SALE_CREATED } from '../../../services/salesEvents.js';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './PaymentDueSummary.css';
-import { useAuctionEventsStore } from '../../../stores/auctionEventsStore.js';
+import { FIRST_ITEM_SHIPPING, ADDITIONAL_ITEM_SHIPPING } from '../../../hooks/useUnpaidSummary.js';
 
-export default function PaymentDueSummary({ userId }) {
-  const [wonAuctions, setWonAuctions] = useState([]);
-  const [sales, setSales] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function PaymentDueSummary({
+  unpaidData,
+  onViewUnpaidAuctions,
+  onViewUnpaidPurchases,
+}) {
   const [copied, setCopied] = useState(false);
   const [copiedCashApp, setCopiedCashApp] = useState(false);
 
   const navigate = useNavigate();
-  const lastAuctionPaid = useAuctionEventsStore((s) => s.lastAuctionPaid);
 
-  useEffect(() => {
-    let isMounted = true;
-    const load = async () => {
-      try {
-        let auctionsResp = { wonAuctions: [] };
-        if (userId) {
-          auctionsResp = await getUserAuctions(userId);
-        }
-
-        const salesResp = await getUserSales();
-
-        if (!isMounted) return;
-
-        let rawWon = [];
-        if (auctionsResp && Array.isArray(auctionsResp.wonAuctions)) {
-          rawWon = auctionsResp.wonAuctions;
-        }
-
-        let rawSales = [];
-        if (Array.isArray(salesResp)) {
-          rawSales = salesResp;
-        }
-
-        setWonAuctions(rawWon);
-        setSales(rawSales);
-      } catch (e) {
-        console.error('Error loading payment due data:', e);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    load();
-    return () => {
-      isMounted = false;
-    };
-  }, [userId]);
-
-  // Real-time purchase updates (paid status & tracking)
-  useEffect(() => {
-    const handleSalePaid = (data) => {
-      if (!data || typeof data.saleId === 'undefined') return;
-      setSales((prev) =>
-        prev.map((s) => (s.id === data.saleId ? { ...s, is_paid: data.isPaid } : s))
-      );
-    };
-    const handleSaleTracking = (data) => {
-      if (!data || typeof data.saleId === 'undefined') return;
-      setSales((prev) =>
-        prev.map((s) => (s.id === data.saleId ? { ...s, tracking_number: data.trackingNumber } : s))
-      );
-    };
-    websocketService.on(SALE_PAID, handleSalePaid);
-    websocketService.on(SALE_TRACKING_INFO, handleSaleTracking);
-    const handleSaleCreated = (data) => {
-      const payload = data?.sale || data;
-      if (!payload) return;
-      const mapped = {
-        id: payload.id ?? payload.saleId,
-        post_id: payload.post_id ?? payload.postId,
-        user_id: payload.user_id ?? payload.userId,
-        price: payload.price,
-        tracking_number: payload.tracking_number ?? payload.trackingNumber ?? '0',
-        is_paid: payload.is_paid ?? payload.isPaid ?? false,
-        created_at: payload.created_at,
-        post_title: payload.post_title,
-        post_image_url: payload.post_image_url,
-        buyer_email: payload.buyer_email,
-      };
-      if (!mapped.id) {
-        console.error('[PaymentDueSummary] sale-created payload missing id', data);
-        return;
-      }
-      setSales((prev) => (prev.some((s) => s.id === mapped.id) ? prev : [mapped, ...prev]));
-    };
-    websocketService.on(SALE_CREATED, handleSaleCreated);
-    return () => {
-      websocketService.off(SALE_PAID, handleSalePaid);
-      websocketService.off(SALE_TRACKING_INFO, handleSaleTracking);
-      websocketService.off(SALE_CREATED, handleSaleCreated);
-    };
-  }, []);
-
-  // Live auction paid websocket update (no sales websocket logic)
-  useEffect(() => {
-    if (!lastAuctionPaid) return;
-    const { id, isPaid } = lastAuctionPaid;
-    setWonAuctions((prev) =>
-      prev.map((a) => (a.auctionId === id || a.id === id ? { ...a, isPaid } : a))
-    );
-  }, [lastAuctionPaid]);
-
-  const unpaidData = useMemo(() => {
-    const unpaidWins = wonAuctions.filter((a) => !a.isPaid);
-    const unpaidPurchases = sales.filter((s) => !s.is_paid);
-
-    const auctionSubtotal = unpaidWins.reduce((sum, a) => sum + (a.finalBid || 0), 0);
-    const purchaseSubtotal = unpaidPurchases.reduce((sum, s) => sum + (Number(s.price) || 0), 0);
-
-    const itemCount = unpaidWins.length + unpaidPurchases.length;
-    let shipping = 0;
-    if (itemCount > 0) {
-      shipping = 9 + Math.max(0, itemCount - 1) * 1;
-    }
-    const total = auctionSubtotal + purchaseSubtotal + shipping;
-
-    return {
-      unpaidWins,
-      unpaidPurchases,
-      auctionSubtotal,
-      purchaseSubtotal,
-      itemCount,
-      shipping,
-      total,
-    };
-  }, [wonAuctions, sales]);
-
-  if (loading) return null;
-
-  const hasUnpaid = unpaidData.unpaidWins.length > 0 || unpaidData.unpaidPurchases.length > 0;
-  if (!hasUnpaid) return null;
+  const unpaidAuctionCount = unpaidData.unpaidWins.length;
+  const unpaidPurchaseCount = unpaidData.unpaidPurchases.length;
 
   const handleMsgNav = () => {
     navigate('/messages');
@@ -152,7 +29,7 @@ export default function PaymentDueSummary({ userId }) {
   const handleCopyZelle = () => {
     let text = '';
     if (ZELLE_NAME) {
-      text = `${ZELLE_NAME} — ${ZELLE_HANDLE}`;
+      text = `${ZELLE_NAME}: ${ZELLE_HANDLE}`;
     } else {
       text = `${ZELLE_HANDLE}`;
     }
@@ -204,9 +81,9 @@ export default function PaymentDueSummary({ userId }) {
     const shippingPerItem = [];
     for (let i = 0; i < rows.length; i += 1) {
       if (i === 0) {
-        shippingPerItem.push(9);
+        shippingPerItem.push(FIRST_ITEM_SHIPPING);
       } else {
-        shippingPerItem.push(1);
+        shippingPerItem.push(ADDITIONAL_ITEM_SHIPPING);
       }
     }
 
@@ -307,31 +184,51 @@ export default function PaymentDueSummary({ userId }) {
   return (
     <div className="payment-due-summary">
       <div className="user-auctions-summary">
-        <h4>Payment needed (combined)</h4>
+        <div className="summary-heading">
+          <h4>Payment needed</h4>
+          <span className="summary-heading-total">${unpaidData.total.toLocaleString()}</span>
+        </div>
+
         <div className="summary-details">
+          {unpaidAuctionCount > 0 && (
+            <button
+              type="button"
+              className="summary-jump-row"
+              onClick={onViewUnpaidAuctions}
+              disabled={typeof onViewUnpaidAuctions !== 'function'}
+            >
+              <span className="summary-jump-label">
+                {unpaidAuctionCount} auction{unpaidAuctionCount === 1 ? '' : 's'} won
+                <span className="summary-jump-hint">View in the Auctions tab</span>
+              </span>
+              <span>${unpaidData.auctionSubtotal.toLocaleString()}</span>
+            </button>
+          )}
+          {unpaidPurchaseCount > 0 && (
+            <button
+              type="button"
+              className="summary-jump-row"
+              onClick={onViewUnpaidPurchases}
+              disabled={typeof onViewUnpaidPurchases !== 'function'}
+            >
+              <span className="summary-jump-label">
+                {unpaidPurchaseCount} purchase{unpaidPurchaseCount === 1 ? '' : 's'}
+                <span className="summary-jump-hint">View in the Purchases tab</span>
+              </span>
+              <span>${unpaidData.purchaseSubtotal.toLocaleString()}</span>
+            </button>
+          )}
           <p className="summary-details-p">
-            <span>Auctions unpaid:</span> {unpaidData.unpaidWins.length}
-          </p>
-          <p className="summary-details-p">
-            <span>Purchases unpaid:</span> {unpaidData.unpaidPurchases.length}
-          </p>
-          <p className="summary-details-p">
-            <span>Auctions subtotal:</span> ${unpaidData.auctionSubtotal.toLocaleString()}
-          </p>
-          <p className="summary-details-p">
-            <span>Purchases subtotal:</span> ${unpaidData.purchaseSubtotal.toLocaleString()}
-          </p>
-          <p className="summary-details-p">
-            <span>Shipping:</span> ${unpaidData.shipping.toLocaleString()}
+            <span>Shipping</span> ${unpaidData.shipping.toLocaleString()}
           </p>
           <p className="summary-total">
-            <strong>Total:</strong> ${unpaidData.total.toLocaleString()}
+            <strong>Total due</strong> ${unpaidData.total.toLocaleString()}
           </p>
         </div>
 
         <div className="payment-info-banner">
           <div className="payment-due">
-            <strong>Payment Due!</strong>
+            <strong>How to pay</strong>
 
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <button
@@ -344,7 +241,7 @@ export default function PaymentDueSummary({ userId }) {
             </div>
           </div>
 
-          <p>
+          <p className="payment-contact-line">
             Contact me through{' '}
             <span onClick={handleMsgNav} style={{ cursor: 'pointer', textDecoration: 'underline' }}>
               Messages
@@ -355,99 +252,100 @@ export default function PaymentDueSummary({ userId }) {
           {/* Quick Pay options as cards */}
           <div className="quick-pay-section">
             <div className="quick-pay-header">Easy Pay Options</div>
+            <div className="quick-pay-grid">
+              {/* Zelle Card */}
+              <div className="quick-pay-card zelle">
+                <div className="quick-pay-thumb" aria-hidden>
+                  Z
+                </div>
+                <div className="quick-pay-content">
+                  <div className="quick-pay-title">
+                    Zelle{' '}
+                    <span style={{ fontWeight: '300', fontSize: '1rem' }}>
+                      {ZELLE_NAME} - {ZELLE_HANDLE}
+                    </span>
+                  </div>
 
-            {/* Zelle Card */}
-            <div className="quick-pay-card zelle">
-              <div className="quick-pay-thumb" aria-hidden>
-                Z
-              </div>
-              <div className="quick-pay-content">
-                <div className="quick-pay-title">
-                  Zelle{' '}
-                  <span style={{ fontWeight: '300', fontSize: '1rem' }}>
-                    {ZELLE_NAME} - {ZELLE_HANDLE}
-                  </span>
+                  <div className="quick-pay-subtitle">
+                    Preferred: instant and always free (available at most banks)
+                  </div>
+                  <div className="quick-pay-row">
+                    <button className="pay-now-btn" onClick={handleCopyZelle}>
+                      Copy Zelle info
+                    </button>
+                    {copied ? <span className="copied-indicator">Copied!</span> : null}
+                  </div>
                 </div>
+              </div>
 
-                <div className="quick-pay-subtitle">
-                  Preferred — instant & always free (available at most banks)
+              {/* Venmo Card */}
+              <div className="quick-pay-card venmo">
+                <div className="quick-pay-thumb" aria-hidden>
+                  V
                 </div>
-                <div className="quick-pay-row">
-                  <button className="pay-now-btn" onClick={handleCopyZelle}>
-                    Copy Zelle info
-                  </button>
-                  {copied ? <span className="copied-indicator">Copied!</span> : null}
-                </div>
-              </div>
-            </div>
-
-            {/* Venmo Card */}
-            <div className="quick-pay-card venmo">
-              <div className="quick-pay-thumb" aria-hidden>
-                V
-              </div>
-              <div className="quick-pay-content">
-                <div className="quick-pay-title">
-                  Venmo
-                  <span style={{ fontWeight: '300', fontSize: '1rem' }}>
-                    {`  `}
-                    {VENMO_HANDLE}
-                  </span>
-                </div>
-                <div className="quick-pay-row">
-                  <a
-                    className="pay-now-btn"
-                    style={{
-                      textDecoration: 'none',
-                      fontSize: '.9rem',
-                      padding: '2px ',
-                      minWidth: '120px',
-                      textAlign: 'center',
-                    }}
-                    href={
-                      VENMO_URL || `https://venmo.com/${(VENMO_HANDLE || '').replace(/^@/, '')}`
-                    }
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    onClick={handleOpenVenmo}
-                  >
-                    Pay via Venmo
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Cash App Card */}
-            <div className="quick-pay-card cashapp">
-              <div className="quick-pay-thumb" aria-hidden>
-                $
-              </div>
-              <div className="quick-pay-content">
-                <div className="quick-pay-title">
-                  Cash App
-                  <span style={{ fontWeight: '300', fontSize: '1rem' }}>
-                    {`  `}${CASHAPP_HANDLE}
-                  </span>
-                </div>
-                <div className="quick-pay-row">
-                  <button
-                    className="pay-now-btn"
-                    onClick={() => {
-                      if (
-                        typeof window !== 'undefined' &&
-                        window.navigator &&
-                        window.navigator.clipboard
-                      ) {
-                        window.navigator.clipboard.writeText(CASHAPP_HANDLE).then(() => {
-                          setCopiedCashApp(true);
-                          setTimeout(() => setCopiedCashApp(false), 1500);
-                        });
+                <div className="quick-pay-content">
+                  <div className="quick-pay-title">
+                    Venmo
+                    <span style={{ fontWeight: '300', fontSize: '1rem' }}>
+                      {`  `}
+                      {VENMO_HANDLE}
+                    </span>
+                  </div>
+                  <div className="quick-pay-row">
+                    <a
+                      className="pay-now-btn"
+                      style={{
+                        textDecoration: 'none',
+                        fontSize: '.9rem',
+                        padding: '2px ',
+                        minWidth: '120px',
+                        textAlign: 'center',
+                      }}
+                      href={
+                        VENMO_URL || `https://venmo.com/${(VENMO_HANDLE || '').replace(/^@/, '')}`
                       }
-                    }}
-                  >
-                    Copy Cash App
-                  </button>
-                  {copiedCashApp ? <span className="copied-indicator">Copied!</span> : null}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      onClick={handleOpenVenmo}
+                    >
+                      Pay via Venmo
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Cash App Card */}
+              <div className="quick-pay-card cashapp">
+                <div className="quick-pay-thumb" aria-hidden>
+                  $
+                </div>
+                <div className="quick-pay-content">
+                  <div className="quick-pay-title">
+                    Cash App
+                    <span style={{ fontWeight: '300', fontSize: '1rem' }}>
+                      {`  `}${CASHAPP_HANDLE}
+                    </span>
+                  </div>
+                  <div className="quick-pay-row">
+                    <button
+                      className="pay-now-btn"
+                      onClick={() => {
+                        if (
+                          typeof window !== 'undefined' &&
+                          window.navigator &&
+                          window.navigator.clipboard
+                        ) {
+                          window.navigator.clipboard.writeText(CASHAPP_HANDLE).then(() => {
+                            setCopiedCashApp(true);
+                            setTimeout(() => setCopiedCashApp(false), 1500);
+                          });
+                        }
+                      }}
+                    >
+                      Copy Cash App
+                    </button>
+                    {copiedCashApp ? <span className="copied-indicator">Copied!</span> : null}
+                  </div>
                 </div>
               </div>
             </div>
