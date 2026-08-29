@@ -577,16 +577,13 @@ const AuctionResultsPanel = () => {
                     rel="noopener noreferrer"
                   >
                     <img alt="" className="slg-sale-tracking-mark" src="../../../usps.png" />
-                    <span className="slg-sale-tracking-text">
-                      <span className="slg-sale-tracking-caption">Track with USPS</span>
-                      <span className="slg-sale-tracking-number">
-                        {currentAuction.trackingNumber}
-                      </span>
+                    <span className="slg-sale-tracking-number">
+                      {currentAuction.trackingNumber}
                     </span>
                   </a>
                 )}
 
-                <div className="slg-field">
+                <div className="slg-field slg-tracking-field">
                   <label className="slg-field-label" htmlFor="slg-auction-tracking">
                     Tracking number
                   </label>
@@ -597,14 +594,7 @@ const AuctionResultsPanel = () => {
                     value={trackingInput}
                     onChange={(event) => setTrackingInput(event.target.value)}
                   />
-                </div>
-
-                <div className="slg-sale-actions">
-                  <button
-                    type="button"
-                    className="slg-sales-button slg-sales-button--primary slg-sales-button--wide"
-                    onClick={handleSaveTracking}
-                  >
+                  <button type="button" className="slg-save-tracking" onClick={handleSaveTracking}>
                     Save tracking
                   </button>
                 </div>
