@@ -17,6 +17,11 @@
   --slg-edge: rgba(255, 255, 255, 0.11);
   --slg-edge-soft: rgba(255, 255, 255, 0.06);
 
+  /* Controls sit on top of the lifted surfaces, so they get two of their
+     own or a button reads as an outlined hole cut in the card. */
+  --slg-control: #191d23;
+  --slg-control-hover: #232830;
+
   /* type color */
   --slg-ink: #e9ebef;
   --slg-dim: #7c838e;
