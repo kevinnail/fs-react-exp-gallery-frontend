@@ -562,11 +562,17 @@
 
 /* ---------- detail: tracking ---------- */
 
+/* The carrier mark and the number, the whole thing clickable. It sits at
+   the start of the panel row so it stays the width of what it holds
+   instead of stretching across the panel as a grid child. */
 .slg-sale-tracking-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.6rem;
+  justify-self: start;
+  gap: 0.5rem;
+  width: 192px;
+  height: 48px;
+  padding: 0 0.5rem;
   text-decoration: none;
   background: var(--slg-void);
   border: 1px solid var(--slg-edge);
@@ -586,24 +592,51 @@
   flex: 0 0 auto;
 }
 
-.slg-sale-tracking-text {
-  display: grid;
-  gap: 0.15rem;
-  min-width: 0;
-}
-
-.slg-sale-tracking-caption {
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  color: var(--slg-dim);
-}
-
 .slg-sale-tracking-number {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  line-height: 1.25;
   color: var(--slg-ink);
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
+}
+
+/* ---------- detail: save tracking ---------- */
+
+/* The tracking field is the last thing in the panel, so it takes the
+   full width instead of leaving the other half empty. */
+.slg-tracking-field {
+  grid-column: 1 / span 2;
+}
+
+.slg-save-tracking {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  width: 136px;
+  height: 34px;
+  font-family: var(--slg-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: #000000;
+  background: var(--slg-ink);
+  border: 1px solid var(--slg-ink);
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    transform 90ms ease;
+}
+
+.slg-save-tracking:hover {
+  background: #ffffff;
+}
+
+.slg-save-tracking:active {
+  transform: scale(0.97);
 }
 
 /* ---------- detail: actions ---------- */
