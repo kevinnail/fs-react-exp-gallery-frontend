@@ -80,7 +80,7 @@ export default function PaymentDueSummary({
       });
     });
 
-    // Compute per-item shipping allocation: first $9, rest $1
+    // Compute per-item shipping allocation: first $10, rest $1
     const shippingPerItem = [];
     for (let i = 0; i < rows.length; i += 1) {
       if (i === 0) {

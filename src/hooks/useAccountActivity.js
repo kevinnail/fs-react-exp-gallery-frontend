@@ -6,16 +6,9 @@ import { SALE_PAID, SALE_TRACKING_INFO, SALE_CREATED } from '../services/salesEv
 import { useAuctionEventsStore } from '../stores/auctionEventsStore.js';
 import { toast } from 'react-toastify';
 
-const FIRST_ITEM_SHIPPING = 9;
+const FIRST_ITEM_SHIPPING = 10;
 const ADDITIONAL_ITEM_SHIPPING = 1;
 
-/**
- * Single source of truth for the signed-in user's auction and purchase activity on
- * the account page. Loads both feeds once, keeps them current over websockets and
- * the auction events store, and derives what is still owed. The summary tab, the
- * tab badges, and the auctions/purchases tabs all read from this one instance so
- * the page makes one round trip per feed instead of one per tab.
- */
 export const useAccountActivity = (userId) => {
   const [activeAuctionBids, setActiveAuctionBids] = useState([]);
   const [wonAuctions, setWonAuctions] = useState([]);
