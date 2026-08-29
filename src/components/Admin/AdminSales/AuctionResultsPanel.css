@@ -1,55 +1,16 @@
 /* Auction results, admin side.
  *
- * The same list as the gallery tab, with one difference that changes the
- * shape: a result carries its own controls. A row can't be a single
- * button and also contain buttons, so it splits in two — the piece is
- * the link to the auction, and the state block beside it holds the
- * pipeline and the controls that move it.
+ * The list and the detail rail are the gallery tab's, unchanged: a row is
+ * a single button that selects an auction, and everything you can do
+ * about it lives in the panel beside it. All of that vocabulary comes
+ * from AdminSales.css.
  *
- * Everything else — thumbnail, title, price, stages — is the shared row
- * vocabulary in AdminSales.css. Only what is genuinely specific to a
- * result lives here.
+ * The one thing a result has that a gallery sale does not is a state
+ * before the pipeline starts, so that is all that lives here.
  */
 
-.slg-auction-row {
-  display: grid;
-  gap: 0.75rem;
-  padding: 0.7rem 0;
-  border-bottom: 1px solid var(--slg-edge-soft);
-}
-
-.slg-auction-piece {
-  display: grid;
-  grid-template-columns: 52px minmax(0, 1fr) auto;
-  grid-template-areas:
-    'thumb identity price'
-    'thumb identity price';
-  align-items: center;
-  gap: 0.2rem 0.85rem;
-  width: 100%;
-  padding: 0 0.25rem;
-  font-family: var(--slg-body);
-  text-align: left;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: background 160ms ease;
-}
-
-.slg-auction-piece:hover {
-  background: var(--slg-lift);
-}
-
-.slg-auction-state {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem 0.85rem;
-  padding: 0 0.25rem;
-}
-
-/* An open auction has no pipeline yet — nothing is owed and nothing can
-   ship — so it says so in the flame the rest of the site reserves for
+/* An open auction has no pipeline yet: nothing is owed and nothing can
+   ship, so it says so in the flame the rest of the site reserves for
    live bidding, and the three segments stay off until it closes. */
 .slg-auction-live {
   font-size: 0.625rem;
@@ -58,32 +19,6 @@
   color: var(--slg-flame);
 }
 
-.slg-auction-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-left: auto;
-}
-
-@media (min-width: 700px) {
-  .slg-auction-piece {
-    grid-template-columns: 64px minmax(0, 1fr) 110px;
-    grid-template-areas: 'thumb identity price';
-    gap: 1rem;
-  }
-}
-
-/* Wide enough for the result and its controls to share a line, which is
-   how the list reads on a desktop: a column of pieces and a column of
-   things to do about them. */
-@media (min-width: 1100px) {
-  .slg-auction-row {
-    grid-template-columns: minmax(0, 1fr) minmax(320px, auto);
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .slg-auction-state {
-    justify-content: flex-end;
-  }
+.slg-auction-live--detail {
+  margin: 0;
 }
