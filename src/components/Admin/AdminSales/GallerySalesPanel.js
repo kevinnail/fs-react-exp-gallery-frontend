@@ -872,16 +872,13 @@ const GallerySalesPanel = () => {
                       rel="noopener noreferrer"
                     >
                       <img alt="" className="slg-sale-tracking-mark" src="../../../usps.png" />
-                      <span className="slg-sale-tracking-text">
-                        <span className="slg-sale-tracking-caption">Track with USPS</span>
-                        <span className="slg-sale-tracking-number">
-                          {currentSale.tracking_number}
-                        </span>
+                      <span className="slg-sale-tracking-number">
+                        {currentSale.tracking_number}
                       </span>
                     </a>
                   )}
 
-                  <div className="slg-field">
+                  <div className="slg-field slg-tracking-field">
                     <label className="slg-field-label" htmlFor="slg-sale-tracking">
                       Tracking number
                     </label>
@@ -892,12 +889,9 @@ const GallerySalesPanel = () => {
                       value={trackingInput}
                       onChange={(e) => setTrackingInput(e.target.value)}
                     />
-                  </div>
-
-                  <div className="slg-sale-actions">
                     <button
                       type="button"
-                      className="slg-sales-button slg-sales-button--primary slg-sales-button--wide"
+                      className="slg-save-tracking"
                       onClick={handleSaveTracking}
                     >
                       Save tracking
