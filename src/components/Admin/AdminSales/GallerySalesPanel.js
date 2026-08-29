@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './AdminSales.css';
 import {
@@ -27,6 +27,7 @@ const getFullName = (user) => {
 
 const GallerySalesPanel = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [sales, setSales] = useState([]);
   const [selectedSale, setSelectedSale] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -809,6 +810,18 @@ const GallerySalesPanel = () => {
                     <button
                       type="button"
                       className="slg-sales-button slg-sales-button--wide"
+                      onClick={() => navigate(`/${currentSale.post_id}`)}
+                    >
+                      View post
+                    </button>
+                  </div>
+
+                  <div className="slg-sale-actions">
+                    <button
+                      type="button"
+                      className={`slg-sales-button slg-sales-button--wide${
+                        currentSale.is_paid ? '' : ' slg-sales-button--primary'
+                      }`}
                       onClick={handleTogglePaid}
                     >
                       {currentSale.is_paid ? 'Mark unpaid' : 'Mark paid'}
