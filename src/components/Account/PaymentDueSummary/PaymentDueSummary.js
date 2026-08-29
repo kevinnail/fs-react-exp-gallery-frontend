@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './PaymentDueSummary.css';
-import { FIRST_ITEM_SHIPPING, ADDITIONAL_ITEM_SHIPPING } from '../../../hooks/useUnpaidSummary.js';
+import {
+  FIRST_ITEM_SHIPPING,
+  ADDITIONAL_ITEM_SHIPPING,
+} from '../../../hooks/useAccountActivity.js';
 
 export default function PaymentDueSummary({
   unpaidData,
