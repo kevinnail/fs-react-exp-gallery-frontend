@@ -10,7 +10,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import UserSales from './UserSales/UserSales.js';
 import PaymentDueSummary from './PaymentDueSummary/PaymentDueSummary.js';
-import { useUnpaidSummary } from '../../hooks/useUnpaidSummary.js';
+import { useAccountActivity } from '../../hooks/useAccountActivity.js';
 
 const TAB_SUMMARY = 'summary';
 const TAB_SPECIALS = 'specials';
@@ -48,7 +48,13 @@ export default function Account() {
   const tabsRef = useRef(null);
   const hasAutoSelectedTab = useRef(false);
 
-  const { loading: unpaidLoading, unpaidData } = useUnpaidSummary(user?.id);
+  const {
+    loading: activityLoading,
+    activeAuctionBids,
+    wonAuctions,
+    sales,
+    unpaidData,
+  } = useAccountActivity(user?.id);
   const unpaidAuctionCount = unpaidData.unpaidWins.length;
   const unpaidPurchaseCount = unpaidData.unpaidPurchases.length;
   const hasUnpaid = unpaidData.itemCount > 0;
@@ -69,10 +75,10 @@ export default function Account() {
   };
 
   useEffect(() => {
-    if (unpaidLoading || hasAutoSelectedTab.current) return;
+    if (activityLoading || hasAutoSelectedTab.current) return;
     hasAutoSelectedTab.current = true;
     if (hasUnpaid) setTab(TAB_SUMMARY);
-  }, [unpaidLoading, hasUnpaid]);
+  }, [activityLoading, hasUnpaid]);
 
   // The summary tab only exists while something is unpaid
   useEffect(() => {
@@ -115,11 +121,11 @@ export default function Account() {
   const hasAvatar = Boolean(profile?.imageUrl && String(profile.imageUrl).trim());
   const hasAddress = Boolean(
     address &&
-    address.addressLine1 &&
-    address.city &&
-    address.state &&
-    address.postalCode &&
-    address.countryCode
+      address.addressLine1 &&
+      address.city &&
+      address.state &&
+      address.postalCode &&
+      address.countryCode
   );
 
   const isProfileComplete = hasFirstName && hasLastName && hasAvatar && hasAddress;
@@ -404,8 +410,14 @@ export default function Account() {
               </div>
             </div>
           )}
-          {tab === TAB_AUCTIONS && <UserAuctions userId={user?.id} />}
-          {tab === TAB_PURCHASES && <UserSales userId={user?.id} />}
+          {tab === TAB_AUCTIONS && (
+            <UserAuctions
+              activeAuctionBids={activeAuctionBids}
+              wonAuctions={wonAuctions}
+              loading={activityLoading}
+            />
+          )}
+          {tab === TAB_PURCHASES && <UserSales sales={sales} loading={activityLoading} />}
         </div>
       </div>
 
