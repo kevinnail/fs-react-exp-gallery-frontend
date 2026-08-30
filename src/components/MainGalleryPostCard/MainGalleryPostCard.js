@@ -90,28 +90,28 @@ export default function MainGalleryPostCard({
         ) : (
           <span className="slg-piece-placeholder">No photo yet</span>
         )}
-
-        {sold ? null : (
-          <div className="slg-piece-request">
-            <RequestButton piece={requestPiece} variant="card" />
-          </div>
-        )}
       </div>
 
       <div className="slg-piece-meta">
         <span className="slg-piece-name">{title}</span>
         <span className="slg-piece-desc">{description}</span>
-        <span className="slg-piece-price">
-          {sold ? (
-            <span className="slg-was">${isDiscounted ? originalPrice : price}</span>
-          ) : isDiscounted ? (
-            <>
-              <span className="slg-was">${originalPrice}</span>${Math.floor(discountedPrice)}
-            </>
-          ) : (
-            <>${price}</>
-          )}
-        </span>
+        {/* Price and add control share a row so the photo stays uncovered
+            without the card growing a whole extra line for the button. */}
+        <div className="slg-piece-buy">
+          <span className="slg-piece-price">
+            {sold ? (
+              <span className="slg-was">${isDiscounted ? originalPrice : price}</span>
+            ) : isDiscounted ? (
+              <>
+                <span className="slg-was">${originalPrice}</span>${Math.floor(discountedPrice)}
+              </>
+            ) : (
+              <>${price}</>
+            )}
+          </span>
+
+          {sold ? null : <RequestButton piece={requestPiece} variant="card" />}
+        </div>
       </div>
     </Link>
   );

@@ -48,16 +48,16 @@
   color: var(--slg-alert);
 }
 
-/* ---------- gallery card: compact, sits over the piece frame ---------- */
+/* ---------- gallery card: compact, sits in the meta under the photo ---------- */
 
 .slg-request-button--card {
+  flex-shrink: 0;
   height: 34px;
   padding: 0 0.7rem;
   font-size: 0.625rem;
   border: 1px solid var(--slg-edge);
-  background: rgba(0, 0, 0, 0.72);
+  background: transparent;
   color: var(--slg-ink);
-  backdrop-filter: blur(4px);
 }
 
 .slg-request-button--card:hover,

@@ -158,12 +158,13 @@
   }
 }
 
-/* Quick-add control. Sits in the frame's bottom corner opposite the
-   state badge, and stays visible rather than appearing on hover, since
-   most visitors are on a touch screen with no hover to give. */
-.slg-piece-request {
-  position: absolute;
-  right: 0.25rem;
-  bottom: 0.25rem;
-  z-index: 2;
+/* Quick-add control. It sits under the photo rather than over it: the
+   frame already carries the Sold and Sale badges, and the glass is the
+   thing people came to look at. Sharing the price row keeps the cost to
+   the card's height as small as it can be. */
+.slg-piece-buy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }

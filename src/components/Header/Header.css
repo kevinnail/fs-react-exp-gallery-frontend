@@ -28,7 +28,6 @@ header {
   min-width: 207px;
 }
 
-/* Search sits beside the menu icon, so the row has to lay them out. */
 .header-section {
   display: flex;
   align-items: center;
@@ -283,6 +282,18 @@ header {
   .signout-button,
   .new-link {
     box-shadow: 0 0 10px 0 #7777f3bd;
+  }
+}
+
+/* The title reserved a fixed 207px whether it needed it or not, which made
+   the header a fixed 438px wide at every phone size and pushed the menu
+   icon off the right edge. Letting it size to its own text gives the row
+   the slack that space-between needs. */
+@media (max-width: 480px) {
+  .biz-title {
+    min-width: 0;
+    font-size: 1.25em;
+    left: -8px;
   }
 }
 
