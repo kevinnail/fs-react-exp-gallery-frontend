@@ -157,3 +157,13 @@
     animation: none;
   }
 }
+
+/* Quick-add control. Sits in the frame's bottom corner opposite the
+   state badge, and stays visible rather than appearing on hover, since
+   most visitors are on a touch screen with no hover to give. */
+.slg-piece-request {
+  position: absolute;
+  right: 0.25rem;
+  bottom: 0.25rem;
+  z-index: 2;
+}
