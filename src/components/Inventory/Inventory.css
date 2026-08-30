@@ -31,11 +31,10 @@
 
 .slg-inventory-toggle {
   flex: 0 0 auto;
-  padding: 0.3rem 0.6rem;
+  padding: 0.35rem 0.7rem;
   font-family: var(--slg-body);
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   color: var(--slg-dim);
   background: none;

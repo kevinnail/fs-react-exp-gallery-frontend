@@ -134,9 +134,8 @@
   border: 1px solid var(--slg-edge);
   color: var(--slg-dim);
   font-family: var(--slg-body);
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
   padding: 0.6rem 0.75rem;
   cursor: pointer;
   transition:
@@ -159,9 +158,8 @@
   gap: 1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--slg-edge);
-  font-size: 0.8125rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
   color: var(--slg-dim);
 }
 
@@ -181,8 +179,8 @@
 .slg-request-note-label {
   display: block;
   margin-bottom: 0.5rem;
-  font-size: 0.8125rem;
-  letter-spacing: 0.06em;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
   color: var(--slg-dim);
 }
 
@@ -212,12 +210,11 @@
   justify-content: center;
   width: 100%;
   height: 52px;
-  padding: 0 1.5rem;
+  padding: 0 1.25rem;
   font-family: var(--slg-body);
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   text-decoration: none;
   border: 1px solid var(--slg-ink);
   background: var(--slg-ink);

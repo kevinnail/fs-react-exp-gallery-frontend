@@ -3,10 +3,9 @@
 
 .piece-attachment-count {
   margin: 0.5rem 0 0.25rem;
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   opacity: 0.75;
 }
 
