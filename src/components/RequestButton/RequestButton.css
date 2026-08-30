@@ -1,0 +1,87 @@
+.slg-request-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--slg-body);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.slg-request-button-mark {
+  font-size: 1em;
+  line-height: 1;
+}
+
+/* ---------- detail page: the primary action on a piece ---------- */
+
+.slg-request-button--detail {
+  height: 46px;
+  padding: 0 1.5rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--slg-ink);
+  background: var(--slg-ink);
+  color: #000000;
+}
+
+.slg-request-button--detail:hover,
+.slg-request-button--detail:focus-visible {
+  background: transparent;
+  color: var(--slg-ink);
+}
+
+.slg-request-button--detail.slg-request-button--active {
+  background: transparent;
+  color: var(--slg-ink);
+  border-color: var(--slg-ink);
+}
+
+.slg-request-button--detail.slg-request-button--active:hover,
+.slg-request-button--detail.slg-request-button--active:focus-visible {
+  border-color: var(--slg-alert);
+  color: var(--slg-alert);
+}
+
+/* ---------- gallery card: compact, sits in the meta under the photo ---------- */
+
+.slg-request-button--card {
+  flex-shrink: 0;
+  height: 34px;
+  padding: 0 0.7rem;
+  font-size: 0.625rem;
+  border: 1px solid var(--slg-edge);
+  background: transparent;
+  color: var(--slg-ink);
+}
+
+.slg-request-button--card:hover,
+.slg-request-button--card:focus-visible {
+  border-color: var(--slg-ink);
+  color: var(--slg-ink);
+}
+
+.slg-request-button--card.slg-request-button--active {
+  border-color: var(--slg-ink);
+  background: var(--slg-ink);
+  color: #000000;
+}
+
+/* Touch targets stay finger-sized on phones, where most visitors are. */
+@media (max-width: 768px) {
+  .slg-request-button--card {
+    height: 38px;
+    padding: 0 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slg-request-button {
+    transition: none;
+  }
+}

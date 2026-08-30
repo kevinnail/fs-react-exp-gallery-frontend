@@ -1,0 +1,269 @@
+/* Request review page.
+ *
+ * Reads as a summary, not a store checkout: no card fields, no order
+ * numbers, and the explainer sits above the list rather than in fine
+ * print underneath it. Mobile is the majority of traffic, so the layout
+ * is a single column that only widens on large screens.
+ */
+
+.slg-request {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: calc(var(--slg-header-height) + 1.5rem) var(--slg-gutter-tight) 4rem;
+  color: var(--slg-ink);
+  font-family: var(--slg-body);
+}
+
+.slg-request-head {
+  margin-bottom: 1rem;
+}
+
+.slg-request-title {
+  margin: 0;
+  font-family: var(--slg-display);
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.slg-request-explainer {
+  margin: 0 0 2rem;
+  padding: 1rem 1.1rem;
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--slg-dim);
+}
+
+.slg-request-explainer strong {
+  color: var(--slg-ink);
+  font-weight: 600;
+}
+
+/* ---------- empty state ---------- */
+
+.slg-request-empty {
+  display: grid;
+  gap: 1.25rem;
+  justify-items: start;
+}
+
+.slg-request-empty p {
+  margin: 0;
+  color: var(--slg-dim);
+}
+
+/* ---------- item list ---------- */
+
+.slg-request-list {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.slg-request-item {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge-soft);
+}
+
+.slg-request-item--gone {
+  opacity: 0.55;
+}
+
+.slg-request-thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  display: block;
+  background: var(--slg-void);
+}
+
+.slg-request-thumb--empty {
+  border: 1px solid var(--slg-edge-soft);
+}
+
+.slg-request-item-body {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.slg-request-item-title {
+  color: var(--slg-ink);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+}
+
+.slg-request-item-title:hover,
+.slg-request-item-title:focus-visible {
+  color: var(--slg-ink);
+  text-decoration: underline;
+}
+
+.slg-request-item--gone .slg-request-item-title {
+  text-decoration: line-through;
+}
+
+.slg-request-item-price {
+  font-size: 0.875rem;
+  color: var(--slg-dim);
+}
+
+.slg-request-gone-note {
+  font-size: 0.8125rem;
+  color: var(--slg-state-bad);
+}
+
+.slg-request-gone-summary {
+  margin: 0 0 1.5rem;
+  font-size: 0.875rem;
+  color: var(--slg-state-wait);
+}
+
+.slg-request-remove {
+  background: transparent;
+  border: 1px solid var(--slg-edge);
+  color: var(--slg-dim);
+  font-family: var(--slg-body);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.6rem 0.75rem;
+  cursor: pointer;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.slg-request-remove:hover,
+.slg-request-remove:focus-visible {
+  color: var(--slg-alert);
+  border-color: var(--slg-alert);
+}
+
+/* ---------- total and note ---------- */
+
+.slg-request-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--slg-edge);
+  font-size: 0.8125rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slg-dim);
+}
+
+.slg-request-total-value {
+  font-size: 1.375rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--slg-ink);
+}
+
+.slg-request-total-note {
+  margin: 0.35rem 0 2rem;
+  font-size: 0.8125rem;
+  color: var(--slg-dim);
+}
+
+.slg-request-note-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  color: var(--slg-dim);
+}
+
+.slg-request-note {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem;
+  margin-bottom: 1.5rem;
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge);
+  color: var(--slg-ink);
+  font-family: var(--slg-body);
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.slg-request-note:focus-visible {
+  outline: none;
+  border-color: var(--slg-ink);
+}
+
+/* ---------- submit ---------- */
+
+.slg-request-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 52px;
+  padding: 0 1.5rem;
+  font-family: var(--slg-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--slg-ink);
+  background: var(--slg-ink);
+  color: #000000;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.slg-request-submit:hover:not(:disabled),
+.slg-request-submit:focus-visible:not(:disabled) {
+  background: transparent;
+  color: var(--slg-ink);
+}
+
+.slg-request-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.slg-request-signin-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--slg-dim);
+}
+
+@media (min-width: 768px) {
+  .slg-request {
+    padding-left: var(--slg-gutter);
+    padding-right: var(--slg-gutter);
+  }
+
+  .slg-request-submit {
+    width: auto;
+    min-width: 260px;
+  }
+
+  .slg-request-empty .slg-request-submit {
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slg-request-remove,
+  .slg-request-submit {
+    transition: none;
+  }
+}

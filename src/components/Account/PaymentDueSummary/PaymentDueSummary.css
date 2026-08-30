@@ -178,3 +178,84 @@
     padding: 0.6rem;
   }
 }
+
+/* Condensed summary heading with the amount owed up front */
+.summary-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.summary-heading h4 {
+  margin: 0;
+  border: none;
+  padding: 0;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+}
+
+.summary-heading-total {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgb(246, 255, 0);
+}
+
+/* Rows that jump to the tab holding the unpaid item */
+.summary-jump-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.4rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.summary-jump-row:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.summary-jump-row:disabled {
+  cursor: default;
+}
+
+.summary-jump-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.summary-jump-hint {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.payment-contact-line {
+  font-size: 0.95rem;
+  margin: 0.5rem 0;
+}
+
+/* Pay options side by side on wide screens so the tabs stay near the fold */
+.quick-pay-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.6rem;
+  align-items: stretch;
+}
+
+.quick-pay-grid .quick-pay-card {
+  margin-bottom: 0;
+}

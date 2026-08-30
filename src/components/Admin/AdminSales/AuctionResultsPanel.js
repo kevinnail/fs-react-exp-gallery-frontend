@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getBids } from '../../../services/fetch-bids.js';
 import {
   getAdminAuctions,
@@ -18,123 +18,46 @@ import { countCompletedStages, hasRealTracking } from './saleStatus.js';
 
 const formatMoney = (amount) => `$${Number(amount || 0).toLocaleString()}`;
 
-const AuctionResultsPanel = () => {
-  const [auctions, setAuctions] = useState([]);
-  const [loading, setLoading] = useState(true);
+const getAuctionWinner = (auction) => {
+  if (!auction) return null;
+  if (auction.winner) return auction.winner;
+  if (auction.topBid && auction.topBid.user) return auction.topBid.user;
+  return null;
+};
 
-  const [showTrackingModal, setShowTrackingModal] = useState(false);
-  const [trackingAuctionId, setTrackingAuctionId] = useState(null);
-  const [trackingInput, setTrackingInput] = useState('');
-  const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
-  const [copyToastId] = useState('auction-tracking-copy-address');
+const getWinnerName = (winner) => `${winner?.firstName || ''} ${winner?.lastName || ''}`.trim();
 
-  // Resolve current auction winner and address for tracking modal
-  let selectedAuction = null;
-  if (trackingAuctionId) {
-    selectedAuction = auctions.find((x) => x.id === trackingAuctionId) || null;
-  }
-
-  let winner = null;
-  if (selectedAuction) {
-    if (selectedAuction.winner) {
-      winner = selectedAuction.winner;
-    } else if (selectedAuction.topBid && selectedAuction.topBid.user) {
-      winner = selectedAuction.topBid.user;
-    }
-  }
-
-  let resolvedUser = null;
-  if (winner) {
-    for (let i = 0; i < users.length; i += 1) {
-      const user = users[i];
-
-      if (winner.id && Number(user.id) === Number(winner.userId)) {
-        resolvedUser = user;
-        break;
-      }
+const findWinnerAccount = (users, winner) => {
+  if (!winner) return null;
+  return (
+    users.find((user) => {
+      const winnerUserId = winner.userId || winner.id;
+      if (winnerUserId && Number(user.id) === Number(winnerUserId)) return true;
       if (
         winner.email &&
         (user.email || user.user_email || '').toLowerCase() === winner.email.toLowerCase()
       ) {
-        resolvedUser = user;
-        break;
+        return true;
       }
-    }
-  }
+      return false;
+    }) || null
+  );
+};
 
-  let address = null;
-  if (resolvedUser && resolvedUser.address) {
-    address = resolvedUser.address;
-  }
-  const profile = resolvedUser?.profile || {};
-  const displayName =
-    `${profile.firstName || winner?.firstName || ''} ${profile.lastName || winner?.lastName || ''}`.trim();
+const buildTrackingUrl = (trackingNumber) =>
+  `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(trackingNumber)}`;
 
-  const copyAddressText = () => {
-    if (!address) return;
-    const countryCode = (address.countryCode || 'US').toUpperCase();
-    const lines = [
-      displayName || resolvedUser?.email || resolvedUser?.user_email || '',
-      address.addressLine1,
-      address.addressLine2,
-      `${address.city}, ${address.state} ${address.postalCode}`,
-      countryCode !== 'US' ? countryCode : null,
-    ].filter(Boolean);
-    const text = lines.join('\n');
+const AuctionResultsPanel = () => {
+  const [auctions, setAuctions] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedAuctionId, setSelectedAuctionId] = useState(null);
+  const [trackingInput, setTrackingInput] = useState('');
 
-    const onSuccess = () => {
-      toast.success('Address copied', {
-        theme: 'dark',
-        draggable: true,
-        draggablePercent: 60,
-        toastId: copyToastId,
-        autoClose: 2000,
-      });
-    };
-    const onFail = () => {
-      toast.error('Failed to copy address', {
-        theme: 'colored',
-        draggable: true,
-        draggablePercent: 60,
-        toastId: copyToastId,
-        autoClose: 3000,
-      });
-    };
+  const navigate = useNavigate();
+  const auctionPanelRef = useRef(null);
 
-    if (
-      typeof window !== 'undefined' &&
-      window.navigator &&
-      window.navigator.clipboard &&
-      window.navigator.clipboard.writeText
-    ) {
-      window.navigator.clipboard.writeText(text).then(onSuccess).catch(onFail);
-    } else {
-      try {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.readOnly = true;
-        ta.style.position = 'fixed';
-        ta.style.top = '-1000px';
-        document.body.appendChild(ta);
-        ta.select();
-        toast.info('Clipboard not available. Press Ctrl+C to copy.', {
-          theme: 'colored',
-          draggable: true,
-          draggablePercent: 60,
-          toastId: copyToastId,
-          autoClose: 3500,
-        });
-        setTimeout(() => {
-          document.body.removeChild(ta);
-        }, 4000);
-      } catch (e) {
-        onFail();
-      }
-    }
-  };
-
-  const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
+  const lastBidUpdate = useAuctionEventsStore((state) => state.lastBidUpdate);
 
   useEffect(() => {
     if (!lastBidUpdate) return;
@@ -144,64 +67,29 @@ const AuctionResultsPanel = () => {
       try {
         const bids = await getBids(auctionId);
         if (Array.isArray(bids) && bids.length > 0) {
-          const topBid = bids.reduce((max, b) => (b.bidAmount > max.bidAmount ? b : max));
-          setAuctions((prev) =>
-            prev.map((a) =>
-              Number(a.id) === auctionId ? { ...a, topBid, winner: topBid.user } : a
+          const topBid = bids.reduce((highest, bid) =>
+            bid.bidAmount > highest.bidAmount ? bid : highest
+          );
+          setAuctions((previous) =>
+            previous.map((auction) =>
+              Number(auction.id) === auctionId
+                ? { ...auction, topBid, winner: topBid.user }
+                : auction
             )
           );
         }
-      } catch (err) {
-        console.error('Error updating admin high bid:', err);
+      } catch (error) {
+        console.error('Error updating admin high bid:', error);
       }
     })();
   }, [lastBidUpdate]);
-
-  const openTrackingModal = (auctionId, existingTracking = '') => {
-    setTrackingAuctionId(auctionId);
-    setTrackingInput(existingTracking);
-    setShowTrackingModal(true);
-  };
-
-  const handleSaveTracking = async () => {
-    setShowTrackingModal(false);
-    setLoading(true);
-    try {
-      await updateAuctionTracking(trackingAuctionId, trackingInput.trim());
-
-      setAuctions((prev) =>
-        prev.map((x) =>
-          x.id === trackingAuctionId ? { ...x, trackingNumber: trackingInput.trim() } : x
-        )
-      );
-
-      setLoading(false);
-      toast.success('Tracking saved and email sent!', {
-        theme: 'dark',
-        draggable: true,
-        draggablePercent: 60,
-        toastId: 'auction-track-fail',
-        autoClose: 3000,
-      });
-    } catch (e) {
-      toast.error(`${e.message}` || 'Error saving tracking', {
-        theme: 'colored',
-        draggable: true,
-        draggablePercent: 60,
-        toastId: 'auction-track-fail',
-        autoClose: 3000,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const allAuctions = await getAdminAuctions();
-        const users = await getAllUsers();
-        setUsers(Array.isArray(users) ? users : []);
+        const allUsers = await getAllUsers();
+        setUsers(Array.isArray(allUsers) ? allUsers : []);
 
         // hydrate each auction with top bid + bidder if available
         const withResults = await Promise.all(
@@ -211,19 +99,21 @@ const AuctionResultsPanel = () => {
               if (!Array.isArray(bids) || bids.length === 0)
                 return { ...auction, winner: null, topBid: null };
 
-              const topBid = bids.reduce((max, b) => (b.bidAmount > max.bidAmount ? b : max));
+              const topBid = bids.reduce((highest, bid) =>
+                bid.bidAmount > highest.bidAmount ? bid : highest
+              );
               return { ...auction, winner: topBid.user, topBid };
-            } catch (e) {
-              console.error('Error fetching bids for auction', auction.id, e);
+            } catch (error) {
+              console.error('Error fetching bids for auction', auction.id, error);
               return { ...auction, winner: null, topBid: null };
             }
           })
         );
 
-        setAuctions(withResults.filter((a) => a.topBid));
-      } catch (e) {
-        console.error('Error loading auctions:', e);
-        toast.error(`${e.message}` || 'Error loading auctions', {
+        setAuctions(withResults.filter((auction) => auction.topBid));
+      } catch (error) {
+        console.error('Error loading auctions:', error);
+        toast.error(`${error.message}` || 'Error loading auctions', {
           theme: 'colored',
           draggable: true,
           draggablePercent: 60,
@@ -244,16 +134,24 @@ const AuctionResultsPanel = () => {
       if (!auctionId) return;
 
       // optimistically mark auction closed
-      setAuctions((prev) => prev.map((a) => (a.id === auctionId ? { ...a, isActive: false } : a)));
+      setAuctions((previous) =>
+        previous.map((auction) =>
+          auction.id === auctionId ? { ...auction, isActive: false } : auction
+        )
+      );
 
       try {
         // fetch latest bids to hydrate winner/topBid if any
         const bids = await getBids(auctionId);
         if (Array.isArray(bids) && bids.length > 0) {
-          const topBid = bids.reduce((max, b) => (b.bidAmount > max.bidAmount ? b : max));
-          setAuctions((prev) =>
-            prev.map((a) =>
-              a.id === auctionId ? { ...a, topBid, winner: topBid.user, isActive: false } : a
+          const topBid = bids.reduce((highest, bid) =>
+            bid.bidAmount > highest.bidAmount ? bid : highest
+          );
+          setAuctions((previous) =>
+            previous.map((auction) =>
+              auction.id === auctionId
+                ? { ...auction, topBid, winner: topBid.user, isActive: false }
+                : auction
             )
           );
         }
@@ -264,16 +162,13 @@ const AuctionResultsPanel = () => {
           draggablePercent: 60,
           autoClose: 3000,
         });
-      } catch (e) {
-        console.error('Error hydrating auction after end event', auctionId, e);
+      } catch (error) {
+        console.error('Error hydrating auction after end event', auctionId, error);
       }
     };
 
     // 'user-won' can contain more specific info; treat it similarly
     const handleUserWon = async (payload) => {
-      const auctionId = payload && (payload.auctionId || payload.id || payload);
-      if (!auctionId) return handleAuctionEnded(payload);
-      // re-use same logic
       await handleAuctionEnded(payload);
     };
 
@@ -286,16 +181,155 @@ const AuctionResultsPanel = () => {
     };
   }, []);
 
-  const handleTogglePaid = async (auctionId, currentPaid) => {
-    try {
-      await markAuctionPaid(auctionId, !currentPaid);
+  const currentAuction = selectedAuctionId
+    ? auctions.find((auction) => auction.id === selectedAuctionId) || null
+    : null;
 
-      setAuctions((prev) =>
-        prev.map((x) => (x.id === auctionId ? { ...x, isPaid: !currentPaid } : x))
+  const currentWinner = getAuctionWinner(currentAuction);
+  const currentWinnerAccount = findWinnerAccount(users, currentWinner);
+  const currentAddress = currentWinnerAccount?.address || null;
+  const currentWinnerProfile = currentWinnerAccount?.profile || {};
+  const currentWinnerName = `${currentWinnerProfile.firstName || currentWinner?.firstName || ''} ${
+    currentWinnerProfile.lastName || currentWinner?.lastName || ''
+  }`.trim();
+  const currentWinnerEmail =
+    currentWinner?.email || currentWinnerAccount?.email || currentWinnerAccount?.user_email || '';
+
+  const revealDetailPanel = () => {
+    if (window.matchMedia('(min-width: 1100px)').matches) return;
+    requestAnimationFrame(() => {
+      auctionPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  const handleSelectAuction = (auctionId) => {
+    setSelectedAuctionId(auctionId);
+
+    const auction = auctions.find((candidate) => candidate.id === auctionId);
+    if (auction) {
+      setTrackingInput(hasRealTracking(auction.trackingNumber) ? auction.trackingNumber : '');
+    }
+
+    revealDetailPanel();
+  };
+
+  const copyAddressText = () => {
+    if (!currentAddress) {
+      toast.error('No address on file to copy.', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-copy-no-address',
+        autoClose: 3500,
+      });
+      return;
+    }
+
+    const countryCode = (currentAddress.countryCode || 'US').toUpperCase();
+    const lines = [
+      currentWinnerName || currentWinnerEmail,
+      currentAddress.addressLine1,
+      currentAddress.addressLine2,
+      `${currentAddress.city}, ${currentAddress.state} ${currentAddress.postalCode}`,
+      countryCode !== 'US' ? countryCode : null,
+    ].filter(Boolean);
+    const text = lines.join('\n');
+
+    const onSuccess = () => {
+      toast.success('Address copied', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-tracking-copy-address',
+        autoClose: 2000,
+      });
+    };
+    const onFail = () => {
+      toast.error('Failed to copy address', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-tracking-copy-address',
+        autoClose: 3000,
+      });
+    };
+
+    if (
+      typeof window !== 'undefined' &&
+      window.navigator &&
+      window.navigator.clipboard &&
+      window.navigator.clipboard.writeText
+    ) {
+      window.navigator.clipboard.writeText(text).then(onSuccess).catch(onFail);
+    } else {
+      try {
+        const holder = document.createElement('textarea');
+        holder.value = text;
+        holder.readOnly = true;
+        holder.style.position = 'fixed';
+        holder.style.top = '-1000px';
+        document.body.appendChild(holder);
+        holder.select();
+        toast.info('Clipboard not available. Press Ctrl+C to copy.', {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          toastId: 'auction-tracking-copy-address',
+          autoClose: 3500,
+        });
+        setTimeout(() => {
+          document.body.removeChild(holder);
+        }, 4000);
+      } catch (error) {
+        onFail();
+      }
+    }
+  };
+
+  const handleSaveTracking = async () => {
+    try {
+      await updateAuctionTracking(selectedAuctionId, trackingInput.trim());
+
+      setAuctions((previous) =>
+        previous.map((auction) =>
+          auction.id === selectedAuctionId
+            ? { ...auction, trackingNumber: trackingInput.trim() }
+            : auction
+        )
       );
-    } catch (e) {
+
+      toast.success('Tracking saved and email sent!', {
+        theme: 'dark',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-track-fail',
+        autoClose: 3000,
+      });
+    } catch (error) {
+      toast.error(`${error.message}` || 'Error saving tracking', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'auction-track-fail',
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const handleTogglePaid = async () => {
+    if (!currentAuction) return;
+    const currentPaid = currentAuction.isPaid;
+    try {
+      await markAuctionPaid(currentAuction.id, !currentPaid);
+
+      setAuctions((previous) =>
+        previous.map((auction) =>
+          auction.id === currentAuction.id ? { ...auction, isPaid: !currentPaid } : auction
+        )
+      );
+    } catch (error) {
       console.error('Error marking auction paid');
-      toast.error(`${e.message}` || 'Error marking auction paid', {
+      toast.error(`${error.message}` || 'Error marking auction paid', {
         theme: 'colored',
         draggable: true,
         draggablePercent: 60,
@@ -325,6 +359,25 @@ const AuctionResultsPanel = () => {
     { label: 'Owed', value: formatMoney(totalOwed), isOwed: true },
   ];
 
+  const currentAuctionClosed = currentAuction ? !currentAuction.isActive : false;
+  const currentAuctionStages = currentAuction
+    ? countCompletedStages({
+        isPaid: currentAuction.isPaid,
+        trackingNumber: currentAuction.trackingNumber,
+      })
+    : 1;
+
+  const renderAddressLines = (address) => (
+    <div className="slg-sale-address-lines">
+      <div>{address.addressLine1}</div>
+      {address.addressLine2 ? <div>{address.addressLine2}</div> : null}
+      <div>
+        {address.city}, {address.state} {address.postalCode}
+      </div>
+      <div>{address.countryCode || 'US'}</div>
+    </div>
+  );
+
   return (
     <>
       <div className="slg-sales-stats">
@@ -343,7 +396,7 @@ const AuctionResultsPanel = () => {
         ))}
       </div>
 
-      <div className="slg-sales-body slg-sales-body--full">
+      <div className="slg-sales-body">
         <main className="slg-sales-main">
           <div className="slg-sales-toolbar">
             <h2 className="slg-sales-heading">Auction results</h2>
@@ -358,9 +411,7 @@ const AuctionResultsPanel = () => {
             <ul className="slg-sale-list">
               {auctions.map((auction) => {
                 const isClosed = !auction.isActive;
-                const winnerName = auction.winner
-                  ? `${auction.winner.firstName || ''} ${auction.winner.lastName || ''}`.trim()
-                  : '';
+                const winnerName = getWinnerName(getAuctionWinner(auction));
                 const highBid = auction.topBid ? auction.topBid.bidAmount : 0;
                 const image = auction.imageUrls?.[0];
                 const completedStages = countCompletedStages({
@@ -369,11 +420,12 @@ const AuctionResultsPanel = () => {
                 });
 
                 return (
-                  <li key={auction.id} className="slg-auction-row">
+                  <li key={auction.id}>
                     <button
                       type="button"
-                      className="slg-auction-piece"
-                      onClick={() => navigate(`/auctions/${auction.id}`)}
+                      className={`slg-sale-row${selectedAuctionId === auction.id ? ' slg-sale-row--on' : ''}`}
+                      aria-pressed={selectedAuctionId === auction.id}
+                      onClick={() => handleSelectAuction(auction.id)}
                     >
                       <span className="slg-sale-thumb">
                         {image ? <img src={image} alt="" /> : null}
@@ -389,131 +441,168 @@ const AuctionResultsPanel = () => {
                       <span className="slg-sale-price">
                         {highBid ? formatMoney(highBid) : 'No bids'}
                       </span>
-                    </button>
 
-                    <div className="slg-auction-state">
                       {isClosed ? (
                         <SaleStages completedCount={completedStages} />
                       ) : (
-                        <span className="slg-auction-live">Live</span>
+                        <span className="slg-stages slg-auction-live">Live</span>
                       )}
-
-                      {isClosed && (
-                        <div className="slg-auction-actions">
-                          <button
-                            type="button"
-                            className={`slg-sales-button${auction.isPaid ? '' : ' slg-sales-button--primary'}`}
-                            onClick={() => handleTogglePaid(auction.id, auction.isPaid)}
-                          >
-                            {auction.isPaid ? 'Mark unpaid' : 'Mark paid'}
-                          </button>
-
-                          {auction.isPaid && (
-                            <button
-                              type="button"
-                              className="slg-sales-button"
-                              onClick={() => openTrackingModal(auction.id, auction.trackingNumber)}
-                            >
-                              {hasRealTracking(auction.trackingNumber)
-                                ? `Tracking ···${String(auction.trackingNumber).slice(-4)}`
-                                : 'Add tracking'}
-                            </button>
-                          )}
-
-                          {hasRealTracking(auction.trackingNumber) && (
-                            <a
-                              className="slg-sales-button"
-                              href={`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
-                                auction.trackingNumber
-                              )}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              Track with USPS
-                            </a>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                    </button>
                   </li>
                 );
               })}
             </ul>
           )}
         </main>
-      </div>
 
-      {showTrackingModal && (
-        <div className="slg-modal-scrim">
-          <div className="slg-modal" role="dialog" aria-modal="true">
-            <div className="slg-modal-head">
-              <h2 className="slg-modal-title">Add tracking</h2>
-              <button
-                type="button"
-                className="slg-modal-close"
-                onClick={() => setShowTrackingModal(false)}
-                aria-label="Close tracking form"
-              >
-                ✕
-              </button>
+        <aside className="slg-sales-rail" ref={auctionPanelRef}>
+          {!currentAuction ? (
+            <div className="slg-sale-panel">
+              <div className="slg-sale-panel-head">
+                <h2 className="slg-sale-panel-title">Auction detail</h2>
+              </div>
+              <p className="slg-sale-placeholder">
+                Pick an auction to see the winner, the address, and where it is in the pipeline.
+              </p>
             </div>
+          ) : (
+            <div className="slg-sale-panel">
+              <div className="slg-sale-panel-head">
+                <h2 className="slg-sale-panel-title">Auction detail</h2>
+                <button
+                  type="button"
+                  className="slg-sales-button"
+                  onClick={() => setSelectedAuctionId(null)}
+                >
+                  Close
+                </button>
+              </div>
 
-            <div className="slg-user-card">
-              <span className="slg-sale-fact-label">Ship to</span>
-              {address ? (
-                <div className="slg-sale-address">
-                  <div className="slg-sale-address-lines">
-                    <div>{displayName || 'Unknown'}</div>
-                    <div>{address.addressLine1}</div>
-                    {address.addressLine2 ? <div>{address.addressLine2}</div> : null}
-                    <div>
-                      {address.city}, {address.state} {address.postalCode}
-                    </div>
-                    <div>{address.countryCode || 'US'}</div>
+              <div className="slg-sale-panel-body">
+                {currentAuctionClosed ? (
+                  <SaleStages completedCount={currentAuctionStages} variant="detail" />
+                ) : (
+                  <p className="slg-auction-live slg-auction-live--detail">Live bidding</p>
+                )}
+
+                <div className="slg-sale-piece">
+                  {currentAuction.imageUrls?.[0] ? (
+                    <img
+                      src={currentAuction.imageUrls[0]}
+                      alt=""
+                      className="slg-sale-piece-image"
+                    />
+                  ) : (
+                    <span className="slg-sale-piece-image" aria-hidden="true" />
+                  )}
+                  <div className="slg-sale-piece-meta">
+                    <h3 className="slg-sale-piece-title">{currentAuction.title}</h3>
+                    <span className="slg-sale-piece-price">
+                      {currentAuction.topBid
+                        ? formatMoney(currentAuction.topBid.bidAmount)
+                        : 'No bids'}
+                    </span>
                   </div>
-                  <button type="button" className="slg-sales-button" onClick={copyAddressText}>
-                    Copy address
+                </div>
+
+                <div className="slg-sale-actions">
+                  <button
+                    type="button"
+                    className="slg-sales-button slg-sales-button--wide"
+                    onClick={() => navigate(`/auctions/${currentAuction.id}`)}
+                  >
+                    View auction
                   </button>
                 </div>
-              ) : (
-                <p className="slg-sale-fact-value slg-sale-fact-value--missing">
-                  No shipping address on file
-                </p>
-              )}
-            </div>
 
-            <div className="slg-field">
-              <label className="slg-field-label" htmlFor="slg-auction-tracking">
-                USPS tracking number
-              </label>
-              <input
-                id="slg-auction-tracking"
-                type="text"
-                className="slg-input"
-                value={trackingInput}
-                onChange={(e) => setTrackingInput(e.target.value)}
-              />
-            </div>
+                {currentAuctionClosed && (
+                  <div className="slg-sale-actions">
+                    <button
+                      type="button"
+                      className={`slg-sales-button slg-sales-button--wide${
+                        currentAuction.isPaid ? '' : ' slg-sales-button--primary'
+                      }`}
+                      onClick={handleTogglePaid}
+                    >
+                      {currentAuction.isPaid ? 'Mark unpaid' : 'Mark paid'}
+                    </button>
+                  </div>
+                )}
 
-            <div className="slg-modal-actions">
-              <button
-                type="button"
-                className="slg-sales-button slg-sales-button--wide"
-                onClick={() => setShowTrackingModal(false)}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="slg-sales-button slg-sales-button--primary slg-sales-button--wide"
-                onClick={handleSaveTracking}
-              >
-                Save tracking
-              </button>
+                <dl className="slg-sale-facts">
+                  <div className="slg-sale-fact">
+                    <dt className="slg-sale-fact-label">
+                      {currentAuctionClosed ? 'Winner' : 'High bidder'}
+                    </dt>
+                    <dd className="slg-sale-fact-value">{currentWinnerName || 'No bids'}</dd>
+                  </div>
+
+                  <div className="slg-sale-fact">
+                    <dt className="slg-sale-fact-label">Email</dt>
+                    <dd className="slg-sale-fact-value">
+                      {currentWinnerEmail || (
+                        <span className="slg-sale-fact-value--missing">No email on file</span>
+                      )}
+                    </dd>
+                  </div>
+
+                  <div className="slg-sale-fact">
+                    <dt className="slg-sale-fact-label">Ship to</dt>
+                    <dd className="slg-sale-fact-value">
+                      {currentAddress ? (
+                        <div className="slg-sale-address">
+                          {renderAddressLines(currentAddress)}
+                          <button
+                            type="button"
+                            className="slg-sales-button"
+                            onClick={copyAddressText}
+                          >
+                            Copy address
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="slg-sale-fact-value--missing">
+                          No shipping address on file
+                        </span>
+                      )}
+                    </dd>
+                  </div>
+                </dl>
+
+                {hasRealTracking(currentAuction.trackingNumber) && (
+                  <a
+                    className="slg-sale-tracking-link"
+                    href={buildTrackingUrl(currentAuction.trackingNumber)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img alt="" className="slg-sale-tracking-mark" src="../../../usps.png" />
+                    <span className="slg-sale-tracking-number">
+                      {currentAuction.trackingNumber}
+                    </span>
+                  </a>
+                )}
+
+                <div className="slg-field slg-tracking-field">
+                  <label className="slg-field-label" htmlFor="slg-auction-tracking">
+                    Tracking number
+                  </label>
+                  <input
+                    id="slg-auction-tracking"
+                    type="text"
+                    className="slg-input"
+                    value={trackingInput}
+                    onChange={(event) => setTrackingInput(event.target.value)}
+                  />
+                  <button type="button" className="slg-save-tracking" onClick={handleSaveTracking}>
+                    Save tracking
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
+        </aside>
+      </div>
     </>
   );
 };

@@ -28,7 +28,6 @@ header {
   min-width: 207px;
 }
 
-/* Search sits beside the menu icon, so the row has to lay them out. */
 .header-section {
   display: flex;
   align-items: center;
@@ -283,5 +282,67 @@ header {
   .signout-button,
   .new-link {
     box-shadow: 0 0 10px 0 #7777f3bd;
+  }
+}
+
+/* The title reserved a fixed 207px whether it needed it or not, which made
+   the header a fixed 438px wide at every phone size and pushed the menu
+   icon off the right edge. Letting it size to its own text gives the row
+   the slack that space-between needs. */
+@media (max-width: 480px) {
+  .biz-title {
+    min-width: 0;
+    font-size: 1.25em;
+    left: -8px;
+  }
+}
+
+/* Request basket. Only rendered when it holds something, so it never
+   crowds the header for a visitor who is just browsing. */
+.request-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--slg-dim);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 200ms ease-in;
+}
+
+.request-icon-wrapper:hover,
+.request-icon-wrapper:focus-visible {
+  color: #ffffff;
+}
+
+.request-icon {
+  font-size: 32px;
+}
+
+.request-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #ff4444;
+  color: #ffffff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  pointer-events: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .request-icon-wrapper {
+    transition: none;
   }
 }

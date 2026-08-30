@@ -12,10 +12,6 @@
   text-align: left;
 }
 
-/* ---------- site message ----------
-   Kevin's admin message is an announcement, not a headline, so it gets
-   one quiet line above the fold instead of the whole top of the page. */
-
 .slg-notice {
   display: flex;
   align-items: center;
@@ -27,7 +23,7 @@
 
 .slg-notice p {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: 1.2rem;
   line-height: 1.5;
   color: var(--slg-dim);
 }
@@ -68,10 +64,9 @@
 .slg-eyebrow {
   margin: 0;
   font-family: var(--slg-body);
-  font-size: 0.6875rem;
+  font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.16em;
-  /* text-transform: uppercase; */
   color: var(--slg-dim);
 }
 

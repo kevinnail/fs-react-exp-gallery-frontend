@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import RequestButton from '../RequestButton/RequestButton.js';
 import './MainGalleryPostCard.css';
 
 export default function MainGalleryPostCard({
@@ -53,6 +54,16 @@ export default function MainGalleryPostCard({
     return () => observer.disconnect();
   }, []);
 
+  const requestPiece = {
+    postId: id,
+    title,
+    price: isDiscounted ? discountedPrice : price,
+    discountedPrice: isDiscounted ? discountedPrice : null,
+    imageUrl: imageSource,
+    url: `${window.location.origin}/${id}`,
+    sold,
+  };
+
   return (
     <Link
       className={`slg-piece${sold ? ' slg-piece--sold' : ''}`}
@@ -84,17 +95,23 @@ export default function MainGalleryPostCard({
       <div className="slg-piece-meta">
         <span className="slg-piece-name">{title}</span>
         <span className="slg-piece-desc">{description}</span>
-        <span className="slg-piece-price">
-          {sold ? (
-            <span className="slg-was">${isDiscounted ? originalPrice : price}</span>
-          ) : isDiscounted ? (
-            <>
-              <span className="slg-was">${originalPrice}</span>${Math.floor(discountedPrice)}
-            </>
-          ) : (
-            <>${price}</>
-          )}
-        </span>
+        {/* Price and add control share a row so the photo stays uncovered
+            without the card growing a whole extra line for the button. */}
+        <div className="slg-piece-buy">
+          <span className="slg-piece-price">
+            {sold ? (
+              <span className="slg-was">${isDiscounted ? originalPrice : price}</span>
+            ) : isDiscounted ? (
+              <>
+                <span className="slg-was">${originalPrice}</span>${Math.floor(discountedPrice)}
+              </>
+            ) : (
+              <>${price}</>
+            )}
+          </span>
+
+          {sold ? null : <RequestButton piece={requestPiece} variant="card" />}
+        </div>
       </div>
     </Link>
   );

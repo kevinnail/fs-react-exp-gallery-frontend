@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { fetchGalleryPosts, markWelcomeMessageFalse } from '../../services/fetch-utils.js';
 import ProfileForm from './AccountForm.js';
@@ -10,6 +10,33 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import UserSales from './UserSales/UserSales.js';
 import PaymentDueSummary from './PaymentDueSummary/PaymentDueSummary.js';
+import { useAccountActivity } from '../../hooks/useAccountActivity.js';
+
+const TAB_SUMMARY = 'summary';
+const TAB_SPECIALS = 'specials';
+const TAB_AUCTIONS = 'auctions';
+const TAB_PURCHASES = 'purchases';
+
+// Offset so the smooth scroll clears the fixed site header
+const TAB_SCROLL_OFFSET = 100;
+
+const tabLabel = (text, badge, badgeTitle) => (
+  <span className="account-tab-label">
+    {text}
+    {badge ? (
+      <span className="account-tab-badge" title={badgeTitle}>
+        {badge}
+      </span>
+    ) : null}
+  </span>
+);
+
+const totalDueLabel = (text, badge, badgeTitle) => (
+  <span className="account-tab-label">
+    {text}
+    {badge ? <span title={badgeTitle}>{badge}</span> : null}
+  </span>
+);
 
 export default function Account() {
   const { user } = useUserStore();
@@ -17,13 +44,46 @@ export default function Account() {
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
   const navigate = useNavigate();
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(TAB_SPECIALS);
+  const tabsRef = useRef(null);
+  const hasAutoSelectedTab = useRef(false);
+
+  const {
+    loading: activityLoading,
+    activeAuctionBids,
+    wonAuctions,
+    sales,
+    unpaidData,
+  } = useAccountActivity(user?.id);
+  const unpaidAuctionCount = unpaidData.unpaidWins.length;
+  const unpaidPurchaseCount = unpaidData.unpaidPurchases.length;
+  const hasUnpaid = unpaidData.itemCount > 0;
 
   const currentSpecialDiscount = 0.7; //^  Adjust as needed =========================================================
 
-  const handleTabChange = (e, newValue) => {
+  const handleTabChange = (event, newValue) => {
     setTab(newValue);
   };
+
+  const goToTab = (value) => {
+    setTab(value);
+    window.requestAnimationFrame(() => {
+      if (!tabsRef.current) return;
+      const top = tabsRef.current.getBoundingClientRect().top + window.scrollY - TAB_SCROLL_OFFSET;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  };
+
+  useEffect(() => {
+    if (activityLoading || hasAutoSelectedTab.current) return;
+    hasAutoSelectedTab.current = true;
+    if (hasUnpaid) setTab(TAB_SUMMARY);
+  }, [activityLoading, hasUnpaid]);
+
+  // The summary tab only exists while something is unpaid
+  useEffect(() => {
+    if (!hasUnpaid && tab === TAB_SUMMARY) setTab(TAB_SPECIALS);
+  }, [hasUnpaid, tab]);
 
   useEffect(() => {
     // Use store method so both profile & address get populated
@@ -192,64 +252,107 @@ export default function Account() {
             )}
           </div>
           <div className="profile-info">
-            {!isProfileComplete && (
-              <span className="profile-incomplete-note" role="note">
-                Account info incomplete — click the gear to update
-              </span>
-            )}
             <h1>
               {profile?.firstName || profile?.lastName
                 ? `${profile?.firstName || ''} ${profile?.lastName || ''}`
                 : ''}
             </h1>
             <p className="user-email">{user?.email}</p>
-            <div
-              style={{
-                border: `1px solid ${profile?.sendEmailNotifications ? 'green' : 'yellow'}`,
-                padding: '.25rem .5rem',
-                borderRadius: '12px',
-              }}
-            >
-              Email notifications are{' '}
-              {profile?.sendEmailNotifications ? (
-                <>
-                  <strong>enabled</strong> You will receive emails for new messages, new work,
-                  auctions, and tracking info.
-                </>
-              ) : (
-                <>
-                  <strong>disabled</strong>, you will only receive emails for tracking info.
-                </>
+            <p className="account-greeting">{displayGreeting}</p>
+            <div className="account-status-row">
+              <button
+                type="button"
+                className={`account-chip ${
+                  profile?.sendEmailNotifications ? 'account-chip-on' : 'account-chip-off'
+                }`}
+                onClick={handleEditProfile}
+                title={
+                  profile?.sendEmailNotifications
+                    ? 'Emails for new messages, new work, auctions, and tracking info. Click to change in settings.'
+                    : 'Only tracking info emails. Click to change in settings.'
+                }
+              >
+                <span className="account-chip-dot" aria-hidden="true" />
+                Email notifications {profile?.sendEmailNotifications ? 'on' : 'off'}
+                <span className="account-chip-gear" aria-hidden="true">
+                  ⚙️
+                </span>
+              </button>
+              {!isProfileComplete && (
+                <button
+                  type="button"
+                  className="account-chip account-chip-warn"
+                  onClick={handleEditProfile}
+                >
+                  Account info incomplete
+                  <span className="account-chip-gear" aria-hidden="true">
+                    ⚙️
+                  </span>
+                </button>
               )}
             </div>
           </div>
         </div>
 
-        <div className="profile-details">
-          <h2 className="detail-value">{displayGreeting}</h2>
-          {profile?.showWelcome && customerMessage}
-          {profile?.showWelcome && (
+        {profile?.showWelcome && (
+          <div className="profile-details">
+            {customerMessage}
             <span className="got-it-button" onClick={removeWelcomeMessage}>
               Got it! Don&apos;t show this message again
             </span>
-          )}
+          </div>
+        )}
+
+        <div ref={tabsRef}>
+          <Tabs
+            value={tab}
+            onChange={handleTabChange}
+            className="account-tabs"
+            variant="scrollable"
+            scrollButtons="auto"
+            TabIndicatorProps={{ className: 'account-tabs-indicator' }}
+          >
+            {hasUnpaid && (
+              <Tab
+                className="account-tab account-tab-due"
+                value={TAB_SUMMARY}
+                label={totalDueLabel(
+                  'Summary',
+                  `$${unpaidData.total.toLocaleString()}`,
+                  'Amount currently due'
+                )}
+              />
+            )}
+            <Tab className="account-tab" value={TAB_SPECIALS} label="Specials" />
+            <Tab
+              className="account-tab"
+              value={TAB_AUCTIONS}
+              label={tabLabel(
+                'Auctions',
+                unpaidAuctionCount || null,
+                `${unpaidAuctionCount} awaiting payment`
+              )}
+            />
+            <Tab
+              className="account-tab"
+              value={TAB_PURCHASES}
+              label={tabLabel(
+                'Purchases',
+                unpaidPurchaseCount || null,
+                `${unpaidPurchaseCount} awaiting payment`
+              )}
+            />
+          </Tabs>
         </div>
-
-        {/* Combined payment due summary across auctions + purchases */}
-        <PaymentDueSummary userId={user?.id} />
-
-        <Tabs
-          value={tab}
-          onChange={handleTabChange}
-          className="account-tabs"
-          TabIndicatorProps={{ className: 'account-tabs-indicator' }}
-        >
-          <Tab className="account-tab" label="Specials" />
-          <Tab className="account-tab" label="Auctions" />
-          <Tab className="account-tab" label="Purchases" />
-        </Tabs>
         <div className="tab-content-wrapper">
-          {tab === 0 && (
+          {tab === TAB_SUMMARY && hasUnpaid && (
+            <PaymentDueSummary
+              unpaidData={unpaidData}
+              onViewUnpaidAuctions={() => goToTab(TAB_AUCTIONS)}
+              onViewUnpaidPurchases={() => goToTab(TAB_PURCHASES)}
+            />
+          )}
+          {tab === TAB_SPECIALS && (
             <div className="new-work-section">
               <span className="new-work-msg">
                 <span style={{ display: 'block', textAlign: 'center' }}>
@@ -307,8 +410,14 @@ export default function Account() {
               </div>
             </div>
           )}
-          {tab === 1 && <UserAuctions userId={user?.id} />}
-          {tab === 2 && <UserSales userId={user?.id} />}
+          {tab === TAB_AUCTIONS && (
+            <UserAuctions
+              activeAuctionBids={activeAuctionBids}
+              wonAuctions={wonAuctions}
+              loading={activityLoading}
+            />
+          )}
+          {tab === TAB_PURCHASES && <UserSales sales={sales} loading={activityLoading} />}
         </div>
       </div>
 

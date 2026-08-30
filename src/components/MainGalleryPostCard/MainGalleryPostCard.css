@@ -157,3 +157,14 @@
     animation: none;
   }
 }
+
+/* Quick-add control. It sits under the photo rather than over it: the
+   frame already carries the Sold and Sale badges, and the glass is the
+   thing people came to look at. Sharing the price row keeps the cost to
+   the card's height as small as it can be. */
+.slg-piece-buy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}

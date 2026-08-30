@@ -14,16 +14,18 @@ export function useGalleryPost(id) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const [additionalImagesGallery, setAdditionalImagesGallery] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     setLoading(true);
+    setNotFound(false);
     const fetchData = async () => {
       try {
         const data = await getGalleryPostDetail(id);
         if (!data) {
+          setNotFound(true);
           setLoading(false);
-          navigate('/');
           return;
         }
         const additionalImagesGallery = await getAdditionalImageUrlsPublicIdsGallery(id);
@@ -62,6 +64,7 @@ export function useGalleryPost(id) {
     setError,
     isDeleted,
     setIsDeleted,
+    notFound,
     additionalImagesGallery,
     setAdditionalImagesGallery,
   };

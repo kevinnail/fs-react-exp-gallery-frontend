@@ -108,7 +108,7 @@ div {
 .user-email {
   color: rgba(255, 255, 255, 0.7);
   font-size: 1.1rem;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 0.35rem 0;
 }
 
 .edit-profile-btn {
@@ -323,18 +323,25 @@ div {
 }
 
 .account-tabs {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+  margin-top: 1.5rem;
+  min-height: 0;
 }
 
 .account-tabs-indicator {
   background-color: green;
-  height: 3px;
+  height: 4px;
+  border-radius: 4px 4px 0 0;
 }
 
 .account-tab {
   color: rgba(255, 255, 255, 0.6);
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
   text-transform: none;
+  padding: 0.85rem 1.5rem;
+  min-height: 0;
 }
 
 .account-tab.Mui-selected {
@@ -345,31 +352,79 @@ div {
   color: yellow;
 }
 
-.profile-incomplete-note {
-  position: absolute;
-  top: 12px;
-  right: 56px; /* sits just left of the edit icon */
-  font-size: 0.85rem;
-  color: #ffe27a;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 4px 8px;
-  border-radius: 6px;
-  backdrop-filter: blur(3px);
+.account-tab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-@media (max-width: 768px) {
-  .profile-incomplete-note {
-    position: static;
-    display: block;
-    right: auto;
-    top: auto;
-    margin: 0 0 0.5rem 0;
-    width: fit-content;
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffd86b;
-    border-color: rgba(255, 255, 255, 0.25);
-  }
+.account-tab-badge {
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: rgb(246, 255, 0);
+  color: #000;
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.4rem;
+  text-align: center;
+  box-shadow: 0 0 8px rgba(246, 255, 0, 0.45);
+}
+
+/* Status chips (notifications, incomplete profile) */
+.account-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.account-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.account-chip:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.account-chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #5bd672;
+}
+
+.account-chip-off .account-chip-dot {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.account-chip-warn {
+  color: #ffd86b;
+  border-color: rgba(255, 216, 107, 0.45);
+}
+
+.account-chip-gear {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.account-greeting {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.15rem;
+  font-weight: 400;
+  margin: 0;
 }
 
 /* 
@@ -387,6 +442,15 @@ div {
 
   .profile-info h1 {
     font-size: 2rem;
+  }
+
+  .account-status-row {
+    justify-content: center;
+  }
+
+  .account-tab {
+    font-size: 1rem;
+    padding: 0.75rem 0.9rem;
   }
 
   .detail-item {
@@ -430,4 +494,14 @@ div {
   .profile-details {
     padding: 1rem;
   }
+}
+
+/* Summary tab carries the amount owed, so it reads as the priority tab */
+.account-tab-due .account-tab-badge {
+  background: rgb(246, 255, 0);
+  font-size: 0.85rem;
+}
+
+.account-tab-due.Mui-selected {
+  color: rgb(246, 255, 0);
 }

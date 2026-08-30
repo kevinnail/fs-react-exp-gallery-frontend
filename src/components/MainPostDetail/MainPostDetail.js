@@ -4,7 +4,9 @@ import Modal from 'react-modal';
 import { useSwipeable } from 'react-swipeable';
 import { useGalleryPost } from '../../hooks/useGalleryPost.js';
 import Loading from '../Loading/Loading.js';
+import NotFound from '../NotFound/NotFound.js';
 import ShareButton from '../ShareButton/ShareButton.js';
+import RequestButton from '../RequestButton/RequestButton.js';
 import './MainPostDetail.css';
 
 Modal.setAppElement('#root');
@@ -32,7 +34,7 @@ function storeFor(sellingLink) {
 
 export default function MainPostDetail() {
   const { id } = useParams();
-  const { postDetail, imageUrls, loading } = useGalleryPost(id);
+  const { postDetail, imageUrls, loading, notFound } = useGalleryPost(id);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -78,6 +80,17 @@ export default function MainPostDetail() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxIsOpen, showPrevious, showNext]);
 
+  const requestPiece = {
+    postId: postDetail?.id,
+    title: postDetail?.title,
+    category: postDetail?.category,
+    price: postDetail?.price,
+    discountedPrice: postDetail?.discountedPrice,
+    imageUrl: imageUrls?.[0],
+    url: window.location.href,
+    sold: postDetail?.sold,
+  };
+
   const handleMessageClick = () => {
     navigate('/messages', {
       state: {
@@ -95,6 +108,7 @@ export default function MainPostDetail() {
   };
 
   if (loading) return <Loading />;
+  if (notFound) return <NotFound />;
 
   return (
     <main className="slg-detail">
@@ -191,7 +205,12 @@ export default function MainPostDetail() {
           <div className="slg-detail-rule" />
 
           <div className="slg-detail-actions">
-            <button className="slg-detail-button" onClick={handleMessageClick}>
+            <RequestButton piece={requestPiece} variant="detail" />
+
+            <button
+              className="slg-detail-button slg-detail-button--quiet"
+              onClick={handleMessageClick}
+            >
               Message Kevin
             </button>
 

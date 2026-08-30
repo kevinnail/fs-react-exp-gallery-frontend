@@ -95,6 +95,20 @@
   cursor: pointer;
 }
 
+/* ...but the word alone is a 16px strip in the left column, which a
+   thumb misses. The button stretches over the whole row so the count
+   and value cells are part of the same target, without nesting a
+   control in every cell. */
+.slg-inventory-table tbody tr {
+  position: relative;
+}
+
+.slg-inventory-category::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
 .slg-inventory-count {
   font-size: 0.9375rem;
   font-weight: 600;
@@ -118,13 +132,39 @@
   font-weight: 600;
 }
 
-.slg-inventory-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.035);
+/* Hover only where there is a pointer to hover with: on a phone it
+   sticks to the last row touched and competes with the selected row. */
+@media (hover: hover) {
+  .slg-inventory-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.035);
+  }
 }
 
+.slg-inventory-table tbody tr:active {
+  background: var(--slg-lift-hover);
+}
+
+/* The filter it applies is a screen away on a phone, so the row has to
+   carry the whole confirmation by itself. Stock colour stays on the
+   count, which is the larger figure. */
 .slg-inventory-row--selected,
 .slg-inventory-table tbody tr.slg-inventory-row--selected:hover {
-  background: var(--slg-lift-hover);
+  background: rgba(255, 106, 31, 0.16);
+}
+
+.slg-inventory-row--selected .slg-inventory-category {
+  font-weight: 600;
+  color: var(--slg-flame);
+}
+
+/* Coarse pointers get rows tall enough to hit: 0.5rem cell padding on a
+   13px line is a 30px row, under the 44px thumb target. */
+@media (pointer: coarse) {
+  .slg-inventory-table tbody th,
+  .slg-inventory-table tbody td {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
 }
 
 /* ---------- footer totals ---------- */

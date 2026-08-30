@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
-import {
-  getMyMessages,
-  sendMessage,
-  markMessageAsReadFetchCall,
-} from '../../services/fetch-messages.js';
+import { getMyMessages, markMessageAsReadFetchCall } from '../../services/fetch-messages.js';
+import { sendCustomerMessage } from '../../services/sendCustomerMessage.js';
+import { parsePieceAttachment } from '../../services/pieceAttachment.js';
+import PieceAttachment, { renderPieceSalePrice } from '../PieceAttachment/PieceAttachment.js';
 import { getAdminProfile } from '../../services/fetch-utils.js';
 import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
 import { useMessaging } from '../../hooks/useWebSocket.js';
@@ -151,27 +150,17 @@ export default function Messages() {
         messageToSend = `${newMessage}\n\n---\nAbout this piece: ${pieceMetadata.title} (${pieceMetadata.category}) - $${pieceMetadata.price} | discounted: $${pieceMetadata.discountedPrice}\nView: ${pieceMetadata.url}\nImage: ${pieceMetadata.imageUrl}`;
       }
 
-      if (conversationId) {
-        socket.emit('send_message', {
-          conversationId,
-          messageContent: messageToSend,
-        });
-      } else {
-        // still use the REST call once to create a new conversation
-        const response = await sendMessage(messageToSend);
+      const { conversationId: sentConversationId } = await sendCustomerMessage({
+        socket,
+        messageContent: messageToSend,
+        conversationId,
+      });
 
-        setConversationId(response.conversationId);
+      if (!conversationId) {
+        setConversationId(sentConversationId);
         if (isConnected) {
-          joinConversation(response.conversationId);
+          joinConversation(sentConversationId);
         }
-        // then emit through WebSocket to trigger real-time flow
-        socket.emit('send_message', {
-          conversationId: response.conversationId,
-          messageContent: messageToSend,
-          isFromAdmin: response.isFromAdmin,
-          userId: response.userId,
-          messageId: response.id,
-        });
       }
 
       setNewMessage('');
@@ -244,87 +233,14 @@ export default function Messages() {
   };
 
   const renderMessageWithPieceMetadata = (messageContent) => {
-    // Check if message contains piece metadata
-    // Try new format first (with discounted price)
-    let pieceMetadataMatch = messageContent.match(
-      /About this piece: (.+?) \(([^)]+)\) - \$(.+?) \| discounted: \$(.+?)\nView: (.+)/
+    const { body, items } = parsePieceAttachment(messageContent);
+
+    return (
+      <>
+        <p>{body}</p>
+        <PieceAttachment items={items} />
+      </>
     );
-    // Fallback for legacy messages without discounted price
-    if (!pieceMetadataMatch) {
-      pieceMetadataMatch = messageContent.match(
-        /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
-      );
-    }
-
-    if (pieceMetadataMatch) {
-      const [, title, category, price, discountedPriceOrUrl, maybeUrl] = pieceMetadataMatch;
-
-      // If legacy format, discountedPriceOrUrl is actually the URL
-      const isLegacy = !maybeUrl;
-      const discounted = isLegacy ? null : discountedPriceOrUrl;
-      const url = isLegacy ? discountedPriceOrUrl : maybeUrl;
-
-      // extract imageUrl the same way you already do
-
-      // Extract imageUrl from message content
-      const imageMatch = messageContent.match(/Image: (.+)/);
-      const imageUrl = imageMatch ? imageMatch[1] : null;
-
-      const mainMessage = messageContent.split('\n\n---\n')[0];
-
-      return (
-        <>
-          <p>{mainMessage}</p>
-          <div className="piece-metadata-highlight">
-            <div className="piece-metadata-highlight-content">
-              {' '}
-              <p>
-                <img width="50px" src={imageUrl} alt={title} />
-              </p>
-              <h3>{title}</h3>
-            </div>
-
-            <p>
-              <span>Category:</span> {category}
-            </p>
-            <p>
-              <span>Price:</span> {renderSalePrice(price, discounted)}
-            </p>
-
-            <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
-              View piece
-            </a>
-          </div>
-        </>
-      );
-    }
-
-    return <p>{messageContent}</p>;
-  };
-
-  const renderSalePrice = (price, discountedPrice) => {
-    const numPrice = Number(price);
-    const numDiscount = Number(discountedPrice);
-
-    if (discountedPrice && numDiscount < numPrice) {
-      return (
-        <>
-          <span className="detail-on-sale">ON SALE! </span>
-          <span
-            style={{
-              textDecoration: 'line-through',
-              marginRight: '10px',
-              color: 'red',
-            }}
-          >
-            ${numPrice.toFixed(2)}
-          </span>
-          <span>${numDiscount.toFixed(2)}</span>
-        </>
-      );
-    }
-
-    return <span>${numPrice.toFixed(2)}</span>;
   };
 
   return (
@@ -413,7 +329,7 @@ export default function Messages() {
                 </p>
                 <p>
                   <strong>Price:</strong>{' '}
-                  {renderSalePrice(pieceMetadata.price, pieceMetadata.discountedPrice)}
+                  {renderPieceSalePrice(pieceMetadata.price, pieceMetadata.discountedPrice)}
                 </p>
 
                 <a href={pieceMetadata.url} target="_blank" rel="noopener noreferrer">

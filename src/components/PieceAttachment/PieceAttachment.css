@@ -1,0 +1,15 @@
+/* Wrapper around one or more attached pieces. The card styles themselves
+   still come from Messages.css / AdminInbox.css so neither page shifts. */
+
+.piece-attachment-count {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.piece-attachment .piece-metadata-highlight + .piece-metadata-highlight {
+  margin-top: 0.5rem;
+}

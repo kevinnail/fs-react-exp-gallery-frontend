@@ -6,12 +6,18 @@ import './Header.css';
 import Menu from '../Menu/Menu.js';
 import SearchBar from '../SearchBar/SearchBar.js';
 import { useNotificationStore } from '../../stores/notificationStore.js';
+import { useCartStore, selectItemCount } from '../../stores/cartStore.js';
+import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
+import RequestTray from '../RequestTray/RequestTray.js';
 
 export default function Header() {
   const { user, signout, isAdmin } = useUserStore();
   const unreadMessageCount = useUserStore((s) => s.unreadMessageCount);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const requestCount = useCartStore(selectItemCount);
+  const [isTrayOpen, setIsTrayOpen] = useState(false);
 
   const { unreadAuctionCount, fetchUnreadAuctions } = useNotificationStore();
   const totalUnread = unreadAuctionCount + unreadMessageCount;
@@ -105,6 +111,17 @@ export default function Header() {
         </div>
         <div className="header-section">
           <SearchBar />
+          {requestCount > 0 && (
+            <button
+              type="button"
+              className="request-icon-wrapper"
+              onClick={() => setIsTrayOpen(true)}
+              aria-label={`Your request, ${requestCount} ${requestCount === 1 ? 'piece' : 'pieces'}`}
+            >
+              <LocalMallOutlinedIcon className="request-icon" />
+              <span className="request-badge">{requestCount}</span>
+            </button>
+          )}
           <div className="menu-icon-wrapper" ref={buttonRef} onClick={handleMenuClick}>
             <button
               type="button"
@@ -129,6 +146,8 @@ export default function Header() {
       >
         <Menu handleClick={handleClick} closeMenu={closeMenu} />
       </div>
+
+      <RequestTray isOpen={isTrayOpen} onClose={() => setIsTrayOpen(false)} />
     </>
   );
 }

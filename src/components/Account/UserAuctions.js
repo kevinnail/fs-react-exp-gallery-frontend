@@ -1,71 +1,47 @@
 import { useEffect, useState } from 'react';
 import './UserAuctions.css';
-import { getUserAuctions, getAuctionDetail } from '../../services/fetch-auctions.js';
+import { getAuctionDetail } from '../../services/fetch-auctions.js';
 import { useNavigate } from 'react-router-dom';
-import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
 
-export default function UserAuctions({ userId }) {
-  // active bids hydrated with their auction details
-  const [activeBids, setActiveBids] = useState([]); // [{ bid, auction }]
-  const [wonAuctions, setWonAuctions] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }) {
+  // active bids hydrated with their auction details: [{ bid, auction }]
+  const [hydratedBids, setHydratedBids] = useState([]);
+  const [hydrating, setHydrating] = useState(true);
 
   const navigate = useNavigate();
 
-  const lastAuctionPaid = useAuctionEventsStore((s) => s.lastAuctionPaid);
-  const lastTrackingUpdate = useAuctionEventsStore((s) => s.lastTrackingUpdate);
-
+  // Auction detail is only needed to render this tab, so it is fetched here
+  // rather than with the account-wide activity feed.
   useEffect(() => {
-    if (!lastAuctionPaid) return;
-    const { id, isPaid } = lastAuctionPaid;
-
-    setWonAuctions((prev) =>
-      prev.map((a) => (a.auctionId === id || a.id === id ? { ...a, isPaid } : a))
-    );
-  }, [lastAuctionPaid]);
-
-  useEffect(() => {
-    if (!lastTrackingUpdate) return;
-    const { id, trackingNumber } = lastTrackingUpdate;
-
-    setWonAuctions((prev) =>
-      prev.map((a) => (a.auctionId === id || a.id === id ? { ...a, trackingNumber } : a))
-    );
-  }, [lastTrackingUpdate]);
-
-  useEffect(() => {
-    const loadUserAuctions = async () => {
+    let isMounted = true;
+    const hydrateActiveBids = async () => {
+      if (loading) return;
       try {
-        const data = await getUserAuctions(userId);
-
-        const rawActive = Array.isArray(data?.activeAuctionBids) ? data.activeAuctionBids : [];
-        const rawWon = Array.isArray(data?.wonAuctions) ? data.wonAuctions : [];
-
-        // hydrate active bids with auction detail so we can show title/images/end time
         const hydrated = await Promise.all(
-          rawActive.map(async (bid) => {
+          activeAuctionBids.map(async (bid) => {
             try {
               const auction = await getAuctionDetail(bid.auctionId);
               return { bid, auction };
-            } catch (e) {
-              console.error('getAuctionDetail failed for', bid.auctionId, e);
+            } catch (error) {
+              console.error('getAuctionDetail failed for', bid.auctionId, error);
               return { bid, auction: null };
             }
           })
         );
-
-        const activeHydration = hydrated.filter((a) => (a.auction.isActive ? a : ''));
-        setActiveBids(activeHydration);
-        setWonAuctions(rawWon);
-      } catch (err) {
-        console.error('Error loading user auctions:', err);
+        if (!isMounted) return;
+        setHydratedBids(hydrated.filter((entry) => entry.auction?.isActive));
+      } catch (error) {
+        console.error('Error hydrating active bids:', error);
       } finally {
-        setLoading(false);
+        if (isMounted) setHydrating(false);
       }
     };
 
-    loadUserAuctions();
-  }, [userId]);
+    hydrateActiveBids();
+    return () => {
+      isMounted = false;
+    };
+  }, [activeAuctionBids, loading]);
 
   const handleAuctionNav = (id) => {
     navigate(`/auctions/${id}`);
@@ -222,7 +198,7 @@ export default function UserAuctions({ userId }) {
     </div>
   );
 
-  if (loading) {
+  if (loading || hydrating) {
     return (
       <div className="user-auctions-widget">
         <p>Loading...</p>
@@ -247,9 +223,9 @@ export default function UserAuctions({ userId }) {
       </p>
 
       <h3>Active bids</h3>
-      {activeBids.length > 0 ? (
+      {hydratedBids.length > 0 ? (
         <div className="auction-mini-grid">
-          {activeBids.map(({ bid, auction }) => (
+          {hydratedBids.map(({ bid, auction }) => (
             <div
               key={bid.id}
               className="auction-mini-card"
@@ -268,15 +244,15 @@ export default function UserAuctions({ userId }) {
       <h3>Won</h3>
       {wonAuctions.length > 0 ? (
         <div className="auction-mini-grid">
-          {wonAuctions.map((a) => (
+          {wonAuctions.map((auction) => (
             <div
-              key={a.id}
+              key={auction.id}
               className="auction-mini-card won"
               style={{
-                border: a.isPaid ? '1px solid green' : '1px solid red',
+                border: auction.isPaid ? '1px solid green' : '1px solid red',
               }}
             >
-              <WonCard auction={a} />
+              <WonCard auction={auction} />
             </div>
           ))}
         </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './AdminSales.css';
 import {
@@ -27,6 +27,7 @@ const getFullName = (user) => {
 
 const GallerySalesPanel = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [sales, setSales] = useState([]);
   const [selectedSale, setSelectedSale] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,6 +38,9 @@ const GallerySalesPanel = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserResults, setShowUserResults] = useState(false);
   const [prefillApplied, setPrefillApplied] = useState(false);
+
+  const prefillUserResolved = useRef(false);
+  const prefillRevealed = useRef(false);
   const salesPanelRef = useRef(null);
   const { posts } = usePosts();
 
@@ -84,9 +88,7 @@ const GallerySalesPanel = () => {
     }
   };
 
-  // handle selecting an existing sale
-
-  const revealDetailPanelOnMobile = () => {
+  const revealDetailPanel = () => {
     if (window.matchMedia('(min-width: 1100px)').matches) return;
     requestAnimationFrame(() => {
       salesPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -102,7 +104,7 @@ const GallerySalesPanel = () => {
       setTrackingInput(sale.tracking_number || '');
     }
 
-    revealDetailPanelOnMobile();
+    revealDetailPanel();
   };
 
   // handle saving tracking number
@@ -399,21 +401,18 @@ const GallerySalesPanel = () => {
     setSelectedUser(null);
     setSearchTerm('');
     setDebouncedTerm('');
-    revealDetailPanelOnMobile();
+    revealDetailPanel();
   };
 
   // the one new refactor line
   const currentSale = selectedSale ? sales.find((s) => s.id === selectedSale) : null;
 
-  // Prefill from AdminInbox navigation
   useEffect(() => {
     const prefill = location.state?.prefill;
     if (!prefill || prefillApplied) return;
 
-    // Open create sale form
     setIsCreatingSale(true);
 
-    // Prefill fields
     if (prefill.buyerEmail) setNewBuyerEmail(prefill.buyerEmail);
     if (prefill.piece?.id) setNewPieceId(prefill.piece.id);
     if (prefill.piece) {
@@ -425,23 +424,35 @@ const GallerySalesPanel = () => {
       if (priceToUse !== null && priceToUse !== undefined) setNewPrice(String(priceToUse));
     }
 
-    // Try selecting the user from loaded users by id or email
-    if (users && users.length > 0 && (prefill.user?.id || prefill.user?.email)) {
-      const match = users.find(
-        (u) =>
-          (prefill.user?.id && Number(u.id) === Number(prefill.user.id)) ||
-          (prefill.user?.email &&
-            ((u.email && u.email.toLowerCase() === prefill.user.email.toLowerCase()) ||
-              (u.user_email && u.user_email.toLowerCase() === prefill.user.email.toLowerCase())))
-      );
-      if (match) {
-        setSelectedUser(match);
-      }
-    }
-
     setPrefillApplied(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.state, users, prefillApplied]);
+  }, [location.state, prefillApplied]);
+
+  useEffect(() => {
+    if (!prefillApplied || loading || prefillRevealed.current) return;
+    prefillRevealed.current = true;
+    revealDetailPanel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefillApplied, loading]);
+
+  useEffect(() => {
+    const prefillUser = location.state?.prefill?.user;
+    if (!prefillUser || prefillUserResolved.current || users.length === 0) return;
+    if (!prefillUser.id && !prefillUser.email) return;
+
+    prefillUserResolved.current = true;
+
+    const match = users.find(
+      (u) =>
+        (prefillUser.id && Number(u.id) === Number(prefillUser.id)) ||
+        (prefillUser.email &&
+          ((u.email && u.email.toLowerCase() === prefillUser.email.toLowerCase()) ||
+            (u.user_email && u.user_email.toLowerCase() === prefillUser.email.toLowerCase())))
+    );
+    if (match) {
+      setSelectedUser(match);
+    }
+  }, [location.state, users]);
 
   const stageCounts = sales.reduce(
     (totals, sale) => {
@@ -799,6 +810,18 @@ const GallerySalesPanel = () => {
                     <button
                       type="button"
                       className="slg-sales-button slg-sales-button--wide"
+                      onClick={() => navigate(`/${currentSale.post_id}`)}
+                    >
+                      View post
+                    </button>
+                  </div>
+
+                  <div className="slg-sale-actions">
+                    <button
+                      type="button"
+                      className={`slg-sales-button slg-sales-button--wide${
+                        currentSale.is_paid ? '' : ' slg-sales-button--primary'
+                      }`}
                       onClick={handleTogglePaid}
                     >
                       {currentSale.is_paid ? 'Mark unpaid' : 'Mark paid'}
@@ -849,16 +872,13 @@ const GallerySalesPanel = () => {
                       rel="noopener noreferrer"
                     >
                       <img alt="" className="slg-sale-tracking-mark" src="../../../usps.png" />
-                      <span className="slg-sale-tracking-text">
-                        <span className="slg-sale-tracking-caption">Track with USPS</span>
-                        <span className="slg-sale-tracking-number">
-                          {currentSale.tracking_number}
-                        </span>
+                      <span className="slg-sale-tracking-number">
+                        {currentSale.tracking_number}
                       </span>
                     </a>
                   )}
 
-                  <div className="slg-field">
+                  <div className="slg-field slg-tracking-field">
                     <label className="slg-field-label" htmlFor="slg-sale-tracking">
                       Tracking number
                     </label>
@@ -869,12 +889,9 @@ const GallerySalesPanel = () => {
                       value={trackingInput}
                       onChange={(e) => setTrackingInput(e.target.value)}
                     />
-                  </div>
-
-                  <div className="slg-sale-actions">
                     <button
                       type="button"
-                      className="slg-sales-button slg-sales-button--primary slg-sales-button--wide"
+                      className="slg-save-tracking"
                       onClick={handleSaveTracking}
                     >
                       Save tracking
