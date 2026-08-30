@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import RequestPage from './RequestPage.js';
@@ -63,6 +63,9 @@ const asServerPost = (item, overrides = {}) => ({
 
 const renderPage = () => render(<RequestPage />, { wrapper: MemoryRouter });
 
+const estimatedTotal = () =>
+  within(screen.getByText('Estimated total').closest('.slg-request-total'));
+
 describe('RequestPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -84,7 +87,8 @@ describe('RequestPage', () => {
   it('totals the available pieces', async () => {
     renderPage();
 
-    expect(await screen.findByText('$340.00')).toBeInTheDocument();
+    await screen.findByText('Estimated total');
+    expect(estimatedTotal().getByText('$340.00')).toBeInTheDocument();
   });
 
   it('marks a piece that sold while it sat in the basket and leaves it out of the total', async () => {
@@ -97,7 +101,7 @@ describe('RequestPage', () => {
     renderPage();
 
     expect(await screen.findByText('Just sold, sorry')).toBeInTheDocument();
-    expect(screen.getByText('$90.00')).toBeInTheDocument();
+    expect(estimatedTotal().getByText('$90.00')).toBeInTheDocument();
     expect(screen.getByText(/one piece sold while it was in your request/i)).toBeInTheDocument();
   });
 
