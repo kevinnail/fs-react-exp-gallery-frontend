@@ -10,6 +10,8 @@ import {
 import { useMessaging } from '../../hooks/useWebSocket.js';
 import './AdminInbox.css';
 import { getAllUsers } from '../../services/fetch-utils.js';
+import { parsePieceAttachment } from '../../services/pieceAttachment.js';
+import PieceAttachment from '../PieceAttachment/PieceAttachment.js';
 
 export default function AdminInbox() {
   const { setUnreadMessageCount } = useUserStore();
@@ -391,133 +393,59 @@ export default function AdminInbox() {
     return dateWithYear;
   };
 
+  const customerForConversation = () => {
+    if (!messages || messages.length === 0) return null;
+
+    const conversation = conversations.find(
+      (candidate) => Number(candidate.user_id) === Number(messages[0]?.userId)
+    );
+    if (!conversation) return null;
+
+    return {
+      id: conversation.user_id,
+      email: conversation.email,
+      firstName: conversation.first_name,
+      lastName: conversation.last_name,
+      avatar: conversation.image_url,
+    };
+  };
+
+  const handleCreateSale = (piece) => {
+    const customer = customerForConversation();
+
+    navigate('/admin/sales', {
+      state: {
+        fromInbox: true,
+        prefill: {
+          buyerEmail: customer?.email || null,
+          user: customer,
+          piece: {
+            id: piece.postId,
+            title: piece.title,
+            price: Number(piece.price),
+            discountedPrice: piece.discountedPrice ? Number(piece.discountedPrice) : null,
+            imageUrl: piece.imageUrl,
+            url: piece.url,
+          },
+        },
+      },
+      replace: false,
+    });
+  };
+
   const renderMessageWithPieceMetadata = (messageContent) => {
     if (!messageContent) {
       return <p>[Message unavailable]</p>;
     }
-    // Check if message contains piece metadata
-    // Try new format first (with discounted price)
-    let pieceMetadataMatch = messageContent.match(
-      /About this piece: (.+?) \(([^)]+)\) - \$(.+?) \| discounted: \$(.+?)\nView: (.+)/
+
+    const { body, items } = parsePieceAttachment(messageContent);
+
+    return (
+      <>
+        <p>{body}</p>
+        <PieceAttachment items={items} onCreateSale={handleCreateSale} />
+      </>
     );
-    // Fallback for legacy messages without discounted price
-    if (!pieceMetadataMatch) {
-      pieceMetadataMatch = messageContent.match(
-        /About this piece: (.+?) \(([^)]+)\) - \$([^\n]+)\nView: (.+)/
-      );
-    }
-    if (pieceMetadataMatch) {
-      const [, title, category, price, discountedPrice, url] = pieceMetadataMatch;
-
-      // Extract imageUrl from message content
-      const imageMatch = messageContent.match(/Image: (.+)/);
-      const imageUrl = imageMatch ? imageMatch[1] : null;
-
-      const mainMessage = messageContent.split('\n\n---\n')[0];
-      const renderSalePrice = (price, discountedPrice) => {
-        const numPrice = Number(price);
-        const numDiscount = Number(discountedPrice);
-
-        if (discountedPrice && numDiscount < numPrice) {
-          return (
-            <>
-              <span className="detail-on-sale">ON SALE! </span>
-              <span
-                style={{
-                  textDecoration: 'line-through',
-                  marginRight: '10px',
-                  color: 'red',
-                }}
-              >
-                ${numPrice.toFixed(2)}
-              </span>
-              <span>${numDiscount.toFixed(2)}</span>
-            </>
-          );
-        }
-
-        return <span>${numPrice.toFixed(2)}</span>;
-      };
-      // Try to derive the post id from the URL (last path segment)
-      let postId = null;
-      try {
-        const u = new URL(url);
-        const parts = u.pathname.split('/').filter(Boolean);
-        postId = parts[parts.length - 1] || null;
-      } catch (e) {
-        // ignore
-      }
-
-      const handleCreateSale = () => {
-        // Find current conversation's customer details
-        let customer = null;
-        if (messages && messages.length > 0) {
-          const convo = conversations.find(
-            (c) => Number(c.user_id) === Number(messages[0]?.userId)
-          );
-          if (convo) {
-            customer = {
-              id: convo.user_id,
-              email: convo.email,
-              firstName: convo.first_name,
-              lastName: convo.last_name,
-              avatar: convo.image_url,
-            };
-          }
-        }
-
-        const piece = {
-          id: postId ? Number(postId) : null,
-          title,
-          price: Number(price),
-          discountedPrice: discountedPrice ? Number(discountedPrice) : null,
-          imageUrl,
-          url,
-        };
-
-        navigate('/admin/sales', {
-          state: {
-            fromInbox: true,
-            prefill: {
-              buyerEmail: customer?.email || null,
-              user: customer,
-              piece,
-            },
-          },
-          replace: false,
-        });
-      };
-
-      return (
-        <>
-          <p>{mainMessage}</p>
-          <div className="piece-metadata-highlight">
-            <div className="piece-metadata-highlight-content">
-              {' '}
-              <p>
-                <img width="50px" src={imageUrl} alt={title} />
-              </p>
-              <h3>{title}</h3>
-            </div>
-
-            <p>
-              <span>Category:</span> {category}
-            </p>
-            <p>
-              <span>Price:</span> {renderSalePrice(price, discountedPrice)}
-            </p>
-            <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700' }}>
-              View piece
-            </a>
-            <button type="button" className="create-sale-button" onClick={handleCreateSale}>
-              Create Sale →
-            </button>
-          </div>
-        </>
-      );
-    }
-
-    return <p>{messageContent}</p>;
   };
 
   return (
