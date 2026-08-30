@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import RequestButton from '../RequestButton/RequestButton.js';
 import './MainGalleryPostCard.css';
 
 export default function MainGalleryPostCard({
@@ -53,6 +54,16 @@ export default function MainGalleryPostCard({
     return () => observer.disconnect();
   }, []);
 
+  const requestPiece = {
+    postId: id,
+    title,
+    price: isDiscounted ? discountedPrice : price,
+    discountedPrice: isDiscounted ? discountedPrice : null,
+    imageUrl: imageSource,
+    url: `${window.location.origin}/${id}`,
+    sold,
+  };
+
   return (
     <Link
       className={`slg-piece${sold ? ' slg-piece--sold' : ''}`}
@@ -78,6 +89,12 @@ export default function MainGalleryPostCard({
           </>
         ) : (
           <span className="slg-piece-placeholder">No photo yet</span>
+        )}
+
+        {sold ? null : (
+          <div className="slg-piece-request">
+            <RequestButton piece={requestPiece} variant="card" />
+          </div>
         )}
       </div>
 
