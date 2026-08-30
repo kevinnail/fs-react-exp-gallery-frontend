@@ -10,6 +10,7 @@ import NewPost from './components/NewPost/NewPost.js';
 import EditPost from './components/EditPost/EditPost.js';
 import MainGallery from './components/MainGallery/MainGallery.js';
 import MainPostDetail from './components/MainPostDetail/MainPostDetail.js';
+import RequestPage from './components/RequestPage/RequestPage.js';
 import AboutMe from './components/AboutMe/AboutMe.js';
 import DiscountForm from './components/DiscountForm/DiscountForm.js';
 import MassEmailForm from './components/MassEmailForm/MassEmailForm.js';
@@ -220,7 +221,7 @@ function App() {
             <Route path="/auctions" element={<AuctionList />} />
             <Route path="/auctions/:id" element={<AuctionDetail />} />
             <Route path="/auctions/archive" element={<AuctionArchive />} />
-
+            <Route path="/request" element={<RequestPage />} />
             <Route path="/:id" element={<MainPostDetail />} />
 
             <Route
