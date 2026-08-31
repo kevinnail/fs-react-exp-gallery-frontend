@@ -189,7 +189,6 @@ export default function MainPostDetail() {
               </>
             ) : isDiscounted ? (
               <>
-                <span className="slg-detail-sale-flag">On sale</span>
                 <span className="slg-detail-was">${postDetail?.originalPrice}</span>$
                 {discountedPrice.toFixed(2)}
               </>

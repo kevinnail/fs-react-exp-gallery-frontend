@@ -45,7 +45,7 @@ export default function Header() {
           top: '55px',
           right: '225px',
           zIndex: 9999,
-          background: 'orange',
+          background: 'var(--slg-state-wait)',
           color: 'black',
           fontWeight: 'bold',
           padding: '4px 8px',

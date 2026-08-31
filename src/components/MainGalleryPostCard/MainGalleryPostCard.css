@@ -110,10 +110,10 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Struck price is secondary information, so it reads as dim rather
-   than as an error in red. */
+/* The struck original carries the whole sale signal now that nothing sits
+   on top of the photo, so it takes the accent rather than receding. */
 .slg-was {
-  color: var(--slg-dim);
+  color: var(--slg-accent);
   font-weight: 400;
   text-decoration: line-through;
 }
@@ -134,10 +134,6 @@
   border: 1px solid var(--slg-edge);
 }
 
-.slg-badge--sale {
-  color: var(--slg-flame);
-  border-color: var(--slg-flame);
-}
 
 .slg-piece--sold .slg-piece-frame img {
   opacity: 0.42;

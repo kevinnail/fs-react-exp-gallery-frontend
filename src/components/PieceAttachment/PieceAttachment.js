@@ -7,17 +7,8 @@ export const renderPieceSalePrice = (price, discountedPrice) => {
   if (discountedPrice && discounted < listed) {
     return (
       <>
-        <span className="detail-on-sale">ON SALE! </span>
-        <span
-          style={{
-            textDecoration: 'line-through',
-            marginRight: '10px',
-            color: 'red',
-          }}
-        >
-          ${listed.toFixed(2)}
-        </span>
-        <span>${discounted.toFixed(2)}</span>
+        <span className="piece-attachment-was">${listed.toFixed(2)}</span>
+        <span className="piece-attachment-now">${discounted.toFixed(2)}</span>
       </>
     );
   }

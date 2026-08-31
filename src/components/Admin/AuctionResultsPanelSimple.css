@@ -30,7 +30,7 @@
   font-family: var(--slg-display);
   font-size: 1.5rem;
   line-height: 1;
-  color: var(--slg-flame);
+  color: var(--slg-accent);
   font-variant-numeric: tabular-nums;
 }
 
@@ -88,6 +88,6 @@
 .slg-live-bid {
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--slg-flame);
+  color: var(--slg-accent);
   font-variant-numeric: tabular-nums;
 }

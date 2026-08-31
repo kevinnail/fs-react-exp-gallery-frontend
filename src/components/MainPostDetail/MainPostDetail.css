@@ -214,16 +214,9 @@
 }
 
 .slg-detail-was {
-  color: var(--slg-dim);
+  color: var(--slg-accent);
   font-weight: 400;
   text-decoration: line-through;
-}
-
-.slg-detail-sale-flag {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--slg-flame);
 }
 
 .slg-detail-sold-flag {
@@ -423,7 +416,7 @@
 .slg-detail a:focus-visible,
 .slg-detail button:focus-visible,
 .slg-lightbox button:focus-visible {
-  outline: 2px solid var(--slg-flame);
+  outline: 2px solid var(--slg-accent);
   outline-offset: 4px;
 }
 

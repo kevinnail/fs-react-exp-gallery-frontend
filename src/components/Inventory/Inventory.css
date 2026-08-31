@@ -148,12 +148,12 @@
    count, which is the larger figure. */
 .slg-inventory-row--selected,
 .slg-inventory-table tbody tr.slg-inventory-row--selected:hover {
-  background: rgba(255, 106, 31, 0.16);
+  background: rgba(255, 59, 48, 0.16);
 }
 
 .slg-inventory-row--selected .slg-inventory-category {
   font-weight: 600;
-  color: var(--slg-flame);
+  color: var(--slg-accent);
 }
 
 /* Coarse pointers get rows tall enough to hit: 0.5rem cell padding on a

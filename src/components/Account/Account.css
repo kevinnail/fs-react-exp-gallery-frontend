@@ -505,3 +505,11 @@ div {
 .account-tab-due.Mui-selected {
   color: rgb(246, 255, 0);
 }
+
+/* Same treatment as the public gallery card: the struck original takes the
+   accent and the price being asked stays plain. */
+.recent-post-was {
+  margin-right: 1rem;
+  color: var(--slg-accent);
+  text-decoration: line-through;
+}
