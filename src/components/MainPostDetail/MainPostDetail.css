@@ -24,10 +24,9 @@
   background: none;
   border: none;
   font-family: var(--slg-body);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-weight: 500;
-  letter-spacing: 0.06em;
-  /* text-transform: uppercase; */
+  letter-spacing: 0.01em;
   color: var(--slg-dim);
   cursor: pointer;
   transition: color 180ms ease;
@@ -110,10 +109,9 @@
   left: 1rem;
   z-index: 2;
   padding: 0.35rem 0.7rem;
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  /* text-transform: uppercase; */
+  letter-spacing: 0.02em;
   color: var(--slg-ink);
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(6px);
@@ -123,9 +121,8 @@
 .slg-detail-zoom-hint {
   align-self: flex-end;
   padding: 0 var(--slg-gutter);
-  font-size: 0.6875rem;
-  letter-spacing: 0.12em;
-  /* text-transform: uppercase; */
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
   color: var(--slg-dim);
 }
 
@@ -187,10 +184,9 @@
   background: none;
   border: none;
   font-family: var(--slg-body);
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  /* text-transform: uppercase; */
+  letter-spacing: 0.02em;
   color: var(--slg-dim);
 }
 
@@ -224,18 +220,16 @@
 }
 
 .slg-detail-sale-flag {
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   color: var(--slg-flame);
 }
 
 .slg-detail-sold-flag {
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   color: var(--slg-dim);
 }
 
@@ -268,13 +262,12 @@
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  height: 46px;
-  padding: 0 1.5rem;
+  height: 48px;
+  padding: 0 1.25rem;
   font-family: var(--slg-body);
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   text-decoration: none;
   border: 1px solid var(--slg-ink);
   background: var(--slg-ink);
@@ -320,10 +313,9 @@
 }
 
 .slg-detail-contact-label {
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   color: var(--slg-dim);
 }
 
@@ -420,8 +412,8 @@
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--slg-body);
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
   color: var(--slg-dim);
   font-variant-numeric: tabular-nums;
 }

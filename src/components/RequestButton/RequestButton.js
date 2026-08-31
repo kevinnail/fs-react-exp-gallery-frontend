@@ -21,6 +21,7 @@ const RequestButton = ({ piece, variant = 'detail' }) => {
   };
 
   const label = isInCart ? 'In request' : 'Add to request';
+  const shortLabel = isInCart ? 'Added' : 'Add';
 
   return (
     <button
@@ -30,6 +31,7 @@ const RequestButton = ({ piece, variant = 'detail' }) => {
       }`}
       onClick={handleClick}
       aria-pressed={isInCart}
+      aria-label={label}
       title={
         isInCart ? `Remove ${piece.title} from your request` : `Add ${piece.title} to your request`
       }
@@ -37,7 +39,12 @@ const RequestButton = ({ piece, variant = 'detail' }) => {
       <span className="slg-request-button-mark" aria-hidden="true">
         {isInCart ? '✓' : '+'}
       </span>
-      <span className="slg-request-button-label">{label}</span>
+      <span className="slg-request-button-label slg-request-button-label--full" aria-hidden="true">
+        {label}
+      </span>
+      <span className="slg-request-button-label slg-request-button-label--short" aria-hidden="true">
+        {shortLabel}
+      </span>
     </button>
   );
 };
