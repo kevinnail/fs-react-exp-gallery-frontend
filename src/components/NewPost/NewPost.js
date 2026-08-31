@@ -18,9 +18,10 @@ export default function NewPost() {
         author_id,
         public_id,
         num_imgs,
+        discountedPrice,
+        sold,
         link,
         hide,
-        sold,
       } = newPost;
 
       // create new post with fetch call to db
@@ -33,9 +34,10 @@ export default function NewPost() {
         author_id,
         public_id,
         num_imgs,
+        discountedPrice,
+        sold,
         link,
-        hide,
-        sold
+        hide
       );
 
       // send image urls and public ids to db
