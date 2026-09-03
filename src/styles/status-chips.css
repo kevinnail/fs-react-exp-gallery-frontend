@@ -1,0 +1,33 @@
+/* Order and auction state, shown as chips. Each chip is one whole state, so a card
+   that shows two of them wraps between chips instead of breaking a phrase in half.
+   Shared by the Purchases and Auctions tabs on the account page. */
+
+.slg-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.slg-status-chip {
+  padding: 0.15rem 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+}
+
+.slg-status-chip--unpaid {
+  color: var(--slg-state-bad);
+}
+
+.slg-status-chip--paid,
+.slg-status-chip--shipped {
+  color: var(--slg-state-good);
+}
+
+.slg-status-chip--wait {
+  color: var(--slg-state-wait);
+}
