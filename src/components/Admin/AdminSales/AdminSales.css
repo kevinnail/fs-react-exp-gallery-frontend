@@ -899,6 +899,155 @@
   outline-offset: 2px;
 }
 
+/* ---------- order items: the create form ---------- */
+
+.slg-input-money {
+  display: block;
+}
+
+.slg-sale-items {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 0 0.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.slg-sale-item {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 96px 28px;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem;
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge-soft);
+}
+
+.slg-sale-item-thumb {
+  display: block;
+  width: 44px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--slg-void);
+}
+
+.slg-sale-item-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slg-sale-item-meta {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.slg-sale-item-title {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--slg-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slg-sale-item-sub {
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--slg-dim);
+}
+
+.slg-sale-item-price .slg-input {
+  width: 100%;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.slg-sale-item-remove {
+  width: 28px;
+  height: 28px;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--slg-dim);
+  background: transparent;
+  border: 1px solid var(--slg-edge);
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    border-color 140ms ease;
+}
+
+.slg-sale-item-remove:hover {
+  color: var(--slg-alert);
+  border-color: var(--slg-alert);
+}
+
+/* ---------- order totals ---------- */
+
+.slg-order-totals {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.4rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--slg-edge-soft);
+}
+
+.slg-order-total-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.8125rem;
+  color: var(--slg-dim);
+}
+
+.slg-order-total-line dt,
+.slg-order-total-line dd {
+  margin: 0;
+}
+
+.slg-order-total-line dd {
+  font-variant-numeric: tabular-nums;
+}
+
+.slg-order-total-line--grand {
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--slg-edge-soft);
+  font-family: var(--slg-display);
+  font-size: 1.125rem;
+  color: var(--slg-ink);
+}
+
+/* ---------- order items: the detail panel ---------- */
+
+.slg-sale-pieces {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slg-sale-thumb {
+  position: relative;
+}
+
+.slg-sale-thumb-count {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  min-width: 18px;
+  padding: 0 4px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  color: var(--slg-void);
+  background: var(--slg-ink);
+}
+
 /* ---------- wider screens ---------- */
 
 @media (min-width: 700px) {
