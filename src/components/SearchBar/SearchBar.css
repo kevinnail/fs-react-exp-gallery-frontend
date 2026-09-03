@@ -24,7 +24,7 @@
 
 .slg-search-toggle:hover,
 .slg-search-toggle:focus-visible {
-  color: var(--slg-flame);
+  color: var(--slg-accent);
   box-shadow: 0 0 12px 0 rgba(255, 255, 255, 0.35);
 }
 

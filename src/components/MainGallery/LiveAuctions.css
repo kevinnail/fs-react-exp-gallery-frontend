@@ -19,7 +19,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--slg-flame);
+  background: var(--slg-state-good);
   align-self: center;
   flex: 0 0 auto;
   animation: slg-pulse 2s ease-in-out infinite;
@@ -29,11 +29,11 @@
   0%,
   100% {
     opacity: 1;
-    box-shadow: 0 0 0 0 rgba(255, 106, 31, 0.5);
+    box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.5);
   }
   50% {
     opacity: 0.65;
-    box-shadow: 0 0 0 5px rgba(255, 106, 31, 0);
+    box-shadow: 0 0 0 5px rgba(255, 59, 48, 0);
   }
 }
 
@@ -116,7 +116,7 @@
 .slg-lot:hover,
 .slg-lot:focus-visible {
   background: var(--slg-lift-hover);
-  border-color: var(--slg-flame);
+  border-color: var(--slg-accent);
 }
 
 /* Fixed height on the box, not the image, so a lot whose photo is
@@ -182,7 +182,7 @@
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.05em;
-  color: var(--slg-flame);
+  color: var(--slg-accent);
   font-variant-numeric: tabular-nums;
 }
 

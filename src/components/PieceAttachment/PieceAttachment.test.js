@@ -67,7 +67,6 @@ describe('PieceAttachment', () => {
   it('shows the discounted price when a piece is on sale', () => {
     render(<PieceAttachment items={[threePieces[0]]} />);
 
-    expect(screen.getByText('ON SALE!')).toBeInTheDocument();
     expect(screen.getByText('$250.00')).toBeInTheDocument();
     expect(screen.getByText('$200.00')).toBeInTheDocument();
   });

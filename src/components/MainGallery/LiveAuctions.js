@@ -110,13 +110,15 @@ export default function LiveAuctions() {
   return (
     <section className="slg-live" aria-labelledby="slg-live-heading">
       <div className="slg-section-head">
-        <h2 className="slg-section-title" id="slg-live-heading">
-          <span className="slg-live-dot" aria-hidden="true" />
-          Live auctions
-          <span className="slg-count">
-            {auctions.length} {auctions.length === 1 ? 'lot' : 'lots'} ending soon
-          </span>
-        </h2>
+        <Link className="slg-live-auctions-link" to="/auctions">
+          <h2 className="slg-section-title" id="slg-live-heading">
+            <span className="slg-live-dot" aria-hidden="true" />
+            Live auctions{`  `}
+            <span className="slg-count">
+              {auctions.length} {auctions.length === 1 ? 'lot' : 'lots'} ending soon
+            </span>
+          </h2>
+        </Link>
         <Link className="slg-text-link" to="/auctions">
           All auctions &amp; archive
         </Link>

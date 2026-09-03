@@ -26,12 +26,18 @@
   --slg-ink: #e9ebef;
   --slg-dim: #7c838e;
 
-  /* the one accent */
-  --slg-flame: #ff6a1f;
+  /* The one accent. NO ORANGE. Not here, not anywhere in this project:
+     no flame, no amber, no burnt or coral shades, in any component. */
+  --slg-accent: #ff3b30;
 
-  /* Destructive state only — a deleted row, a hard-delete confirm. Never
-     decorative, and never used for "on sale" (that's the flame). */
+  /* Destructive state only: a deleted row, a hard-delete confirm. Brighter
+     accent red above is the decorative one, this stays for real danger. */
   --slg-alert: #e5484d;
+
+  /* Neutral "you did this on purpose" blue. The request bag is the customer's
+     own running list, not a problem to fix, so it must not borrow red from
+     unread messages and outbid alerts, or green from a completed sale. */
+  --slg-info: #2563eb;
 
   --slg-state-bad: #e5484d;
   --slg-state-wait: #f2c94c;

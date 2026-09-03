@@ -107,7 +107,7 @@
 }
 
 .slg-field-count--full {
-  color: var(--slg-flame);
+  color: var(--slg-accent);
 }
 
 .slg-input,
@@ -290,7 +290,7 @@
 /* Keyboard focus lands on the hidden radio, so the segment has to show
    it on the admin's behalf. */
 .slg-segment-option:focus-within {
-  outline: 2px solid var(--slg-flame);
+  outline: 2px solid var(--slg-accent);
   outline-offset: 2px;
 }
 
@@ -320,12 +320,12 @@
 
 .slg-dropzone--active {
   background: var(--slg-lift-hover);
-  border-color: var(--slg-flame);
+  border-color: var(--slg-accent);
   border-style: solid;
 }
 
 .slg-dropzone:focus-within {
-  outline: 2px solid var(--slg-flame);
+  outline: 2px solid var(--slg-accent);
   outline-offset: 2px;
 }
 
@@ -449,7 +449,7 @@
 .slg-form-page input:focus-visible,
 .slg-form-page select:focus-visible,
 .slg-form-page textarea:focus-visible {
-  outline: 2px solid var(--slg-flame);
+  outline: 2px solid var(--slg-accent);
   outline-offset: 2px;
 } */
 

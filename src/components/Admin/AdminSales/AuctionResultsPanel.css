@@ -16,7 +16,7 @@
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: var(--slg-flame);
+  color: var(--slg-accent);
 }
 
 .slg-auction-live--detail {

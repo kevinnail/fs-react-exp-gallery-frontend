@@ -72,7 +72,20 @@
 
 .slg-text-link {
   padding-bottom: 2px;
-  font-size: 0.8125rem;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: var(--slg-dim);
+  border: 2px solid var(--slg-edge);
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
+  padding: 8px;
+}
+
+.slg-live-auctions-link {
+  padding-bottom: 2px;
   font-weight: 500;
   letter-spacing: 0.04em;
   text-decoration: none;
@@ -113,7 +126,7 @@
 
 .slg-page a:focus-visible,
 .slg-page button:focus-visible {
-  outline: 2px solid var(--slg-flame);
+  outline: 2px solid var(--slg-accent);
   outline-offset: 4px;
 }
 

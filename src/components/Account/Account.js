@@ -386,13 +386,7 @@ export default function Account() {
                         <p>
                           <span>Price:</span>
                           <span style={{ fontWeight: '600' }}>
-                            <span
-                              style={{
-                                color: 'red',
-                                textDecoration: 'line-through',
-                                marginRight: '1rem',
-                              }}
-                            >
+                            <span className="recent-post-was">
                               {post.price ? `$${post.price}` : 'N/A'}
                             </span>
                             <i className="fa fa-arrow-right" aria-hidden="true"></i>

@@ -12,3 +12,15 @@
 .piece-attachment .piece-metadata-highlight + .piece-metadata-highlight {
   margin-top: 0.5rem;
 }
+
+/* Same treatment as the public gallery card: the struck original takes the
+   accent and the price being asked stays plain. */
+.piece-attachment-was {
+  margin-right: 0.5rem;
+  color: var(--slg-accent);
+  text-decoration: line-through;
+}
+
+.piece-attachment-now {
+  color: var(--slg-ink);
+}

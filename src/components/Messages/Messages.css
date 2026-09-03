@@ -353,12 +353,12 @@
 
 /* Connection status styles */
 .connection-status {
-  background: rgba(255, 193, 7, 0.2);
-  border: 1px solid rgba(255, 193, 7, 0.4);
+  background: rgba(242, 201, 76, 0.2);
+  border: 1px solid rgba(242, 201, 76, 0.4);
   border-radius: 8px;
   padding: 0.5rem 1rem;
   margin-bottom: 0.5rem;
-  color: #ffc107;
+  color: var(--slg-state-wait);
 }
 
 .connection-status p {

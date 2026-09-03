@@ -73,7 +73,6 @@ export default function MainGalleryPostCard({
     >
       <div className="slg-piece-frame">
         {sold ? <span className="slg-badge">Sold</span> : null}
-        {!sold && isDiscounted ? <span className="slg-badge slg-badge--sale">Sale</span> : null}
 
         {hasImage ? (
           <>

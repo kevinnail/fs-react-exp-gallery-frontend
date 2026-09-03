@@ -24,10 +24,10 @@
   line-height: 1.5;
   color: var(--slg-ink);
   background: var(--slg-lift);
-  border: 1px solid var(--slg-flame);
+  border: 1px solid var(--slg-accent);
 }
 
 .slg-auction-warning strong {
   font-weight: 600;
-  color: var(--slg-flame);
+  color: var(--slg-accent);
 }

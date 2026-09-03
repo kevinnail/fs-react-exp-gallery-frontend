@@ -327,7 +327,7 @@ header {
   position: absolute;
   top: -6px;
   right: -8px;
-  background: #ff4444;
+  background: var(--slg-info);
   color: #ffffff;
   border-radius: 50%;
   width: 18px;
