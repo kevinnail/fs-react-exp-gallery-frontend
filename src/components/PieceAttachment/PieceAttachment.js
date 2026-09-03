@@ -19,6 +19,10 @@ export const renderPieceSalePrice = (price, discountedPrice) => {
 const PieceAttachment = ({ items = [], onCreateSale }) => {
   if (items.length === 0) return null;
 
+  const itemWithoutId = items.find((item) => !item.postId);
+  const createSaleLabel =
+    items.length > 1 ? `Create Sale for ${items.length} pieces →` : 'Create Sale →';
+
   return (
     <div className="piece-attachment">
       {items.length > 1 && (
@@ -54,20 +58,20 @@ const PieceAttachment = ({ items = [], onCreateSale }) => {
               View piece
             </a>
           ) : null}
-
-          {onCreateSale ? (
-            <button
-              type="button"
-              className="create-sale-button"
-              onClick={() => onCreateSale(item)}
-              disabled={!item.postId}
-              title={item.postId ? undefined : 'No piece id on this message'}
-            >
-              Create Sale →
-            </button>
-          ) : null}
         </div>
       ))}
+
+      {onCreateSale ? (
+        <button
+          type="button"
+          className="create-sale-button"
+          onClick={() => onCreateSale(items)}
+          disabled={Boolean(itemWithoutId)}
+          title={itemWithoutId ? `No piece id for "${itemWithoutId.title}"` : undefined}
+        >
+          {createSaleLabel}
+        </button>
+      ) : null}
     </div>
   );
 };
