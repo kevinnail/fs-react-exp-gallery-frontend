@@ -37,25 +37,31 @@ const threePieces = [
 ];
 
 describe('PieceAttachment', () => {
-  it('renders one card per piece with a Create Sale button for the admin', () => {
+  it('renders one card per piece and a single Create Sale button naming the count', () => {
     render(<PieceAttachment items={threePieces} onCreateSale={jest.fn()} />);
 
     expect(screen.getByText('Requesting 3 pieces')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Blue Wrap Rig' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Slyme Spoon' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Fume Pendant' })).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: /create sale/i })).toHaveLength(3);
+    expect(screen.getByRole('button', { name: 'Create Sale for 3 pieces →' })).toBeInTheDocument();
   });
 
-  it('hands the clicked piece to onCreateSale so the right sale is prefilled', async () => {
+  it('hands every piece to onCreateSale so one order covers the whole request', async () => {
     const onCreateSale = jest.fn();
     const user = userEvent.setup();
     render(<PieceAttachment items={threePieces} onCreateSale={onCreateSale} />);
 
-    await user.click(screen.getAllByRole('button', { name: /create sale/i })[1]);
+    await user.click(screen.getByRole('button', { name: /create sale/i }));
 
     expect(onCreateSale).toHaveBeenCalledTimes(1);
-    expect(onCreateSale.mock.calls[0][0].postId).toBe(17);
+    expect(onCreateSale.mock.calls[0][0].map((piece) => piece.postId)).toEqual([42, 17, 8]);
+  });
+
+  it('drops the count from the label for a single-piece request', () => {
+    render(<PieceAttachment items={[threePieces[0]]} onCreateSale={jest.fn()} />);
+
+    expect(screen.getByRole('button', { name: 'Create Sale →' })).toBeInTheDocument();
   });
 
   it('offers no Create Sale button in the customer thread', () => {
@@ -87,6 +93,16 @@ describe('PieceAttachment', () => {
 
     expect(screen.queryByText(/requesting/i)).not.toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: /create sale/i })).toHaveLength(1);
+  });
+
+  it('blocks the whole request when any one piece has no usable id, naming that piece', () => {
+    const mixedItems = [threePieces[0], { ...threePieces[1], postId: null }];
+
+    render(<PieceAttachment items={mixedItems} onCreateSale={jest.fn()} />);
+
+    const createSale = screen.getByRole('button', { name: /create sale/i });
+    expect(createSale).toBeDisabled();
+    expect(createSale).toHaveAttribute('title', 'No piece id for "Slyme Spoon"');
   });
 
   it('disables Create Sale when a message carries no usable piece id', () => {
