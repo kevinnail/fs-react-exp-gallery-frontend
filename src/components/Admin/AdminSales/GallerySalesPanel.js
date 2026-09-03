@@ -484,22 +484,26 @@ const GallerySalesPanel = () => {
     setIsCreatingSale(true);
 
     if (prefill.buyerEmail) setNewBuyerEmail(prefill.buyerEmail);
-    if (prefill.piece?.id) {
-      const hasDiscount =
-        prefill.piece.discountedPrice !== null &&
-        prefill.piece.discountedPrice !== undefined &&
-        !Number.isNaN(prefill.piece.discountedPrice);
-      const priceToUse = hasDiscount ? prefill.piece.discountedPrice : prefill.piece.price;
 
-      setNewItems([
-        {
-          postId: prefill.piece.id,
-          title: prefill.piece.title,
-          imageUrl: prefill.piece.imageUrl || prefill.piece.image_url,
-          price: priceToUse === null || priceToUse === undefined ? '' : String(priceToUse),
-        },
-      ]);
-      setNewShipping(String(estimateShipping(1)));
+    const prefilledPieces = (prefill.pieces || []).filter((piece) => piece?.id);
+    if (prefilledPieces.length > 0) {
+      setNewItems(
+        prefilledPieces.map((piece) => {
+          const hasDiscount =
+            piece.discountedPrice !== null &&
+            piece.discountedPrice !== undefined &&
+            !Number.isNaN(piece.discountedPrice);
+          const priceToUse = hasDiscount ? piece.discountedPrice : piece.price;
+
+          return {
+            postId: piece.id,
+            title: piece.title,
+            imageUrl: piece.imageUrl || piece.image_url,
+            price: priceToUse === null || priceToUse === undefined ? '' : String(priceToUse),
+          };
+        })
+      );
+      setNewShipping(String(estimateShipping(prefilledPieces.length)));
     }
 
     setPrefillApplied(true);
