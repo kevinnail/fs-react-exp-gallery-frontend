@@ -115,7 +115,7 @@ describe('GallerySalesPanel', () => {
 
     const row = await screen.findByRole('button', { name: /2 pieces/ });
     // 250 + 90 items, plus 11 shipping
-    expect(within(row).getByText('$351')).toBeInTheDocument();
+    expect(within(row).getByText('$351.00')).toBeInTheDocument();
     expect(within(row).getByText(/buyer@example.com/)).toBeInTheDocument();
   });
 
@@ -129,9 +129,9 @@ describe('GallerySalesPanel', () => {
 
     expect(screen.getByRole('heading', { name: 'Blue Wrap Rig' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Slyme Spoon' })).toBeInTheDocument();
-    expect(within(totalsRow('Items')).getByText('$340')).toBeInTheDocument();
-    expect(within(totalsRow('Shipping')).getByText('$11')).toBeInTheDocument();
-    expect(within(totalsRow('Total')).getByText('$351')).toBeInTheDocument();
+    expect(within(totalsRow('Items')).getByText('$340.00')).toBeInTheDocument();
+    expect(within(totalsRow('Shipping')).getByText('$11.00')).toBeInTheDocument();
+    expect(within(totalsRow('Total')).getByText('$351.00')).toBeInTheDocument();
   });
 
   it('seeds shipping from the piece count and posts one order for both pieces', async () => {
@@ -151,7 +151,7 @@ describe('GallerySalesPanel', () => {
 
     // the discounted price is what seeds the second row
     expect(screen.getByLabelText('Price for Slyme Spoon')).toHaveValue(90);
-    expect(within(totalsRow('Total')).getByText('$351')).toBeInTheDocument();
+    expect(within(totalsRow('Total')).getByText('$351.00')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Save sale' }));
 
