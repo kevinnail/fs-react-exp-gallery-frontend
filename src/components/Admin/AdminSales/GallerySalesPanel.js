@@ -16,21 +16,19 @@ import {
   FIRST_ITEM_SHIPPING,
   ADDITIONAL_ITEM_SHIPPING,
 } from '../../../hooks/useAccountActivity.js';
+import {
+  getOrderItems,
+  getOrderItemsSubtotal,
+  getOrderTotal,
+} from '../../../services/salesOrder.js';
 
-const formatMoney = (amount) => `$${Number(amount || 0).toLocaleString()}`;
+const formatMoney = (amount) => `$${Number(amount || 0).toFixed(2)}`;
 
 // Seed value only. The admin can always type over it.
 const estimateShipping = (itemCount) => {
   if (itemCount <= 0) return 0;
   return FIRST_ITEM_SHIPPING + (itemCount - 1) * ADDITIONAL_ITEM_SHIPPING;
 };
-
-const getOrderItems = (order) => (Array.isArray(order?.items) ? order.items : []);
-
-const getItemsSubtotal = (order) =>
-  getOrderItems(order).reduce((runningTotal, item) => runningTotal + (Number(item.price) || 0), 0);
-
-const getOrderTotal = (order) => getItemsSubtotal(order) + (Number(order?.shipping_cost) || 0);
 
 const getInitial = (...candidates) => {
   const source = candidates.find(Boolean) || '?';
@@ -975,7 +973,7 @@ const GallerySalesPanel = () => {
                   </ul>
 
                   {renderOrderTotals(
-                    getItemsSubtotal(currentSale),
+                    getOrderItemsSubtotal(currentSale),
                     Number(currentSale.shipping_cost) || 0
                   )}
 
