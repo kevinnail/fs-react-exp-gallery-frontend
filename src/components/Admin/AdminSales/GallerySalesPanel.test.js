@@ -79,6 +79,17 @@ const twoPieceOrder = {
 
 const renderPanel = () => render(<GallerySalesPanel />, { wrapper: MemoryRouter });
 
+// What AdminInbox pushes through router state when the admin clicks Create Sale
+// on a request message.
+const renderPanelWithPrefill = (prefill) =>
+  render(
+    <MemoryRouter
+      initialEntries={[{ pathname: '/admin/sales', state: { fromInbox: true, prefill } }]}
+    >
+      <GallerySalesPanel />
+    </MemoryRouter>
+  );
+
 const addPiece = async (user, pieceTitle) => {
   await user.click(screen.getByRole('button', { name: 'Add piece' }));
   const picker = await screen.findByRole('dialog');
@@ -174,6 +185,42 @@ describe('GallerySalesPanel', () => {
     await addPiece(user, 'Slyme Spoon');
 
     expect(shippingInput()).toHaveValue(25);
+  });
+
+  it('opens prefilled with every piece from a request and shipping for the count', async () => {
+    const user = userEvent.setup();
+    createSale.mockResolvedValue({ id: 1 });
+
+    renderPanelWithPrefill({
+      buyerEmail: 'buyer@example.com',
+      user: null,
+      pieces: [
+        { id: 42, title: 'Blue Wrap Rig', price: 250, discountedPrice: null, imageUrl: 'a.jpg' },
+        { id: 17, title: 'Slyme Spoon', price: 120, discountedPrice: 90, imageUrl: 'b.jpg' },
+        { id: 8, title: 'Fume Pendant', price: 60, discountedPrice: null, imageUrl: 'c.jpg' },
+      ],
+    });
+
+    expect(await screen.findByLabelText('Price for Blue Wrap Rig')).toHaveValue(250);
+    expect(screen.getByLabelText('Price for Slyme Spoon')).toHaveValue(90);
+    expect(screen.getByLabelText('Price for Fume Pendant')).toHaveValue(60);
+    // 10 for the first piece, 1 for each of the other two
+    expect(shippingInput()).toHaveValue(12);
+    expect(screen.getByLabelText('Buyer email')).toHaveValue('buyer@example.com');
+
+    await user.click(screen.getByRole('button', { name: 'Save sale' }));
+
+    await waitFor(() => expect(createSale).toHaveBeenCalledTimes(1));
+    expect(createSale).toHaveBeenCalledWith(
+      'buyer@example.com',
+      [
+        { postId: 42, price: '250' },
+        { postId: 17, price: '90' },
+        { postId: 8, price: '60' },
+      ],
+      '12',
+      ''
+    );
   });
 
   it('refuses to save an order with no pieces', async () => {
