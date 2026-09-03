@@ -3,6 +3,8 @@ import './UserAuctions.css';
 import { getAuctionDetail } from '../../services/fetch-auctions.js';
 import { useNavigate } from 'react-router-dom';
 
+const hasTracking = (trackingNumber) => Boolean(trackingNumber) && trackingNumber !== '0';
+
 export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }) {
   // active bids hydrated with their auction details: [{ bid, auction }]
   const [hydratedBids, setHydratedBids] = useState([]);
@@ -101,22 +103,22 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
       )}
 
       <div className="auction-mini-info">
-        {!auction.isPaid && (
-          <>
-            <span
-              style={{
-                color: '#ff4444',
-                padding: '2px 6px',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                marginRight: '3rem',
-              }}
-            >
-              Payment Needed
-            </span>
-          </>
-        )}
+        <div className="slg-status-row">
+          {!auction.isPaid && (
+            <span className="slg-status-chip slg-status-chip--unpaid">Payment Needed</span>
+          )}
+
+          {auction.isPaid && !hasTracking(auction.trackingNumber) && (
+            <>
+              <span className="slg-status-chip slg-status-chip--paid">Paid</span>
+              <span className="slg-status-chip slg-status-chip--wait">Shipping Soon</span>
+            </>
+          )}
+
+          {hasTracking(auction.trackingNumber) && (
+            <span className="slg-status-chip slg-status-chip--shipped">Shipped</span>
+          )}
+        </div>
 
         <h4>{auction.title || `Auction #${auction.auctionId}`}</h4>
 
@@ -145,29 +147,7 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
           <span>Reason: </span>
           {auction.closedReason === 'buy_now' ? 'Bought instantly' : 'Expired'}
         </p>
-        {auction.isPaid && (!auction.trackingNumber || auction.trackingNumber === '0') && (
-          <span
-            style={{
-              color: 'yellow',
-              padding: '2px 6px',
-              borderRadius: '4px',
-              fontSize: '1rem',
-              fontWeight: 'bold',
-              marginRight: '3rem',
-            }}
-          >
-            <span
-              style={{
-                marginRight: '1.5rem',
-                color: 'green',
-              }}
-            >
-              Paid{' '}
-            </span>{' '}
-            Shipping Soon
-          </span>
-        )}
-        {auction.trackingNumber && auction.trackingNumber !== '0' && (
+        {hasTracking(auction.trackingNumber) && (
           <div
             className="tracking-link"
             onClick={() => handleTrackingClick(auction.trackingNumber)}
@@ -249,7 +229,9 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
               key={auction.id}
               className="auction-mini-card won"
               style={{
-                border: auction.isPaid ? '1px solid green' : '1px solid red',
+                border: auction.isPaid
+                  ? '1px solid var(--slg-state-good)'
+                  : '1px solid var(--slg-state-bad)',
               }}
             >
               <WonCard auction={auction} />
