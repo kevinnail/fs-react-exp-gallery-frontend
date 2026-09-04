@@ -110,7 +110,7 @@
 }
 
 .slg-sales-stat-value--owed {
-  color: var(--slg-accent);
+  color: var(--slg-state-good);
 }
 
 .slg-sales-stat--bad {

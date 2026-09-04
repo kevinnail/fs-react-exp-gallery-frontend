@@ -99,10 +99,10 @@
   color: var(--slg-ink);
 }
 
-/* Matches the public card: the struck original takes the accent so a
+/* Matches the public card: the struck original takes the attention red so a
    discounted row is legible at a glance down the list. */
 .slg-row-was {
-  color: var(--slg-accent);
+  color: var(--slg-alert);
   text-decoration: line-through;
 }
 

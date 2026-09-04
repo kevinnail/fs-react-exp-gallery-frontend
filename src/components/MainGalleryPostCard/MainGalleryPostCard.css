@@ -111,9 +111,9 @@
 }
 
 /* The struck original carries the whole sale signal now that nothing sits
-   on top of the photo, so it takes the accent rather than receding. */
+   on top of the photo, so it takes the attention red rather than receding. */
 .slg-was {
-  color: var(--slg-accent);
+  color: var(--slg-alert);
   font-weight: 400;
   text-decoration: line-through;
 }

@@ -507,9 +507,9 @@ div {
 }
 
 /* Same treatment as the public gallery card: the struck original takes the
-   accent and the price being asked stays plain. */
+   attention red and the price being asked stays plain. */
 .recent-post-was {
   margin-right: 1rem;
-  color: var(--slg-accent);
+  color: var(--slg-alert);
   text-decoration: line-through;
 }

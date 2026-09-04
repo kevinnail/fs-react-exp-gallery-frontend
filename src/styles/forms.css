@@ -107,7 +107,7 @@
 }
 
 .slg-field-count--full {
-  color: var(--slg-accent);
+  color: var(--slg-alert);
 }
 
 .slg-input,
@@ -441,17 +441,6 @@
   color: var(--slg-ink);
   background: transparent;
 }
-
-/* ---------- focus ---------- */
-
-/* .slg-form-page button:focus-visible,
-.slg-form-page a:focus-visible,
-.slg-form-page input:focus-visible,
-.slg-form-page select:focus-visible,
-.slg-form-page textarea:focus-visible {
-  outline: 2px solid var(--slg-accent);
-  outline-offset: 2px;
-} */
 
 /* ---------- wider screens ----------
    Details on one side, media on the other, both flowing on automatic
