@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { usePosts } from '../../hooks/usePosts.js';
 import { useActiveAuctions } from '../../hooks/useActiveAuctions.js';
 import PostCard from '../PostCard/PostCard.js';
@@ -7,6 +7,9 @@ import Loading from '../Loading/Loading.js';
 import Inventory from '../Inventory/Inventory.js';
 import { calculateInventoryTotals, formatMoney } from '../Inventory/inventoryTotals.js';
 import AuctionResultsPanelSimple from './AuctionResultsPanelSimple.js';
+import Sheet from '../Sheet/Sheet.js';
+import { useTheme } from '@emotion/react';
+import { useMediaQuery } from '@mui/system';
 
 const POSTS_PER_PAGE = 15;
 
@@ -42,22 +45,21 @@ export default function Admin() {
   const [showDeleted, setShowDeleted] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const categorySheet = useRef(null);
+  const [categorySheetOpen, setCategorySheetOpen] = useState(false);
+  const [auctionSheetOpen, setAuctionSheetOpen] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     setCurrentPage(1);
   };
 
+  // Picking from the sheet applies the filter and gets out of the way.
   const handleSheetCategorySelect = (category) => {
     handleCategorySelect(category);
-    categorySheet.current?.close();
-  };
-
-  const handleSheetClick = (event) => {
-    if (event.target === categorySheet.current) {
-      categorySheet.current.close();
-    }
+    setCategorySheetOpen(false);
   };
 
   if (loading) {
@@ -93,11 +95,16 @@ export default function Admin() {
 
   const bidTotalUnknown = auctionsLoading || Boolean(auctionsError);
 
+  // A tile with `onOpen` renders as a button and opens its own detail.
   const statTiles = [
     { label: 'For sale', value: totals.forSaleCount },
     { label: 'Stock value', value: formatMoney(totals.forSaleValue) },
     { label: 'Hidden', value: totals.hiddenCount },
-    { label: 'Total Bids', value: bidTotalUnknown ? '…' : formatMoney(activeBidTotal) },
+    {
+      label: 'Total Bids',
+      value: bidTotalUnknown ? '…' : formatMoney(activeBidTotal),
+      onOpen: () => setAuctionSheetOpen(true),
+    },
   ];
 
   const visibilityFilters = [
@@ -109,17 +116,41 @@ export default function Admin() {
   return (
     <div className="slg-admin">
       <div className="slg-admin-head">
-        <p className="slg-eyebrow">Admin</p>
+        <p className="slg-admin-eyebrow">Admin</p>
         <h1 className="slg-admin-title">Dashboard</h1>
       </div>
 
       <div className="slg-admin-stats">
-        {statTiles.map((tile) => (
-          <div key={tile.label} className="slg-stat">
-            <span className="slg-stat-label">{tile.label}</span>
-            <span className="slg-stat-value">{tile.value}</span>
-          </div>
-        ))}
+        {statTiles.map((tile) => {
+          const tileContent = (
+            <>
+              <span className="slg-stat-label">
+                {tile.label}
+                {tile.onOpen && isMobile && (
+                  <span className="slg-stat-caret" aria-hidden="true">
+                    ›
+                  </span>
+                )}
+              </span>
+              <span className="slg-stat-value">{tile.value}</span>
+            </>
+          );
+
+          return tile.onOpen && isMobile ? (
+            <button
+              key={tile.label}
+              type="button"
+              className="slg-stat slg-stat--action"
+              onClick={tile.onOpen}
+            >
+              {tileContent}
+            </button>
+          ) : (
+            <div key={tile.label} className="slg-stat">
+              {tileContent}
+            </div>
+          );
+        })}
       </div>
 
       <div className="slg-admin-body">
@@ -142,7 +173,7 @@ export default function Admin() {
             <button
               type="button"
               className="slg-chip slg-chip--picker"
-              onClick={() => categorySheet.current?.showModal()}
+              onClick={() => setCategorySheetOpen(true)}
             >
               Categories
             </button>
@@ -228,7 +259,7 @@ export default function Admin() {
         </main>
 
         <aside className="slg-admin-rail">
-          <details className="slg-panel" open={railStartsOpen}>
+          <details className="slg-panel slg-panel--auctions" open={railStartsOpen}>
             <summary className="slg-panel-summary">Active auctions</summary>
             <div className="slg-panel-body">
               <AuctionResultsPanelSimple auctions={auctions} loading={auctionsLoading} />
@@ -248,26 +279,25 @@ export default function Admin() {
         </aside>
       </div>
 
-      <dialog ref={categorySheet} className="slg-sheet" onClick={handleSheetClick}>
-        <div className="slg-sheet-head">
-          <h2 className="slg-sheet-title">Inventory by category</h2>
-          <button
-            type="button"
-            className="slg-sheet-close"
-            onClick={() => categorySheet.current?.close()}
-          >
-            Done
-          </button>
-        </div>
+      <Sheet
+        title="Inventory by category"
+        isOpen={categorySheetOpen}
+        onClose={() => setCategorySheetOpen(false)}
+      >
+        <Inventory
+          totals={totals}
+          selectedCategory={selectedCategory}
+          onCategorySelect={handleSheetCategorySelect}
+        />
+      </Sheet>
 
-        <div className="slg-sheet-body">
-          <Inventory
-            totals={totals}
-            selectedCategory={selectedCategory}
-            onCategorySelect={handleSheetCategorySelect}
-          />
-        </div>
-      </dialog>
+      <Sheet
+        title="Active auctions"
+        isOpen={auctionSheetOpen}
+        onClose={() => setAuctionSheetOpen(false)}
+      >
+        <AuctionResultsPanelSimple auctions={auctions} loading={auctionsLoading} />
+      </Sheet>
     </div>
   );
 }
