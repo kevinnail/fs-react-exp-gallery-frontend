@@ -1,0 +1,70 @@
+/* Bottom sheet. See Sheet.js for why this is a native <dialog>. */
+
+.slg-sheet {
+  width: 100%;
+  max-width: 100%;
+  /* `auto auto 0` centres the sheet horizontally and pins it to the
+     bottom edge of the screen, which is where a thumb already is. */
+  margin: auto auto 0;
+  /* Never taller than most of the screen, so what it covers stays
+     partly visible and long contents scroll inside the sheet. */
+  max-height: 85vh;
+  padding: 0;
+  color: var(--slg-ink);
+  background: var(--slg-lift);
+  border: 1px solid var(--slg-edge);
+  border-bottom: none;
+}
+
+/* The browser's own backdrop element. Giving it a background is what
+   dims the page behind the sheet: there is no overlay div. */
+.slg-sheet::backdrop {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+/* Sticky so "Done" stays reachable while the contents scroll. */
+.slg-sheet-head {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem;
+  background: var(--slg-lift);
+  border-bottom: 1px solid var(--slg-edge);
+}
+
+.slg-sheet-title {
+  margin: 0;
+  font-family: var(--slg-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--slg-dim);
+}
+
+.slg-sheet-close {
+  min-height: 36px;
+  padding: 0 0.9rem;
+  font-family: var(--slg-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--slg-ink);
+  background: var(--slg-control);
+  border: 1px solid var(--slg-edge);
+  cursor: pointer;
+}
+
+.slg-sheet-close:hover {
+  background: var(--slg-control-hover);
+}
+
+.slg-sheet-body {
+  padding: 0.9rem;
+  /* The sheet is capped at 85vh, so the contents scroll here rather
+     than the sheet growing past the top of the screen. */
+  max-height: calc(85vh - 60px);
+  overflow-y: auto;
+}
