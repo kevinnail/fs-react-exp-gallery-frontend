@@ -94,18 +94,10 @@
   cursor: pointer;
 }
 
-/* ...but the word alone is a 16px strip in the left column, which a
-   thumb misses. The button stretches over the whole row so the count
-   and value cells are part of the same target, without nesting a
-   control in every cell. */
+/* The row itself is clickable (see Inventory.js), so it gets the hand
+   cursor rather than only the category name having one. */
 .slg-inventory-table tbody tr {
-  position: relative;
-}
-
-.slg-inventory-category::after {
-  content: '';
-  position: absolute;
-  inset: 0;
+  cursor: pointer;
 }
 
 .slg-inventory-count {
@@ -143,27 +135,28 @@
   background: var(--slg-lift-hover);
 }
 
-/* The filter it applies is a screen away on a phone, so the row has to
-   carry the whole confirmation by itself. Stock colour stays on the
-   count, which is the larger figure. */
+/* Selection is a deliberate act, not a problem, so it uses the neutral
+   blue and never the accent: red in this table already means out of
+   stock (--slg-stock-out), and the accent is reserved for heat.
+   The name goes white and bold rather than blue, which would not hold
+   contrast against the dark ground at this size. */
 .slg-inventory-row--selected,
 .slg-inventory-table tbody tr.slg-inventory-row--selected:hover {
-  background: rgba(255, 59, 48, 0.16);
+  background: rgba(37, 99, 235, 0.22);
 }
 
 .slg-inventory-row--selected .slg-inventory-category {
   font-weight: 600;
-  color: var(--slg-accent);
+  color: var(--slg-ink);
 }
 
-/* Coarse pointers get rows tall enough to hit: 0.5rem cell padding on a
-   13px line is a 30px row, under the 44px thumb target. */
-@media (pointer: coarse) {
-  .slg-inventory-table tbody th,
-  .slg-inventory-table tbody td {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-  }
+/* Rows tall enough for a thumb: 0.5rem cell padding on a 13px line is a
+   30px row, under the 44px target. Applied everywhere rather than only
+   on touch, so there is one row height to reason about. */
+.slg-inventory-table tbody th,
+.slg-inventory-table tbody td {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 
 /* ---------- footer totals ---------- */
@@ -190,11 +183,4 @@
   display: block;
   font-size: 0.9375rem;
   font-weight: 500;
-}
-
-.slg-inventory-figure-note {
-  display: block;
-  padding-top: 0.15rem;
-  font-size: 0.6875rem;
-  color: var(--slg-dim);
 }
