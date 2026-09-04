@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { usePosts } from '../../hooks/usePosts.js';
+import { useActiveAuctions } from '../../hooks/useActiveAuctions.js';
 import PostCard from '../PostCard/PostCard.js';
 import './Admin.css';
 import Loading from '../Loading/Loading.js';
@@ -32,25 +33,30 @@ const buildPageWindow = (currentPage, totalPages) => {
 
 export default function Admin() {
   const { posts, loading, setPosts } = usePosts();
+  const { auctions, loading: auctionsLoading, error: auctionsError } = useActiveAuctions();
   const [railStartsOpen] = useState(() => window.matchMedia('(min-width: 1200px)').matches);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const mainRef = useRef(null);
   // Admin filter state for post visibility
   const [showRegular, setShowRegular] = useState(true);
   const [showHidden, setShowHidden] = useState(true);
   const [showDeleted, setShowDeleted] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const categorySheet = useRef(null);
+
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     setCurrentPage(1);
   };
 
-  // Below 1200px the inventory panel sits underneath the post list
-  const handleRailCategorySelect = (category) => {
+  const handleSheetCategorySelect = (category) => {
     handleCategorySelect(category);
-    if (!window.matchMedia('(min-width: 1200px)').matches) {
-      mainRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    categorySheet.current?.close();
+  };
+
+  const handleSheetClick = (event) => {
+    if (event.target === categorySheet.current) {
+      categorySheet.current.close();
     }
   };
 
@@ -80,12 +86,18 @@ export default function Admin() {
     window.scrollTo(0, 0);
   };
 
+  const activeBidTotal = auctions.reduce(
+    (runningTotal, auction) => runningTotal + (auction.currentBid || 0),
+    0
+  );
+
+  const bidTotalUnknown = auctionsLoading || Boolean(auctionsError);
+
   const statTiles = [
-    { label: 'Pieces', value: totals.categorisedCount },
     { label: 'For sale', value: totals.forSaleCount },
-    { label: 'Sold', value: totals.soldCount },
+    { label: 'Stock value', value: formatMoney(totals.forSaleValue) },
     { label: 'Hidden', value: totals.hiddenCount },
-    { label: 'Stock value', value: formatMoney(totals.forSaleDiscountedTotal) },
+    { label: 'Total Bids', value: bidTotalUnknown ? '…' : formatMoney(activeBidTotal) },
   ];
 
   const visibilityFilters = [
@@ -96,9 +108,6 @@ export default function Admin() {
 
   return (
     <div className="slg-admin">
-      {/* A div, not a <header>: Header.css styles the bare `header`
-          element as the site's fixed nav bar, so a semantic header here
-          would be pulled out of flow and pinned behind it. */}
       <div className="slg-admin-head">
         <p className="slg-eyebrow">Admin</p>
         <h1 className="slg-admin-title">Dashboard</h1>
@@ -114,7 +123,7 @@ export default function Admin() {
       </div>
 
       <div className="slg-admin-body">
-        <main className="slg-admin-main" ref={mainRef}>
+        <main className="slg-admin-main">
           <div className="slg-admin-toolbar">
             <div className="slg-chips" role="group" aria-label="Show posts by visibility">
               {visibilityFilters.map((filter) => (
@@ -130,6 +139,14 @@ export default function Admin() {
               ))}
             </div>
 
+            <button
+              type="button"
+              className="slg-chip slg-chip--picker"
+              onClick={() => categorySheet.current?.showModal()}
+            >
+              Categories
+            </button>
+
             {selectedCategory && (
               <button
                 type="button"
@@ -138,7 +155,7 @@ export default function Admin() {
               >
                 {selectedCategory}
                 <span aria-hidden="true">✕</span>
-                <span className="slg-visually-hidden">— clear category filter</span>
+                <span className="slg-visually-hidden">, clear category filter</span>
               </button>
             )}
 
@@ -214,22 +231,43 @@ export default function Admin() {
           <details className="slg-panel" open={railStartsOpen}>
             <summary className="slg-panel-summary">Active auctions</summary>
             <div className="slg-panel-body">
-              <AuctionResultsPanelSimple />
+              <AuctionResultsPanelSimple auctions={auctions} loading={auctionsLoading} />
             </div>
           </details>
 
-          <details className="slg-panel" open={railStartsOpen}>
+          <details className="slg-panel slg-panel--inventory" open={railStartsOpen}>
             <summary className="slg-panel-summary">Inventory by category</summary>
             <div className="slg-panel-body">
               <Inventory
-                posts={posts}
+                totals={totals}
                 selectedCategory={selectedCategory}
-                onCategorySelect={handleRailCategorySelect}
+                onCategorySelect={handleCategorySelect}
               />
             </div>
           </details>
         </aside>
       </div>
+
+      <dialog ref={categorySheet} className="slg-sheet" onClick={handleSheetClick}>
+        <div className="slg-sheet-head">
+          <h2 className="slg-sheet-title">Inventory by category</h2>
+          <button
+            type="button"
+            className="slg-sheet-close"
+            onClick={() => categorySheet.current?.close()}
+          >
+            Done
+          </button>
+        </div>
+
+        <div className="slg-sheet-body">
+          <Inventory
+            totals={totals}
+            selectedCategory={selectedCategory}
+            onCategorySelect={handleSheetCategorySelect}
+          />
+        </div>
+      </dialog>
     </div>
   );
 }
