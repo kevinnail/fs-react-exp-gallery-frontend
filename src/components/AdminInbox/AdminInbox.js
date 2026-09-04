@@ -410,7 +410,7 @@ export default function AdminInbox() {
     };
   };
 
-  const handleCreateSale = (piece) => {
+  const handleCreateSale = (pieces) => {
     const customer = customerForConversation();
 
     navigate('/admin/sales', {
@@ -419,14 +419,14 @@ export default function AdminInbox() {
         prefill: {
           buyerEmail: customer?.email || null,
           user: customer,
-          piece: {
+          pieces: pieces.map((piece) => ({
             id: piece.postId,
             title: piece.title,
             price: Number(piece.price),
             discountedPrice: piece.discountedPrice ? Number(piece.discountedPrice) : null,
             imageUrl: piece.imageUrl,
             url: piece.url,
-          },
+          })),
         },
       },
       replace: false,

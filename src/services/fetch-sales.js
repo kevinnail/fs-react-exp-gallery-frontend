@@ -1,6 +1,6 @@
 const BASE_URL = process.env.REACT_APP_HOME_URL;
 
-export async function createSale(buyerEmail, postId, price, tracking) {
+export async function createSale(buyerEmail, items, shippingCost, tracking) {
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/admin/sales`, {
       method: 'POST',
@@ -11,8 +11,8 @@ export async function createSale(buyerEmail, postId, price, tracking) {
       credentials: 'include',
       body: JSON.stringify({
         buyerEmail,
-        postId,
-        price,
+        items,
+        shippingCost,
         tracking,
       }),
     });
@@ -52,12 +52,12 @@ export async function getAllSales() {
   }
 }
 
-export async function updateSaleTracking(postId, trackingNumber) {
+export async function updateSaleTracking(orderId, trackingNumber) {
   try {
     if (!trackingNumber) {
       trackingNumber = '0';
     }
-    const resp = await fetch(`${BASE_URL}/api/v1/admin/${postId}/tracking`, {
+    const resp = await fetch(`${BASE_URL}/api/v1/admin/${orderId}/tracking`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',

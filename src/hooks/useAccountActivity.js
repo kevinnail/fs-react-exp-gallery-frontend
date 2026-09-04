@@ -4,6 +4,7 @@ import { getUserSales } from '../services/fetch-sales.js';
 import websocketService from '../services/websocket.js';
 import { SALE_PAID, SALE_TRACKING_INFO, SALE_CREATED } from '../services/salesEvents.js';
 import { useAuctionEventsStore } from '../stores/auctionEventsStore.js';
+import { getOrderItemsSubtotal, getOrderShipping } from '../services/salesOrder.js';
 import { toast } from 'react-toastify';
 
 const FIRST_ITEM_SHIPPING = 10;
@@ -72,44 +73,53 @@ export const useAccountActivity = (userId) => {
   // Real-time purchase updates (paid status, tracking, and newly created sales)
   useEffect(() => {
     const handleSalePaid = (data) => {
-      if (!data || typeof data.saleId === 'undefined') return;
+      if (!data || typeof data.orderId === 'undefined') return;
       setSales((previous) =>
-        previous.map((sale) => (sale.id === data.saleId ? { ...sale, is_paid: data.isPaid } : sale))
+        previous.map((order) =>
+          order.id === data.orderId ? { ...order, is_paid: data.isPaid } : order
+        )
       );
     };
 
     const handleSaleTracking = (data) => {
-      if (!data || typeof data.saleId === 'undefined') return;
+      if (!data || typeof data.orderId === 'undefined') return;
       setSales((previous) =>
-        previous.map((sale) =>
-          sale.id === data.saleId ? { ...sale, tracking_number: data.trackingNumber } : sale
+        previous.map((order) =>
+          order.id === data.orderId ? { ...order, tracking_number: data.trackingNumber } : order
         )
       );
     };
 
     const handleSaleCreated = (data) => {
-      const payload = data?.sale || data;
+      const payload = data?.order || data;
       if (!payload) return;
+
       const mapped = {
-        id: payload.id ?? payload.saleId,
-        post_id: payload.post_id ?? payload.postId,
-        user_id: payload.user_id ?? payload.userId,
-        price: payload.price,
-        tracking_number: payload.tracking_number ?? payload.trackingNumber ?? '0',
-        is_paid: payload.is_paid ?? payload.isPaid ?? false,
+        id: payload.orderId,
+        buyer_id: payload.userId,
+        shipping_cost: payload.shippingCost,
+        tracking_number: payload.trackingNumber ?? '0',
+        is_paid: payload.isPaid ?? false,
         created_at: payload.created_at,
-        post_title: payload.post_title,
-        post_image_url: payload.post_image_url,
-        buyer_email: payload.buyer_email,
+        items: Array.isArray(payload.items)
+          ? payload.items.map((item) => ({
+              id: item.saleId,
+              post_id: item.postId,
+              price: item.price,
+              post_title: item.post_title,
+              post_image_url: item.post_image_url,
+            }))
+          : [],
       };
+
       if (!mapped.id) {
-        console.error('[useAccountActivity] sale-created payload missing id', data);
+        console.error('[useAccountActivity] sale-created payload missing an order id', data);
         return;
       }
-      // ensure the sale belongs to this user
-      if (mapped.user_id && userId && Number(mapped.user_id) !== Number(userId)) return;
+      // ensure the order belongs to this user
+      if (mapped.buyer_id && userId && Number(mapped.buyer_id) !== Number(userId)) return;
       setSales((previous) =>
-        previous.some((sale) => sale.id === mapped.id) ? previous : [mapped, ...previous]
+        previous.some((order) => order.id === mapped.id) ? previous : [mapped, ...previous]
       );
     };
 
@@ -146,22 +156,30 @@ export const useAccountActivity = (userId) => {
 
   const unpaidData = useMemo(() => {
     const unpaidWins = wonAuctions.filter((auction) => !auction.isPaid);
-    const unpaidPurchases = sales.filter((sale) => !sale.is_paid);
+    const unpaidPurchases = sales.filter((order) => !order.is_paid);
 
     const auctionSubtotal = unpaidWins.reduce(
       (accumulated, auction) => accumulated + (auction.finalBid || 0),
       0
     );
     const purchaseSubtotal = unpaidPurchases.reduce(
-      (accumulated, sale) => accumulated + (Number(sale.price) || 0),
+      (accumulated, order) => accumulated + getOrderItemsSubtotal(order),
       0
     );
 
-    const itemCount = unpaidWins.length + unpaidPurchases.length;
-    let shipping = 0;
-    if (itemCount > 0) {
-      shipping = FIRST_ITEM_SHIPPING + Math.max(0, itemCount - 1) * ADDITIONAL_ITEM_SHIPPING;
+    // A gallery order carries the shipping the admin actually charged. An auction win
+    // has no order behind it and no stored shipping, so it keeps the estimate.
+    const purchaseShipping = unpaidPurchases.reduce(
+      (accumulated, order) => accumulated + getOrderShipping(order),
+      0
+    );
+    let auctionShipping = 0;
+    if (unpaidWins.length > 0) {
+      auctionShipping = FIRST_ITEM_SHIPPING + (unpaidWins.length - 1) * ADDITIONAL_ITEM_SHIPPING;
     }
+    const shipping = purchaseShipping + auctionShipping;
+
+    const itemCount = unpaidWins.length + unpaidPurchases.length;
     const total = auctionSubtotal + purchaseSubtotal + shipping;
 
     return {
@@ -169,6 +187,8 @@ export const useAccountActivity = (userId) => {
       unpaidPurchases,
       auctionSubtotal,
       purchaseSubtotal,
+      auctionShipping,
+      purchaseShipping,
       itemCount,
       shipping,
       total,

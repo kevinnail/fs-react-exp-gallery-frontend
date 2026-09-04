@@ -1,26 +1,8 @@
 import './AuctionResultsPanelSimple.css';
 import { Link } from 'react-router-dom';
-import { getAdminAuctions } from '../../services/fetch-auctions.js';
-import { useEffect, useState } from 'react';
 import Loading from '../Loading/Loading.js';
 
-export default function AuctionResultsPanelSimple() {
-  const [auctions, setAuctions] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const allAuctions = await getAdminAuctions();
-        setAuctions(allAuctions.filter((auction) => auction.isActive));
-      } catch (error) {
-        setAuctions([]);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
+export default function AuctionResultsPanelSimple({ auctions, loading }) {
   if (loading) {
     return (
       <div className="slg-live">
@@ -29,16 +11,8 @@ export default function AuctionResultsPanelSimple() {
     );
   }
 
-  // Calculate total active bids
-  const activeTotal = auctions.reduce((sum, auction) => sum + (auction.currentBid || 0), 0);
-
   return (
     <div className="slg-live">
-      <div className="slg-live-total">
-        <span className="slg-live-total-label">Money on the table</span>
-        <span className="slg-live-total-figure">${activeTotal.toLocaleString()}</span>
-      </div>
-
       {auctions.length === 0 ? (
         <p className="slg-live-empty">No active auctions.</p>
       ) : (

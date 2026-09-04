@@ -5,6 +5,11 @@ import {
   FIRST_ITEM_SHIPPING,
   ADDITIONAL_ITEM_SHIPPING,
 } from '../../../hooks/useAccountActivity.js';
+import {
+  getOrderItemsSubtotal,
+  getOrderShipping,
+  describeOrderPieces,
+} from '../../../services/salesOrder.js';
 
 export default function PaymentDueSummary({
   unpaidData,
@@ -52,50 +57,44 @@ export default function PaymentDueSummary({
     const win = window.open('', '_blank');
     const date = new Date().toLocaleDateString();
 
-    // Build a combined rows list preserving order: auctions then purchases
-    const rows = [];
-    unpaidData.unpaidWins.forEach((a) => {
+    // Auction wins have no order behind them, so they still split the estimate:
+    // $10 for the first, $1 for each after. A purchase is one order and carries the
+    // shipping the admin actually charged, on one line.
+    const auctionRows = unpaidData.unpaidWins.map((auction, index) => {
       let date = null;
-      if (a.closedAt) {
-        date = new Date(a.closedAt);
+      if (auction.closedAt) {
+        date = new Date(auction.closedAt);
       }
-      rows.push({
+      return {
         type: 'Auction',
-        label: a.title || `Auction #${a.auctionId}`,
-        amount: Number(a.finalBid) || 0,
+        label: auction.title || `Auction #${auction.auctionId}`,
+        amount: Number(auction.finalBid) || 0,
         date,
-      });
+        shipping: index === 0 ? FIRST_ITEM_SHIPPING : ADDITIONAL_ITEM_SHIPPING,
+      };
     });
 
-    unpaidData.unpaidPurchases.forEach((s) => {
+    const purchaseRows = unpaidData.unpaidPurchases.map((order) => {
       let date = null;
-      if (s.created_at) {
-        date = new Date(s.created_at);
+      if (order.created_at) {
+        date = new Date(order.created_at);
       }
-      rows.push({
+      return {
         type: 'Purchase',
-        label: s.post_title || `Post #${s.post_id}`,
-        amount: Number(s.price) || 0,
+        label: describeOrderPieces(order),
+        amount: getOrderItemsSubtotal(order),
         date,
-      });
+        shipping: getOrderShipping(order),
+      };
     });
 
-    // Compute per-item shipping allocation: first $10, rest $1
-    const shippingPerItem = [];
-    for (let i = 0; i < rows.length; i += 1) {
-      if (i === 0) {
-        shippingPerItem.push(FIRST_ITEM_SHIPPING);
-      } else {
-        shippingPerItem.push(ADDITIONAL_ITEM_SHIPPING);
-      }
-    }
+    const rows = [...auctionRows, ...purchaseRows];
 
     const tableRowsHtml = rows
-      .map((r, i) => {
-        const ship = shippingPerItem[i] || 0;
+      .map((row) => {
         let dateStr = '';
-        if (r.date) {
-          dateStr = r.date.toLocaleString([], {
+        if (row.date) {
+          dateStr = row.date.toLocaleString([], {
             year: '2-digit',
             month: '2-digit',
             day: '2-digit',
@@ -103,7 +102,7 @@ export default function PaymentDueSummary({
             minute: '2-digit',
           });
         }
-        return `<tr><td>${r.type}</td><td>${r.label}</td><td>$${r.amount.toLocaleString()}</td><td>${dateStr}</td><td>$${ship.toFixed(2)}</td></tr>`;
+        return `<tr><td>${row.type}</td><td>${row.label}</td><td>$${row.amount.toLocaleString()}</td><td>${dateStr}</td><td>$${row.shipping.toFixed(2)}</td></tr>`;
       })
       .join('');
 

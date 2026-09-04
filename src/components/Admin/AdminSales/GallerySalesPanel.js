@@ -12,8 +12,23 @@ import { getAllUsers } from '../../../services/fetch-utils.js';
 import { usePosts } from '../../../hooks/usePosts.js';
 import SaleStages from './SaleStages.js';
 import { countCompletedStages, hasRealTracking } from './saleStatus.js';
+import {
+  FIRST_ITEM_SHIPPING,
+  ADDITIONAL_ITEM_SHIPPING,
+} from '../../../hooks/useAccountActivity.js';
+import {
+  getOrderItems,
+  getOrderItemsSubtotal,
+  getOrderTotal,
+} from '../../../services/salesOrder.js';
 
-const formatMoney = (amount) => `$${Number(amount || 0).toLocaleString()}`;
+const formatMoney = (amount) => `$${Number(amount || 0).toFixed(2)}`;
+
+// Seed value only. The admin can always type over it.
+const estimateShipping = (itemCount) => {
+  if (itemCount <= 0) return 0;
+  return FIRST_ITEM_SHIPPING + (itemCount - 1) * ADDITIONAL_ITEM_SHIPPING;
+};
 
 const getInitial = (...candidates) => {
   const source = candidates.find(Boolean) || '?';
@@ -49,8 +64,9 @@ const GallerySalesPanel = () => {
 
   // state for creating a sale
   const [newBuyerEmail, setNewBuyerEmail] = useState('');
-  const [newPieceId, setNewPieceId] = useState('');
-  const [newPrice, setNewPrice] = useState('');
+  const [newItems, setNewItems] = useState([]);
+  const [newShipping, setNewShipping] = useState('0');
+  const [shippingEdited, setShippingEdited] = useState(false);
   const [newTracking, setNewTracking] = useState('');
   // Helper for selecting a post from modal
   const getPostPrice = (post) => {
@@ -64,10 +80,45 @@ const GallerySalesPanel = () => {
     return post.price;
   };
 
+  const applyItems = (nextItems) => {
+    setNewItems(nextItems);
+    if (!shippingEdited) setNewShipping(String(estimateShipping(nextItems.length)));
+  };
+
   const handleSelectPost = (post) => {
-    setNewPieceId(post.id);
-    setNewPrice(String(getPostPrice(post)));
     setShowPostModal(false);
+
+    const alreadyAdded = newItems.some((item) => String(item.postId) === String(post.id));
+    if (alreadyAdded) {
+      toast.info('That piece is already on this sale.', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'admin-sales-duplicate-piece',
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    applyItems([
+      ...newItems,
+      {
+        postId: post.id,
+        title: post.title,
+        imageUrl: post.image_url || post.imageUrl,
+        price: String(getPostPrice(post)),
+      },
+    ]);
+  };
+
+  const handleRemoveItem = (postId) => {
+    applyItems(newItems.filter((item) => String(item.postId) !== String(postId)));
+  };
+
+  const handleItemPriceChange = (postId, price) => {
+    setNewItems(
+      newItems.map((item) => (String(item.postId) === String(postId) ? { ...item, price } : item))
+    );
   };
 
   // state for editing tracking on existing sale
@@ -125,13 +176,30 @@ const GallerySalesPanel = () => {
 
   // handle creating a new sale
   const handleCreateSale = async () => {
+    if (newItems.length === 0) {
+      toast.error('Add at least one piece to the sale.', {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        toastId: 'admin-sales-no-items',
+        autoClose: 3000,
+      });
+      return;
+    }
+
     try {
-      await createSale(newBuyerEmail, newPieceId, newPrice, newTracking);
+      await createSale(
+        newBuyerEmail,
+        newItems.map((item) => ({ postId: item.postId, price: item.price })),
+        newShipping,
+        newTracking
+      );
 
       // reset inputs
       setNewBuyerEmail('');
-      setNewPieceId('');
-      setNewPrice('');
+      setNewItems([]);
+      setNewShipping('0');
+      setShippingEdited(false);
       setNewTracking('');
 
       setIsCreatingSale(false);
@@ -414,14 +482,26 @@ const GallerySalesPanel = () => {
     setIsCreatingSale(true);
 
     if (prefill.buyerEmail) setNewBuyerEmail(prefill.buyerEmail);
-    if (prefill.piece?.id) setNewPieceId(prefill.piece.id);
-    if (prefill.piece) {
-      const hasDiscount =
-        prefill.piece.discountedPrice !== null &&
-        prefill.piece.discountedPrice !== undefined &&
-        !Number.isNaN(prefill.piece.discountedPrice);
-      const priceToUse = hasDiscount ? prefill.piece.discountedPrice : prefill.piece.price;
-      if (priceToUse !== null && priceToUse !== undefined) setNewPrice(String(priceToUse));
+
+    const prefilledPieces = (prefill.pieces || []).filter((piece) => piece?.id);
+    if (prefilledPieces.length > 0) {
+      setNewItems(
+        prefilledPieces.map((piece) => {
+          const hasDiscount =
+            piece.discountedPrice !== null &&
+            piece.discountedPrice !== undefined &&
+            !Number.isNaN(piece.discountedPrice);
+          const priceToUse = hasDiscount ? piece.discountedPrice : piece.price;
+
+          return {
+            postId: piece.id,
+            title: piece.title,
+            imageUrl: piece.imageUrl || piece.image_url,
+            price: priceToUse === null || priceToUse === undefined ? '' : String(priceToUse),
+          };
+        })
+      );
+      setNewShipping(String(estimateShipping(prefilledPieces.length)));
     }
 
     setPrefillApplied(true);
@@ -455,21 +535,23 @@ const GallerySalesPanel = () => {
   }, [location.state, users]);
 
   const stageCounts = sales.reduce(
-    (totals, sale) => {
+    (totals, order) => {
       const completed = countCompletedStages({
-        isPaid: sale.is_paid,
-        trackingNumber: sale.tracking_number,
+        isPaid: order.is_paid,
+        trackingNumber: order.tracking_number,
       });
       if (completed === 1) totals.awaitingPayment += 1;
       if (completed === 2) totals.readyToShip += 1;
-      totals.gross += Number(sale.price) || 0;
+      totals.gross += getOrderTotal(order);
+      totals.pieces += getOrderItems(order).length;
       return totals;
     },
-    { awaitingPayment: 0, readyToShip: 0, gross: 0 }
+    { awaitingPayment: 0, readyToShip: 0, gross: 0, pieces: 0 }
   );
 
   const statTiles = [
-    { label: 'Sales', value: sales.length },
+    { label: 'Orders', value: sales.length },
+    { label: 'Pieces', value: stageCounts.pieces },
     {
       label: 'Unpaid',
       value: stageCounts.awaitingPayment,
@@ -482,6 +564,12 @@ const GallerySalesPanel = () => {
     },
     { label: 'Gross', value: formatMoney(stageCounts.gross) },
   ];
+
+  const newItemsSubtotal = newItems.reduce(
+    (runningTotal, item) => runningTotal + (Number(item.price) || 0),
+    0
+  );
+  const newShippingAmount = Number(newShipping) || 0;
 
   const currentSaleStages = currentSale
     ? countCompletedStages({
@@ -517,6 +605,23 @@ const GallerySalesPanel = () => {
         <span className="slg-user-email">{user.email || user.user_email}</span>
       </span>
     </>
+  );
+
+  const renderOrderTotals = (itemsSubtotal, shippingAmount) => (
+    <dl className="slg-order-totals">
+      <div className="slg-order-total-line">
+        <dt>Items</dt>
+        <dd>{formatMoney(itemsSubtotal)}</dd>
+      </div>
+      <div className="slg-order-total-line">
+        <dt>Shipping</dt>
+        <dd>{formatMoney(shippingAmount)}</dd>
+      </div>
+      <div className="slg-order-total-line slg-order-total-line--grand">
+        <dt>Total</dt>
+        <dd>{formatMoney(itemsSubtotal + shippingAmount)}</dd>
+      </div>
+    </dl>
   );
 
   const renderAddressLines = (address) => (
@@ -573,33 +678,42 @@ const GallerySalesPanel = () => {
             }
             return (
               <ul className="slg-sale-list">
-                {sales.map((sale) => {
+                {sales.map((order) => {
                   const completedStages = countCompletedStages({
-                    isPaid: sale.is_paid,
-                    trackingNumber: sale.tracking_number,
+                    isPaid: order.is_paid,
+                    trackingNumber: order.tracking_number,
                   });
+                  const items = getOrderItems(order);
+                  const [firstItem] = items;
                   return (
-                    <li key={sale.id}>
+                    <li key={order.id}>
                       <button
                         type="button"
-                        className={`slg-sale-row${selectedSale === sale.id ? ' slg-sale-row--on' : ''}`}
-                        aria-pressed={selectedSale === sale.id}
-                        onClick={() => handleSelectSale(sale.id)}
+                        className={`slg-sale-row${selectedSale === order.id ? ' slg-sale-row--on' : ''}`}
+                        aria-pressed={selectedSale === order.id}
+                        onClick={() => handleSelectSale(order.id)}
                       >
                         <span className="slg-sale-thumb">
-                          <img src={sale.image_url} alt="" />
+                          <img src={firstItem?.post_image_url} alt="" />
+                          {items.length > 1 && (
+                            <span className="slg-sale-thumb-count">{items.length}</span>
+                          )}
                         </span>
 
                         <span className="slg-sale-identity">
-                          <span className="slg-sale-title">{sale.post_title}</span>
+                          <span className="slg-sale-title">
+                            {items.length > 1
+                              ? `${items.length} pieces · ${firstItem?.post_title}`
+                              : firstItem?.post_title}
+                          </span>
                           <span className="slg-sale-buyer">
-                            {`${sale.buyer_first_name || ''} ${sale.buyer_last_name || ''}`.trim()}
+                            {`${order.buyer_first_name || ''} ${order.buyer_last_name || ''}`.trim()}
                             {' · '}
-                            {sale.buyer_email}
+                            {order.buyer_email}
                           </span>
                         </span>
 
-                        <span className="slg-sale-price">{formatMoney(sale.price)}</span>
+                        <span className="slg-sale-price">{formatMoney(getOrderTotal(order))}</span>
 
                         <SaleStages completedCount={completedStages} />
                       </button>
@@ -708,36 +822,73 @@ const GallerySalesPanel = () => {
                     </div>
 
                     <div className="slg-field">
-                      <label className="slg-field-label" htmlFor="slg-piece-id">
-                        Piece ID
-                      </label>
-                      <input
-                        id="slg-piece-id"
-                        type="number"
-                        className="slg-input"
-                        value={newPieceId}
-                        onChange={(e) => setNewPieceId(e.target.value)}
-                      />
+                      <span className="slg-field-label">Pieces</span>
+
+                      {newItems.length === 0 ? (
+                        <p className="slg-sale-fact-value slg-sale-fact-value--missing">
+                          No pieces on this sale yet.
+                        </p>
+                      ) : (
+                        <ul className="slg-sale-items">
+                          {newItems.map((item) => (
+                            <li key={item.postId} className="slg-sale-item">
+                              <span className="slg-sale-item-thumb">
+                                <img src={item.imageUrl} alt="" />
+                              </span>
+
+                              <span className="slg-sale-item-meta">
+                                <span className="slg-sale-item-title">{item.title}</span>
+                                <span className="slg-sale-item-sub">ID {item.postId}</span>
+                              </span>
+
+                              <span className="slg-input-money slg-sale-item-price">
+                                <input
+                                  type="number"
+                                  className="slg-input"
+                                  aria-label={`Price for ${item.title}`}
+                                  value={item.price}
+                                  onChange={(event) =>
+                                    handleItemPriceChange(item.postId, event.target.value)
+                                  }
+                                />
+                              </span>
+
+                              <button
+                                type="button"
+                                className="slg-sale-item-remove"
+                                aria-label={`Remove ${item.title}`}
+                                onClick={() => handleRemoveItem(item.postId)}
+                              >
+                                ✕
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
                       <button
                         type="button"
                         className="slg-sales-button"
                         onClick={() => setShowPostModal(true)}
                       >
-                        Find post
+                        Add piece
                       </button>
                     </div>
 
                     <div className="slg-field">
-                      <label className="slg-field-label" htmlFor="slg-sale-price">
-                        Price
+                      <label className="slg-field-label" htmlFor="slg-sale-shipping">
+                        Shipping
                       </label>
                       <span className="slg-input-money">
                         <input
-                          id="slg-sale-price"
+                          id="slg-sale-shipping"
                           type="number"
                           className="slg-input"
-                          value={newPrice}
-                          onChange={(e) => setNewPrice(e.target.value)}
+                          value={newShipping}
+                          onChange={(event) => {
+                            setShippingEdited(true);
+                            setNewShipping(event.target.value);
+                          }}
                         />
                       </span>
                     </div>
@@ -754,6 +905,8 @@ const GallerySalesPanel = () => {
                         onChange={(e) => setNewTracking(e.target.value)}
                       />
                     </div>
+
+                    {renderOrderTotals(newItemsSubtotal, newShippingAmount)}
 
                     <div className="slg-sale-actions">
                       <button
@@ -798,23 +951,31 @@ const GallerySalesPanel = () => {
                 <div className="slg-sale-panel-body">
                   <SaleStages completedCount={currentSaleStages} variant="detail" />
 
-                  <div className="slg-sale-piece">
-                    <img src={currentSale.image_url} alt="" className="slg-sale-piece-image" />
-                    <div className="slg-sale-piece-meta">
-                      <h3 className="slg-sale-piece-title">{currentSale.post_title}</h3>
-                      <span className="slg-sale-piece-price">{formatMoney(currentSale.price)}</span>
-                    </div>
-                  </div>
+                  <ul className="slg-sale-pieces">
+                    {getOrderItems(currentSale).map((item) => (
+                      <li key={item.id} className="slg-sale-piece">
+                        <img src={item.post_image_url} alt="" className="slg-sale-piece-image" />
+                        <div className="slg-sale-piece-meta">
+                          <h3 className="slg-sale-piece-title">{item.post_title}</h3>
+                          <span className="slg-sale-piece-price">{formatMoney(item.price)}</span>
+                          <div className="slg-sale-actions">
+                            <button
+                              type="button"
+                              className="slg-sales-button"
+                              onClick={() => navigate(`/${item.post_id}`)}
+                            >
+                              View post
+                            </button>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
 
-                  <div className="slg-sale-actions">
-                    <button
-                      type="button"
-                      className="slg-sales-button slg-sales-button--wide"
-                      onClick={() => navigate(`/${currentSale.post_id}`)}
-                    >
-                      View post
-                    </button>
-                  </div>
+                  {renderOrderTotals(
+                    getOrderItemsSubtotal(currentSale),
+                    Number(currentSale.shipping_cost) || 0
+                  )}
 
                   <div className="slg-sale-actions">
                     <button
