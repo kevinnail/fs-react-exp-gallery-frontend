@@ -28,6 +28,19 @@
   padding: 1.75rem var(--slg-gutter-tight) 1.25rem;
 }
 
+/* The dashboard's own eyebrow. Deliberately not `slg-eyebrow`: that one
+   is declared in MainGallery.css and matches five components at once, so
+   editing it here would have changed the gallery too. This name is the
+   dashboard's alone. */
+.slg-admin-eyebrow {
+  margin: 0;
+  font-family: var(--slg-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--slg-dim);
+}
+
 .slg-admin-title {
   margin: 0;
   font-family: var(--slg-display);
@@ -64,11 +77,32 @@
   background: var(--slg-lift);
 }
 
+.slg-stat--action {
+  font: inherit;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.slg-stat--action:hover {
+  background: var(--slg-lift-hover);
+}
+
 .slg-stat-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   color: var(--slg-dim);
+}
+
+.slg-stat-caret {
+  font-size: 0.875rem;
+  line-height: 1;
+  letter-spacing: 0;
 }
 
 .slg-stat-value {
@@ -107,8 +141,6 @@
   gap: 0.4rem;
 }
 
-/* A toggle, so it reads as pressed or not rather than as a checkbox the
-   admin has to aim a 13px square at with a thumb. */
 .slg-chip {
   display: inline-flex;
   align-items: center;
@@ -140,12 +172,6 @@
   border-color: var(--slg-ink);
 }
 
-/* An active category filter, not a warning. Filled like `--on` above
-   because it is a live selection, in `--slg-info` rather than the ink
-   fill so it reads as the category filter and not a fourth visibility
-   toggle. */
-/* Opens the category sheet. Hidden once the rail becomes a sidebar and
-   the inventory is permanently on screen. */
 .slg-chip--picker {
   color: var(--slg-ink);
   border-color: var(--slg-dim);
@@ -305,82 +331,9 @@
   padding: 0.9rem;
 }
 
-/* Hidden by default: on a phone the inventory is reached from the
-   toolbar's Categories chip, not from a panel at the bottom of the
-   page. Shown again at 1200px where the rail is a real sidebar. */
-.slg-panel--inventory {
+.slg-panel--inventory,
+.slg-panel--auctions {
   display: none;
-}
-
-/* ---------- category sheet ----------
-   The phone's inventory picker. It slides up from the bottom of the
-   screen next to the list it filters, instead of sitting at the end of
-   the page inside an accordion.
-
-   A native <dialog> opened with showModal() so the backdrop, Escape and
-   focus handling come from the browser rather than from us. */
-
-.slg-sheet {
-  width: 100%;
-  max-width: 100%;
-  /* `auto auto 0` centres it horizontally and pins it to the bottom
-     edge, which is where a thumb is. */
-  margin: auto auto 0;
-  /* Never taller than most of the screen, so the list stays visible
-     behind it and a long category table scrolls inside the sheet. */
-  max-height: 85vh;
-  padding: 0;
-  color: var(--slg-ink);
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge);
-  border-bottom: none;
-}
-
-.slg-sheet::backdrop {
-  background: rgba(0, 0, 0, 0.65);
-}
-
-/* Sticky so "Done" stays reachable while the categories scroll. */
-.slg-sheet-head {
-  position: sticky;
-  top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.9rem;
-  background: var(--slg-lift);
-  border-bottom: 1px solid var(--slg-edge);
-}
-
-.slg-sheet-title {
-  margin: 0;
-  font-family: var(--slg-body);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  color: var(--slg-dim);
-}
-
-.slg-sheet-close {
-  min-height: 36px;
-  padding: 0 0.9rem;
-  font-family: var(--slg-body);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  color: var(--slg-ink);
-  background: var(--slg-control);
-  border: 1px solid var(--slg-edge);
-  cursor: pointer;
-}
-
-.slg-sheet-body {
-  padding: 0.9rem;
-  /* The sheet is capped at 85vh, so the categories scroll here rather
-     than the sheet growing past the top of the screen. */
-  max-height: calc(85vh - 60px);
-  overflow-y: auto;
 }
 
 /* ---------- shared ---------- */
@@ -410,8 +363,6 @@
     padding-right: var(--slg-gutter);
   }
 
-  /* The stat block carries an outer border, so it is inset with margin
-     rather than padding, and goes four across once the row fits. */
   .slg-admin-stats {
     grid-template-columns: repeat(4, 1fr);
     margin-left: var(--slg-gutter);
@@ -419,14 +370,9 @@
   }
 }
 
-/* The rail becomes a sidebar only once there's genuinely room for one.
-   Below this it's two collapsed panels under the list, which is the
-   right shape for a phone. */
 @media (min-width: 1200px) {
-  /* The rail is a real sidebar at this width, so the inventory lives
-     there and the phone's sheet trigger is not needed. Below this the
-     pair swaps: see the base rules for both classes above. */
-  .slg-panel--inventory {
+  .slg-panel--inventory,
+  .slg-panel--auctions {
     display: block;
   }
 
