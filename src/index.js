@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom/client';
 import './styles/tokens.css';
 import './styles/forms.css';
 import './styles/status-chips.css';
+import './styles/item-cards.css';
 import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
