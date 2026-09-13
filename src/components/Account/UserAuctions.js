@@ -5,6 +5,17 @@ import { useNavigate } from 'react-router-dom';
 
 const hasTracking = (trackingNumber) => Boolean(trackingNumber) && trackingNumber !== '0';
 
+const formatBid = (amount) => `$${Number(amount).toLocaleString()}`;
+
+const formatShortDateTime = (value) =>
+  new Date(value).toLocaleString([], {
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
 export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }) {
   // active bids hydrated with their auction details: [{ bid, auction }]
   const [hydratedBids, setHydratedBids] = useState([]);
@@ -49,134 +60,150 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
     navigate(`/auctions/${id}`);
   };
 
+  const handleTrackingClick = (trackingNumber) => {
+    if (!trackingNumber) return;
+    const url = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(
+      trackingNumber
+    )}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   const renderActiveBidCard = ({ bid, auction }) => {
-    const img = auction?.imageUrls?.[0];
+    const imageUrl = auction?.imageUrls?.[0];
     const title = auction?.title || `Auction #${bid.auctionId}`;
     const currentBid = auction?.currentBid ?? auction?.startPrice;
-    const endsAt = auction?.endTime ? new Date(auction.endTime).toLocaleString() : null;
 
     return (
-      <>
-        {img ? (
-          <img src={img} alt={title} className="auction-mini-img  auction-mini-card-image" />
-        ) : (
-          <div className="auction-mini-img placeholder" />
-        )}
-        <div className="auction-mini-info">
-          <h4>{title}</h4>
-          <p>
-            <span>Your bid: </span>${Number(bid.bidAmount).toLocaleString()}
-          </p>
-          {typeof currentBid !== 'undefined' && (
-            <p>
-              <span>Current bid: </span>${Number(currentBid).toLocaleString()}
-            </p>
-          )}
-          <p>
-            <span>Placed: </span>
-            {new Date(bid.createdAt).toLocaleString()}
-          </p>
-          {endsAt && (
-            <p>
-              <span>Ends: </span>
-              {endsAt}
-            </p>
-          )}
+      <div
+        key={bid.id}
+        className="slg-item-card user-auctions-bid-card"
+        onClick={() => {
+          handleAuctionNav(auction.id);
+        }}
+      >
+        <div className="slg-item-rows">
+          <div className="slg-item-row">
+            {imageUrl ? (
+              <img src={imageUrl} alt={title} className="slg-item-thumb" />
+            ) : (
+              <div className="slg-item-thumb placeholder" />
+            )}
+            <span className="slg-item-text">
+              <span className="slg-item-title">{title}</span>
+              {auction?.endTime && (
+                <span className="slg-item-subline">
+                  Ends {formatShortDateTime(auction.endTime)}
+                </span>
+              )}
+            </span>
+          </div>
         </div>
-      </>
+
+        <div className="slg-item-footer">
+          <div className="slg-item-meta">
+            <span className="slg-item-date">Placed {formatShortDateTime(bid.createdAt)}</span>
+            <dl className="slg-item-figures">
+              <div className="slg-item-figure">
+                <dt>Your bid</dt>
+                <dd>{formatBid(bid.bidAmount)}</dd>
+              </div>
+              {typeof currentBid !== 'undefined' && (
+                <div className="slg-item-figure slg-item-figure--strong">
+                  <dt>Current bid</dt>
+                  <dd>{formatBid(currentBid)}</dd>
+                </div>
+              )}
+            </dl>
+          </div>
+        </div>
+      </div>
     );
   };
 
-  const WonCard = ({ auction }) => (
-    <div>
-      {auction.imageUrls?.[0] ? (
-        <img
-          onClick={() => {
-            handleAuctionNav(auction.auctionId);
-          }}
-          src={auction.imageUrls[0]}
-          alt={auction.title}
-          className="auction-mini-img auction-mini-card-image"
-        />
-      ) : (
-        <div className="auction-mini-img placeholder" />
-      )}
+  const renderWonCard = (auction) => {
+    const title = auction.title || `Auction #${auction.auctionId}`;
+    const hasBuyNowPrice = auction.buyNowPrice !== null && auction.buyNowPrice !== undefined;
 
-      <div className="auction-mini-info">
-        <div className="slg-status-row">
-          {!auction.isPaid && (
-            <span className="slg-status-chip slg-status-chip--unpaid">Payment Needed</span>
-          )}
-
-          {auction.isPaid && !hasTracking(auction.trackingNumber) && (
-            <>
-              <span className="slg-status-chip slg-status-chip--paid">Paid</span>
-              <span className="slg-status-chip slg-status-chip--wait">Shipping Soon</span>
-            </>
-          )}
-
-          {hasTracking(auction.trackingNumber) && (
-            <span className="slg-status-chip slg-status-chip--shipped">Shipped</span>
-          )}
+    return (
+      <div
+        key={auction.id}
+        className="slg-item-card"
+        style={{
+          border: auction.isPaid
+            ? '1px solid var(--slg-state-good)'
+            : '1px solid var(--slg-state-bad)',
+        }}
+      >
+        <div className="slg-item-rows">
+          <div className="slg-item-row">
+            {auction.imageUrls?.[0] ? (
+              <img
+                onClick={() => {
+                  handleAuctionNav(auction.auctionId);
+                }}
+                src={auction.imageUrls[0]}
+                alt={title}
+                className="slg-item-thumb slg-item-thumb--link"
+              />
+            ) : (
+              <div className="slg-item-thumb placeholder" />
+            )}
+            <span className="slg-item-text">
+              <span className="slg-item-title">{title}</span>
+              <span className="slg-item-subline">
+                Reason: {auction.closedReason === 'buy_now' ? 'Bought instantly' : 'Expired'}
+              </span>
+            </span>
+            <span className="slg-item-price">{formatBid(auction.finalBid)}</span>
+          </div>
         </div>
 
-        <h4>{auction.title || `Auction #${auction.auctionId}`}</h4>
+        <div className="slg-item-footer">
+          <div className="slg-item-meta">
+            <div className="slg-status-row">
+              {!auction.isPaid && (
+                <span className="slg-status-chip slg-status-chip--unpaid">Payment Needed</span>
+              )}
 
-        <p className="won-card-p">
-          <span>Final bid: </span>${Number(auction.finalBid).toLocaleString()}
-        </p>
+              {auction.isPaid && !hasTracking(auction.trackingNumber) && (
+                <>
+                  <span className="slg-status-chip slg-status-chip--paid">Paid</span>
+                  <span className="slg-status-chip slg-status-chip--wait">Shipping Soon</span>
+                </>
+              )}
 
-        {typeof auction.buyNowPrice !== 'undefined' && (
-          <p className="won-card-p">
-            <span>Buy now price: </span>${Number(auction.buyNowPrice).toLocaleString()}
-          </p>
-        )}
+              {hasTracking(auction.trackingNumber) && (
+                <span className="slg-status-chip slg-status-chip--shipped">Shipped</span>
+              )}
+            </div>
 
-        <p className="won-card-p">
-          <span>Closed: </span>
-          {new Date(auction.closedAt).toLocaleString([], {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
-        </p>
-
-        <p className="won-card-p">
-          <span>Reason: </span>
-          {auction.closedReason === 'buy_now' ? 'Bought instantly' : 'Expired'}
-        </p>
-        {hasTracking(auction.trackingNumber) && (
-          <div
-            className="tracking-link"
-            onClick={() => handleTrackingClick(auction.trackingNumber)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleTrackingClick(auction.trackingNumber);
-            }}
-          >
-            <img
-              alt="USPS"
-              className="auction-result-thumb"
-              style={{
-                width: '50px',
-                height: '50px',
-                margin: '.5rem 0 0 .25rem',
-              }}
-              src="../../../usps.png"
-            />
-
-            <p style={{ textAlign: 'left', margin: 0 }}>
-              <span>Tracking number: </span>
-              <span>{auction.trackingNumber}</span>
-            </p>
+            <span className="slg-item-date">Closed {formatShortDateTime(auction.closedAt)}</span>
           </div>
-        )}
+
+          {hasTracking(auction.trackingNumber) && (
+            <button
+              type="button"
+              className="slg-item-tracking"
+              onClick={() => handleTrackingClick(auction.trackingNumber)}
+            >
+              <img alt="USPS" className="slg-item-tracking-logo" src="../../../usps.png" />
+              <span>Tracking</span>
+              <span className="slg-item-tracking-number">{auction.trackingNumber}</span>
+            </button>
+          )}
+
+          {hasBuyNowPrice && (
+            <dl className="slg-item-figures">
+              <div className="slg-item-figure">
+                <dt>Buy now price</dt>
+                <dd>{formatBid(auction.buyNowPrice)}</dd>
+              </div>
+            </dl>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   if (loading || hydrating) {
     return (
@@ -185,12 +212,6 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
       </div>
     );
   }
-
-  const handleTrackingClick = (trackingNumber) => {
-    if (!trackingNumber) return;
-    const url = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(trackingNumber)}`;
-    window.open(url, '_blank');
-  };
 
   return (
     <div className="user-auctions-widget">
@@ -204,40 +225,14 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
 
       <h3>Active bids</h3>
       {hydratedBids.length > 0 ? (
-        <div className="auction-mini-grid">
-          {hydratedBids.map(({ bid, auction }) => (
-            <div
-              key={bid.id}
-              className="auction-mini-card"
-              onClick={() => {
-                handleAuctionNav(auction.id);
-              }}
-            >
-              {renderActiveBidCard({ bid, auction })}
-            </div>
-          ))}
-        </div>
+        <div className="slg-item-grid">{hydratedBids.map(renderActiveBidCard)}</div>
       ) : (
         <p className="empty-msg">No active bids.</p>
       )}
 
       <h3>Won</h3>
       {wonAuctions.length > 0 ? (
-        <div className="auction-mini-grid">
-          {wonAuctions.map((auction) => (
-            <div
-              key={auction.id}
-              className="auction-mini-card won"
-              style={{
-                border: auction.isPaid
-                  ? '1px solid var(--slg-state-good)'
-                  : '1px solid var(--slg-state-bad)',
-              }}
-            >
-              <WonCard auction={auction} />
-            </div>
-          ))}
-        </div>
+        <div className="slg-item-grid">{wonAuctions.map(renderWonCard)}</div>
       ) : (
         <p className="empty-msg">No completed wins yet.</p>
       )}
