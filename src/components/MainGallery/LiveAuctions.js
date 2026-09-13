@@ -9,6 +9,8 @@ import './LiveAuctions.css';
 // duration, so ten lots pan at the same speed as four.
 const PAN_PIXELS_PER_SECOND = 45;
 const OVERFLOW_MARGIN_PX = 24;
+const RESUME_DELAY_MS = 750;
+const MAX_FRAME_SECONDS = 0.1;
 
 function LotClock({ endTime }) {
   const { label, hasEnded } = useAuctionCountdown(endTime);
@@ -49,14 +51,18 @@ function Lot({ auction }) {
  * When nothing is running this renders null and the hero moves up.
  *
  * The lots pan horizontally only when there are enough of them to
- * overflow the screen — with three or four they simply sit there,
+ * overflow the screen. With three or four they simply sit there,
  * because motion with nothing hidden behind it is just noise. Whether
  * they overflow can only be known by measuring, which is why this
  * needs a resize observer rather than a media query.
+ *
+ * The pan drives the rail's real scroll position rather than a CSS
+ * transform, so a finger can grab and swipe it natively (momentum
+ * included) and the pan resumes from wherever it was left.
  */
 export default function LiveAuctions() {
   const [auctions, setAuctions] = useState([]);
-  const [panDuration, setPanDuration] = useState(0);
+  const [isPanning, setIsPanning] = useState(false);
   const railRef = useRef(null);
   const lotSetRef = useRef(null);
 
@@ -90,8 +96,7 @@ export default function LiveAuctions() {
       // Panning hides the scrollbar, which widens the rail slightly.
       // The margin keeps that from flipping a borderline case back and
       // forth between panning and not.
-      const overflows = setWidth > rail.clientWidth + OVERFLOW_MARGIN_PX;
-      setPanDuration(overflows ? setWidth / PAN_PIXELS_PER_SECOND : 0);
+      setIsPanning(setWidth > rail.clientWidth + OVERFLOW_MARGIN_PX);
     };
 
     measure();
@@ -103,9 +108,96 @@ export default function LiveAuctions() {
     return () => observer.disconnect();
   }, [auctions]);
 
-  if (!auctions.length) return null;
+  useEffect(() => {
+    const rail = railRef.current;
+    const lotSet = lotSetRef.current;
+    if (!isPanning || !rail || !lotSet) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
 
-  const isPanning = panDuration > 0;
+    let animationFrameId;
+    let previousTimestamp;
+    let isTouching = false;
+    let isHovered = false;
+    let resumeAt = 0;
+    let position = rail.scrollLeft;
+    let lastWrittenScrollLeft = rail.scrollLeft;
+
+    const holdOff = () => {
+      resumeAt = performance.now() + RESUME_DELAY_MS;
+    };
+
+    const handleTouchStart = () => {
+      isTouching = true;
+    };
+
+    const handleTouchEnd = () => {
+      isTouching = false;
+      holdOff();
+    };
+
+    const handlePointerEnter = (event) => {
+      if (event.pointerType === 'mouse') isHovered = true;
+    };
+
+    const handlePointerLeave = (event) => {
+      if (event.pointerType === 'mouse') isHovered = false;
+    };
+
+    const handleScroll = () => {
+      if (Math.abs(rail.scrollLeft - lastWrittenScrollLeft) > 1) holdOff();
+    };
+
+    const step = (timestamp) => {
+      const elapsedSeconds =
+        previousTimestamp === undefined
+          ? 0
+          : Math.min((timestamp - previousTimestamp) / 1000, MAX_FRAME_SECONDS);
+      previousTimestamp = timestamp;
+
+      const isFocused = rail.contains(document.activeElement);
+      const isPaused = isTouching || isHovered || isFocused || timestamp < resumeAt;
+
+      if (isPaused) {
+        position = rail.scrollLeft;
+      } else {
+        position += PAN_PIXELS_PER_SECOND * elapsedSeconds;
+      }
+
+      if (!isTouching) {
+        const setWidth = lotSet.getBoundingClientRect().width;
+        if (position >= setWidth) position -= setWidth;
+        else if (position <= 0) position += setWidth;
+      }
+
+      const nextScrollLeft = Math.round(position);
+      if (nextScrollLeft !== rail.scrollLeft) {
+        rail.scrollLeft = nextScrollLeft;
+      }
+      lastWrittenScrollLeft = rail.scrollLeft;
+
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    rail.addEventListener('touchstart', handleTouchStart, { passive: true });
+    rail.addEventListener('touchend', handleTouchEnd, { passive: true });
+    rail.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+    rail.addEventListener('pointerenter', handlePointerEnter);
+    rail.addEventListener('pointerleave', handlePointerLeave);
+    rail.addEventListener('scroll', handleScroll, { passive: true });
+    animationFrameId = requestAnimationFrame(step);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      rail.removeEventListener('touchstart', handleTouchStart);
+      rail.removeEventListener('touchend', handleTouchEnd);
+      rail.removeEventListener('touchcancel', handleTouchEnd);
+      rail.removeEventListener('pointerenter', handlePointerEnter);
+      rail.removeEventListener('pointerleave', handlePointerLeave);
+      rail.removeEventListener('scroll', handleScroll);
+    };
+  }, [isPanning]);
+
+  if (!auctions.length) return null;
 
   return (
     <section className="slg-live" aria-labelledby="slg-live-heading">
@@ -125,10 +217,7 @@ export default function LiveAuctions() {
       </div>
 
       <div className={`slg-lot-rail${isPanning ? ' slg-lot-rail--panning' : ''}`} ref={railRef}>
-        <div
-          className={`slg-lot-track${isPanning ? ' slg-lot-track--panning' : ''}`}
-          style={isPanning ? { animationDuration: `${panDuration}s` } : undefined}
-        >
+        <div className="slg-lot-track">
           <div className="slg-lot-set" ref={lotSetRef}>
             {auctions.map((auction) => (
               <Lot key={auction.id} auction={auction} />
