@@ -48,15 +48,15 @@ const shippedSinglePieceOrder = {
 const renderSales = (sales) =>
   render(<UserSales sales={sales} loading={false} />, { wrapper: MemoryRouter });
 
-const cardFor = (pieceTitle) => screen.getByText(pieceTitle).closest('.user-sales-card');
+const cardFor = (pieceTitle) => screen.getByText(pieceTitle).closest('.slg-item-card');
 
-const totalLine = (card, label) => within(card).getByText(label).closest('.user-sales-total-line');
+const totalLine = (card, label) => within(card).getByText(label).closest('.slg-item-figure');
 
 describe('UserSales', () => {
   it('renders one card per order listing every piece with its own price', () => {
     renderSales([twoPieceOrder]);
 
-    expect(document.querySelectorAll('.user-sales-card')).toHaveLength(1);
+    expect(document.querySelectorAll('.slg-item-card')).toHaveLength(1);
 
     const card = cardFor('Blue Wrap Rig');
     expect(within(card).getByText('Slyme Spoon')).toBeInTheDocument();
@@ -97,7 +97,7 @@ describe('UserSales', () => {
     renderSales([orderWithoutImage]);
 
     expect(screen.queryByAltText('Fume Pendant')).not.toBeInTheDocument();
-    expect(document.querySelector('.user-sales-img.placeholder')).toBeInTheDocument();
+    expect(document.querySelector('.slg-item-thumb.placeholder')).toBeInTheDocument();
   });
 
   it('says so when there are no purchases', () => {
