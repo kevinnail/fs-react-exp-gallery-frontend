@@ -1,0 +1,178 @@
+/* Compact item cards: a thumbnail row per piece, then a footer for state, tracking and
+   figures. Shared by the Purchases and Auctions tabs on the account page. */
+
+.slg-item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  align-items: start;
+  gap: 0.75rem;
+}
+
+.slg-item-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.slg-item-rows {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  list-style: none;
+}
+
+.slg-item-row {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.slg-item-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.slg-item-thumb--link {
+  cursor: pointer;
+}
+
+.slg-item-thumb.placeholder {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.slg-item-text {
+  display: grid;
+  min-width: 0;
+}
+
+.slg-item-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slg-item-subline {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.slg-item-price {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.slg-item-footer {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.5rem 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.slg-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+}
+
+.slg-item-meta .slg-status-row {
+  margin-bottom: 0;
+}
+
+.slg-item-date {
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+.slg-item-tracking {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  min-width: 0;
+  padding: 0.2rem 0.5rem 0.2rem 0.25rem;
+  border: 1px solid var(--slg-state-good);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.slg-item-tracking-logo {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.slg-item-tracking-number {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.slg-item-figures {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.2rem 1rem;
+  margin: 0;
+}
+
+.slg-item-figure {
+  display: flex;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.slg-item-figure dt,
+.slg-item-figure dd {
+  margin: 0;
+}
+
+.slg-item-figure dt {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.slg-item-figure dd {
+  font-variant-numeric: tabular-nums;
+}
+
+.slg-item-figure--strong {
+  font-weight: 700;
+}
+
+.slg-item-figure--strong dt {
+  color: inherit;
+}
+
+@media (max-width: 768px) {
+  .slg-item-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .slg-item-row {
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+  }
+
+  .slg-item-thumb {
+    width: 44px;
+    height: 44px;
+  }
+}
