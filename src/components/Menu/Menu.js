@@ -177,14 +177,6 @@ export default function Menu({ handleClick, closeMenu }) {
               </div>
               <NavLink
                 className="menu-new-link"
-                to="/admin/new"
-                title="Make new post"
-                onClick={handleLinkClick}
-              >
-                New
-              </NavLink>
-              <NavLink
-                className="menu-new-link"
                 to="/admin/discounts"
                 title="Post a new sale"
                 onClick={handleLinkClick}
