@@ -10,7 +10,7 @@
  */
 
 /* An open auction has no pipeline yet: nothing is owed and nothing can
-   ship, so it says so in the flame the rest of the site reserves for
+   ship, so it says so in the accent the rest of the site reserves for
    live bidding, and the three segments stay off until it closes. */
 .slg-auction-live {
   font-size: 0.625rem;

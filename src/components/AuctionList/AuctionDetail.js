@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getAuctions } from '../../services/fetch-auctions.js';
 import AuctionCard from './AuctionCard.js';
 import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
@@ -67,20 +67,31 @@ export default function AuctionDetail() {
   return (
     <div className="messages-container">
       <div className="messages-content">
-        <button
-          onClick={handleBack}
+        <div
           style={{
-            background: 'none',
-            border: 'none',
-            color: '#fff',
-            fontSize: '0.9rem',
-            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             marginBottom: '1rem',
-            padding: 0,
           }}
         >
-          ← Back
-        </button>
+          <button
+            onClick={handleBack}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#fff',
+              fontSize: '0.9rem',
+              cursor: 'pointer',
+              padding: 0,
+            }}
+          >
+            ← Back
+          </button>
+          <Link className="slg-text-link" to="/auctions">
+            All auctions &amp; archive
+          </Link>
+        </div>
 
         <AuctionCard auction={auction} />
       </div>

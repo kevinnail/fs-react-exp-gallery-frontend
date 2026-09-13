@@ -214,7 +214,7 @@
 }
 
 .slg-detail-was {
-  color: var(--slg-accent);
+  color: var(--slg-alert);
   font-weight: 400;
   text-decoration: line-through;
 }

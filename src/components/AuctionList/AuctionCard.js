@@ -300,6 +300,7 @@ export default function AuctionCard({ auction }) {
     }
   };
 
+  const hasBids = highestBid > 0;
   const highestBidderUserId = bids[0]?.userId;
   const hasHighBidder = highestBidderUserId !== undefined && highestBidderUserId !== null;
   const isCurrentUserHighBidder =
@@ -431,9 +432,21 @@ export default function AuctionCard({ auction }) {
               )}
             </p>
 
+            {!hasBids && (
+              <p>
+                <span>Opening Bid:</span>
+                <span className="bid-prices">
+                  {' '}
+                  <strong> ${auction.startPrice || ' - '}</strong>{' '}
+                </span>
+              </p>
+            )}
             <div className="bin-end-time-wrapper">
               <p>
-                <strong>BIN:</strong> ${auction.buyNowPrice || '—'}
+                <span>BIN:</span>
+                <span className="bid-prices">
+                  <strong> ${auction.buyNowPrice || ' - '}</strong>
+                </span>
               </p>
               {isActive && (
                 <p

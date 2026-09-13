@@ -1,18 +1,21 @@
-/* Design tokens — Stress Less Glass front page
+/* Design tokens for the Stress Less Glass front page
  *
  * Every product photo is shot on pure black with a reflection under
  * the piece, so the page ground is pure black too. Images then carry
  * no frame and no radius: the photo's own background is the page, and
  * the glass is the only color on the screen.
  *
- * The single accent is reserved for heat — live auctions and sale
- * prices. Nothing else on the page is allowed to use it.
+ * Two colors carry meaning and nothing else may use them. The accent
+ * marks live auction activity: the lot hover, the countdown, the "Live"
+ * label, and the two form states that say a control is armed. Red is
+ * only ever attention: a struck discounted price, a warning, a field at
+ * its limit, a destructive action.
  */
 
 :root {
   /* ground and surfaces */
   --slg-void: #000000; /* page — matches the photo background exactly */
-  --slg-lift: #0d0f13; /* lot cards, strips (cool bias under a warm accent) */
+  --slg-lift: #0d0f13; /* lot cards, strips */
   --slg-lift-hover: #14171c;
   --slg-edge: rgba(255, 255, 255, 0.11);
   --slg-edge-soft: rgba(255, 255, 255, 0.06);
@@ -26,12 +29,14 @@
   --slg-ink: #e9ebef;
   --slg-dim: #7c838e;
 
-  /* The one accent. NO ORANGE. Not here, not anywhere in this project:
-     no flame, no amber, no burnt or coral shades, in any component. */
-  --slg-accent: #ff3b30;
+  /* The one accent, for live auction activity only. NO ORANGE. Not here,
+     not anywhere in this project: no amber, no burnt or coral shades,
+     in any component. */
+  --slg-accent: #7f45d6;
 
-  /* Destructive state only: a deleted row, a hard-delete confirm. Brighter
-     accent red above is the decorative one, this stays for real danger. */
+  /* The attention red. Anything that has to pull the eye as a function,
+     not as decoration: a struck discounted price, a form warning, a field
+     at its limit, a destructive action. */
   --slg-alert: #e5484d;
 
   /* Neutral "you did this on purpose" blue. The request bag is the customer's
