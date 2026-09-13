@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
 import { usePosts } from '../../hooks/usePosts.js';
 import { useActiveAuctions } from '../../hooks/useActiveAuctions.js';
 import PostCard from '../PostCard/PostCard.js';
@@ -117,7 +119,19 @@ export default function Admin() {
     <div className="slg-admin">
       <div className="slg-admin-head">
         <p className="slg-admin-eyebrow">Admin</p>
-        <h1 className="slg-admin-title">Dashboard</h1>
+        <div className="slg-admin-title-row">
+          <h1 className="slg-admin-title">Dashboard</h1>
+          <nav className="slg-admin-actions" aria-label="Create">
+            <Link className="slg-chip slg-chip--create" to="/admin/new">
+              <AddIcon className="slg-chip-icon" />
+              <span className="slg-visually-hidden">New </span>post
+            </Link>
+            <Link className="slg-chip slg-chip--create" to="/admin/auctions">
+              <AddIcon className="slg-chip-icon" />
+              <span className="slg-visually-hidden">New </span>auction
+            </Link>
+          </nav>
+        </div>
       </div>
 
       <div className="slg-admin-stats">

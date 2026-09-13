@@ -51,6 +51,28 @@
   color: var(--slg-ink);
 }
 
+.slg-admin-title-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.slg-admin-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.slg-chip--create {
+  color: var(--slg-ink);
+  border-color: var(--slg-dim);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.slg-chip--create .slg-chip-icon {
+  margin-right: -0.2rem;
+}
+
 /* ---------- stat block ----------
    Four short numbers, laid out two-up on a phone and four across once
    there is room. Nothing scrolls sideways: every figure is on screen at
