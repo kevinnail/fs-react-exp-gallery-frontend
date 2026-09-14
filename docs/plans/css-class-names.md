@@ -20,10 +20,10 @@ Starting point: 528 unique `slg-` classes across 62 files, plus 36 `--slg-*` cus
 
 ## Slices
 
-1. **Standalone components.** Loading, NotFound, Sheet, ShareButton, SearchBar. No other file references their classes. NotFound's `slg-button` classes belong to `forms.css` and move in slice 2.
-2. **Shared styles.** `src/styles/forms.css`, `item-cards.css`, `status-chips.css` and every component using them, plus the selectors in `UserSales.test.js`, `GallerySalesPanel.test.js` and `RequestPage.test.js`. Resolves the classes defined in more than one file: `.slg-field` and `.slg-input-money` (forms.css and AdminSales.css), `.slg-input` (forms.css, AdminSales.css, AuctionForm.css), `.slg-status-row` (item-cards.css and status-chips.css). Because CSS is global these duplicates currently stack on every page that loads both files, so each one gets checked for which rules actually reach which elements before it is split.
-3. **Home gallery.** MainGallery, LiveAuctions, NewestPieceHero, MainGalleryPostCard. `.slg-section-head` is defined in both MainGallery.css and LiveAuctions.css.
-4. **Piece detail and requests.** MainPostDetail, RequestButton, RequestTray, RequestPage, PieceAttachment.
+1. **Standalone components.** Loading, NotFound, Sheet, ShareButton, SearchBar. No other file references their classes. NotFound's `slg-button` classes are defined in `NewestPieceHero.css` and move in slice 3.
+2. **Shared styles.** `src/styles/forms.css`, `item-cards.css`, `status-chips.css` and every file using them: PostForm, AuctionForm (JS and CSS), GallerySalesPanel, AuctionResultsPanel, the selectors in AdminSales.css that target form fields, UserAuctions, UserSales and `UserSales.test.js`. The bare `placeholder` class on account thumbnails becomes a modifier, so Auth.css's global `.placeholder` rule stops reaching it.
+3. **Home gallery.** MainGallery, LiveAuctions, NewestPieceHero, MainGalleryPostCard. `.slg-section-head` is defined in both MainGallery.css and LiveAuctions.css. `slg-button` (NewestPieceHero.css, also used by NotFound) and `slg-eyebrow` (MainGallery.css, also used by PostForm, AuctionForm and AdminSales) move here along with every file using them.
+4. **Piece detail and requests.** MainPostDetail, RequestButton, RequestTray, RequestPage (and `RequestPage.test.js`), PieceAttachment.
 5. **About page.** AboutMe.
 6. **Admin dashboard.** Admin, PostCard, PostForm, AuctionForm, Inventory, AuctionResultsPanelSimple.
 7. **Admin sales.** AdminSales.css (106 classes), GallerySalesPanel, AuctionResultsPanel, SaleStages. Split in two at build time if the diff is too large to review in one sitting.
@@ -37,3 +37,4 @@ Starting point: 528 unique `slg-` classes across 62 files, plus 36 `--slg-*` cus
 ## Found along the way
 
 - `.slg-modal-actions` and `.slg-sales-hidden` in AdminSales.css are not used by any component.
+- AdminSales.css redefines the money input wrapper (now `.form-money-input-wrapper`) as `display: block`. It loads after `forms.css`, so that override also reaches the PostForm and AuctionForm money fields, not just the sales create form it was written for. The rename keeps this behavior as is.
