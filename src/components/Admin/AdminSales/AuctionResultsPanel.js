@@ -583,14 +583,14 @@ const AuctionResultsPanel = () => {
                   </a>
                 )}
 
-                <div className="slg-field slg-tracking-field">
-                  <label className="slg-field-label" htmlFor="slg-auction-tracking">
+                <div className="form-field slg-tracking-field">
+                  <label className="form-field-label" htmlFor="slg-auction-tracking">
                     Tracking number
                   </label>
                   <input
                     id="slg-auction-tracking"
                     type="text"
-                    className="slg-input"
+                    className="form-input"
                     value={trackingInput}
                     onChange={(event) => setTrackingInput(event.target.value)}
                   />

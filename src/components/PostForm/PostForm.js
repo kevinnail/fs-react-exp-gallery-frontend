@@ -33,11 +33,11 @@ const TITLE_MAX_LENGTH = 50;
 const DESCRIPTION_MAX_LENGTH = 350;
 
 const SegmentedToggle = ({ name, value, onChange, options }) => (
-  <div className="slg-segment">
+  <div className="form-segmented-toggle">
     {options.map((option) => (
       <label
         key={String(option.value)}
-        className={`slg-segment-option${value === option.value ? ' slg-segment-option--on' : ''}`}
+        className={`form-segmented-toggle-option${value === option.value ? ' form-segmented-toggle-option--selected' : ''}`}
       >
         <input
           type="radio"
@@ -103,16 +103,16 @@ export default function PostForm({
     if (loading || (files.length === 0 && currentImages.length === 0)) return null;
 
     return (
-      <div className="slg-thumbs">
+      <div className="form-image-previews">
         {files.map((file, index) => (
-          <div key={file.name} className="slg-thumb">
+          <div key={file.name} className="form-image-preview">
             <img src={file.preview} alt={`New image ${index + 1}`} />
             {index === 0 && currentImages.length === 0 && (
-              <span className="slg-thumb-lead">Lead</span>
+              <span className="form-image-preview-lead-badge">Lead</span>
             )}
             <button
               type="button"
-              className="slg-thumb-remove"
+              className="form-image-preview-remove-button"
               aria-label={`Remove new image ${index + 1}`}
               onClick={(event) => {
                 event.preventDefault();
@@ -124,12 +124,12 @@ export default function PostForm({
           </div>
         ))}
         {currentImages.map((url, index) => (
-          <div key={url} className="slg-thumb">
+          <div key={url} className="form-image-preview">
             <img src={url} alt={`Current image ${index + 1}`} />
-            {index === 0 && <span className="slg-thumb-lead">Lead</span>}
+            {index === 0 && <span className="form-image-preview-lead-badge">Lead</span>}
             <button
               type="button"
-              className="slg-thumb-remove"
+              className="form-image-preview-remove-button"
               aria-label={`Remove current image ${index + 1}`}
               onClick={(event) => {
                 event.preventDefault();
@@ -227,24 +227,24 @@ export default function PostForm({
   const totalImageCount = files.length + currentImages.length;
 
   return (
-    <div className="slg-form-page">
-      <div className="slg-form-head">
+    <div className="admin-form-page">
+      <div className="admin-form-header">
         <p className="slg-eyebrow">{formFunctionMode === 'new' ? 'Gallery' : 'Gallery / Edit'}</p>
-        <h1 className="slg-form-title">{newOrEdit}</h1>
+        <h1 className="admin-form-title">{newOrEdit}</h1>
       </div>
 
-      <form className="slg-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
-        <div className="slg-form-column">
-          <p className="slg-form-group-label">Details</p>
+      <form className="admin-form" onSubmit={handleFormSubmit} encType="multipart/form-data">
+        <div className="admin-form-column">
+          <p className="admin-form-section-heading">Details</p>
 
-          <div className="slg-field">
-            <label className="slg-field-label" htmlFor="post-category">
+          <div className="form-field">
+            <label className="form-field-label" htmlFor="post-category">
               Category
             </label>
-            <div className="slg-select-wrap">
+            <div className="form-select-wrapper">
               <select
                 id="post-category"
-                className="slg-select"
+                className="form-select"
                 value={categoryInput}
                 onChange={handleCategoryChange}
                 required
@@ -261,12 +261,14 @@ export default function PostForm({
             </div>
           </div>
 
-          <div className="slg-field">
-            <label className="slg-field-label" htmlFor="post-title">
+          <div className="form-field">
+            <label className="form-field-label" htmlFor="post-title">
               Title
               <span
-                className={`slg-field-count${
-                  (titleInput || '').length === TITLE_MAX_LENGTH ? ' slg-field-count--full' : ''
+                className={`form-field-character-count${
+                  (titleInput || '').length === TITLE_MAX_LENGTH
+                    ? ' form-field-character-count--at-limit'
+                    : ''
                 }`}
               >
                 {(titleInput || '').length}/{TITLE_MAX_LENGTH}
@@ -274,7 +276,7 @@ export default function PostForm({
             </label>
             <input
               id="post-title"
-              className="slg-input"
+              className="form-input"
               type="text"
               name="title"
               placeholder="Enter title"
@@ -285,13 +287,13 @@ export default function PostForm({
             />
           </div>
 
-          <div className="slg-field">
-            <label className="slg-field-label" htmlFor="post-description">
+          <div className="form-field">
+            <label className="form-field-label" htmlFor="post-description">
               Description
               <span
-                className={`slg-field-count${
+                className={`form-field-character-count${
                   (descriptionInput || '').length === DESCRIPTION_MAX_LENGTH
-                    ? ' slg-field-count--full'
+                    ? ' form-field-character-count--at-limit'
                     : ''
                 }`}
               >
@@ -300,7 +302,7 @@ export default function PostForm({
             </label>
             <textarea
               id="post-description"
-              className="slg-textarea"
+              className="form-textarea"
               name="description"
               placeholder="Enter description"
               maxLength={DESCRIPTION_MAX_LENGTH}
@@ -310,15 +312,15 @@ export default function PostForm({
             />
           </div>
 
-          <div className="slg-form-pair">
-            <div className="slg-field">
-              <label className="slg-field-label" htmlFor="post-price">
+          <div className="admin-form-field-pair">
+            <div className="form-field">
+              <label className="form-field-label" htmlFor="post-price">
                 Price
               </label>
-              <div className="slg-input-money">
+              <div className="form-money-input-wrapper">
                 <input
                   id="post-price"
-                  className="slg-input"
+                  className="form-input"
                   type="number"
                   step="1"
                   name="price"
@@ -330,14 +332,14 @@ export default function PostForm({
               </div>
             </div>
 
-            <div className="slg-field">
-              <label className="slg-field-label" htmlFor="post-discounted-price">
+            <div className="form-field">
+              <label className="form-field-label" htmlFor="post-discounted-price">
                 Sale price
               </label>
-              <div className="slg-input-money">
+              <div className="form-money-input-wrapper">
                 <input
                   id="post-discounted-price"
-                  className="slg-input"
+                  className="form-input"
                   type="number"
                   step="1"
                   name="discountedPrice"
@@ -349,28 +351,28 @@ export default function PostForm({
             </div>
           </div>
 
-          <div className="slg-field">
-            <label className="slg-field-label" htmlFor="post-selling-link">
+          <div className="form-field">
+            <label className="form-field-label" htmlFor="post-selling-link">
               Selling link
             </label>
             <input
               id="post-selling-link"
-              className="slg-input"
+              className="form-input"
               type="text"
               name="link"
               placeholder="GlassPass, Etsy or Instagram URL"
               value={sellingLink ?? ''}
               onChange={(event) => setSellingLink(event.target.value)}
             />
-            <p className="slg-field-hint">Where a buyer completes the purchase. Optional.</p>
+            <p className="form-field-hint">Where a buyer completes the purchase. Optional.</p>
           </div>
         </div>
 
-        <div className="slg-form-column">
-          <p className="slg-form-group-label">Visibility</p>
+        <div className="admin-form-column">
+          <p className="admin-form-section-heading">Visibility</p>
 
-          <div className="slg-field">
-            <span className="slg-field-label">Sold status</span>
+          <div className="form-field">
+            <span className="form-field-label">Sold status</span>
             <SegmentedToggle
               name="sold"
               value={soldInput}
@@ -382,8 +384,8 @@ export default function PostForm({
             />
           </div>
 
-          <div className="slg-field">
-            <span className="slg-field-label">Gallery visibility</span>
+          <div className="form-field">
+            <span className="form-field-label">Gallery visibility</span>
             <SegmentedToggle
               name="hide"
               value={hideInput}
@@ -393,27 +395,27 @@ export default function PostForm({
                 { value: true, label: 'Hidden' },
               ]}
             />
-            <p className="slg-field-hint">Hidden posts stay in the admin list only.</p>
+            <p className="form-field-hint">Hidden posts stay in the admin list only.</p>
           </div>
 
-          <p className="slg-form-group-label">Images</p>
+          <p className="admin-form-section-heading">Images</p>
 
           <div
             {...getRootProps({
-              className: `slg-dropzone${isDragActive ? ' slg-dropzone--active' : ''}`,
+              className: `form-image-dropzone${isDragActive ? ' form-image-dropzone--dragging' : ''}`,
             })}
           >
             <input {...getInputProps()} />
-            <span className="slg-dropzone-primary">
+            <span className="form-image-dropzone-instructions">
               {files.length === 0
                 ? 'Tap to choose images'
                 : `${files.length} file${files.length > 1 ? 's' : ''} selected`}
             </span>
-            <span className="slg-dropzone-secondary">JPG or PNG — up to 10</span>
+            <span className="form-image-dropzone-file-types">JPG or PNG — up to 10</span>
           </div>
 
           {totalImageCount > 0 && (
-            <p className="slg-field-hint">
+            <p className="form-field-hint">
               {totalImageCount} image{totalImageCount > 1 ? 's' : ''} on this post
             </p>
           )}
@@ -421,8 +423,8 @@ export default function PostForm({
           {thumbs}
         </div>
 
-        <div className="slg-form-actions">
-          <button className="slg-form-button" type="submit">
+        <div className="admin-form-actions">
+          <button className="admin-form-submit-button" type="submit">
             {formFunctionMode === 'new' ? 'Create post' : 'Save changes'}
           </button>
         </div>

@@ -8,7 +8,7 @@
 /* Without an explicit colour-scheme the browser paints the native
    date/time picker and its calendar indicator for a light page, which
    renders as a black-on-black glyph the admin can't see. */
-.slg-input[type='datetime-local'] {
+.form-input[type='datetime-local'] {
   color-scheme: dark;
 }
 
