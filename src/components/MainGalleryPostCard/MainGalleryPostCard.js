@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import RequestButton from '../RequestButton/RequestButton.js';
+import { useUserStore } from '../../stores/userStore.js';
+import { getPiecePrice } from '../../services/userSpecial.js';
 import './MainGalleryPostCard.css';
 
 export default function MainGalleryPostCard({
@@ -12,13 +14,18 @@ export default function MainGalleryPostCard({
   discountedPrice,
   originalPrice,
   sold,
+  created_at,
   fallbackImageUrl,
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const containerRef = useRef(null);
+  const user = useUserStore((state) => state.user);
 
-  const isDiscounted = discountedPrice && parseFloat(discountedPrice) < parseFloat(originalPrice);
+  const { listedPrice, salePrice } = getPiecePrice(
+    { price, discountedPrice, originalPrice, sold, created_at },
+    { isSignedIn: Boolean(user) }
+  );
 
   // Video posts store a matching .jpg poster frame alongside the .mp4.
   const posterFor = (source) => (source.endsWith('.mp4') ? `${source.slice(0, -4)}.jpg` : source);
@@ -57,8 +64,8 @@ export default function MainGalleryPostCard({
   const requestPiece = {
     postId: id,
     title,
-    price: isDiscounted ? discountedPrice : price,
-    discountedPrice: isDiscounted ? discountedPrice : null,
+    price,
+    discountedPrice: salePrice,
     imageUrl: imageSource,
     url: `${window.location.origin}/${id}`,
     sold,
@@ -94,15 +101,14 @@ export default function MainGalleryPostCard({
       <div className="slg-piece-meta">
         <span className="slg-piece-name">{title}</span>
         <span className="slg-piece-desc">{description}</span>
-        {/* Price and add control share a row so the photo stays uncovered
-            without the card growing a whole extra line for the button. */}
+
         <div className="slg-piece-buy">
           <span className="slg-piece-price">
             {sold ? (
-              <span className="slg-was">${isDiscounted ? originalPrice : price}</span>
-            ) : isDiscounted ? (
+              <span className="slg-was">${listedPrice}</span>
+            ) : salePrice !== null ? (
               <>
-                <span className="slg-was">${originalPrice}</span>${Math.floor(discountedPrice)}
+                <span className="slg-was">${listedPrice}</span>${Math.floor(salePrice)}
               </>
             ) : (
               <>${price}</>
