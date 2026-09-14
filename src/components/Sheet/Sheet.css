@@ -1,6 +1,6 @@
 /* Bottom sheet. See Sheet.js for why this is a native <dialog>. */
 
-.slg-sheet {
+.bottom-sheet {
   width: 100%;
   max-width: 100%;
   /* `auto auto 0` centres the sheet horizontally and pins it to the
@@ -18,12 +18,12 @@
 
 /* The browser's own backdrop element. Giving it a background is what
    dims the page behind the sheet: there is no overlay div. */
-.slg-sheet::backdrop {
+.bottom-sheet::backdrop {
   background: rgba(0, 0, 0, 0.65);
 }
 
 /* Sticky so "Done" stays reachable while the contents scroll. */
-.slg-sheet-head {
+.bottom-sheet-header {
   position: sticky;
   top: 0;
   display: flex;
@@ -35,7 +35,7 @@
   border-bottom: 1px solid var(--slg-edge);
 }
 
-.slg-sheet-title {
+.bottom-sheet-title {
   margin: 0;
   font-family: var(--slg-body);
   font-size: 0.6875rem;
@@ -44,7 +44,7 @@
   color: var(--slg-dim);
 }
 
-.slg-sheet-close {
+.bottom-sheet-done-button {
   min-height: 36px;
   padding: 0 0.9rem;
   font-family: var(--slg-body);
@@ -57,11 +57,11 @@
   cursor: pointer;
 }
 
-.slg-sheet-close:hover {
+.bottom-sheet-done-button:hover {
   background: var(--slg-control-hover);
 }
 
-.slg-sheet-body {
+.bottom-sheet-content {
   padding: 0.9rem;
   /* The sheet is capped at 85vh, so the contents scroll here rather
      than the sheet growing past the top of the screen. */

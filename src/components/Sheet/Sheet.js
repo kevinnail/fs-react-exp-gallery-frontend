@@ -17,15 +17,15 @@ const Sheet = ({ title, isOpen, onClose, children }) => {
   };
 
   return (
-    <dialog ref={dialog} className="slg-sheet" onClose={onClose} onClick={handleClick}>
-      <div className="slg-sheet-head">
-        <h2 className="slg-sheet-title">{title}</h2>
-        <button type="button" className="slg-sheet-close" onClick={onClose}>
+    <dialog ref={dialog} className="bottom-sheet" onClose={onClose} onClick={handleClick}>
+      <div className="bottom-sheet-header">
+        <h2 className="bottom-sheet-title">{title}</h2>
+        <button type="button" className="bottom-sheet-done-button" onClick={onClose}>
           Done
         </button>
       </div>
 
-      <div className="slg-sheet-body">{children}</div>
+      <div className="bottom-sheet-content">{children}</div>
     </dialog>
   );
 };

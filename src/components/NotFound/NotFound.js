@@ -17,16 +17,16 @@ const NotFound = () => {
         .slice(0, CUBE_FACES.length);
 
   return (
-    <main className="slg-404">
-      <div className="slg-404-inner">
-        <div className="slg-404-copy">
-          <p className="slg-404-code">404</p>
-          <h1 className="slg-404-title">This one got away.</h1>
-          <p className="slg-404-text">
+    <main className="not-found-page">
+      <div className="not-found-layout">
+        <div className="not-found-message">
+          <p className="not-found-status-code">404</p>
+          <h1 className="not-found-title">This one got away.</h1>
+          <p className="not-found-description">
             The page you asked for isn&apos;t here. It may have sold, been taken down, or the link
             may have a typo in it. The work below is still very much around.
           </p>
-          <div className="slg-404-actions">
+          <div className="not-found-links">
             <Link className="slg-button" to="/">
               Browse the gallery
             </Link>
@@ -39,9 +39,9 @@ const NotFound = () => {
           </div>
         </div>
 
-        <div className="slg-404-stage">
-          <div className="slg-404-scene">
-            <div className="slg-404-cube">
+        <div className="not-found-cubes">
+          <div className="not-found-gallery-cube-scene">
+            <div className="not-found-gallery-cube">
               {CUBE_FACES.map((facePosition, faceIndex) => {
                 const post = cubePosts[faceIndex];
                 const imageUrl = imageUrlFor(post);
@@ -49,13 +49,13 @@ const NotFound = () => {
                 return (
                   <Link
                     key={facePosition}
-                    className={`slg-404-face slg-404-face--${facePosition}${
-                      imageUrl ? '' : ' slg-404-face--placeholder'
+                    className={`not-found-gallery-cube-face not-found-gallery-cube-face--${facePosition}${
+                      imageUrl ? '' : ' not-found-gallery-cube-face--placeholder'
                     }`}
                     to={post?.id ? `/${post.id}` : '/'}
                     style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
                   >
-                    <span className="slg-404-face-label">
+                    <span className="not-found-cube-face-label">
                       {post?.title ? `View ${post.title}` : 'Browse the gallery'}
                     </span>
                   </Link>
@@ -64,15 +64,15 @@ const NotFound = () => {
             </div>
           </div>
 
-          <div className="slg-404-scene2">
-            <div className="slg-404-cube2">
+          <div className="not-found-about-cube-scene">
+            <div className="not-found-about-cube">
               {CUBE_FACES.map((facePosition) => (
                 <Link
                   key={facePosition}
-                  className={`slg-404-face2 slg-404-face2--${facePosition}`}
+                  className={`not-found-about-cube-face not-found-about-cube-face--${facePosition}`}
                   to="/about-me"
                 >
-                  <span className="slg-404-face-label">About me</span>
+                  <span className="not-found-cube-face-label">About me</span>
                 </Link>
               ))}
             </div>

@@ -53,12 +53,12 @@ const ShareButton = ({ imageUrl, title, text, variant = 'compact', className = '
   return (
     <button
       type="button"
-      className={`slg-share slg-share--${variant} ${className}`.trim()}
+      className={`share-button share-button--${variant} ${className}`.trim()}
       onClick={handleShare}
       aria-label={`Share ${title}`}
     >
       <IosShareIcon fontSize="small" />
-      <span className="slg-share-label">{label}</span>
+      <span className="share-button-label">{label}</span>
     </button>
   );
 };

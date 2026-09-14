@@ -94,11 +94,11 @@ const SearchBar = () => {
   const hasTerm = debouncedTerm.length >= MINIMUM_TERM_LENGTH;
 
   return (
-    <div className="slg-search">
+    <div className="search-bar">
       <button
         type="button"
         ref={toggleRef}
-        className="slg-search-toggle"
+        className="search-toggle"
         aria-label={isOpen ? 'Close search' : 'Search pieces'}
         aria-expanded={isOpen}
         onClick={() => (isOpen ? close() : setIsOpen(true))}
@@ -116,20 +116,16 @@ const SearchBar = () => {
       </button>
 
       {isOpen ? (
-        <div className="slg-search-panel" ref={panelRef}>
-          <form
-            className="slg-search-form"
-            role="search"
-            onSubmit={(event) => event.preventDefault()}
-          >
-            <svg className="slg-search-form-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <div className="search-panel" ref={panelRef}>
+          <form className="search-form" role="search" onSubmit={(event) => event.preventDefault()}>
+            <svg className="search-form-icon" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="11" cy="11" r="7" />
               <path d="M16.5 16.5L21 21" />
             </svg>
             <input
               ref={inputRef}
               type="search"
-              className="slg-search-input"
+              className="search-input"
               placeholder="Search pieces, colors, categories…"
               aria-label="Search pieces"
               autoComplete="off"
@@ -137,20 +133,20 @@ const SearchBar = () => {
               onChange={(event) => setSearchTerm(event.target.value)}
             />
             {hasTerm && !isSearching ? (
-              <span className="slg-search-count">
+              <span className="search-result-count">
                 {results.length} {results.length === 1 ? 'piece' : 'pieces'}
               </span>
             ) : null}
           </form>
 
           {hasTerm ? (
-            <div className="slg-search-results">
+            <div className="search-results">
               {isSearching && !results.length ? (
-                <p className="slg-search-status">Searching…</p>
+                <p className="search-status-message">Searching…</p>
               ) : null}
 
               {!isSearching && !results.length ? (
-                <p className="slg-search-status">
+                <p className="search-status-message">
                   No pieces match “{debouncedTerm}”. Try a color, a shape, or a category.
                 </p>
               ) : null}
@@ -159,17 +155,17 @@ const SearchBar = () => {
                 <button
                   key={post.id}
                   type="button"
-                  className="slg-search-hit"
+                  className="search-result"
                   onClick={() => navigate(`/${post.id}`)}
                 >
-                  <span className="slg-search-hit-frame">
+                  <span className="search-result-thumbnail">
                     {post.image_url ? (
                       <img src={posterFrameFor(post.image_url)} alt="" loading="lazy" />
                     ) : null}
                   </span>
-                  <span className="slg-search-hit-text">
-                    <span className="slg-search-hit-name">{post.title}</span>
-                    <span className="slg-search-hit-meta">
+                  <span className="search-result-text">
+                    <span className="search-result-title">{post.title}</span>
+                    <span className="search-result-price-and-category">
                       {post.sold ? 'Sold' : `$${post.price}`}
                       {post.category ? ` · ${post.category}` : ''}
                     </span>
