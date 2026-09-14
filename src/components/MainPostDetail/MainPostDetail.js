@@ -7,6 +7,8 @@ import Loading from '../Loading/Loading.js';
 import NotFound from '../NotFound/NotFound.js';
 import ShareButton from '../ShareButton/ShareButton.js';
 import RequestButton from '../RequestButton/RequestButton.js';
+import { useUserStore } from '../../stores/userStore.js';
+import { getPiecePrice } from '../../services/userSpecial.js';
 import './MainPostDetail.css';
 
 Modal.setAppElement('#root');
@@ -39,12 +41,11 @@ export default function MainPostDetail() {
   const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
+  const user = useUserStore((state) => state.user);
 
   const store = storeFor(postDetail?.selling_link);
 
-  const originalPrice = parseFloat(postDetail?.originalPrice);
-  const discountedPrice = parseFloat(postDetail?.discountedPrice);
-  const isDiscounted = Boolean(discountedPrice) && discountedPrice < originalPrice;
+  const { listedPrice, salePrice } = getPiecePrice(postDetail ?? {}, { isSignedIn: Boolean(user) });
 
   const currentSource = imageUrls[currentIndex];
   const isVideo = Boolean(currentSource?.endsWith('.mp4'));
@@ -85,7 +86,7 @@ export default function MainPostDetail() {
     title: postDetail?.title,
     category: postDetail?.category,
     price: postDetail?.price,
-    discountedPrice: postDetail?.discountedPrice,
+    discountedPrice: salePrice,
     imageUrl: imageUrls?.[0],
     url: window.location.href,
     sold: postDetail?.sold,
@@ -99,7 +100,7 @@ export default function MainPostDetail() {
           title: postDetail?.title,
           category: postDetail?.category,
           price: postDetail?.price,
-          discountedPrice: postDetail?.discountedPrice,
+          discountedPrice: salePrice,
           imageUrl: imageUrls?.[0],
           url: window.location.href,
         },
@@ -183,14 +184,11 @@ export default function MainPostDetail() {
             {postDetail?.sold ? (
               <>
                 <span className="slg-detail-sold-flag">Sold</span>
-                <span className="slg-detail-was">
-                  ${isDiscounted ? postDetail?.originalPrice : postDetail?.price}
-                </span>
+                <span className="slg-detail-was">${listedPrice}</span>
               </>
-            ) : isDiscounted ? (
+            ) : salePrice !== null ? (
               <>
-                <span className="slg-detail-was">${postDetail?.originalPrice}</span>$
-                {discountedPrice.toFixed(2)}
+                <span className="slg-detail-was">${listedPrice}</span>${salePrice.toFixed(2)}
               </>
             ) : (
               <>${postDetail?.price}</>
