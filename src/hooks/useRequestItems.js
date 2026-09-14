@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { getGalleryPostDetail } from '../services/fetch-utils.js';
 import { useCartStore } from '../stores/cartStore.js';
+import { useUserStore } from '../stores/userStore.js';
+import { getPiecePrice } from '../services/userSpecial.js';
 
 export const useRequestItems = () => {
   const items = useCartStore((state) => state.items);
+  const user = useUserStore((state) => state.user);
   const [refreshedItems, setRefreshedItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +31,7 @@ export const useRequestItems = () => {
               title: post.title ?? item.title,
               category: post.category ?? item.category,
               price: post.price ?? item.price,
-              discountedPrice: post.discountedPrice ?? null,
+              discountedPrice: getPiecePrice(post, { isSignedIn: Boolean(user) }).salePrice,
               imageUrl: post.image_url ?? item.imageUrl,
               sold: isSold || isGone,
               unavailableReason: isSold ? 'sold' : isGone ? 'gone' : null,
@@ -50,7 +53,7 @@ export const useRequestItems = () => {
     return () => {
       cancelled = true;
     };
-  }, [items]);
+  }, [items, user]);
 
   const availableItems = refreshedItems.filter((item) => !item.sold);
   const unavailableItems = refreshedItems.filter((item) => item.sold);
