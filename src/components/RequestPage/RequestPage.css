@@ -118,6 +118,13 @@
   color: var(--slg-dim);
 }
 
+.request-item-was {
+  margin-right: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--slg-alert);
+  text-decoration: line-through;
+}
+
 .slg-request-gone-note {
   font-size: 0.8125rem;
   color: var(--slg-state-bad);
