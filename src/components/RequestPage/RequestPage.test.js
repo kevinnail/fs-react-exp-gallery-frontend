@@ -91,6 +91,42 @@ describe('RequestPage', () => {
     expect(estimatedTotal().getByText('$340.00')).toBeInTheDocument();
   });
 
+  it('prices a piece posted inside the last 14 days at the account special', async () => {
+    const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+    getGalleryPostDetail.mockImplementation((id) =>
+      Promise.resolve(
+        Number(id) === 42
+          ? asServerPost(blueRig, { created_at: threeDaysAgo })
+          : asServerPost(slymeSpoon)
+      )
+    );
+
+    renderPage();
+
+    await screen.findByText('Estimated total');
+    const wasPrice = screen.getByText('$250.00');
+    expect(wasPrice).toHaveClass('request-item-was');
+    expect(wasPrice.parentElement).toHaveTextContent('$250.00$175.00');
+    expect(estimatedTotal().getByText('$265.00')).toBeInTheDocument();
+  });
+
+  it('charges full price once the 14-day special has ended', async () => {
+    const twentyDaysAgo = new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString();
+    getGalleryPostDetail.mockImplementation((id) =>
+      Promise.resolve(
+        Number(id) === 42
+          ? asServerPost(blueRig, { created_at: twentyDaysAgo })
+          : asServerPost(slymeSpoon)
+      )
+    );
+
+    renderPage();
+
+    await screen.findByText('Estimated total');
+    expect(screen.getByText('$250.00')).not.toHaveClass('request-item-was');
+    expect(estimatedTotal().getByText('$340.00')).toBeInTheDocument();
+  });
+
   it('marks a piece that sold while it sat in the basket and leaves it out of the total', async () => {
     getGalleryPostDetail.mockImplementation((id) =>
       Promise.resolve(
