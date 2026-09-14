@@ -11,6 +11,11 @@ import Tab from '@mui/material/Tab';
 import UserSales from './UserSales/UserSales.js';
 import PaymentDueSummary from './PaymentDueSummary/PaymentDueSummary.js';
 import { useAccountActivity } from '../../hooks/useAccountActivity.js';
+import {
+  getPiecePrice,
+  getSpecialCountdownLabel,
+  isSpecialActive,
+} from '../../services/userSpecial.js';
 
 const TAB_SUMMARY = 'summary';
 const TAB_SPECIALS = 'specials';
@@ -59,8 +64,6 @@ export default function Account() {
   const unpaidPurchaseCount = unpaidData.unpaidPurchases.length;
   const hasUnpaid = unpaidData.itemCount > 0;
 
-  const currentSpecialDiscount = 0.7; //^  Adjust as needed =========================================================
-
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
   };
@@ -96,11 +99,8 @@ export default function Account() {
       try {
         const posts = await fetchGalleryPosts();
 
-        const twoWeeksAgo = new Date();
-        twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-
         const recentWork = posts
-          .filter((post) => new Date(post.created_at) >= twoWeeksAgo && post.sold === false)
+          .filter((post) => isSpecialActive(post))
           .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
         setRecentPosts(recentWork);
@@ -367,37 +367,48 @@ export default function Account() {
 
               <div className="new-work-content">
                 {recentPosts.length > 0 ? (
-                  recentPosts.map((post) => (
-                    <div
-                      key={post.id}
-                      className="recent-post-card"
-                      onClick={() => handleClickNewWork(post.id)}
-                    >
-                      <div className="recent-post-image-title-wrapper">
-                        <img src={post.image_url} alt={post.title} className="recent-post-image" />
-                      </div>
+                  recentPosts.map((post) => {
+                    const { salePrice } = getPiecePrice(post, { isSignedIn: true });
+                    const countdownLabel = getSpecialCountdownLabel(post);
 
-                      <div className="recent-post-details">
-                        <p>
-                          <span>Category:</span>
-                          <span>{post.category}</span>
-                        </p>
+                    return (
+                      <div
+                        key={post.id}
+                        className="recent-post-card"
+                        onClick={() => handleClickNewWork(post.id)}
+                      >
+                        <div className="recent-post-image-title-wrapper">
+                          <img
+                            src={post.image_url}
+                            alt={post.title}
+                            className="recent-post-image"
+                          />
+                        </div>
 
-                        <p>
-                          <span>Price:</span>
-                          <span style={{ fontWeight: '600' }}>
-                            <span className="recent-post-was">
-                              {post.price ? `$${post.price}` : 'N/A'}
+                        <div className="recent-post-details">
+                          <p>
+                            <span>Category:</span>
+                            <span>{post.category}</span>
+                          </p>
+
+                          <p>
+                            <span>Price:</span>
+                            <span style={{ fontWeight: '600' }}>
+                              <span className="recent-post-was">
+                                {post.price ? `$${post.price}` : 'N/A'}
+                              </span>
+                              <i className="fa fa-arrow-right" aria-hidden="true"></i>
+                              <span style={{ marginLeft: '.25rem' }}>${salePrice.toFixed(0)}</span>
                             </span>
-                            <i className="fa fa-arrow-right" aria-hidden="true"></i>
-                            <span style={{ marginLeft: '.25rem' }}>
-                              ${(post.price * currentSpecialDiscount).toFixed(0)}
-                            </span>
-                          </span>
-                        </p>
+                          </p>
+
+                          {countdownLabel && (
+                            <span className="special-countdown">{countdownLabel}</span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    );
+                  })
                 ) : (
                   <p style={{ margin: '1rem' }}>No new work right now! Check back regularly.</p>
                 )}
