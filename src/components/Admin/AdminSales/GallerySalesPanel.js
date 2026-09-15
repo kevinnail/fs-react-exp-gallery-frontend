@@ -593,31 +593,34 @@ const GallerySalesPanel = () => {
         <img
           src={user.profile.imageUrl || user.profile.image_url}
           alt=""
-          className="slg-user-avatar"
+          className="admin-sales-customer-avatar"
         />
       ) : (
-        <div className="slg-user-avatar slg-user-avatar--fallback" aria-hidden="true">
+        <div
+          className="admin-sales-customer-avatar admin-sales-customer-avatar--initial"
+          aria-hidden="true"
+        >
           {getInitial(user.profile?.firstName, user.email, user.user_email)}
         </div>
       )}
-      <span className="slg-user-meta">
-        <span className="slg-user-name">{getFullName(user)}</span>
-        <span className="slg-user-email">{user.email || user.user_email}</span>
+      <span className="admin-sales-customer-name-and-email">
+        <span className="admin-sales-customer-name">{getFullName(user)}</span>
+        <span className="admin-sales-customer-email">{user.email || user.user_email}</span>
       </span>
     </>
   );
 
   const renderOrderTotals = (itemsSubtotal, shippingAmount) => (
-    <dl className="slg-order-totals">
-      <div className="slg-order-total-line">
+    <dl className="admin-sales-order-totals">
+      <div className="admin-sales-order-total-row">
         <dt>Items</dt>
         <dd>{formatMoney(itemsSubtotal)}</dd>
       </div>
-      <div className="slg-order-total-line">
+      <div className="admin-sales-order-total-row">
         <dt>Shipping</dt>
         <dd>{formatMoney(shippingAmount)}</dd>
       </div>
-      <div className="slg-order-total-line slg-order-total-line--grand">
+      <div className="admin-sales-order-total-row admin-sales-order-total-row--grand-total">
         <dt>Total</dt>
         <dd>{formatMoney(itemsSubtotal + shippingAmount)}</dd>
       </div>
@@ -744,12 +747,12 @@ const GallerySalesPanel = () => {
                   </div>
 
                   <div className="admin-sales-detail-panel-content">
-                    <div className="form-field slg-user-search">
-                      <label className="form-field-label" htmlFor="slg-customer-search">
+                    <div className="form-field admin-sales-customer-search">
+                      <label className="form-field-label" htmlFor="gallery-sales-customer-search">
                         Find customer
                       </label>
                       <input
-                        id="slg-customer-search"
+                        id="gallery-sales-customer-search"
                         type="text"
                         className="form-input"
                         placeholder="Name or email"
@@ -761,15 +764,17 @@ const GallerySalesPanel = () => {
                         onFocus={() => setShowUserResults(true)}
                       />
                       {showUserResults && debouncedTerm && (
-                        <div className="slg-user-results">
+                        <div className="admin-sales-customer-results">
                           {filteredUsers.length === 0 ? (
-                            <p className="slg-user-results-empty">No customers match that.</p>
+                            <p className="admin-sales-customer-results-empty-message">
+                              No customers match that.
+                            </p>
                           ) : (
                             filteredUsers.map((user) => (
                               <button
                                 key={user.id}
                                 type="button"
-                                className="slg-user-result"
+                                className="admin-sales-customer-result"
                                 onClick={() => handleSelectUser(user)}
                               >
                                 {renderUserIdentity(user)}
@@ -781,8 +786,10 @@ const GallerySalesPanel = () => {
                     </div>
 
                     {selectedUser && (
-                      <div className="slg-user-card">
-                        <div className="slg-user-identity">{renderUserIdentity(selectedUser)}</div>
+                      <div className="admin-sales-selected-customer">
+                        <div className="admin-sales-customer-details">
+                          {renderUserIdentity(selectedUser)}
+                        </div>
 
                         {selectedUser.address ? (
                           <div className="admin-sales-detail-address">
@@ -804,11 +811,11 @@ const GallerySalesPanel = () => {
                     )}
 
                     <div className="form-field">
-                      <label className="form-field-label" htmlFor="slg-buyer-email">
+                      <label className="form-field-label" htmlFor="gallery-sales-buyer-email">
                         Buyer email
                       </label>
                       <input
-                        id="slg-buyer-email"
+                        id="gallery-sales-buyer-email"
                         type="text"
                         className="form-input"
                         value={newBuyerEmail}
@@ -831,19 +838,23 @@ const GallerySalesPanel = () => {
                           No pieces on this sale yet.
                         </p>
                       ) : (
-                        <ul className="slg-sale-items">
+                        <ul className="admin-sales-new-sale-items">
                           {newItems.map((item) => (
-                            <li key={item.postId} className="slg-sale-item">
-                              <span className="slg-sale-item-thumb">
+                            <li key={item.postId} className="admin-sales-new-sale-item">
+                              <span className="admin-sales-new-sale-item-thumbnail">
                                 <img src={item.imageUrl} alt="" />
                               </span>
 
-                              <span className="slg-sale-item-meta">
-                                <span className="slg-sale-item-title">{item.title}</span>
-                                <span className="slg-sale-item-sub">ID {item.postId}</span>
+                              <span className="admin-sales-new-sale-item-details">
+                                <span className="admin-sales-new-sale-item-title">
+                                  {item.title}
+                                </span>
+                                <span className="admin-sales-new-sale-item-id">
+                                  ID {item.postId}
+                                </span>
                               </span>
 
-                              <span className="form-money-input-wrapper slg-sale-item-price">
+                              <span className="form-money-input-wrapper admin-sales-new-sale-item-price-field">
                                 <input
                                   type="number"
                                   className="form-input"
@@ -857,7 +868,7 @@ const GallerySalesPanel = () => {
 
                               <button
                                 type="button"
-                                className="slg-sale-item-remove"
+                                className="admin-sales-new-sale-item-remove-button"
                                 aria-label={`Remove ${item.title}`}
                                 onClick={() => handleRemoveItem(item.postId)}
                               >
@@ -878,12 +889,12 @@ const GallerySalesPanel = () => {
                     </div>
 
                     <div className="form-field">
-                      <label className="form-field-label" htmlFor="slg-sale-shipping">
+                      <label className="form-field-label" htmlFor="gallery-sales-shipping">
                         Shipping
                       </label>
                       <span className="form-money-input-wrapper">
                         <input
-                          id="slg-sale-shipping"
+                          id="gallery-sales-shipping"
                           type="number"
                           className="form-input"
                           value={newShipping}
@@ -896,11 +907,14 @@ const GallerySalesPanel = () => {
                     </div>
 
                     <div className="form-field">
-                      <label className="form-field-label" htmlFor="slg-new-tracking">
+                      <label
+                        className="form-field-label"
+                        htmlFor="gallery-sales-new-sale-tracking-number"
+                      >
                         Tracking number
                       </label>
                       <input
-                        id="slg-new-tracking"
+                        id="gallery-sales-new-sale-tracking-number"
                         type="text"
                         className="form-input"
                         value={newTracking}
@@ -1078,13 +1092,17 @@ const GallerySalesPanel = () => {
       </div>
 
       {showPostModal && (
-        <div className="slg-modal-scrim">
-          <div className="slg-modal slg-modal--wide" role="dialog" aria-modal="true">
-            <div className="slg-modal-head">
-              <h2 className="slg-modal-title">Select a piece</h2>
+        <div className="admin-sales-modal-overlay">
+          <div
+            className="admin-sales-modal admin-sales-modal--wide"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="admin-sales-modal-header">
+              <h2 className="admin-sales-modal-title">Select a piece</h2>
               <button
                 type="button"
-                className="slg-modal-close"
+                className="admin-sales-modal-close-button"
                 onClick={() => setShowPostModal(false)}
                 aria-label="Close piece finder"
               >
@@ -1093,19 +1111,21 @@ const GallerySalesPanel = () => {
             </div>
 
             {posts && posts.length > 0 ? (
-              <div className="slg-post-picker">
+              <div className="admin-sales-piece-finder">
                 {posts.map((post) => (
                   <button
                     key={post.id}
                     type="button"
-                    className="slg-post-option"
+                    className="admin-sales-piece-option"
                     onClick={() => handleSelectPost(post)}
                   >
                     <img src={post.image_url || post.imageUrl} alt="" />
-                    <span className="slg-post-option-meta">
-                      <span className="slg-post-option-title">{post.title}</span>
-                      <span className="slg-post-option-sub">ID {post.id}</span>
-                      <span className="slg-post-option-sub">{formatMoney(getPostPrice(post))}</span>
+                    <span className="admin-sales-piece-option-details">
+                      <span className="admin-sales-piece-option-title">{post.title}</span>
+                      <span className="admin-sales-piece-option-secondary-text">ID {post.id}</span>
+                      <span className="admin-sales-piece-option-secondary-text">
+                        {formatMoney(getPostPrice(post))}
+                      </span>
                     </span>
                   </button>
                 ))}
