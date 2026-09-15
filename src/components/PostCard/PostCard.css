@@ -9,7 +9,7 @@
  * .list-container, .admin-panel) are in Admin.css now.
  */
 
-.slg-row {
+.admin-post-row {
   display: grid;
   grid-template-columns: 52px minmax(0, 1fr) auto;
   grid-template-areas:
@@ -25,20 +25,20 @@
   transition: background 160ms ease;
 }
 
-.slg-row:hover {
+.admin-post-row:hover {
   background: var(--slg-lift);
 }
 
 /* Mid-delete: visible but inert, so a double tap can't fire the request
    twice. */
-.slg-row--busy {
+.admin-post-row--deleting {
   opacity: 0.4;
   pointer-events: none;
 }
 
 /* ---------- thumbnail ---------- */
 
-.slg-row-thumb {
+.admin-post-row-thumbnail {
   grid-area: thumb;
   align-self: start;
   display: block;
@@ -48,7 +48,7 @@
   background: var(--slg-lift);
 }
 
-.slg-row-thumb img {
+.admin-post-row-thumbnail img {
   display: block;
   width: 100%;
   height: 100%;
@@ -57,7 +57,7 @@
 
 /* ---------- identity ---------- */
 
-.slg-row-identity {
+.admin-post-row-details {
   grid-area: identity;
   display: grid;
   gap: 0.1rem;
@@ -66,7 +66,7 @@
 
 /* Wraps to two lines rather than being cut to 14 characters in JS. A
    title the admin can't read is a row they have to open to identify. */
-.slg-row-title {
+.admin-post-row-title {
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.3;
@@ -77,7 +77,7 @@
   overflow: hidden;
 }
 
-.slg-row-category {
+.admin-post-row-category {
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
   color: var(--slg-dim);
@@ -85,7 +85,7 @@
 
 /* ---------- price ---------- */
 
-.slg-row-price {
+.admin-post-row-price {
   grid-area: price;
   display: flex;
   align-items: baseline;
@@ -94,21 +94,21 @@
   font-variant-numeric: tabular-nums;
 }
 
-.slg-row-now {
+.admin-post-row-current-price {
   font-weight: 500;
   color: var(--slg-ink);
 }
 
 /* Matches the public card: the struck original takes the attention red so a
    discounted row is legible at a glance down the list. */
-.slg-row-was {
+.admin-post-row-original-price {
   color: var(--slg-alert);
   text-decoration: line-through;
 }
 
 /* ---------- state tags ---------- */
 
-.slg-row-state {
+.admin-post-row-status-tags {
   grid-area: state;
   display: flex;
   flex-wrap: wrap;
@@ -117,11 +117,11 @@
 
 /* Most rows have no state at all, so the track collapses rather than
    leaving an empty line under every price. */
-.slg-row-state:empty {
+.admin-post-row-status-tags:empty {
   display: none;
 }
 
-.slg-tag {
+.admin-post-row-tag {
   padding: 0.15rem 0.4rem;
   font-size: 0.5625rem;
   font-weight: 600;
@@ -130,49 +130,49 @@
   border: 1px solid var(--slg-edge);
 }
 
-.slg-tag--sold {
+.admin-post-row-tag--sold {
   color: #7fb08a;
   border-color: #3f6f4a;
 }
 
-.slg-tag--deleted {
+.admin-post-row-tag--deleted {
   color: var(--slg-alert);
   border-color: var(--slg-alert);
 }
 
 /* A hidden post is still live inventory, so it dims rather than shouting.
    A deleted one is the exception that earns a mark in the margin. */
-.slg-row--hidden .slg-row-thumb img {
+.admin-post-row--hidden .admin-post-row-thumbnail img {
   opacity: 0.45;
 }
 
-.slg-row--sold .slg-row-title,
-.slg-row--sold .slg-row-now {
+.admin-post-row--sold .admin-post-row-title,
+.admin-post-row--sold .admin-post-row-current-price {
   color: var(--slg-dim);
 }
 
-.slg-row--deleted {
+.admin-post-row--deleted {
   box-shadow: inset 2px 0 0 var(--slg-alert);
 }
 
-.slg-row--deleted .slg-row-thumb img {
+.admin-post-row--deleted .admin-post-row-thumbnail img {
   opacity: 0.3;
 }
 
-.slg-row--deleted .slg-row-title {
+.admin-post-row--deleted .admin-post-row-title {
   color: var(--slg-dim);
   text-decoration: line-through;
 }
 
 /* ---------- actions ---------- */
 
-.slg-row-actions {
+.admin-post-row-actions {
   grid-area: actions;
   display: flex;
   gap: 0.25rem;
 }
 
-.slg-row-action {
+.admin-post-row-button {
   min-width: 60px;
   min-height: 34px;
   padding: 0 0.6rem;
@@ -190,24 +190,24 @@
     color 160ms ease;
 }
 
-.slg-row-action:hover:not(:disabled) {
+.admin-post-row-button:hover:not(:disabled) {
   color: var(--slg-ink);
   border-color: var(--slg-ink);
 }
 
-.slg-row-action--danger:hover:not(:disabled) {
+.admin-post-row-button--danger:hover:not(:disabled) {
   color: #000000;
   background: var(--slg-alert);
   border-color: var(--slg-alert);
 }
 
-.slg-row-action:disabled {
+.admin-post-row-button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
 
-.slg-row a:focus-visible,
-.slg-row button:focus-visible {
+.admin-post-row a:focus-visible,
+.admin-post-row button:focus-visible {
   outline: 2px solid var(--slg-accent);
   outline-offset: 2px;
 }
@@ -216,7 +216,7 @@
    The dialog is still MUI's; these are the controls inside it, restyled
    so a destructive confirm doesn't look like a stock blue text button. */
 
-.slg-dialog-check {
+.admin-post-hard-delete-option {
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -227,14 +227,14 @@
   cursor: pointer;
 }
 
-.slg-dialog-check input {
+.admin-post-hard-delete-option input {
   width: 18px;
   height: 18px;
   accent-color: var(--slg-alert);
   cursor: pointer;
 }
 
-.slg-dialog-button {
+.admin-post-delete-dialog-button {
   min-height: 42px;
   padding: 0 1.1rem;
   font-family: var(--slg-body);
@@ -251,37 +251,37 @@
     color 160ms ease;
 }
 
-.slg-dialog-button:hover {
+.admin-post-delete-dialog-button:hover {
   color: var(--slg-ink);
   border-color: var(--slg-ink);
 }
 
-.slg-dialog-button--confirm {
+.admin-post-delete-dialog-button--confirm {
   color: #000000;
   background: var(--slg-ink);
   border-color: var(--slg-ink);
 }
 
-.slg-dialog-button--confirm:hover {
+.admin-post-delete-dialog-button--confirm:hover {
   color: var(--slg-ink);
   background: transparent;
 }
 
-.slg-dialog-button--danger {
+.admin-post-delete-dialog-button--danger {
   background: var(--slg-alert);
   border-color: var(--slg-alert);
 }
 
-.slg-dialog-button--danger:hover {
+.admin-post-delete-dialog-button--danger:hover {
   color: var(--slg-alert);
 }
 
-.slg-dialog-button:focus-visible {
+.admin-post-delete-dialog-button:focus-visible {
   outline: 2px solid var(--slg-accent);
   outline-offset: 2px;
 }
 
-.slg-dialog-status {
+.admin-post-delete-dialog-status {
   padding: 0 1.1rem;
   font-family: var(--slg-body);
   font-size: 0.8125rem;
@@ -293,28 +293,28 @@
    state column instead of down a stack of small paragraphs. */
 
 @media (min-width: 900px) {
-  .slg-row {
+  .admin-post-row {
     grid-template-columns: 64px minmax(0, 1fr) 110px 150px auto;
     grid-template-areas: 'thumb identity price state actions';
     gap: 1rem;
     padding: 0.6rem 0 0.6rem 8px;
   }
 
-  .slg-row-thumb {
+  .admin-post-row-thumbnail {
     width: 64px;
     align-self: center;
   }
 
-  .slg-row-title {
+  .admin-post-row-title {
     font-size: 0.9375rem;
     -webkit-line-clamp: 1;
   }
 
-  .slg-row-state:empty {
+  .admin-post-row-status-tags:empty {
     display: flex;
   }
 
-  .slg-row-actions {
+  .admin-post-row-actions {
     grid-auto-flow: column;
     gap: 0.4rem;
   }

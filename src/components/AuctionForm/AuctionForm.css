@@ -15,7 +15,7 @@
 /* Editing a running auction changes terms people have already bid
    against, so the form says so instead of looking identical to the
    create form. */
-.slg-auction-warning {
+.auction-form-live-warning {
   display: flex;
   gap: 0.6rem;
   margin: 0;
@@ -27,7 +27,7 @@
   border: 1px solid var(--slg-alert);
 }
 
-.slg-auction-warning strong {
+.auction-form-live-warning strong {
   font-weight: 600;
   color: var(--slg-alert);
 }

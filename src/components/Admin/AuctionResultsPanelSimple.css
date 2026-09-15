@@ -10,13 +10,13 @@
  * an open auction is what the token is reserved for.
  */
 
-.slg-auction-empty {
+.admin-active-auctions-empty-message {
   margin: 0;
   font-size: 0.8125rem;
   color: var(--slg-dim);
 }
 
-.slg-auction-list {
+.admin-active-auctions-list {
   display: grid;
   gap: 1px;
   margin: 0;
@@ -24,7 +24,7 @@
   list-style: none;
 }
 
-.slg-auction-row {
+.admin-active-auctions-row {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr) auto;
   align-items: center;
@@ -35,33 +35,33 @@
   transition: background 160ms ease;
 }
 
-.slg-auction-row:hover,
-.slg-auction-row:focus-visible {
+.admin-active-auctions-row:hover,
+.admin-active-auctions-row:focus-visible {
   background: var(--slg-lift-hover);
 }
 
-.slg-auction-thumb {
+.admin-active-auctions-thumbnail {
   display: block;
   aspect-ratio: 1;
   overflow: hidden;
   background: var(--slg-lift);
 }
 
-.slg-auction-thumb img {
+.admin-active-auctions-thumbnail img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.slg-auction-title {
+.admin-active-auctions-title {
   font-size: 0.8125rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.slg-auction-bid {
+.admin-active-auctions-current-bid {
   font-size: 0.9375rem;
   font-weight: 500;
   color: var(--slg-state-good);

@@ -166,7 +166,7 @@ export default function AuctionForm() {
           <p className="admin-form-section-heading">Lot</p>
 
           {hasBids && (
-            <p className="slg-auction-warning">
+            <p className="auction-form-live-warning">
               <strong>Live</strong>
               <span>
                 This auction already has bids at $
