@@ -8,7 +8,7 @@
  * column of text.
  */
 
-.slg-about {
+.about-page {
   padding-top: var(--slg-header-height);
   padding-bottom: 5rem;
   background: var(--slg-void);
@@ -19,7 +19,7 @@
 
 /* ---------- shared type ---------- */
 
-.slg-about-eyebrow {
+.about-heading-label {
   margin: 0;
   font-size: 0.6875rem;
   font-weight: 600;
@@ -28,7 +28,7 @@
   color: var(--slg-dim);
 }
 
-.slg-about-lead {
+.about-intro-summary {
   margin: 0;
   max-width: 44ch;
   font-size: 1.0625rem;
@@ -36,7 +36,7 @@
   color: var(--slg-ink);
 }
 
-.slg-about-text {
+.about-paragraph {
   margin: 0;
   max-width: 52ch;
   font-size: 0.9375rem;
@@ -46,13 +46,13 @@
 
 /* ---------- buttons ---------- */
 
-.slg-about-actions {
+.about-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
 }
 
-.slg-about-button {
+.about-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -74,20 +74,20 @@
     border-color 180ms ease;
 }
 
-.slg-about-button:hover,
-.slg-about-button:focus-visible {
+.about-button:hover,
+.about-button:focus-visible {
   background: transparent;
   color: var(--slg-ink);
 }
 
-.slg-about-button--quiet {
+.about-button--secondary {
   background: transparent;
   color: var(--slg-dim);
   border-color: var(--slg-edge);
 }
 
-.slg-about-button--quiet:hover,
-.slg-about-button--quiet:focus-visible {
+.about-button--secondary:hover,
+.about-button--secondary:focus-visible {
   background: transparent;
   color: var(--slg-ink);
   border-color: var(--slg-ink);
@@ -95,13 +95,13 @@
 
 /* ---------- hero ---------- */
 
-.slg-about-hero {
+.about-intro {
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
 }
 
-.slg-about-hero-copy {
+.about-intro-details {
   order: 2;
   display: flex;
   flex-direction: column;
@@ -110,7 +110,7 @@
   padding: 2.5rem var(--slg-gutter) 1rem;
 }
 
-.slg-about-title {
+.about-page-title {
   margin: 0;
   font-family: var(--slg-display);
   font-size: clamp(2.75rem, 9vw, 5rem);
@@ -121,22 +121,22 @@
   text-wrap: balance;
 }
 
-.slg-about-hero-figure {
+.about-intro-image {
   order: 1;
   margin: 0;
   overflow: hidden;
 }
 
-.slg-about-hero-figure img {
+.about-intro-image img {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   object-position: 65% 30%;
-  animation: slg-about-bloom 1000ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: about-intro-image-fade-in 1000ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-@keyframes slg-about-bloom {
+@keyframes about-intro-image-fade-in {
   from {
     opacity: 0;
     transform: scale(1.03);
@@ -149,14 +149,14 @@
 
 /* ---------- alternating bands ---------- */
 
-.slg-about-band {
+.about-section {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.75rem;
   padding-top: 4rem;
 }
 
-.slg-about-band-copy {
+.about-section-details {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -164,7 +164,7 @@
   padding: 0 var(--slg-gutter);
 }
 
-.slg-about-band-title {
+.about-section-title {
   margin: 0;
   font-family: var(--slg-display);
   font-size: clamp(1.6rem, 4vw, 2.5rem);
@@ -173,12 +173,12 @@
   color: var(--slg-ink);
 }
 
-.slg-about-band-figure {
+.about-section-media {
   margin: 0;
   overflow: hidden;
 }
 
-.slg-about-band-figure img {
+.about-section-media img {
   display: block;
   width: 100%;
   aspect-ratio: 1;
@@ -187,14 +187,14 @@
 
 /* A code screenshot cropped square loses the code, so this one is
    contained rather than covered. */
-.slg-about-band-figure--code img {
+.about-section-media--code-screenshot img {
   aspect-ratio: 4 / 3;
   object-fit: contain;
   background: var(--slg-lift);
   border: 1px solid var(--slg-edge);
 }
 
-.slg-about-band-figure--portrait img {
+.about-section-media--portrait img {
   aspect-ratio: 4 / 5;
   object-position: center 25%;
 }
@@ -203,7 +203,7 @@
    A recruiter scans before they read, so the stack gets its own line of
    sight rather than being buried in a sentence. */
 
-.slg-about-stack {
+.about-tech-stack {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
@@ -212,7 +212,7 @@
   list-style: none;
 }
 
-.slg-about-stack li {
+.about-tech-stack li {
   padding: 0.3rem 0.6rem;
   font-size: 0.75rem;
   font-weight: 500;
@@ -224,23 +224,23 @@
 
 /* ---------- pursuits tile grid ---------- */
 
-.slg-about-band-figure--grid {
+.about-section-media--tile-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px;
 }
 
-.slg-about-tile {
+.about-pursuit-tile {
   position: relative;
   display: block;
   overflow: hidden;
 }
 
-.slg-about-tile img {
+.about-pursuit-tile img {
   aspect-ratio: 1;
 }
 
-.slg-about-tile-caption {
+.about-pursuit-caption {
   position: absolute;
   inset: auto 0 0 0;
   padding: 1.75rem 0.75rem 0.6rem;
@@ -253,11 +253,11 @@
 
 /* ---------- elsewhere ---------- */
 
-.slg-about-elsewhere {
+.about-elsewhere {
   padding: 4.5rem var(--slg-gutter) 0;
 }
 
-.slg-about-elsewhere-title {
+.about-elsewhere-title {
   margin: 0 0 1.75rem;
   font-family: var(--slg-display);
   font-size: clamp(1.6rem, 3.5vw, 2.25rem);
@@ -266,7 +266,7 @@
   color: var(--slg-ink);
 }
 
-.slg-about-links {
+.about-elsewhere-links {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
@@ -275,7 +275,7 @@
   list-style: none;
 }
 
-.slg-about-link {
+.about-elsewhere-link {
   display: flex;
   align-items: center;
   gap: 0.85rem;
@@ -290,21 +290,21 @@
     color 180ms ease;
 }
 
-.slg-about-link:hover,
-.slg-about-link:focus-visible {
+.about-elsewhere-link:hover,
+.about-elsewhere-link:focus-visible {
   background: var(--slg-lift-hover);
   border-color: var(--slg-ink);
   color: var(--slg-ink);
 }
 
-.slg-about-link img {
+.about-elsewhere-link img {
   width: 36px;
   height: 36px;
   object-fit: contain;
   flex: 0 0 auto;
 }
 
-.slg-about-link span {
+.about-elsewhere-link span {
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -312,72 +312,72 @@
 
 /* ---------- focus ---------- */
 
-.slg-about a:focus-visible,
-.slg-about button:focus-visible {
+.about-page a:focus-visible,
+.about-page button:focus-visible {
   outline: 2px solid var(--slg-accent);
   outline-offset: 4px;
 }
 
 @media (max-width: 599px) {
-  .slg-about-actions .slg-about-button {
+  .about-actions .about-button {
     flex: 1 1 100%;
   }
 }
 
 @media (min-width: 900px) {
-  .slg-about-hero {
+  .about-intro {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
     gap: var(--slg-gutter);
     min-height: 58vh;
   }
 
-  .slg-about-hero-copy {
+  .about-intro-details {
     order: 1;
     gap: 1.5rem;
     padding: 2rem 0 2rem var(--slg-gutter);
   }
 
-  .slg-about-hero-figure {
+  .about-intro-image {
     order: 2;
     height: 58vh;
   }
 
-  .slg-about-hero-figure img {
+  .about-intro-image img {
     height: 100%;
     aspect-ratio: auto;
   }
 
   /* Image bleeds to the outside edge, copy sits on the inside — and the
      modifier swaps which side that is, band to band. */
-  .slg-about-band {
+  .about-section {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: center;
     gap: var(--slg-gutter);
     padding-top: 6rem;
   }
 
-  .slg-about-band-copy {
+  .about-section-details {
     padding-right: var(--slg-gutter);
     padding-left: 0;
   }
 
-  .slg-about-band--reverse .slg-about-band-figure {
+  .about-section--image-right .about-section-media {
     order: 2;
   }
 
-  .slg-about-band--reverse .slg-about-band-copy {
+  .about-section--image-right .about-section-details {
     order: 1;
     padding-left: var(--slg-gutter);
     padding-right: 0;
   }
 
-  .slg-about-tile-caption {
+  .about-pursuit-caption {
     font-size: 0.75rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slg-about-hero-figure img {
+  .about-intro-image img {
     animation: none;
   }
 }
