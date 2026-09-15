@@ -47,3 +47,7 @@ Starting point: 528 unique `slg-` classes across 62 files, plus 20 `--slg-*` des
 - `.admin-sales-modal-actions` and `.admin-sales-visually-hidden` (formerly `.slg-modal-actions` and `.slg-sales-hidden`) in AdminSales.css are not used by any component.
 - AdminSales.css redefines the money input wrapper (now `.form-money-input-wrapper`) as `display: block`. It loads after `forms.css`, so that override also reaches the PostForm and AuctionForm money fields, not just the sales create form it was written for. The rename keeps this behavior as is.
 - `.pagination-button.active` in UsersDashboard.css matches nothing: no component under `Admin/Users` sets an `active` class.
+- Header.css rules no component uses, renamed in 9b so they stop reaching other components: `.site-header-unread-badge`, `.site-header-signout-button`, `.site-header-user-email` (their old names were only ever matched by Menu, Account, UserCard and AdminInbox), plus `.site-header-menu-toggle`, `.site-header-mobile-new-link-old`, `.site-header-new-link`, `.site-header-new-post-label`, `.site-header-signout-icon`, `.site-header-upload-icon` and `.site-header-username`.
+- Header.js sets `link`, `menu-icon-adapt` and `menu-div-adapt`, and no stylesheet has a rule for any of them.
+- `.conversation-meta .unread-badge` in AdminInbox.css matches nothing: AdminInbox renders its badge as `admin-unread-badge`.
+- The comment above AuctionForm's header `div` says Header.css styles the bare `header` element. Since 9b it targets `.site-header`, so AuctionForm could use a `<header>` again.
