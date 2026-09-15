@@ -113,6 +113,9 @@ const RequestPage = () => {
                     </span>
                   ) : (
                     <span className="slg-request-item-price">
+                      {effectivePrice(item) < Number(item.price) && (
+                        <span className="request-item-was">${Number(item.price).toFixed(2)}</span>
+                      )}
                       ${effectivePrice(item).toFixed(2)}
                     </span>
                   )}

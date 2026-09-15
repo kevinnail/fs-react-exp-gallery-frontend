@@ -742,14 +742,14 @@ const GallerySalesPanel = () => {
                   </div>
 
                   <div className="slg-sale-panel-body">
-                    <div className="slg-field slg-user-search">
-                      <label className="slg-field-label" htmlFor="slg-customer-search">
+                    <div className="form-field slg-user-search">
+                      <label className="form-field-label" htmlFor="slg-customer-search">
                         Find customer
                       </label>
                       <input
                         id="slg-customer-search"
                         type="text"
-                        className="slg-input"
+                        className="form-input"
                         placeholder="Name or email"
                         value={searchTerm}
                         onChange={(e) => {
@@ -801,14 +801,14 @@ const GallerySalesPanel = () => {
                       </div>
                     )}
 
-                    <div className="slg-field">
-                      <label className="slg-field-label" htmlFor="slg-buyer-email">
+                    <div className="form-field">
+                      <label className="form-field-label" htmlFor="slg-buyer-email">
                         Buyer email
                       </label>
                       <input
                         id="slg-buyer-email"
                         type="text"
-                        className="slg-input"
+                        className="form-input"
                         value={newBuyerEmail}
                         onChange={(e) => setNewBuyerEmail(e.target.value)}
                       />
@@ -821,8 +821,8 @@ const GallerySalesPanel = () => {
                       </button>
                     </div>
 
-                    <div className="slg-field">
-                      <span className="slg-field-label">Pieces</span>
+                    <div className="form-field">
+                      <span className="form-field-label">Pieces</span>
 
                       {newItems.length === 0 ? (
                         <p className="slg-sale-fact-value slg-sale-fact-value--missing">
@@ -841,10 +841,10 @@ const GallerySalesPanel = () => {
                                 <span className="slg-sale-item-sub">ID {item.postId}</span>
                               </span>
 
-                              <span className="slg-input-money slg-sale-item-price">
+                              <span className="form-money-input-wrapper slg-sale-item-price">
                                 <input
                                   type="number"
-                                  className="slg-input"
+                                  className="form-input"
                                   aria-label={`Price for ${item.title}`}
                                   value={item.price}
                                   onChange={(event) =>
@@ -875,15 +875,15 @@ const GallerySalesPanel = () => {
                       </button>
                     </div>
 
-                    <div className="slg-field">
-                      <label className="slg-field-label" htmlFor="slg-sale-shipping">
+                    <div className="form-field">
+                      <label className="form-field-label" htmlFor="slg-sale-shipping">
                         Shipping
                       </label>
-                      <span className="slg-input-money">
+                      <span className="form-money-input-wrapper">
                         <input
                           id="slg-sale-shipping"
                           type="number"
-                          className="slg-input"
+                          className="form-input"
                           value={newShipping}
                           onChange={(event) => {
                             setShippingEdited(true);
@@ -893,14 +893,14 @@ const GallerySalesPanel = () => {
                       </span>
                     </div>
 
-                    <div className="slg-field">
-                      <label className="slg-field-label" htmlFor="slg-new-tracking">
+                    <div className="form-field">
+                      <label className="form-field-label" htmlFor="slg-new-tracking">
                         Tracking number
                       </label>
                       <input
                         id="slg-new-tracking"
                         type="text"
-                        className="slg-input"
+                        className="form-input"
                         value={newTracking}
                         onChange={(e) => setNewTracking(e.target.value)}
                       />
@@ -1039,14 +1039,14 @@ const GallerySalesPanel = () => {
                     </a>
                   )}
 
-                  <div className="slg-field slg-tracking-field">
-                    <label className="slg-field-label" htmlFor="slg-sale-tracking">
+                  <div className="form-field slg-tracking-field">
+                    <label className="form-field-label" htmlFor="slg-sale-tracking">
                       Tracking number
                     </label>
                     <input
                       id="slg-sale-tracking"
                       type="text"
-                      className="slg-input"
+                      className="form-input"
                       value={trackingInput}
                       onChange={(e) => setTrackingInput(e.target.value)}
                     />

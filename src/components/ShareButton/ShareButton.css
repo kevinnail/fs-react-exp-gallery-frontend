@@ -1,4 +1,4 @@
-.slg-share {
+.share-button {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -14,19 +14,19 @@
     border-color 180ms ease;
 }
 
-.slg-share:hover,
-.slg-share:focus-visible {
+.share-button:hover,
+.share-button:focus-visible {
   color: var(--slg-ink);
 }
 
 /* Sits in the top bar on mobile, beside the back link. */
-.slg-share--compact {
+.share-button--compact {
   padding: 0.4rem 0;
   font-size: 0.8125rem;
 }
 
 /* Sits in the detail rail on desktop, grouped with the piece's own actions. */
-.slg-share--full {
+.share-button--full {
   gap: 0.5rem;
   align-self: flex-start;
   height: 38px;
@@ -35,7 +35,7 @@
   font-size: 0.8125rem;
 }
 
-.slg-share--full:hover,
-.slg-share--full:focus-visible {
+.share-button--full:hover,
+.share-button--full:focus-visible {
   border-color: var(--slg-ink);
 }

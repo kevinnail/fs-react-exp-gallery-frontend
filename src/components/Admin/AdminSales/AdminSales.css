@@ -232,7 +232,7 @@
 .slg-sales-button--primary:active:not(:disabled) {
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
-.slg-field .slg-sales-button {
+.form-field .slg-sales-button {
   justify-self: start;
 }
 
@@ -901,7 +901,7 @@
 
 /* ---------- order items: the create form ---------- */
 
-.slg-input-money {
+.form-money-input-wrapper {
   display: block;
 }
 
@@ -960,7 +960,7 @@
   color: var(--slg-dim);
 }
 
-.slg-sale-item-price .slg-input {
+.slg-sale-item-price .form-input {
   width: 100%;
   text-align: right;
   font-variant-numeric: tabular-nums;

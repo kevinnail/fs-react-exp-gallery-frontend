@@ -295,6 +295,14 @@ div {
   text-overflow: ellipsis;
 }
 
+.special-countdown {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+}
+
 .recent-post-details .description {
   display: none;
 }

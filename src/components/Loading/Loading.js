@@ -10,18 +10,18 @@ function randomDrift() {
   const approachSeconds = randomBetween(6, 9.5);
 
   return {
-    '--slg-far': randomBetween(0.06, 0.12).toFixed(3),
-    '--slg-near': randomBetween(2.2, 2.8).toFixed(2),
-    '--slg-approach-duration': `${approachSeconds.toFixed(2)}s`,
-    '--slg-approach-delay': `${(-randomBetween(0, approachSeconds * 2)).toFixed(2)}s`,
-    '--slg-drift-x': `min(${randomBetween(16, 32).toFixed(1)}vw, 230px)`,
-    '--slg-drift-y': `min(${randomBetween(9, 18).toFixed(1)}vh, 130px)`,
-    '--slg-drift-x-duration': `${horizontalSeconds.toFixed(2)}s`,
-    '--slg-drift-y-duration': `${verticalSeconds.toFixed(2)}s`,
-    '--slg-drift-x-delay': `${(-randomBetween(0, horizontalSeconds)).toFixed(2)}s`,
-    '--slg-drift-y-delay': `${(-randomBetween(0, verticalSeconds)).toFixed(2)}s`,
-    '--slg-spin-duration': `${spinSeconds.toFixed(2)}s`,
-    '--slg-spin-direction': Math.random() < 0.5 ? 'normal' : 'reverse',
+    '--marble-far-scale': randomBetween(0.06, 0.12).toFixed(3),
+    '--marble-near-scale': randomBetween(2.2, 2.8).toFixed(2),
+    '--marble-zoom-duration': `${approachSeconds.toFixed(2)}s`,
+    '--marble-zoom-delay': `${(-randomBetween(0, approachSeconds * 2)).toFixed(2)}s`,
+    '--marble-drift-horizontal-distance': `min(${randomBetween(16, 32).toFixed(1)}vw, 230px)`,
+    '--marble-drift-vertical-distance': `min(${randomBetween(9, 18).toFixed(1)}vh, 130px)`,
+    '--marble-drift-horizontal-duration': `${horizontalSeconds.toFixed(2)}s`,
+    '--marble-drift-vertical-duration': `${verticalSeconds.toFixed(2)}s`,
+    '--marble-drift-horizontal-delay': `${(-randomBetween(0, horizontalSeconds)).toFixed(2)}s`,
+    '--marble-drift-vertical-delay': `${(-randomBetween(0, verticalSeconds)).toFixed(2)}s`,
+    '--marble-spin-duration': `${spinSeconds.toFixed(2)}s`,
+    '--marble-spin-direction': Math.random() < 0.5 ? 'normal' : 'reverse',
   };
 }
 
@@ -31,18 +31,18 @@ export default function Loading() {
   const [drift] = useState(randomDrift);
 
   return (
-    <div className="slg-loading" role="status" aria-live="polite">
-      <div className="slg-loading-field" style={drift}>
-        <div className="slg-loading-drift-x">
-          <div className="slg-loading-drift-y">
-            <div className="slg-loading-approach">
-              <img className="slg-loading-marble" src="/marble-css.png" alt="" />
+    <div className="loading-screen" role="status" aria-live="polite">
+      <div className="loading-marble-area" style={drift}>
+        <div className="loading-marble-drift-horizontal">
+          <div className="loading-marble-drift-vertical">
+            <div className="loading-marble-zoom">
+              <img className="loading-marble" src="/marble-css.png" alt="" />
             </div>
           </div>
         </div>
       </div>
 
-      <p className="slg-loading-label">Loading</p>
+      <p className="loading-text">Loading</p>
     </div>
   );
 }

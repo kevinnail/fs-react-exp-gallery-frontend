@@ -2,14 +2,14 @@
    that shows two of them wraps between chips instead of breaking a phrase in half.
    Shared by the Purchases and Auctions tabs on the account page. */
 
-.slg-status-row {
+.status-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
   margin-bottom: 0.6rem;
 }
 
-.slg-status-chip {
+.status-chip {
   padding: 0.15rem 0.5rem;
   font-size: 1rem;
   font-weight: 700;
@@ -19,15 +19,15 @@
   border-radius: 4px;
 }
 
-.slg-status-chip--unpaid {
+.status-chip--unpaid {
   color: var(--slg-state-bad);
 }
 
-.slg-status-chip--paid,
-.slg-status-chip--shipped {
+.status-chip--paid,
+.status-chip--shipped {
   color: var(--slg-state-good);
 }
 
-.slg-status-chip--wait {
+.status-chip--shipping-soon {
   color: var(--slg-state-wait);
 }

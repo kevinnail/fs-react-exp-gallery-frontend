@@ -153,17 +153,17 @@ export default function AuctionForm() {
   const hasBids = Number(existingAuction?.currentBid) > 0;
 
   return (
-    <div className="slg-form-page">
+    <div className="admin-form-page">
       {/* A div rather than a <header>: Header.css styles the bare `header`
           element as the site's fixed nav bar. */}
-      <div className="slg-form-head">
+      <div className="admin-form-header">
         <p className="slg-eyebrow">{id ? 'Auctions / Edit' : 'Auctions'}</p>
-        <h1 className="slg-form-title">{id ? 'Edit Auction' : 'New Auction'}</h1>
+        <h1 className="admin-form-title">{id ? 'Edit Auction' : 'New Auction'}</h1>
       </div>
 
-      <form className="slg-form" onSubmit={handleSubmit}>
-        <div className="slg-form-column">
-          <p className="slg-form-group-label">Lot</p>
+      <form className="admin-form" onSubmit={handleSubmit}>
+        <div className="admin-form-column">
+          <p className="admin-form-section-heading">Lot</p>
 
           {hasBids && (
             <p className="slg-auction-warning">
@@ -176,12 +176,12 @@ export default function AuctionForm() {
             </p>
           )}
 
-          <div className="slg-field">
-            <label className="slg-field-label" htmlFor="auction-title">
+          <div className="form-field">
+            <label className="form-field-label" htmlFor="auction-title">
               Title
               <span
-                className={`slg-field-count${
-                  title.length === TITLE_MAX_LENGTH ? ' slg-field-count--full' : ''
+                className={`form-field-character-count${
+                  title.length === TITLE_MAX_LENGTH ? ' form-field-character-count--at-limit' : ''
                 }`}
               >
                 {title.length}/{TITLE_MAX_LENGTH}
@@ -189,7 +189,7 @@ export default function AuctionForm() {
             </label>
             <input
               id="auction-title"
-              className="slg-input"
+              className="form-input"
               type="text"
               placeholder="Enter auction title"
               maxLength={TITLE_MAX_LENGTH}
@@ -199,12 +199,14 @@ export default function AuctionForm() {
             />
           </div>
 
-          <div className="slg-field">
-            <label className="slg-field-label" htmlFor="auction-description">
+          <div className="form-field">
+            <label className="form-field-label" htmlFor="auction-description">
               Description
               <span
-                className={`slg-field-count${
-                  description.length === DESCRIPTION_MAX_LENGTH ? ' slg-field-count--full' : ''
+                className={`form-field-character-count${
+                  description.length === DESCRIPTION_MAX_LENGTH
+                    ? ' form-field-character-count--at-limit'
+                    : ''
                 }`}
               >
                 {description.length}/{DESCRIPTION_MAX_LENGTH}
@@ -212,7 +214,7 @@ export default function AuctionForm() {
             </label>
             <textarea
               id="auction-description"
-              className="slg-textarea"
+              className="form-textarea"
               placeholder="Enter auction description"
               maxLength={DESCRIPTION_MAX_LENGTH}
               value={description || ''}
@@ -221,15 +223,15 @@ export default function AuctionForm() {
             />
           </div>
 
-          <div className="slg-form-pair">
-            <div className="slg-field">
-              <label className="slg-field-label" htmlFor="auction-start-price">
+          <div className="admin-form-field-pair">
+            <div className="form-field">
+              <label className="form-field-label" htmlFor="auction-start-price">
                 Start price
               </label>
-              <div className="slg-input-money">
+              <div className="form-money-input-wrapper">
                 <input
                   id="auction-start-price"
-                  className="slg-input"
+                  className="form-input"
                   type="number"
                   step="1"
                   placeholder="0"
@@ -240,14 +242,14 @@ export default function AuctionForm() {
               </div>
             </div>
 
-            <div className="slg-field">
-              <label className="slg-field-label" htmlFor="auction-buy-now-price">
+            <div className="form-field">
+              <label className="form-field-label" htmlFor="auction-buy-now-price">
                 Buy now
               </label>
-              <div className="slg-input-money">
+              <div className="form-money-input-wrapper">
                 <input
                   id="auction-buy-now-price"
-                  className="slg-input"
+                  className="form-input"
                   type="number"
                   step="1"
                   placeholder="0"
@@ -258,56 +260,56 @@ export default function AuctionForm() {
             </div>
           </div>
 
-          <div className="slg-field">
-            <label className="slg-field-label" htmlFor="auction-end-time">
+          <div className="form-field">
+            <label className="form-field-label" htmlFor="auction-end-time">
               Closing time
             </label>
             <input
               id="auction-end-time"
-              className="slg-input"
+              className="form-input"
               type="datetime-local"
               value={endTime || ''}
               onChange={(e) => setEndTime(e.target.value)}
               required
             />
-            <p className="slg-field-hint">
+            <p className="form-field-hint">
               Bidding closes at this time and the winner is notified automatically.
             </p>
           </div>
         </div>
 
-        <div className="slg-form-column">
-          <p className="slg-form-group-label">Images</p>
+        <div className="admin-form-column">
+          <p className="admin-form-section-heading">Images</p>
 
           <div
             {...getRootProps({
-              className: `slg-dropzone${isDragActive ? ' slg-dropzone--active' : ''}`,
+              className: `form-image-dropzone${isDragActive ? ' form-image-dropzone--dragging' : ''}`,
             })}
           >
             <input {...getInputProps()} />
-            <span className="slg-dropzone-primary">
+            <span className="form-image-dropzone-instructions">
               {files.length === 0
                 ? 'Tap to choose images'
                 : `${files.length} file${files.length > 1 ? 's' : ''} added`}
             </span>
-            <span className="slg-dropzone-secondary">JPG or PNG — up to 10</span>
+            <span className="form-image-dropzone-file-types">JPG or PNG — up to 10</span>
           </div>
 
           {totalImageCount > 0 && (
-            <p className="slg-field-hint">
+            <p className="form-field-hint">
               {totalImageCount} image{totalImageCount > 1 ? 's' : ''} on this auction
             </p>
           )}
 
           {totalImageCount > 0 && (
-            <div className="slg-thumbs">
+            <div className="form-image-previews">
               {existingImages.map((imageUrl, index) => (
-                <div key={imageUrl} className="slg-thumb">
+                <div key={imageUrl} className="form-image-preview">
                   <img src={imageUrl} alt={`Current image ${index + 1}`} />
-                  {index === 0 && <span className="slg-thumb-lead">Lead</span>}
+                  {index === 0 && <span className="form-image-preview-lead-badge">Lead</span>}
                   <button
                     type="button"
-                    className="slg-thumb-remove"
+                    className="form-image-preview-remove-button"
                     aria-label={`Remove current image ${index + 1}`}
                     onClick={(event) => {
                       event.preventDefault();
@@ -319,14 +321,14 @@ export default function AuctionForm() {
                 </div>
               ))}
               {files.map((file, index) => (
-                <div key={file.name} className="slg-thumb">
+                <div key={file.name} className="form-image-preview">
                   <img src={file.preview} alt={`New image ${index + 1}`} />
                   {existingImages.length === 0 && index === 0 && (
-                    <span className="slg-thumb-lead">Lead</span>
+                    <span className="form-image-preview-lead-badge">Lead</span>
                   )}
                   <button
                     type="button"
-                    className="slg-thumb-remove"
+                    className="form-image-preview-remove-button"
                     aria-label={`Remove new image ${index + 1}`}
                     onClick={(event) => {
                       event.preventDefault();
@@ -341,8 +343,8 @@ export default function AuctionForm() {
           )}
         </div>
 
-        <div className="slg-form-actions">
-          <button className="slg-form-button" type="submit">
+        <div className="admin-form-actions">
+          <button className="admin-form-submit-button" type="submit">
             {id ? 'Save changes' : 'Create auction'}
           </button>
         </div>

@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { useUserStore } from '../../stores/userStore.js';
+import { getPiecePrice } from '../../services/userSpecial.js';
 import './NewestPieceHero.css';
 
 const coverImageFor = (post) => {
@@ -14,11 +16,12 @@ const coverImageFor = (post) => {
  * glass reads as floating in the page itself.
  */
 const NewestPieceHero = ({ post, availableCount }) => {
+  const user = useUserStore((state) => state.user);
+
   if (!post) return null;
 
-  const { id, title, description, price, discountedPrice, originalPrice } = post;
-  const isDiscounted =
-    discountedPrice && parseFloat(discountedPrice) < parseFloat(originalPrice ?? price);
+  const { id, title, description } = post;
+  const { listedPrice, salePrice } = getPiecePrice(post, { isSignedIn: Boolean(user) });
   const coverImage = coverImageFor(post);
 
   return (
@@ -30,12 +33,12 @@ const NewestPieceHero = ({ post, availableCount }) => {
         </h1>
         {description ? <p className="slg-hero-spec">{description}</p> : null}
         <p className="slg-hero-price">
-          {isDiscounted ? (
+          {salePrice !== null ? (
             <>
-              <span className="slg-was">${originalPrice}</span>${Math.floor(discountedPrice)}
+              <span className="slg-was">${listedPrice}</span>${Math.floor(salePrice)}
             </>
           ) : (
-            <>${price}</>
+            <>${listedPrice}</>
           )}
         </p>
         <div className="slg-hero-actions">

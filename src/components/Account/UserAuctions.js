@@ -76,22 +76,22 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
     return (
       <div
         key={bid.id}
-        className="slg-item-card user-auctions-bid-card"
+        className="item-card user-auctions-bid-card"
         onClick={() => {
           handleAuctionNav(auction.id);
         }}
       >
-        <div className="slg-item-rows">
-          <div className="slg-item-row">
+        <div className="item-card-pieces">
+          <div className="item-card-piece">
             {imageUrl ? (
-              <img src={imageUrl} alt={title} className="slg-item-thumb" />
+              <img src={imageUrl} alt={title} className="item-card-piece-image" />
             ) : (
-              <div className="slg-item-thumb placeholder" />
+              <div className="item-card-piece-image item-card-piece-image--placeholder" />
             )}
-            <span className="slg-item-text">
-              <span className="slg-item-title">{title}</span>
+            <span className="item-card-piece-text">
+              <span className="item-card-piece-title">{title}</span>
               {auction?.endTime && (
-                <span className="slg-item-subline">
+                <span className="item-card-piece-detail">
                   Ends {formatShortDateTime(auction.endTime)}
                 </span>
               )}
@@ -99,16 +99,16 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
           </div>
         </div>
 
-        <div className="slg-item-footer">
-          <div className="slg-item-meta">
-            <span className="slg-item-date">Placed {formatShortDateTime(bid.createdAt)}</span>
-            <dl className="slg-item-figures">
-              <div className="slg-item-figure">
+        <div className="item-card-summary">
+          <div className="item-card-status-and-date">
+            <span className="item-card-date">Placed {formatShortDateTime(bid.createdAt)}</span>
+            <dl className="item-card-amounts">
+              <div className="item-card-amount">
                 <dt>Your bid</dt>
                 <dd>{formatBid(bid.bidAmount)}</dd>
               </div>
               {typeof currentBid !== 'undefined' && (
-                <div className="slg-item-figure slg-item-figure--strong">
+                <div className="item-card-amount item-card-amount--emphasized">
                   <dt>Current bid</dt>
                   <dd>{formatBid(currentBid)}</dd>
                 </div>
@@ -127,15 +127,15 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
     return (
       <div
         key={auction.id}
-        className="slg-item-card"
+        className="item-card"
         style={{
           border: auction.isPaid
             ? '1px solid var(--slg-state-good)'
             : '1px solid var(--slg-state-bad)',
         }}
       >
-        <div className="slg-item-rows">
-          <div className="slg-item-row">
+        <div className="item-card-pieces">
+          <div className="item-card-piece">
             {auction.imageUrls?.[0] ? (
               <img
                 onClick={() => {
@@ -143,58 +143,58 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
                 }}
                 src={auction.imageUrls[0]}
                 alt={title}
-                className="slg-item-thumb slg-item-thumb--link"
+                className="item-card-piece-image item-card-piece-image--clickable"
               />
             ) : (
-              <div className="slg-item-thumb placeholder" />
+              <div className="item-card-piece-image item-card-piece-image--placeholder" />
             )}
-            <span className="slg-item-text">
-              <span className="slg-item-title">{title}</span>
-              <span className="slg-item-subline">
+            <span className="item-card-piece-text">
+              <span className="item-card-piece-title">{title}</span>
+              <span className="item-card-piece-detail">
                 Reason: {auction.closedReason === 'buy_now' ? 'Bought instantly' : 'Expired'}
               </span>
             </span>
-            <span className="slg-item-price">{formatBid(auction.finalBid)}</span>
+            <span className="item-card-piece-price">{formatBid(auction.finalBid)}</span>
           </div>
         </div>
 
-        <div className="slg-item-footer">
-          <div className="slg-item-meta">
-            <div className="slg-status-row">
+        <div className="item-card-summary">
+          <div className="item-card-status-and-date">
+            <div className="status-chips">
               {!auction.isPaid && (
-                <span className="slg-status-chip slg-status-chip--unpaid">Payment Needed</span>
+                <span className="status-chip status-chip--unpaid">Payment Needed</span>
               )}
 
               {auction.isPaid && !hasTracking(auction.trackingNumber) && (
                 <>
-                  <span className="slg-status-chip slg-status-chip--paid">Paid</span>
-                  <span className="slg-status-chip slg-status-chip--wait">Shipping Soon</span>
+                  <span className="status-chip status-chip--paid">Paid</span>
+                  <span className="status-chip status-chip--shipping-soon">Shipping Soon</span>
                 </>
               )}
 
               {hasTracking(auction.trackingNumber) && (
-                <span className="slg-status-chip slg-status-chip--shipped">Shipped</span>
+                <span className="status-chip status-chip--shipped">Shipped</span>
               )}
             </div>
 
-            <span className="slg-item-date">Closed {formatShortDateTime(auction.closedAt)}</span>
+            <span className="item-card-date">Closed {formatShortDateTime(auction.closedAt)}</span>
           </div>
 
           {hasTracking(auction.trackingNumber) && (
             <button
               type="button"
-              className="slg-item-tracking"
+              className="item-card-tracking-button"
               onClick={() => handleTrackingClick(auction.trackingNumber)}
             >
-              <img alt="USPS" className="slg-item-tracking-logo" src="../../../usps.png" />
+              <img alt="USPS" className="item-card-tracking-logo" src="../../../usps.png" />
               <span>Tracking</span>
-              <span className="slg-item-tracking-number">{auction.trackingNumber}</span>
+              <span className="item-card-tracking-number">{auction.trackingNumber}</span>
             </button>
           )}
 
           {hasBuyNowPrice && (
-            <dl className="slg-item-figures">
-              <div className="slg-item-figure">
+            <dl className="item-card-amounts">
+              <div className="item-card-amount">
                 <dt>Buy now price</dt>
                 <dd>{formatBid(auction.buyNowPrice)}</dd>
               </div>
@@ -225,14 +225,14 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
 
       <h3>Active bids</h3>
       {hydratedBids.length > 0 ? (
-        <div className="slg-item-grid">{hydratedBids.map(renderActiveBidCard)}</div>
+        <div className="item-card-grid">{hydratedBids.map(renderActiveBidCard)}</div>
       ) : (
         <p className="empty-msg">No active bids.</p>
       )}
 
       <h3>Won</h3>
       {wonAuctions.length > 0 ? (
-        <div className="slg-item-grid">{wonAuctions.map(renderWonCard)}</div>
+        <div className="item-card-grid">{wonAuctions.map(renderWonCard)}</div>
       ) : (
         <p className="empty-msg">No completed wins yet.</p>
       )}
