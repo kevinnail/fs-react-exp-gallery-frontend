@@ -53,8 +53,8 @@ export default function UserSales({ sales, loading }) {
                 className="item-card"
                 style={{
                   border: order.is_paid
-                    ? '1px solid var(--slg-state-good)'
-                    : '1px solid var(--slg-state-bad)',
+                    ? '1px solid var(--color-status-good)'
+                    : '1px solid var(--color-status-bad)',
                 }}
               >
                 <ul className="item-card-pieces">

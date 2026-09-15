@@ -91,7 +91,7 @@ export default function PostForm({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    maxFiles: 10,
+    maxFiles: 20,
     accept: {
       'image/jpeg': ['.jpg', '.jpeg'],
       'image/png': ['.png'],
@@ -229,7 +229,7 @@ export default function PostForm({
   return (
     <div className="admin-form-page">
       <div className="admin-form-header">
-        <p className="slg-eyebrow">{formFunctionMode === 'new' ? 'Gallery' : 'Gallery / Edit'}</p>
+        <p className="heading-label">{formFunctionMode === 'new' ? 'Gallery' : 'Gallery / Edit'}</p>
         <h1 className="admin-form-title">{newOrEdit}</h1>
       </div>
 

@@ -112,9 +112,9 @@ export default function MainPostDetail() {
   if (notFound) return <NotFound />;
 
   return (
-    <main className="slg-detail">
-      <div className="slg-detail-bar">
-        <button className="slg-detail-back" onClick={() => navigate(-1)}>
+    <main className="piece-detail-page">
+      <div className="piece-detail-top-bar">
+        <button className="piece-detail-back-button" onClick={() => navigate(-1)}>
           ← Back
         </button>
 
@@ -122,17 +122,17 @@ export default function MainPostDetail() {
           imageUrl={currentSource}
           title={postDetail?.title}
           text={postDetail?.title}
-          className="slg-detail-share--bar"
+          className="piece-detail-top-bar-share-button"
         />
       </div>
 
-      <div className="slg-detail-layout">
-        <div className="slg-detail-stage">
+      <div className="piece-detail-layout">
+        <div className="piece-detail-media-column">
           <figure
-            className={`slg-detail-figure${isVideo ? '' : ' slg-detail-figure--zoomable'}`}
+            className={`piece-detail-main-media${isVideo ? '' : ' piece-detail-main-media--zoomable'}`}
             onClick={() => (currentSource ? setLightboxIsOpen(true) : null)}
           >
-            {postDetail?.sold ? <span className="slg-detail-sold">Sold</span> : null}
+            {postDetail?.sold ? <span className="piece-detail-sold-badge">Sold</span> : null}
 
             {isVideo ? (
               <video controls>
@@ -140,7 +140,9 @@ export default function MainPostDetail() {
               </video>
             ) : currentSource ? (
               <>
-                {isLoaded ? null : <span className="slg-detail-skeleton" aria-hidden="true" />}
+                {isLoaded ? null : (
+                  <span className="piece-detail-image-skeleton" aria-hidden="true" />
+                )}
                 <img
                   src={posterFor(currentSource)}
                   alt={postDetail?.title}
@@ -152,12 +154,12 @@ export default function MainPostDetail() {
           </figure>
 
           {imageUrls.length > 1 ? (
-            <div className="slg-detail-thumbs">
+            <div className="piece-detail-thumbnails">
               {imageUrls.map((imageUrl, index) => (
                 <button
                   key={imageUrl}
-                  className={`slg-detail-thumb${
-                    index === currentIndex ? ' slg-detail-thumb--active' : ''
+                  className={`piece-detail-thumbnail${
+                    index === currentIndex ? ' piece-detail-thumbnail--selected' : ''
                   }`}
                   onClick={() => setCurrentIndex(index)}
                   aria-label={`Show image ${index + 1} of ${imageUrls.length}`}
@@ -169,26 +171,27 @@ export default function MainPostDetail() {
           ) : null}
 
           {!isVideo && currentSource ? (
-            <span className="slg-detail-zoom-hint">Tap the photo to enlarge</span>
+            <span className="piece-detail-zoom-hint">Tap the photo to enlarge</span>
           ) : null}
         </div>
 
-        <aside className="slg-detail-rail">
+        <aside className="piece-detail-info-column">
           {postDetail?.category ? (
-            <span className="slg-detail-eyebrow">{postDetail.category}</span>
+            <span className="piece-detail-category">{postDetail.category}</span>
           ) : null}
 
-          <h1 className="slg-detail-title">{postDetail?.title}</h1>
+          <h1 className="piece-detail-title">{postDetail?.title}</h1>
 
-          <p className="slg-detail-price">
+          <p className="piece-detail-price">
             {postDetail?.sold ? (
               <>
-                <span className="slg-detail-sold-flag">Sold</span>
-                <span className="slg-detail-was">${listedPrice}</span>
+                <span className="piece-detail-sold-label">Sold</span>
+                <span className="piece-detail-original-price">${listedPrice}</span>
               </>
             ) : salePrice !== null ? (
               <>
-                <span className="slg-detail-was">${listedPrice}</span>${salePrice.toFixed(2)}
+                <span className="piece-detail-original-price">${listedPrice}</span>$
+                {salePrice.toFixed(2)}
               </>
             ) : (
               <>${postDetail?.price}</>
@@ -196,16 +199,16 @@ export default function MainPostDetail() {
           </p>
 
           {postDetail?.description ? (
-            <p className="slg-detail-desc">{postDetail.description}</p>
+            <p className="piece-detail-description">{postDetail.description}</p>
           ) : null}
 
-          <div className="slg-detail-rule" />
+          <div className="piece-detail-divider" />
 
-          <div className="slg-detail-actions">
+          <div className="piece-detail-actions">
             <RequestButton piece={requestPiece} variant="detail" />
 
             <button
-              className="slg-detail-button slg-detail-button--quiet"
+              className="piece-detail-button piece-detail-button--secondary"
               onClick={handleMessageClick}
             >
               Message Kevin
@@ -213,12 +216,12 @@ export default function MainPostDetail() {
 
             {postDetail?.selling_link ? (
               <a
-                className="slg-detail-button slg-detail-button--quiet"
+                className="piece-detail-button piece-detail-button--secondary"
                 href={postDetail.selling_link}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img className="slg-detail-store-logo" src={store.logo} alt="" />
+                <img className="piece-detail-store-logo" src={store.logo} alt="" />
                 {store.isAuction ? `Bid on ${store.name}` : `Buy on ${store.name}`}
               </a>
             ) : null}
@@ -229,11 +232,11 @@ export default function MainPostDetail() {
             title={postDetail?.title}
             text={postDetail?.title}
             variant="full"
-            className="slg-detail-share--rail"
+            className="piece-detail-info-column-share-button"
           />
 
-          <div className="slg-detail-contact">
-            <span className="slg-detail-contact-label">Contact</span>
+          <div className="piece-detail-contact-links">
+            <span className="piece-detail-contact-label">Contact</span>
             <a href="mailto:kevin@kevinnail.com" aria-label="Email Kevin">
               <img src="/email.png" alt="" />
             </a>
@@ -252,8 +255,8 @@ export default function MainPostDetail() {
       <Modal
         isOpen={lightboxIsOpen}
         onRequestClose={() => setLightboxIsOpen(false)}
-        className="slg-lightbox"
-        overlayClassName="slg-lightbox-overlay"
+        className="piece-detail-lightbox"
+        overlayClassName="piece-detail-lightbox-overlay"
         contentLabel={postDetail?.title}
       >
         {isVideo ? (
@@ -265,7 +268,7 @@ export default function MainPostDetail() {
         )}
 
         <button
-          className="slg-lightbox-close"
+          className="piece-detail-lightbox-close-button"
           onClick={() => setLightboxIsOpen(false)}
           aria-label="Close"
         >
@@ -274,7 +277,7 @@ export default function MainPostDetail() {
 
         {currentIndex > 0 ? (
           <button
-            className="slg-lightbox-nav slg-lightbox-nav--previous"
+            className="piece-detail-lightbox-arrow piece-detail-lightbox-arrow--previous"
             onClick={showPrevious}
             aria-label="Previous image"
           >
@@ -284,7 +287,7 @@ export default function MainPostDetail() {
 
         {currentIndex < imageUrls.length - 1 ? (
           <button
-            className="slg-lightbox-nav slg-lightbox-nav--next"
+            className="piece-detail-lightbox-arrow piece-detail-lightbox-arrow--next"
             onClick={showNext}
             aria-label="Next image"
           >
@@ -293,7 +296,7 @@ export default function MainPostDetail() {
         ) : null}
 
         {imageUrls.length > 1 ? (
-          <span className="slg-lightbox-counter">
+          <span className="piece-detail-lightbox-image-counter">
             {currentIndex + 1} / {imageUrls.length}
           </span>
         ) : null}

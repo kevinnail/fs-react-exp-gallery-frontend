@@ -157,7 +157,7 @@ export default function AuctionForm() {
       {/* A div rather than a <header>: Header.css styles the bare `header`
           element as the site's fixed nav bar. */}
       <div className="admin-form-header">
-        <p className="slg-eyebrow">{id ? 'Auctions / Edit' : 'Auctions'}</p>
+        <p className="heading-label">{id ? 'Auctions / Edit' : 'Auctions'}</p>
         <h1 className="admin-form-title">{id ? 'Edit Auction' : 'New Auction'}</h1>
       </div>
 
@@ -166,7 +166,7 @@ export default function AuctionForm() {
           <p className="admin-form-section-heading">Lot</p>
 
           {hasBids && (
-            <p className="slg-auction-warning">
+            <p className="auction-form-live-warning">
               <strong>Live</strong>
               <span>
                 This auction already has bids at $

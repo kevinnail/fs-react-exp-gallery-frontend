@@ -1,9 +1,9 @@
-.slg-request-button {
+.request-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-weight: 500;
   letter-spacing: 0.01em;
   cursor: pointer;
@@ -14,7 +14,7 @@
     border-color 180ms ease;
 }
 
-.slg-request-button-mark {
+.request-button-icon {
   font-size: 1.15em;
   line-height: 1;
 }
@@ -22,60 +22,60 @@
 /* The short label is what fits beside a struck-through sale price on a
    narrow phone. Both labels live in the DOM and CSS picks one, so the
    swap costs no JavaScript and no width measurement. */
-.slg-request-button-label--short {
+.request-button-label--short {
   display: none;
 }
 
 /* ---------- detail page: the primary action on a piece ---------- */
 
-.slg-request-button--detail {
+.request-button--detail {
   height: 48px;
   padding: 0 1.25rem;
   font-size: 1rem;
-  border: 1px solid var(--slg-ink);
-  background: var(--slg-ink);
+  border: 1px solid var(--color-text);
+  background: var(--color-text);
   color: #000000;
 }
 
-.slg-request-button--detail:hover,
-.slg-request-button--detail:focus-visible {
+.request-button--detail:hover,
+.request-button--detail:focus-visible {
   background: transparent;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
-.slg-request-button--detail.slg-request-button--active {
+.request-button--detail.request-button--added {
   background: transparent;
-  color: var(--slg-ink);
-  border-color: var(--slg-ink);
+  color: var(--color-text);
+  border-color: var(--color-text);
 }
 
-.slg-request-button--detail.slg-request-button--active:hover,
-.slg-request-button--detail.slg-request-button--active:focus-visible {
-  border-color: var(--slg-alert);
-  color: var(--slg-alert);
+.request-button--detail.request-button--added:hover,
+.request-button--detail.request-button--added:focus-visible {
+  border-color: var(--color-alert);
+  color: var(--color-alert);
 }
 
 /* ---------- gallery card: compact, sits in the meta under the photo ---------- */
 
-.slg-request-button--card {
+.request-button--card {
   flex-shrink: 0;
   height: 34px;
   padding: 0 0.65rem;
   font-size: 0.875rem;
-  border: 1px solid var(--slg-edge);
+  border: 1px solid var(--color-border);
   background: transparent;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
-.slg-request-button--card:hover,
-.slg-request-button--card:focus-visible {
-  border-color: var(--slg-ink);
-  color: var(--slg-ink);
+.request-button--card:hover,
+.request-button--card:focus-visible {
+  border-color: var(--color-text);
+  color: var(--color-text);
 }
 
-.slg-request-button--card.slg-request-button--active {
-  border-color: var(--slg-ink);
-  background: var(--slg-ink);
+.request-button--card.request-button--added {
+  border-color: var(--color-text);
+  background: var(--color-text);
   color: #000000;
 }
 
@@ -83,22 +83,22 @@
    price, so the card button drops to the short label and keeps a
    finger-sized target. */
 @media (max-width: 768px) {
-  .slg-request-button--card {
+  .request-button--card {
     height: 38px;
     padding: 0 0.7rem;
   }
 
-  .slg-request-button--card .slg-request-button-label--full {
+  .request-button--card .request-button-label--full {
     display: none;
   }
 
-  .slg-request-button--card .slg-request-button-label--short {
+  .request-button--card .request-button-label--short {
     display: inline;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slg-request-button {
+  .request-button {
     transition: none;
   }
 }

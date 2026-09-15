@@ -116,37 +116,40 @@ export default function Admin() {
   ];
 
   return (
-    <div className="slg-admin">
-      <div className="slg-admin-head">
-        <p className="slg-admin-eyebrow">Admin</p>
-        <div className="slg-admin-title-row">
-          <h1 className="slg-admin-title">Dashboard</h1>
-          <nav className="slg-admin-actions" aria-label="Create">
-            <Link className="slg-chip slg-chip--create" to="/admin/new">
-              <AddIcon className="slg-chip-icon" />
-              <span className="slg-visually-hidden">New </span>post
+    <div className="admin-dashboard">
+      <div className="admin-dashboard-header">
+        <p className="admin-dashboard-heading-label">Admin</p>
+        <div className="admin-dashboard-title-row">
+          <h1 className="admin-dashboard-title">Dashboard</h1>
+          <nav className="admin-dashboard-create-links" aria-label="Create">
+            <Link className="admin-dashboard-chip admin-dashboard-chip--create" to="/admin/new">
+              <AddIcon className="admin-dashboard-chip-icon" />
+              <span className="visually-hidden">New </span>post
             </Link>
-            <Link className="slg-chip slg-chip--create" to="/admin/auctions">
-              <AddIcon className="slg-chip-icon" />
-              <span className="slg-visually-hidden">New </span>auction
+            <Link
+              className="admin-dashboard-chip admin-dashboard-chip--create"
+              to="/admin/auctions"
+            >
+              <AddIcon className="admin-dashboard-chip-icon" />
+              <span className="visually-hidden">New </span>auction
             </Link>
           </nav>
         </div>
       </div>
 
-      <div className="slg-admin-stats">
+      <div className="admin-dashboard-stats">
         {statTiles.map((tile) => {
           const tileContent = (
             <>
-              <span className="slg-stat-label">
+              <span className="admin-dashboard-stat-label">
                 {tile.label}
                 {tile.onOpen && isMobile && (
-                  <span className="slg-stat-caret" aria-hidden="true">
+                  <span className="admin-dashboard-stat-caret" aria-hidden="true">
                     ›
                   </span>
                 )}
               </span>
-              <span className="slg-stat-value">{tile.value}</span>
+              <span className="admin-dashboard-stat-value">{tile.value}</span>
             </>
           );
 
@@ -154,28 +157,32 @@ export default function Admin() {
             <button
               key={tile.label}
               type="button"
-              className="slg-stat slg-stat--action"
+              className="admin-dashboard-stat admin-dashboard-stat--button"
               onClick={tile.onOpen}
             >
               {tileContent}
             </button>
           ) : (
-            <div key={tile.label} className="slg-stat">
+            <div key={tile.label} className="admin-dashboard-stat">
               {tileContent}
             </div>
           );
         })}
       </div>
 
-      <div className="slg-admin-body">
-        <main className="slg-admin-main">
-          <div className="slg-admin-toolbar">
-            <div className="slg-chips" role="group" aria-label="Show posts by visibility">
+      <div className="admin-dashboard-layout">
+        <main className="admin-dashboard-posts">
+          <div className="admin-dashboard-toolbar">
+            <div
+              className="admin-dashboard-visibility-filters"
+              role="group"
+              aria-label="Show posts by visibility"
+            >
               {visibilityFilters.map((filter) => (
                 <button
                   key={filter.label}
                   type="button"
-                  className={`slg-chip${filter.isOn ? ' slg-chip--on' : ''}`}
+                  className={`admin-dashboard-chip${filter.isOn ? ' admin-dashboard-chip--selected' : ''}`}
                   aria-pressed={filter.isOn}
                   onClick={filter.toggle}
                 >
@@ -186,7 +193,7 @@ export default function Admin() {
 
             <button
               type="button"
-              className="slg-chip slg-chip--picker"
+              className="admin-dashboard-chip admin-dashboard-chip--category-picker"
               onClick={() => setCategorySheetOpen(true)}
             >
               Categories
@@ -195,28 +202,28 @@ export default function Admin() {
             {selectedCategory && (
               <button
                 type="button"
-                className="slg-chip slg-chip--clear"
+                className="admin-dashboard-chip admin-dashboard-chip--clear-category"
                 onClick={() => handleCategorySelect(null)}
               >
                 {selectedCategory}
                 <span aria-hidden="true">✕</span>
-                <span className="slg-visually-hidden">, clear category filter</span>
+                <span className="visually-hidden">, clear category filter</span>
               </button>
             )}
 
-            <p className="slg-admin-count">
+            <p className="admin-dashboard-post-count">
               {filteredPosts.length} of {posts.length}
             </p>
           </div>
 
           {currentPosts.length === 0 ? (
-            <p className="slg-admin-empty">
+            <p className="admin-dashboard-empty-message">
               {posts.length === 0
                 ? 'No posts yet.'
                 : 'No posts match these filters. Turn a filter back on or clear the category.'}
             </p>
           ) : (
-            <ul className="slg-admin-list">
+            <ul className="admin-dashboard-post-list">
               {currentPosts.map((post) => (
                 <PostCard
                   key={post.id}
@@ -232,10 +239,10 @@ export default function Admin() {
           )}
 
           {totalPages > 1 && (
-            <nav className="slg-pager" aria-label="Post list pages">
+            <nav className="admin-dashboard-pagination" aria-label="Post list pages">
               <button
                 type="button"
-                className="slg-pager-button"
+                className="admin-dashboard-page-button"
                 onClick={() => handlePageChange(pageIndex - 1)}
                 disabled={pageIndex === 1}
               >
@@ -244,14 +251,14 @@ export default function Admin() {
 
               {buildPageWindow(pageIndex, totalPages).map((page) =>
                 typeof page === 'string' ? (
-                  <span key={page} className="slg-pager-gap" aria-hidden="true">
+                  <span key={page} className="admin-dashboard-page-gap" aria-hidden="true">
                     …
                   </span>
                 ) : (
                   <button
                     key={page}
                     type="button"
-                    className={`slg-pager-button${page === pageIndex ? ' slg-pager-button--on' : ''}`}
+                    className={`admin-dashboard-page-button${page === pageIndex ? ' admin-dashboard-page-button--current' : ''}`}
                     aria-current={page === pageIndex ? 'page' : undefined}
                     onClick={() => handlePageChange(page)}
                   >
@@ -262,7 +269,7 @@ export default function Admin() {
 
               <button
                 type="button"
-                className="slg-pager-button"
+                className="admin-dashboard-page-button"
                 onClick={() => handlePageChange(pageIndex + 1)}
                 disabled={pageIndex === totalPages}
               >
@@ -272,17 +279,23 @@ export default function Admin() {
           )}
         </main>
 
-        <aside className="slg-admin-rail">
-          <details className="slg-panel slg-panel--auctions" open={railStartsOpen}>
-            <summary className="slg-panel-summary">Active auctions</summary>
-            <div className="slg-panel-body">
+        <aside className="admin-dashboard-sidebar">
+          <details
+            className="admin-dashboard-panel admin-dashboard-panel--auctions"
+            open={railStartsOpen}
+          >
+            <summary className="admin-dashboard-panel-summary">Active auctions</summary>
+            <div className="admin-dashboard-panel-content">
               <AuctionResultsPanelSimple auctions={auctions} loading={auctionsLoading} />
             </div>
           </details>
 
-          <details className="slg-panel slg-panel--inventory" open={railStartsOpen}>
-            <summary className="slg-panel-summary">Inventory by category</summary>
-            <div className="slg-panel-body">
+          <details
+            className="admin-dashboard-panel admin-dashboard-panel--inventory"
+            open={railStartsOpen}
+          >
+            <summary className="admin-dashboard-panel-summary">Inventory by category</summary>
+            <div className="admin-dashboard-panel-content">
               <Inventory
                 totals={totals}
                 selectedCategory={selectedCategory}

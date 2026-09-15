@@ -91,47 +91,51 @@ export default function PostCard({ id, post, posts, setPosts, discountedPrice, o
   const isSoftDeleted = post.isDeleted;
 
   const rowClassNames = [
-    'slg-row',
-    id === deletedRowId ? 'slg-row--busy' : '',
-    isSoftDeleted ? 'slg-row--deleted' : '',
-    post.hide ? 'slg-row--hidden' : '',
-    post.sold ? 'slg-row--sold' : '',
+    'admin-post-row',
+    id === deletedRowId ? 'admin-post-row--deleting' : '',
+    isSoftDeleted ? 'admin-post-row--deleted' : '',
+    post.hide ? 'admin-post-row--hidden' : '',
+    post.sold ? 'admin-post-row--sold' : '',
   ]
     .filter(Boolean)
     .join(' ');
 
   return (
     <li className={rowClassNames}>
-      <Link className="slg-row-thumb" to={`/${id}`} aria-label={`View ${post.title}`}>
+      <Link className="admin-post-row-thumbnail" to={`/${id}`} aria-label={`View ${post.title}`}>
         {post.image_url ? <img src={thumbnailFor(post.image_url)} alt="" /> : null}
       </Link>
 
-      <div className="slg-row-identity">
-        <span className="slg-row-title">{post.title}</span>
-        <span className="slg-row-category">{post.category}</span>
+      <div className="admin-post-row-details">
+        <span className="admin-post-row-title">{post.title}</span>
+        <span className="admin-post-row-category">{post.category}</span>
       </div>
 
-      <div className="slg-row-price">
+      <div className="admin-post-row-price">
         {isDiscounted ? (
           <>
-            <span className="slg-row-was">${originalPrice}</span>
-            <span className="slg-row-now">${Number(post.discountedPrice).toFixed(2)}</span>
+            <span className="admin-post-row-original-price">${originalPrice}</span>
+            <span className="admin-post-row-current-price">
+              ${Number(post.discountedPrice).toFixed(2)}
+            </span>
           </>
         ) : (
-          <span className="slg-row-now">${post.price}</span>
+          <span className="admin-post-row-current-price">${post.price}</span>
         )}
       </div>
 
-      <div className="slg-row-state">
-        {post.sold && <span className="slg-tag slg-tag--sold">Sold</span>}
-        {post.hide && <span className="slg-tag">Hidden</span>}
-        {isSoftDeleted && <span className="slg-tag slg-tag--deleted">Deleted</span>}
+      <div className="admin-post-row-status-tags">
+        {post.sold && <span className="admin-post-row-tag admin-post-row-tag--sold">Sold</span>}
+        {post.hide && <span className="admin-post-row-tag">Hidden</span>}
+        {isSoftDeleted && (
+          <span className="admin-post-row-tag admin-post-row-tag--deleted">Deleted</span>
+        )}
       </div>
 
-      <div className="slg-row-actions">
+      <div className="admin-post-row-actions">
         <button
           type="button"
-          className="slg-row-action"
+          className="admin-post-row-button"
           onClick={() => navigate(`/admin/${id}`)}
           disabled={post.restricted ? post.restricted : false}
         >
@@ -139,7 +143,7 @@ export default function PostCard({ id, post, posts, setPosts, discountedPrice, o
         </button>
         <button
           type="button"
-          className="slg-row-action slg-row-action--danger"
+          className="admin-post-row-button admin-post-row-button--danger"
           onClick={handleOpenDialog}
         >
           Delete
@@ -153,24 +157,24 @@ export default function PostCard({ id, post, posts, setPosts, discountedPrice, o
         aria-describedby="alert-dialog-description"
         PaperProps={{
           sx: {
-            backgroundColor: 'var(--slg-lift)',
+            backgroundColor: 'var(--color-surface)',
             backgroundImage: 'none',
-            border: '1px solid var(--slg-edge)',
+            border: '1px solid var(--color-border)',
             borderRadius: 0,
-            fontFamily: 'var(--slg-body)',
+            fontFamily: 'var(--font-body)',
           },
         }}
       >
-        <DialogTitle id="alert-dialog-title" sx={{ fontFamily: 'var(--slg-display)' }}>
+        <DialogTitle id="alert-dialog-title" sx={{ fontFamily: 'var(--font-display)' }}>
           {hardDelete ? 'Delete this post permanently?' : 'Hide this post from the gallery?'}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description" sx={{ fontFamily: 'var(--slg-body)' }}>
+          <DialogContentText id="alert-dialog-description" sx={{ fontFamily: 'var(--font-body)' }}>
             {hardDelete
               ? 'Hard delete will permanently remove this post and all images. This action cannot be undone.'
               : 'Soft delete will hide this post from the gallery but retain its record for sales and user history.'}
           </DialogContentText>
-          <label className="slg-dialog-check">
+          <label className="admin-post-hard-delete-option">
             <input
               type="checkbox"
               checked={hardDelete}
@@ -182,13 +186,17 @@ export default function PostCard({ id, post, posts, setPosts, discountedPrice, o
         <DialogActions>
           {!isDeleting ? (
             <>
-              <button type="button" className="slg-dialog-button" onClick={handleCloseDialog}>
+              <button
+                type="button"
+                className="admin-post-delete-dialog-button"
+                onClick={handleCloseDialog}
+              >
                 Cancel
               </button>
               <button
                 type="button"
-                className={`slg-dialog-button slg-dialog-button--confirm${
-                  hardDelete ? ' slg-dialog-button--danger' : ''
+                className={`admin-post-delete-dialog-button admin-post-delete-dialog-button--confirm${
+                  hardDelete ? ' admin-post-delete-dialog-button--danger' : ''
                 }`}
                 onClick={handleConfirmDelete}
                 autoFocus
@@ -197,7 +205,7 @@ export default function PostCard({ id, post, posts, setPosts, discountedPrice, o
               </button>
             </>
           ) : (
-            <span className="slg-dialog-status">Deleting…</span>
+            <span className="admin-post-delete-dialog-status">Deleting…</span>
           )}
         </DialogActions>
       </Dialog>

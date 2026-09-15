@@ -11,10 +11,10 @@
 
 .not-found-page {
   min-height: 100vh;
-  padding-top: var(--slg-header-height);
-  background: var(--slg-void);
-  color: var(--slg-ink);
-  font-family: var(--slg-body);
+  padding-top: var(--header-height);
+  background: var(--color-page-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
   display: grid;
   align-items: center;
   /* The big cube scales to ~5x and sweeps well past its box, exactly as it
@@ -29,7 +29,7 @@
   grid-template-columns: 1fr;
   justify-items: center;
   gap: clamp(2.5rem, 8vw, 4rem);
-  padding: clamp(2rem, 7vw, 4rem) var(--slg-gutter) clamp(3rem, 8vw, 5rem);
+  padding: clamp(2rem, 7vw, 4rem) var(--page-gutter) clamp(3rem, 8vw, 5rem);
 }
 
 /*
@@ -48,21 +48,21 @@
 
 .not-found-status-code {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: clamp(4.5rem, 20vw, 9rem);
   font-weight: 400;
   line-height: 0.8;
   letter-spacing: 0.06em;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .not-found-title {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: clamp(1.5rem, 5vw, 2.25rem);
   font-weight: 400;
   line-height: 1.1;
-  color: var(--slg-ink);
+  color: var(--color-text);
   text-wrap: balance;
 }
 
@@ -71,7 +71,7 @@
   max-width: 44ch;
   font-size: 0.9375rem;
   line-height: 1.65;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .not-found-links {
@@ -102,7 +102,7 @@
    whole panel is the link and only its label is hidden. */
 .not-found-gallery-cube-face:focus-visible,
 .not-found-about-cube-face:focus-visible {
-  outline: 2px solid var(--slg-ink);
+  outline: 2px solid var(--color-text);
   outline-offset: 2px;
 }
 

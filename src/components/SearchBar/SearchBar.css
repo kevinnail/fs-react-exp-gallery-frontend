@@ -14,7 +14,7 @@
   border: 0;
   border-radius: 50%;
   background: transparent;
-  color: var(--slg-ink);
+  color: var(--color-text);
   cursor: pointer;
   transition:
     color 180ms ease,
@@ -24,7 +24,7 @@
 
 .search-toggle:hover,
 .search-toggle:focus-visible {
-  color: var(--slg-accent);
+  color: var(--color-accent);
   box-shadow: 0 0 12px 0 rgba(255, 255, 255, 0.35);
 }
 
@@ -42,12 +42,12 @@
 
 .search-panel {
   position: fixed;
-  top: var(--slg-header-height);
+  top: var(--header-height);
   left: 0;
   right: 0;
   z-index: 2900; /* under the header itself, over the page */
-  background: var(--slg-void);
-  border-bottom: 1px solid var(--slg-edge);
+  background: var(--color-page-background);
+  border-bottom: 1px solid var(--color-border);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
   animation: search-panel-drop 180ms ease-out;
 }
@@ -67,12 +67,12 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.9rem var(--slg-gutter);
+  padding: 0.9rem var(--page-gutter);
 }
 
 .search-form-icon {
   flex: 0 0 auto;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .search-input {
@@ -82,14 +82,14 @@
   border: 0;
   background: transparent;
   outline: none;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 1rem;
   letter-spacing: 0.01em;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .search-input::placeholder {
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* Chrome's own clear affordance sits badly on a borderless field. */
@@ -100,11 +100,11 @@
 
 .search-result-count {
   flex: 0 0 auto;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.04em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -113,17 +113,17 @@
 .search-results {
   max-height: min(65vh, 520px);
   overflow-y: auto;
-  border-top: 1px solid var(--slg-edge-soft);
+  border-top: 1px solid var(--color-border-subtle);
   padding: 0.35rem 0 0.5rem;
   scrollbar-width: thin;
 }
 
 .search-status-message {
   margin: 0;
-  padding: 1rem var(--slg-gutter);
-  font-family: var(--slg-body);
+  padding: 1rem var(--page-gutter);
+  font-family: var(--font-body);
   font-size: 0.875rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .search-result {
@@ -131,7 +131,7 @@
   align-items: center;
   gap: 0.85rem;
   width: 100%;
-  padding: 0.55rem var(--slg-gutter);
+  padding: 0.55rem var(--page-gutter);
   border: 0;
   background: transparent;
   text-align: left;
@@ -141,7 +141,7 @@
 
 .search-result:hover,
 .search-result:focus-visible {
-  background: var(--slg-lift);
+  background: var(--color-surface);
   outline: none;
 }
 
@@ -150,7 +150,7 @@
   width: 48px;
   height: 48px;
   overflow: hidden;
-  background: var(--slg-lift);
+  background: var(--color-surface);
 }
 
 .search-result-thumbnail img {
@@ -167,19 +167,19 @@
 }
 
 .search-result-title {
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--slg-ink);
+  color: var(--color-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .search-result-price-and-category {
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -27,13 +27,13 @@ const NotFound = () => {
             may have a typo in it. The work below is still very much around.
           </p>
           <div className="not-found-links">
-            <Link className="slg-button" to="/">
+            <Link className="button-link" to="/">
               Browse the gallery
             </Link>
-            <Link className="slg-button slg-button--quiet" to="/auctions">
+            <Link className="button-link button-link--secondary" to="/auctions">
               Live auctions
             </Link>
-            <Link className="slg-button slg-button--quiet" to="/about-me">
+            <Link className="button-link button-link--secondary" to="/about-me">
               About me
             </Link>
           </div>

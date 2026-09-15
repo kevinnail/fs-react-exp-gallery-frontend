@@ -64,7 +64,7 @@ const asServerPost = (item, overrides = {}) => ({
 const renderPage = () => render(<RequestPage />, { wrapper: MemoryRouter });
 
 const estimatedTotal = () =>
-  within(screen.getByText('Estimated total').closest('.slg-request-total'));
+  within(screen.getByText('Estimated total').closest('.request-page-total'));
 
 describe('RequestPage', () => {
   beforeEach(() => {
@@ -105,7 +105,7 @@ describe('RequestPage', () => {
 
     await screen.findByText('Estimated total');
     const wasPrice = screen.getByText('$250.00');
-    expect(wasPrice).toHaveClass('request-item-was');
+    expect(wasPrice).toHaveClass('request-page-item-original-price');
     expect(wasPrice.parentElement).toHaveTextContent('$250.00$175.00');
     expect(estimatedTotal().getByText('$265.00')).toBeInTheDocument();
   });
@@ -123,7 +123,7 @@ describe('RequestPage', () => {
     renderPage();
 
     await screen.findByText('Estimated total');
-    expect(screen.getByText('$250.00')).not.toHaveClass('request-item-was');
+    expect(screen.getByText('$250.00')).not.toHaveClass('request-page-item-original-price');
     expect(estimatedTotal().getByText('$340.00')).toBeInTheDocument();
   });
 

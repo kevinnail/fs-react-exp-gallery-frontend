@@ -88,7 +88,7 @@ export default function AuctionDetail() {
           >
             ← Back
           </button>
-          <Link className="slg-text-link" to="/auctions">
+          <Link className="all-auctions-link" to="/auctions">
             All auctions &amp; archive
           </Link>
         </div>

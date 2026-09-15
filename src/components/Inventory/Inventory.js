@@ -14,16 +14,16 @@ const STOCK_LEVEL_LABELS = {
 };
 
 const Inventory = ({ totals, onCategorySelect, selectedCategory }) => (
-  <div className="slg-inventory">
-    <p className="slg-inventory-caption">
+  <div className="inventory">
+    <p className="inventory-description">
       What is on the shelf right now. Sold, hidden and deleted pieces are left out. Tap a category
       to filter the list.
     </p>
 
-    <div className="slg-inventory-controls">
+    <div className="inventory-controls">
       <button
         type="button"
-        className={`slg-inventory-toggle${selectedCategory === null ? ' slg-inventory-toggle--on' : ''}`}
+        className={`inventory-all-categories-button${selectedCategory === null ? ' inventory-all-categories-button--selected' : ''}`}
         aria-pressed={selectedCategory === null}
         onClick={() => onCategorySelect(null)}
       >
@@ -31,14 +31,14 @@ const Inventory = ({ totals, onCategorySelect, selectedCategory }) => (
       </button>
     </div>
 
-    <table className="slg-inventory-table">
+    <table className="inventory-table">
       <thead>
         <tr>
           <th scope="col">Category</th>
-          <th scope="col" className="slg-inventory-numeric">
+          <th scope="col" className="inventory-numeric-cell">
             For sale
           </th>
-          <th scope="col" className="slg-inventory-numeric">
+          <th scope="col" className="inventory-numeric-cell">
             Value
           </th>
         </tr>
@@ -48,8 +48,8 @@ const Inventory = ({ totals, onCategorySelect, selectedCategory }) => (
           const count = totals.forSaleCountByCategory[categoryName];
           const level = stockLevel(count);
           const rowClasses = [
-            `slg-inventory-row--${level}`,
-            selectedCategory === categoryName ? 'slg-inventory-row--selected' : '',
+            `inventory-row--stock-${level}`,
+            selectedCategory === categoryName ? 'inventory-row--selected' : '',
           ]
             .filter(Boolean)
             .join(' ');
@@ -63,7 +63,7 @@ const Inventory = ({ totals, onCategorySelect, selectedCategory }) => (
               <th scope="row">
                 <button
                   type="button"
-                  className="slg-inventory-category"
+                  className="inventory-category-button"
                   aria-pressed={selectedCategory === categoryName}
                   onClick={(event) => {
                     event.stopPropagation();
@@ -71,11 +71,11 @@ const Inventory = ({ totals, onCategorySelect, selectedCategory }) => (
                   }}
                 >
                   {categoryName}
-                  <span className="slg-visually-hidden">, {STOCK_LEVEL_LABELS[level]}</span>
+                  <span className="visually-hidden">, {STOCK_LEVEL_LABELS[level]}</span>
                 </button>
               </th>
-              <td className="slg-inventory-numeric slg-inventory-count">{count}</td>
-              <td className="slg-inventory-numeric">
+              <td className="inventory-numeric-cell inventory-for-sale-count">{count}</td>
+              <td className="inventory-numeric-cell">
                 {formatMoney(totals.forSaleValueByCategory[categoryName])}
               </td>
             </tr>
@@ -85,9 +85,9 @@ const Inventory = ({ totals, onCategorySelect, selectedCategory }) => (
       <tfoot>
         <tr>
           <th scope="row">For sale</th>
-          <td className="slg-inventory-numeric">{totals.forSaleCount}</td>
-          <td className="slg-inventory-numeric">
-            <span className="slg-inventory-figure">{formatMoney(totals.forSaleValue)}</span>
+          <td className="inventory-numeric-cell">{totals.forSaleCount}</td>
+          <td className="inventory-numeric-cell">
+            <span className="inventory-total-value">{formatMoney(totals.forSaleValue)}</span>
           </td>
         </tr>
       </tfoot>

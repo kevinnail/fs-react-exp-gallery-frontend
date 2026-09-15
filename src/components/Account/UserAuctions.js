@@ -130,8 +130,8 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
         className="item-card"
         style={{
           border: auction.isPaid
-            ? '1px solid var(--slg-state-good)'
-            : '1px solid var(--slg-state-bad)',
+            ? '1px solid var(--color-status-good)'
+            : '1px solid var(--color-status-bad)',
         }}
       >
         <div className="item-card-pieces">

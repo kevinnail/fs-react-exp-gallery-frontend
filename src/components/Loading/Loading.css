@@ -5,8 +5,8 @@
   justify-content: center;
   gap: 2rem;
   min-height: 60vh;
-  padding: var(--slg-header-height) 1rem 2rem;
-  background: var(--slg-void);
+  padding: var(--header-height) 1rem 2rem;
+  background: var(--color-page-background);
   overflow: hidden; /* drift amplitude is generous; never spill sideways */
 }
 
@@ -88,13 +88,13 @@
 
 .loading-text {
   margin: 0;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.28em;
   /* text-transform: uppercase; */
   text-indent: 0.28em; /* balances the trailing letter-space */
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   animation: loading-text-pulse 3.4s ease-in-out infinite;
 }
 
