@@ -226,7 +226,7 @@
 
 .form-field-hint {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 1rem;
   line-height: 1.4;
   color: var(--slg-dim);
 }

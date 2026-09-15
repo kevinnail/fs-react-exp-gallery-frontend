@@ -28,7 +28,7 @@
   padding: 1.75rem var(--slg-gutter-tight) 1.25rem;
 }
 
-/* The dashboard's own eyebrow. Deliberately not `slg-eyebrow`: that one
+/* The dashboard's own eyebrow. Deliberately not `heading-label`: that one
    is declared in MainGallery.css and matches five components at once, so
    editing it here would have changed the gallery too. This name is the
    dashboard's alone. */

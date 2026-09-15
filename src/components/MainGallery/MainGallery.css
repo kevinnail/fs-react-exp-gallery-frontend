@@ -3,7 +3,7 @@
  * Front-page only — the admin gallery keeps Gallery.css.
  */
 
-.slg-page {
+.home-page {
   /* Clears the fixed header rather than each section guessing at it. */
   padding-top: var(--slg-header-height);
   background: var(--slg-void);
@@ -12,7 +12,7 @@
   text-align: left;
 }
 
-.slg-notice {
+.home-site-message {
   display: flex;
   align-items: center;
   min-height: 40px;
@@ -21,7 +21,7 @@
   border-bottom: 1px solid var(--slg-edge-soft);
 }
 
-.slg-notice p {
+.home-site-message p {
   margin: 0;
   font-size: 1.2rem;
   line-height: 1.5;
@@ -30,7 +30,7 @@
 
 /* ---------- section headings ---------- */
 
-.slg-section-head {
+.home-section-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -40,7 +40,7 @@
   margin-bottom: 1.75rem;
 }
 
-.slg-section-title {
+.home-section-title {
   display: flex;
   align-items: baseline;
   gap: 0.75rem;
@@ -52,7 +52,7 @@
   color: var(--slg-ink);
 }
 
-.slg-count {
+.home-section-count {
   font-family: var(--slg-body);
   font-size: 0.8125rem;
   font-weight: 500;
@@ -61,7 +61,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-.slg-eyebrow {
+.heading-label {
   margin: 0;
   font-family: var(--slg-body);
   font-size: 0.9rem;
@@ -70,7 +70,7 @@
   color: var(--slg-dim);
 }
 
-.slg-text-link {
+.all-auctions-link {
   padding-bottom: 2px;
   font-size: 1rem;
   font-weight: 500;
@@ -84,7 +84,7 @@
   padding: 8px;
 }
 
-.slg-live-auctions-link {
+.live-auctions-heading-link {
   padding-bottom: 2px;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -96,26 +96,26 @@
     border-color 180ms ease;
 }
 
-.slg-text-link:hover,
-.slg-text-link:focus-visible {
+.all-auctions-link:hover,
+.all-auctions-link:focus-visible {
   color: var(--slg-ink);
   border-color: var(--slg-ink);
 }
 
 /* ---------- gallery grid ---------- */
 
-.slg-gallery {
+.available-pieces {
   padding: 4rem 0 5rem;
 }
 
-.slg-grid {
+.available-pieces-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 3rem 1.75rem;
   padding: 0 var(--slg-gutter);
 }
 
-.slg-empty {
+.available-pieces-empty-message {
   margin: 0;
   padding: 0 var(--slg-gutter);
   font-size: 0.9375rem;
@@ -124,8 +124,8 @@
 
 /* ---------- focus ---------- */
 
-.slg-page a:focus-visible,
-.slg-page button:focus-visible {
+.home-page a:focus-visible,
+.home-page button:focus-visible {
   outline: 2px solid var(--slg-accent);
   outline-offset: 4px;
 }
@@ -133,14 +133,14 @@
 @media (max-width: 599px) {
   /* Two up on phones — scanning inventory beats one giant photo per
      screen. */
-  .slg-grid {
+  .available-pieces-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem 1rem;
   }
 }
 
 @media (min-width: 700px) {
-  .slg-grid {
+  .available-pieces-grid {
     gap: 3.5rem 2rem;
   }
 }

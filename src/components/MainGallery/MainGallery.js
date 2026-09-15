@@ -51,9 +51,9 @@ export default function MainGallery() {
   if (galleryLoading) return <Loading />;
 
   return (
-    <main className="slg-page">
+    <main className="home-page">
       {message ? (
-        <div className="slg-notice">
+        <div className="home-site-message">
           <p>{message}</p>
         </div>
       ) : null}
@@ -62,24 +62,28 @@ export default function MainGallery() {
 
       <NewestPieceHero post={newestPiece} availableCount={availableCount} />
 
-      <section className="slg-gallery" id="slg-available" aria-labelledby="slg-available-heading">
-        <div className="slg-section-head">
-          <h2 className="slg-section-title" id="slg-available-heading">
+      <section
+        className="available-pieces"
+        id="available-pieces"
+        aria-labelledby="available-pieces-heading"
+      >
+        <div className="home-section-header">
+          <h2 className="home-section-title" id="available-pieces-heading">
             Available now
-            <span className="slg-count">
+            <span className="home-section-count">
               {availableCount} {availableCount === 1 ? 'piece' : 'pieces'}
             </span>
           </h2>
         </div>
 
         {posts.length ? (
-          <div className="slg-grid">
+          <div className="available-pieces-grid">
             {posts.map((post) => (
               <MainGalleryPostCard key={post.id} {...post} />
             ))}
           </div>
         ) : (
-          <p className="slg-empty">
+          <p className="available-pieces-empty-message">
             Nothing is listed right now. New pieces go up as they come off the torch.
           </p>
         )}

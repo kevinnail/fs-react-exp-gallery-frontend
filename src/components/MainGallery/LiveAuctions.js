@@ -21,7 +21,7 @@ function LotClock({ endTime, onEnded }) {
 
   if (hasEnded) return null;
 
-  return <span className="slg-lot-clock">{label}</span>;
+  return <span className="live-auctions-lot-countdown">{label}</span>;
 }
 
 function Lot({ auction, onEnded }) {
@@ -30,12 +30,14 @@ function Lot({ auction, onEnded }) {
   const coverImage = imageUrls?.[0];
 
   return (
-    <Link className="slg-lot" to={`/auctions/${id}`}>
-      <div className={`slg-lot-image${coverImage ? '' : ' slg-lot-image--empty'}`}>
+    <Link className="live-auctions-lot" to={`/auctions/${id}`}>
+      <div
+        className={`live-auctions-lot-image${coverImage ? '' : ' live-auctions-lot-image--empty'}`}
+      >
         {coverImage ? <img src={coverImage} alt={title} loading="lazy" /> : 'No photo yet'}
       </div>
-      <p className="slg-lot-name">{title}</p>
-      <p className="slg-lot-meta">
+      <p className="live-auctions-lot-title">{title}</p>
+      <p className="live-auctions-lot-bid">
         {currentBid ? (
           <>
             High bid <strong>${currentBid}</strong>
@@ -210,32 +212,35 @@ export default function LiveAuctions() {
   if (!auctions.length) return null;
 
   return (
-    <section className="slg-live" aria-labelledby="slg-live-heading">
-      <div className="slg-section-head">
-        <Link className="slg-live-auctions-link" to="/auctions">
-          <h2 className="slg-section-title" id="slg-live-heading">
-            <span className="slg-live-dot" aria-hidden="true" />
+    <section className="live-auctions" aria-labelledby="live-auctions-heading">
+      <div className="home-section-header">
+        <Link className="live-auctions-heading-link" to="/auctions">
+          <h2 className="home-section-title" id="live-auctions-heading">
+            <span className="live-auctions-indicator" aria-hidden="true" />
             Live auctions{`  `}
-            <span className="slg-count">
+            <span className="home-section-count">
               {auctions.length} {auctions.length === 1 ? 'lot' : 'lots'} ending soon
             </span>
           </h2>
         </Link>
-        <Link className="slg-text-link" to="/auctions">
+        <Link className="all-auctions-link" to="/auctions">
           All auctions &amp; archive
         </Link>
       </div>
 
-      <div className={`slg-lot-rail${isPanning ? ' slg-lot-rail--panning' : ''}`} ref={railRef}>
-        <div className="slg-lot-track">
-          <div className="slg-lot-set" ref={lotSetRef}>
+      <div
+        className={`live-auctions-rail${isPanning ? ' live-auctions-rail--panning' : ''}`}
+        ref={railRef}
+      >
+        <div className="live-auctions-track">
+          <div className="live-auctions-lot-set" ref={lotSetRef}>
             {auctions.map((auction) => (
               <Lot key={auction.id} auction={auction} onEnded={handleLotEnded} />
             ))}
           </div>
 
           {isPanning ? (
-            <div className="slg-lot-set" aria-hidden="true">
+            <div className="live-auctions-lot-set" aria-hidden="true">
               {auctions.map((auction) => (
                 <Lot key={`${auction.id}-loop`} auction={auction} onEnded={handleLotEnded} />
               ))}

@@ -14,7 +14,7 @@ const AdminSales = () => {
   return (
     <div className="slg-sales">
       <div className="slg-sales-head">
-        <p className="slg-eyebrow">Admin</p>
+        <p className="heading-label">Admin</p>
         <h1 className="slg-sales-title">Sales</h1>
       </div>
 

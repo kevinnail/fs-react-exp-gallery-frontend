@@ -73,17 +73,17 @@ export default function MainGalleryPostCard({
 
   return (
     <Link
-      className={`slg-piece${sold ? ' slg-piece--sold' : ''}`}
+      className={`piece-card${sold ? ' piece-card--sold' : ''}`}
       to={`/${id}`}
       title={title}
       ref={containerRef}
     >
-      <div className="slg-piece-frame">
-        {sold ? <span className="slg-badge">Sold</span> : null}
+      <div className="piece-card-image">
+        {sold ? <span className="piece-card-sold-badge">Sold</span> : null}
 
         {hasImage ? (
           <>
-            {isLoaded ? null : <span className="slg-piece-skeleton" aria-hidden="true" />}
+            {isLoaded ? null : <span className="piece-card-image-skeleton" aria-hidden="true" />}
             {isVisible ? (
               <img
                 src={imageSource}
@@ -94,21 +94,21 @@ export default function MainGalleryPostCard({
             ) : null}
           </>
         ) : (
-          <span className="slg-piece-placeholder">No photo yet</span>
+          <span className="piece-card-image-placeholder">No photo yet</span>
         )}
       </div>
 
-      <div className="slg-piece-meta">
-        <span className="slg-piece-name">{title}</span>
-        <span className="slg-piece-desc">{description}</span>
+      <div className="piece-card-details">
+        <span className="piece-card-title">{title}</span>
+        <span className="piece-card-description">{description}</span>
 
-        <div className="slg-piece-buy">
-          <span className="slg-piece-price">
+        <div className="piece-card-price-row">
+          <span className="piece-card-price">
             {sold ? (
-              <span className="slg-was">${listedPrice}</span>
+              <span className="original-price">${listedPrice}</span>
             ) : salePrice !== null ? (
               <>
-                <span className="slg-was">${listedPrice}</span>${Math.floor(salePrice)}
+                <span className="original-price">${listedPrice}</span>${Math.floor(salePrice)}
               </>
             ) : (
               <>${price}</>

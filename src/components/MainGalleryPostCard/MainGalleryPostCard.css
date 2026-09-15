@@ -10,7 +10,7 @@
  * GalleryPostCard.css.
  */
 
-.slg-piece {
+.piece-card {
   display: block;
   text-decoration: none;
   color: var(--slg-ink);
@@ -18,14 +18,14 @@
 
 /* The frame holds the square, not the image, so the grid keeps its
    rhythm before photos arrive and for posts that have none. */
-.slg-piece-frame {
+.piece-card-image {
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
   background: var(--slg-void);
 }
 
-.slg-piece-frame img {
+.piece-card-image img {
   display: block;
   width: 100%;
   height: 100%;
@@ -35,7 +35,7 @@
     opacity 300ms ease;
 }
 
-.slg-piece-placeholder {
+.piece-card-image-placeholder {
   position: absolute;
   inset: 0;
   display: flex;
@@ -47,22 +47,22 @@
   background: var(--slg-lift);
 }
 
-.slg-piece:hover .slg-piece-frame img,
-.slg-piece:focus-visible .slg-piece-frame img {
+.piece-card:hover .piece-card-image img,
+.piece-card:focus-visible .piece-card-image img {
   transform: scale(1.04);
 }
 
 /* Skeleton holds the exact square the image will occupy, so nothing
    on the page shifts as photos arrive. */
-.slg-piece-skeleton {
+.piece-card-image-skeleton {
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg, #0d0f13 25%, #191d23 50%, #0d0f13 75%);
   background-size: 200% 100%;
-  animation: slg-skeleton 1.5s linear infinite;
+  animation: piece-card-image-skeleton-shimmer 1.5s linear infinite;
 }
 
-@keyframes slg-skeleton {
+@keyframes piece-card-image-skeleton-shimmer {
   from {
     background-position: 200% 0;
   }
@@ -71,13 +71,13 @@
   }
 }
 
-.slg-piece-meta {
+.piece-card-details {
   display: grid;
   gap: 0.15rem;
   padding-top: 0.85rem;
 }
 
-.slg-piece-name {
+.piece-card-title {
   font-family: var(--slg-body);
   font-size: 0.9375rem;
   font-weight: 500;
@@ -88,7 +88,7 @@
   white-space: nowrap;
 }
 
-.slg-piece-desc {
+.piece-card-description {
   font-family: var(--slg-body);
   font-size: 0.8125rem;
   color: var(--slg-dim);
@@ -97,7 +97,7 @@
   white-space: nowrap;
 }
 
-.slg-piece-price {
+.piece-card-price {
   display: flex;
   align-items: baseline;
   gap: 0.4rem;
@@ -112,13 +112,13 @@
 
 /* The struck original carries the whole sale signal now that nothing sits
    on top of the photo, so it takes the attention red rather than receding. */
-.slg-was {
+.original-price {
   color: var(--slg-alert);
   font-weight: 400;
   text-decoration: line-through;
 }
 
-.slg-badge {
+.piece-card-sold-badge {
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
@@ -134,21 +134,21 @@
   border: 1px solid var(--slg-edge);
 }
 
-.slg-piece--sold .slg-piece-frame img {
+.piece-card--sold .piece-card-image img {
   opacity: 0.42;
 }
 
-.slg-piece--sold .slg-piece-name,
-.slg-piece--sold .slg-piece-price {
+.piece-card--sold .piece-card-title,
+.piece-card--sold .piece-card-price {
   color: var(--slg-dim);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slg-piece-frame img {
+  .piece-card-image img {
     transition-duration: 1ms;
   }
 
-  .slg-piece-skeleton {
+  .piece-card-image-skeleton {
     animation: none;
   }
 }
@@ -157,7 +157,7 @@
    frame already carries the Sold and Sale badges, and the glass is the
    thing people came to look at. Sharing the price row keeps the cost to
    the card's height as small as it can be. */
-.slg-piece-buy {
+.piece-card-price-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -167,7 +167,7 @@
 /* On a site-wide sale every card carries a struck original next to the
    sale price. The price gives up room before the button does, so the
    control can never be pushed past the card edge. */
-.slg-piece-buy .slg-piece-price {
+.piece-card-price-row .piece-card-price {
   flex: 0 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;

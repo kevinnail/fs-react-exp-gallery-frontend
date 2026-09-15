@@ -1,6 +1,6 @@
 /* Active auctions, admin side.
  *
- * Deliberately NOT named `slg-live`: the gallery's home page owns that
+ * Deliberately NOT named `live-auctions`: the gallery's home page owns that
  * class (LiveAuctions.css) and gives it 1.5rem/2rem section padding.
  * CRA loads every stylesheet into one global namespace, so sharing the
  * name meant a page-section's padding landing inside a dashboard panel.

@@ -229,7 +229,7 @@ export default function PostForm({
   return (
     <div className="admin-form-page">
       <div className="admin-form-header">
-        <p className="slg-eyebrow">{formFunctionMode === 'new' ? 'Gallery' : 'Gallery / Edit'}</p>
+        <p className="heading-label">{formFunctionMode === 'new' ? 'Gallery' : 'Gallery / Edit'}</p>
         <h1 className="admin-form-title">{newOrEdit}</h1>
       </div>
 
