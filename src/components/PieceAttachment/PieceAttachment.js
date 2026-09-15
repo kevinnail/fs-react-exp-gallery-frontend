@@ -7,8 +7,8 @@ export const renderPieceSalePrice = (price, discountedPrice) => {
   if (discountedPrice && discounted < listed) {
     return (
       <>
-        <span className="piece-attachment-was">${listed.toFixed(2)}</span>
-        <span className="piece-attachment-now">${discounted.toFixed(2)}</span>
+        <span className="piece-attachment-original-price">${listed.toFixed(2)}</span>
+        <span className="piece-attachment-sale-price">${discounted.toFixed(2)}</span>
       </>
     );
   }

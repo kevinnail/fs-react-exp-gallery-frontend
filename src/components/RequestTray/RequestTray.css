@@ -2,7 +2,7 @@
    are on a phone, so the sheet is the default and the drawer is the
    override rather than the other way round. */
 
-.slg-tray-overlay {
+.request-tray-overlay {
   position: fixed;
   inset: 0;
   z-index: 3100;
@@ -12,7 +12,7 @@
   justify-content: center;
 }
 
-.slg-tray {
+.request-tray {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -25,14 +25,14 @@
   font-family: var(--slg-body);
 }
 
-.slg-tray-head {
+.request-tray-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
 }
 
-.slg-tray-title {
+.request-tray-title {
   margin: 0;
   font-family: var(--slg-display);
   font-size: 1.375rem;
@@ -40,7 +40,7 @@
   letter-spacing: 0.04em;
 }
 
-.slg-tray-close {
+.request-tray-close-button {
   background: transparent;
   border: 0;
   color: var(--slg-dim);
@@ -50,24 +50,24 @@
   cursor: pointer;
 }
 
-.slg-tray-close:hover,
-.slg-tray-close:focus-visible {
+.request-tray-close-button:hover,
+.request-tray-close-button:focus-visible {
   color: var(--slg-ink);
 }
 
-.slg-tray-note {
+.request-tray-payment-note {
   margin: 0.35rem 0 1rem;
   font-size: 0.8125rem;
   color: var(--slg-dim);
 }
 
-.slg-tray-empty {
+.request-tray-empty-message {
   margin: 0 0 1.25rem;
   font-size: 0.875rem;
   color: var(--slg-dim);
 }
 
-.slg-tray-list {
+.request-tray-list {
   list-style: none;
   margin: 0 0 1.25rem;
   padding: 0;
@@ -76,14 +76,14 @@
   gap: 0.5rem;
 }
 
-.slg-tray-item {
+.request-tray-item {
   display: grid;
   grid-template-columns: 48px minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.75rem;
 }
 
-.slg-tray-thumb {
+.request-tray-thumbnail {
   width: 48px;
   height: 48px;
   object-fit: cover;
@@ -91,16 +91,16 @@
   background: var(--slg-void);
 }
 
-.slg-tray-thumb--empty {
+.request-tray-thumbnail--empty {
   border: 1px solid var(--slg-edge-soft);
 }
 
-.slg-tray-item-title {
+.request-tray-item-title {
   font-size: 0.875rem;
   overflow-wrap: anywhere;
 }
 
-.slg-tray-remove {
+.request-tray-remove-button {
   background: transparent;
   border: 0;
   color: var(--slg-dim);
@@ -110,12 +110,12 @@
   cursor: pointer;
 }
 
-.slg-tray-remove:hover,
-.slg-tray-remove:focus-visible {
+.request-tray-remove-button:hover,
+.request-tray-remove-button:focus-visible {
   color: var(--slg-alert);
 }
 
-.slg-tray-review {
+.request-tray-review-button {
   flex-shrink: 0;
   height: 48px;
   font-family: var(--slg-body);
@@ -131,24 +131,24 @@
     color 180ms ease;
 }
 
-.slg-tray-review:hover:not(:disabled),
-.slg-tray-review:focus-visible:not(:disabled) {
+.request-tray-review-button:hover:not(:disabled),
+.request-tray-review-button:focus-visible:not(:disabled) {
   background: transparent;
   color: var(--slg-ink);
 }
 
-.slg-tray-review:disabled {
+.request-tray-review-button:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
 @media (min-width: 768px) {
-  .slg-tray-overlay {
+  .request-tray-overlay {
     align-items: stretch;
     justify-content: flex-end;
   }
 
-  .slg-tray {
+  .request-tray {
     width: 380px;
     max-height: none;
     height: 100%;
@@ -159,7 +159,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slg-tray-review {
+  .request-tray-review-button {
     transition: none;
   }
 }

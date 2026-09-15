@@ -70,51 +70,56 @@ const RequestPage = () => {
   if (loading && items.length > 0) return <Loading />;
 
   return (
-    <main className="slg-request">
-      <div className="slg-request-head">
-        <h1 className="slg-request-title">Your request</h1>
+    <main className="request-page">
+      <div className="request-page-header">
+        <h1 className="request-page-title">Your request</h1>
       </div>
 
-      <p className="slg-request-explainer">
+      <p className="request-page-explainer">
         <strong>This isn&apos;t a checkout.</strong> There&apos;s no card payment on the site yet,
         so this sends Kevin a message with everything you&apos;ve picked out. He&apos;ll confirm
         what&apos;s still available, work out shipping, and sort payment with you directly.
       </p>
 
       {items.length === 0 ? (
-        <div className="slg-request-empty">
+        <div className="request-page-empty-state">
           <p>Nothing in your request yet.</p>
-          <Link className="slg-request-submit" to="/">
+          <Link className="request-page-primary-button" to="/">
             Browse the gallery
           </Link>
         </div>
       ) : (
-        <form className="slg-request-form" onSubmit={handleSubmit}>
-          <ul className="slg-request-list">
+        <form className="request-page-form" onSubmit={handleSubmit}>
+          <ul className="request-page-list">
             {items.map((item) => (
               <li
                 key={item.postId}
-                className={`slg-request-item${item.sold ? ' slg-request-item--gone' : ''}`}
+                className={`request-page-item${item.sold ? ' request-page-item--unavailable' : ''}`}
               >
                 {item.imageUrl ? (
-                  <img className="slg-request-thumb" src={item.imageUrl} alt="" />
+                  <img className="request-page-thumbnail" src={item.imageUrl} alt="" />
                 ) : (
-                  <span className="slg-request-thumb slg-request-thumb--empty" aria-hidden="true" />
+                  <span
+                    className="request-page-thumbnail request-page-thumbnail--empty"
+                    aria-hidden="true"
+                  />
                 )}
 
-                <div className="slg-request-item-body">
-                  <Link className="slg-request-item-title" to={`/${item.postId}`}>
+                <div className="request-page-item-details">
+                  <Link className="request-page-item-title" to={`/${item.postId}`}>
                     {item.title}
                   </Link>
 
                   {item.sold ? (
-                    <span className="slg-request-gone-note">
+                    <span className="request-page-item-unavailable-note">
                       {item.unavailableReason === 'gone' ? 'No longer listed' : 'Just sold, sorry'}
                     </span>
                   ) : (
-                    <span className="slg-request-item-price">
+                    <span className="request-page-item-price">
                       {effectivePrice(item) < Number(item.price) && (
-                        <span className="request-item-was">${Number(item.price).toFixed(2)}</span>
+                        <span className="request-page-item-original-price">
+                          ${Number(item.price).toFixed(2)}
+                        </span>
                       )}
                       ${effectivePrice(item).toFixed(2)}
                     </span>
@@ -123,7 +128,7 @@ const RequestPage = () => {
 
                 <button
                   type="button"
-                  className="slg-request-remove"
+                  className="request-page-remove-button"
                   onClick={() => removeItem(item.postId)}
                   aria-label={`Remove ${item.title} from your request`}
                 >
@@ -134,25 +139,25 @@ const RequestPage = () => {
           </ul>
 
           {unavailableItems.length > 0 && (
-            <p className="slg-request-gone-summary">
+            <p className="request-page-unavailable-summary">
               {unavailableItems.length === 1
                 ? 'One piece sold while it was in your request, so it is not included below.'
                 : `${unavailableItems.length} pieces sold while they were in your request, so they are not included below.`}
             </p>
           )}
 
-          <div className="slg-request-total">
+          <div className="request-page-total">
             <span>Estimated total</span>
-            <span className="slg-request-total-value">${total.toFixed(2)}</span>
+            <span className="request-page-total-value">${total.toFixed(2)}</span>
           </div>
-          <p className="slg-request-total-note">Before shipping, which Kevin will confirm.</p>
+          <p className="request-page-shipping-note">Before shipping, which Kevin will confirm.</p>
 
-          <label className="slg-request-note-label" htmlFor="request-note">
+          <label className="request-page-note-label" htmlFor="request-note">
             Anything Kevin should know? (optional)
           </label>
           <textarea
             id="request-note"
-            className="slg-request-note"
+            className="request-page-note"
             value={note}
             onChange={(event) => setNote(event.target.value)}
             placeholder="Shipping or local pickup, questions about a piece, timing"
@@ -161,14 +166,14 @@ const RequestPage = () => {
 
           <button
             type="submit"
-            className="slg-request-submit"
+            className="request-page-primary-button"
             disabled={sending || availableItems.length === 0}
           >
             {sending ? 'Sending...' : 'Send request to Kevin'}
           </button>
 
           {!user && (
-            <p className="slg-request-signin-note">
+            <p className="request-page-sign-in-note">
               You&apos;ll be asked to sign in first, so Kevin can reply to you. Your request is
               saved.
             </p>
