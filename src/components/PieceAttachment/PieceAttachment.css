@@ -9,7 +9,7 @@
   opacity: 0.75;
 }
 
-.piece-attachment .piece-metadata-highlight + .piece-metadata-highlight {
+.piece-attachment .piece-attachment-card + .piece-attachment-card {
   margin-top: 0.5rem;
 }
 

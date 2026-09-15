@@ -1,55 +1,17 @@
-.messages-container {
-  background-image: url(../../../public/ocean.jpg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 90px 0 0 0;
-}
-
-.menu-search-container {
+.messages-search-container {
   width: 100%;
   max-width: 1200px;
   margin-bottom: 0.5rem;
 }
 
-.messages-content {
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 15px;
-  padding: 1rem 3rem;
-  text-align: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  max-width: 800px;
-  width: 100%;
-  backdrop-filter: blur(5px);
-  margin-top: 0.5rem;
-}
-
-.messages-header h1 {
-  color: white;
-  font-size: 2.5rem;
-  margin: 0 0 1rem 0;
-  font-weight: 300;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.messages-header p {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-}
-
-.conversation-container {
+.messages-conversation {
   margin-top: 0.75rem;
   display: flex;
   flex-direction: column;
   height: 500px;
 }
 
-.messages-list {
+.messages-message-list {
   flex: 1;
   overflow-y: auto;
   padding: 0.1rem;
@@ -60,28 +22,28 @@
   max-height: 350px;
 }
 
-.message-item {
+.messages-message {
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
 }
 
-.messages-user-message {
+.messages-message--from-customer {
   align-items: flex-end;
 }
 
-.messages-admin-message {
+.messages-message--from-admin {
   align-items: flex-start;
 }
 
-.messages-admin-message .message-content-wrapper {
+.messages-message--from-admin .messages-admin-message-row {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   width: 65%;
 }
 
-.admin-avatar {
+.messages-admin-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -92,7 +54,7 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-.admin-avatar-fallback {
+.messages-admin-avatar-fallback {
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -108,7 +70,7 @@
   flex-shrink: 0;
 }
 
-.message-content {
+.messages-message-bubble {
   width: 70%;
   padding: 0.75rem 0.5rem;
   border-radius: 12px;
@@ -116,14 +78,14 @@
   text-align: left;
 }
 
-.messages-user-message .message-content {
+.messages-message--from-customer .messages-message-bubble {
   background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
   border-bottom-right-radius: 4px;
   width: 65%;
 }
 
-.messages-admin-message .message-content {
+.messages-message--from-admin .messages-message-bubble {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -131,7 +93,7 @@
   min-width: 100%;
 }
 
-.message-content p {
+.messages-message-bubble p {
   margin: 0 0 0.25rem 0.25rem;
   font-size: 1rem;
   line-height: 1.4;
@@ -139,7 +101,7 @@
   overflow-wrap: break-word;
 }
 
-.message-time {
+.messages-message-time {
   font-size: 0.8rem;
   opacity: 0.7;
   display: block;
@@ -148,39 +110,39 @@
 }
 
 /* align the timestamp text with its bubble side */
-.messages-user-message .message-time {
+.messages-message--from-customer .messages-message-time {
   display: block;
   width: 25%;
   text-align: left;
   margin-bottom: 0.25rem;
 }
 
-.messages-admin-message .message-time {
+.messages-message--from-admin .messages-message-time {
   display: block;
   width: 30%;
   text-align: right;
   margin-bottom: 0.25rem;
 }
 
-.loading-messages,
-.no-messages {
+.messages-loading,
+.messages-empty-message {
   text-align: center;
   padding: 2rem;
   color: rgba(255, 255, 255, 0.8);
   font-style: italic;
 }
 
-.message-form {
+.messages-reply-form {
   margin-top: 1rem;
 }
 
-.input-container {
+.messages-reply-row {
   display: flex;
   gap: 0.75rem;
   align-items: flex-end;
 }
 
-.message-input {
+.messages-reply-input {
   flex: 1;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -192,17 +154,17 @@
   min-height: 60px;
 }
 
-.message-input::placeholder {
+.messages-reply-input::placeholder {
   color: rgba(255, 255, 255, 0.6);
 }
 
-.message-input:focus {
+.messages-reply-input:focus {
   outline: none;
   border-color: rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.15);
 }
 
-.send-button {
+.messages-send-button {
   background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
   border: none;
@@ -215,13 +177,13 @@
   white-space: nowrap;
 }
 
-.send-button:hover:not(:disabled) {
+.messages-send-button:hover:not(:disabled) {
   background: linear-gradient(135deg, #0056b3, #004085);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
-.send-button:disabled {
+.messages-send-button:disabled {
   background: rgba(255, 255, 255, 0.2);
   cursor: not-allowed;
   transform: none;
@@ -229,7 +191,7 @@
 }
 
 /* Piece metadata display styles */
-.piece-metadata-display {
+.messages-piece-context {
   border-radius: 10px;
   padding: 1rem 1rem 1rem 4rem;
   margin-bottom: 1rem;
@@ -237,36 +199,36 @@
   text-align: left;
 }
 
-.piece-metadata-display h3 {
+.messages-piece-context h3 {
   color: white;
   margin: 0 0 0.5rem 0;
   font-size: 1.2rem;
   font-weight: 600;
 }
 
-.piece-info {
+.messages-piece-context-details {
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.9rem;
 }
 
-.piece-info p {
+.messages-piece-context-details p {
   margin: 0.25rem 0;
 }
 
-.piece-info a {
+.messages-piece-context-details a {
   color: #ffd700;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
-.piece-info a:hover {
+.messages-piece-context-details a:hover {
   color: #ffed4e;
   text-decoration: underline;
 }
 
 /* Piece metadata highlight styles for messages */
-.piece-metadata-highlight {
+.messages-page .piece-attachment-card {
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0.5rem;
@@ -277,13 +239,13 @@
   overflow-wrap: break-word;
 }
 
-.piece-metadata-highlight p {
+.messages-page .piece-attachment-card p {
   display: flex;
   justify-content: space-between;
   margin: 0.25rem 0;
 }
 
-.piece-metadata-highlight a {
+.messages-page .piece-attachment-card a {
   display: block;
   width: 100%;
   text-align: center;
@@ -293,12 +255,12 @@
   transition: color 0.3s ease;
 }
 
-.piece-metadata-highlight a:hover {
+.messages-page .piece-attachment-card a:hover {
   color: #ffed4e;
   text-decoration: underline;
 }
 
-.piece-metadata-highlight-content {
+.messages-page .piece-attachment-card-header {
   display: flex;
   gap: 20px;
   align-items: flex-end;
@@ -307,25 +269,25 @@
   padding-bottom: 0.25rem;
 }
 
-.piece-metadata-highlight-content h3 {
+.messages-page .piece-attachment-card-header h3 {
   color: white;
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
 }
 
-.piece-metadata-highlight-content img {
+.messages-page .piece-attachment-card-header img {
   border-radius: 4px;
   object-fit: cover;
 }
 
-.piece-metadata-highlight span {
+.messages-page .piece-attachment-card span {
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
 }
 
 /* Typing indicator styles */
-.typing-indicator {
+.messages-typing-indicator {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
@@ -333,15 +295,15 @@
   margin-bottom: 0.5rem;
   color: #ffd700;
   font-style: italic;
-  animation: pulse 1.5s ease-in-out infinite;
+  animation: messages-typing-pulse 1.5s ease-in-out infinite;
 }
 
-.typing-indicator p {
+.messages-typing-indicator p {
   margin: 0;
   font-size: 0.9rem;
 }
 
-@keyframes pulse {
+@keyframes messages-typing-pulse {
   0%,
   100% {
     opacity: 0.7;
@@ -352,7 +314,7 @@
 }
 
 /* Connection status styles */
-.connection-status {
+.messages-connection-status {
   background: rgba(242, 201, 76, 0.2);
   border: 1px solid rgba(242, 201, 76, 0.4);
   border-radius: 8px;
@@ -361,22 +323,7 @@
   color: var(--color-status-wait);
 }
 
-.connection-status p {
+.messages-connection-status p {
   margin: 0;
   font-size: 0.9rem;
-}
-
-@media (max-width: 768px) {
-  .messages-content {
-    padding: 0 0.75rem 0.75rem 0.75rem;
-    margin: 0 1rem;
-  }
-
-  .messages-header h1 {
-    font-size: 2rem;
-  }
-
-  .messages-header p {
-    font-size: 1rem;
-  }
 }

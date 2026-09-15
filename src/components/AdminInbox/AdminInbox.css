@@ -1,4 +1,4 @@
-.admin-inbox-container {
+.admin-inbox-page {
   min-height: 100vh;
   background-image: url(../../../public/ocean.jpg);
   background-size: cover;
@@ -10,7 +10,7 @@
   padding: 90px 0 0 0;
 }
 
-.admin-inbox-content {
+.admin-inbox-panel {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 15px;
   padding: 0 2rem 1rem 2rem;
@@ -22,7 +22,7 @@
   margin-top: 0.5rem;
 }
 
-.inbox-header h1 {
+.admin-inbox-header h1 {
   color: white;
   font-size: 2.5rem;
   margin: 0.5rem 0;
@@ -30,20 +30,20 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.inbox-header p {
+.admin-inbox-header p {
   color: rgba(255, 255, 255, 0.9);
   font-size: 1.2rem;
   margin-bottom: 2rem;
 }
 
-.inbox-layout {
+.admin-inbox-layout {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 2rem;
   height: 600px;
 }
 
-.conversations-list {
+.admin-inbox-conversation-list {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -51,14 +51,14 @@
   overflow-y: auto;
 }
 
-.conversations-list h2 {
+.admin-inbox-conversation-list h2 {
   color: white;
   font-size: 1.5rem;
   margin-bottom: 1rem;
   font-weight: 300;
 }
 
-.conversation-item {
+.admin-inbox-conversation {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
@@ -68,24 +68,24 @@
   transition: all 0.2s ease;
 }
 
-.conversation-item:hover {
+.admin-inbox-conversation:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.conversation-item.selected {
+.admin-inbox-conversation.admin-inbox-conversation--selected {
   background: rgba(0, 123, 255, 0.2);
   border-color: rgba(0, 123, 255, 0.4);
 }
 
-.conversation-header {
+.admin-inbox-conversation-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
 }
 
-.conversation-avatar {
+.admin-inbox-conversation-avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -95,7 +95,7 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-.conversation-avatar-fallback {
+.admin-inbox-conversation-avatar-fallback {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -110,7 +110,7 @@
   font-weight: bold;
 }
 
-.conversation-header-content {
+.admin-inbox-conversation-sender-row {
   display: flex;
   align-items: center;
   flex: 1;
@@ -118,46 +118,46 @@
   width: 100%;
 }
 
-.conversation-header-content-wrapper {
+.admin-inbox-conversation-sender {
   display: flex;
   align-items: center;
   flex: 1;
   /* justify-content: space-between; */
 }
 
-.sender-info-wrapper {
+.admin-inbox-conversation-sender-details {
   display: grid;
 }
 
-.sender-name {
+.admin-inbox-conversation-sender-name {
   color: white;
   font-weight: 500;
   font-size: 1rem;
 }
 
-.sender-email {
+.admin-inbox-conversation-sender-email {
   color: white;
   font-weight: 500;
   font-size: 0.8rem;
 }
 
-.message-count {
+.admin-inbox-conversation-message-count {
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
 }
 
-.conversation-meta {
+.admin-inbox-conversation-last-activity {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.last-message-time {
+.admin-inbox-conversation-last-message-time {
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.8rem;
 }
 
-.conversation-meta .unread-badge {
+.admin-inbox-conversation-last-activity .admin-inbox-last-activity-unread-badge {
   background: #ff4444;
   color: white;
   border-radius: 50%;
@@ -175,7 +175,7 @@
   box-shadow: none;
 }
 
-.admin-unread-badge {
+.admin-inbox-unread-count {
   background: #ff4444;
   color: white;
   border-radius: 50%;
@@ -191,7 +191,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.messages-panel {
+.admin-inbox-thread-panel {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -200,7 +200,7 @@
   min-width: 0;
 }
 
-.messages-list {
+.admin-inbox-message-list {
   flex: 1;
   padding: 0.5rem;
   overflow-y: auto;
@@ -208,14 +208,14 @@
   min-width: 0;
 }
 
-.admin-message-item {
+.admin-inbox-message {
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.message-avatar {
+.admin-inbox-message-avatar {
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -226,7 +226,7 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-.message-avatar-fallback {
+.admin-inbox-message-avatar-fallback {
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -242,29 +242,29 @@
   flex-shrink: 0;
 }
 
-.admin-admin-message .message-avatar,
-.admin-admin-message .message-avatar-fallback {
+.admin-inbox-message--from-admin .admin-inbox-message-avatar,
+.admin-inbox-message--from-admin .admin-inbox-message-avatar-fallback {
   order: 2;
   margin-right: 0;
   margin-left: 0.5rem;
 }
 
-.admin-customer-message {
+.admin-inbox-message--from-customer {
   align-items: flex-start;
 }
 
-.admin-admin-message {
+.admin-inbox-message--from-admin {
   align-items: flex-end;
 }
 
-.admin-message-content-wrapper {
+.admin-inbox-message-row {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   width: 65%;
 }
 
-.admin-message-content {
+.admin-inbox-message-bubble {
   max-width: 70%;
   padding: 0.25rem 1rem;
   border-radius: 12px;
@@ -272,7 +272,7 @@
   text-align: left;
 }
 
-.admin-customer-message .admin-message-content {
+.admin-inbox-message--from-customer .admin-inbox-message-bubble {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -280,7 +280,7 @@
   width: 70%;
 }
 
-.admin-admin-message .admin-message-content {
+.admin-inbox-message--from-admin .admin-inbox-message-bubble {
   background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
   border-bottom-right-radius: 4px;
@@ -289,7 +289,7 @@
   min-width: 100%;
 }
 
-.admin-message-content p {
+.admin-inbox-message-bubble p {
   margin: 0 0 0.25rem 0.25rem;
   font-size: 1rem;
   line-height: 1.4;
@@ -298,7 +298,7 @@
 }
 
 /* Enhanced styles for piece metadata in messages */
-.admin-message-content p:has-text('About this piece:') {
+.admin-inbox-message-bubble p:has-text('About this piece:') {
   background: rgba(255, 215, 0, 0.1);
   border-left: 3px solid #ffd700;
   padding: 0.5rem;
@@ -307,7 +307,7 @@
 }
 
 /* Alternative approach using CSS for piece metadata highlighting */
-.piece-metadata-highlight {
+.admin-inbox-page .piece-attachment-card {
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid black;
   padding: 0.5rem;
@@ -316,17 +316,17 @@
   font-weight: 600;
 }
 
-.piece-metadata-highlight p {
+.admin-inbox-page .piece-attachment-card p {
   display: flex;
   justify-content: space-between;
 }
-.piece-metadata-highlight a {
+.admin-inbox-page .piece-attachment-card a {
   display: block;
   width: 100%;
   text-align: center;
 }
 
-.create-sale-button {
+.piece-attachment-create-sale-button {
   display: block;
   margin: 0.5rem auto 0 auto;
   background: linear-gradient(135deg, #1f8e3d, #0e6c2a);
@@ -338,11 +338,11 @@
   cursor: pointer;
 }
 
-.create-sale-button:hover {
+.piece-attachment-create-sale-button:hover {
   filter: brightness(1.1);
 }
 
-.piece-metadata-highlight-content {
+.admin-inbox-page .piece-attachment-card-header {
   display: flex;
   gap: 20px;
   align-items: flex-end;
@@ -350,7 +350,7 @@
   margin-bottom: 0.25rem;
 }
 
-.admin-message-time {
+.admin-inbox-message-time {
   font-size: 0.8rem;
   opacity: 0.7;
   display: block;
@@ -359,30 +359,30 @@
   margin-bottom: 0.25rem;
 }
 
-.admin-customer-message .admin-message-time {
+.admin-inbox-message--from-customer .admin-inbox-message-time {
   display: block;
   text-align: right;
   margin-bottom: 0.25rem;
 }
 
-.admin-admin-message .admin-message-time {
+.admin-inbox-message--from-admin .admin-inbox-message-time {
   display: block;
   text-align: left;
   margin-bottom: 0.25rem;
 }
 
-.reply-form {
+.admin-inbox-reply-form {
   padding: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.input-container {
+.admin-inbox-reply-row {
   display: flex;
   gap: 0.75rem;
   align-items: flex-end;
 }
 
-.reply-input {
+.admin-inbox-reply-input {
   flex: 1;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -394,17 +394,17 @@
   min-height: 60px;
 }
 
-.reply-input::placeholder {
+.admin-inbox-reply-input::placeholder {
   color: rgba(255, 255, 255, 0.6);
 }
 
-.reply-input:focus {
+.admin-inbox-reply-input:focus {
   outline: none;
   border-color: rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.15);
 }
 
-.reply-button {
+.admin-inbox-reply-button {
   background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
   border: none;
@@ -417,22 +417,22 @@
   white-space: nowrap;
 }
 
-.reply-button:hover:not(:disabled) {
+.admin-inbox-reply-button:hover:not(:disabled) {
   background: linear-gradient(135deg, #0056b3, #004085);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
-.reply-button:disabled {
+.admin-inbox-reply-button:disabled {
   background: rgba(255, 255, 255, 0.2);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-.loading-conversations,
-.no-conversations,
-.no-conversation-selected {
+.admin-inbox-loading,
+.admin-inbox-empty-message,
+.admin-inbox-no-selection-message {
   text-align: center;
   padding: 2rem;
   color: rgba(255, 255, 255, 0.8);
@@ -440,7 +440,7 @@
 }
 
 /* Typing indicator styles */
-.typing-indicator {
+.admin-inbox-typing-indicator {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
@@ -448,15 +448,15 @@
   margin-bottom: 0.5rem;
   color: #ffd700;
   font-style: italic;
-  animation: pulse 1.5s ease-in-out infinite;
+  animation: admin-inbox-typing-pulse 1.5s ease-in-out infinite;
 }
 
-.typing-indicator p {
+.admin-inbox-typing-indicator p {
   margin: 0;
   font-size: 0.9rem;
 }
 
-@keyframes pulse {
+@keyframes admin-inbox-typing-pulse {
   0%,
   100% {
     opacity: 0.7;
@@ -466,7 +466,7 @@
   }
 }
 
-.connection-status {
+.admin-inbox-connection-status {
   background: rgba(242, 201, 76, 0.2);
   border: 1px solid rgba(242, 201, 76, 0.4);
   border-radius: 8px;
@@ -475,7 +475,7 @@
   color: var(--color-status-wait);
 }
 
-.connection-status p {
+.admin-inbox-connection-status p {
   margin: 0;
   font-size: 0.9rem;
 }
@@ -486,40 +486,40 @@
 
 */
 @media (max-width: 768px) {
-  .conversations-list {
+  .admin-inbox-conversation-list {
     max-height: none;
   }
 
-  .admin-inbox-content {
+  .admin-inbox-panel {
     padding: 1rem;
     margin: 1rem;
   }
 
-  .inbox-header h1 {
+  .admin-inbox-header h1 {
     font-size: 2rem;
   }
 
-  .conversation-header {
+  .admin-inbox-conversation-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
 
-  .conversation-meta {
+  .admin-inbox-conversation-last-activity {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
 }
 @media (max-width: 1024px) {
-  .inbox-layout {
+  .admin-inbox-layout {
     grid-template-columns: 1fr;
     height: auto;
   }
 }
 
 /* Mobile full-screen messages modal */
-.mobile-messages-modal {
+.admin-inbox-mobile-thread-modal {
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -530,7 +530,7 @@
   flex-direction: column;
 }
 
-.close-mobile-modal {
+.admin-inbox-mobile-thread-close-button {
   background: none;
   border: none;
   color: #fff;
@@ -540,7 +540,7 @@
   cursor: pointer;
 }
 
-.messages-panel-mobile {
+.admin-inbox-thread-panel--mobile {
   background: transparent;
   border: none;
   border-radius: 0;
@@ -553,14 +553,14 @@
 
 /* Hide desktop messages panel on small screens */
 @media (max-width: 768px) {
-  .messages-panel-desktop {
+  .admin-inbox-thread-panel--desktop {
     display: none !important;
   }
 }
 
 /* Hide modal on larger screens, even if state is true */
 @media (min-width: 769px) {
-  .mobile-messages-modal {
+  .admin-inbox-mobile-thread-modal {
     display: none !important;
   }
 }

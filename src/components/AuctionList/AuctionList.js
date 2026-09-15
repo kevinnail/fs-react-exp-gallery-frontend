@@ -161,8 +161,8 @@ export default function AuctionList() {
 
   if (loading) {
     return (
-      <div className="messages-container">
-        <div className="messages-content">
+      <div className="ocean-page">
+        <div className="ocean-page-panel">
           <p>Loading auctions...</p>
         </div>
       </div>
@@ -183,14 +183,14 @@ export default function AuctionList() {
   };
 
   return (
-    <div className="messages-container">
-      <div className="messages-content">
+    <div className="ocean-page">
+      <div className="ocean-page-panel">
         {user && isAdmin && (
           <button className="add-edit-auctions" onClick={() => navigate('/admin/auctions')}>
             Add/ Edit Auctions
           </button>
         )}
-        <div className="messages-header">
+        <div className="ocean-page-header">
           <button
             onClick={() => navigate(-1)}
             style={{

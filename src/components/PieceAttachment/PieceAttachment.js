@@ -30,8 +30,8 @@ const PieceAttachment = ({ items = [], onCreateSale }) => {
       )}
 
       {items.map((item, index) => (
-        <div className="piece-metadata-highlight" key={item.postId ?? `${item.title}-${index}`}>
-          <div className="piece-metadata-highlight-content">
+        <div className="piece-attachment-card" key={item.postId ?? `${item.title}-${index}`}>
+          <div className="piece-attachment-card-header">
             <p>
               {item.imageUrl ? <img width="50px" src={item.imageUrl} alt={item.title} /> : null}
             </p>
@@ -64,7 +64,7 @@ const PieceAttachment = ({ items = [], onCreateSale }) => {
       {onCreateSale ? (
         <button
           type="button"
-          className="create-sale-button"
+          className="piece-attachment-create-sale-button"
           onClick={() => onCreateSale(items)}
           disabled={Boolean(itemWithoutId)}
           title={itemWithoutId ? `No piece id for "${itemWithoutId.title}"` : undefined}

@@ -19,8 +19,8 @@ export default function AuctionArchive() {
   }, []);
 
   return (
-    <div className="messages-container">
-      <div className="messages-content">
+    <div className="ocean-page">
+      <div className="ocean-page-panel">
         <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
           <button
             onClick={() => navigate(-1)}
