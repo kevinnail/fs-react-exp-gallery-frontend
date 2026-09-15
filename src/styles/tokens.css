@@ -55,7 +55,7 @@
      phone the page gutter would eat a quarter of an input's width, so
      they get a tighter one. */
   --page-gutter-tight: clamp(0.875rem, 3vw, 2rem);
-  --header-height: 90px; /* must track `header` in Header.css */
+  --header-height: 90px; /* must track `.site-header` in Header.css */
 
   /* families: Gruppo is the existing brand face, kept and set larger */
   --font-display: 'Gruppo', 'Trebuchet MS', sans-serif;

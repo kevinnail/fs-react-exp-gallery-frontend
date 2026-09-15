@@ -1,4 +1,4 @@
-header {
+.site-header {
   background-color: #000000;
   height: 90px;
   width: 100%;
@@ -11,12 +11,12 @@ header {
   position: fixed;
   z-index: 3000;
 }
-.logo {
+.site-header-logo {
   height: 80px;
   margin-top: 5px;
 }
 
-.biz-title {
+.site-header-title {
   font-size: 1.5em;
   grid-area: title;
   margin: 0;
@@ -28,18 +28,18 @@ header {
   min-width: 207px;
 }
 
-.header-section {
+.site-header-actions {
   display: flex;
   align-items: center;
 }
 
-.header-section p {
+.site-header-actions p {
   margin: 0;
   padding: 0;
   font-size: 0.7rem;
 }
 
-.new-link {
+.site-header-new-link {
   color: white;
   text-decoration: none;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
@@ -56,7 +56,7 @@ header {
   position: relative;
 }
 
-.mobile-new-link-OLD {
+.site-header-mobile-new-link-old {
   color: white;
   text-decoration: none;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
@@ -73,7 +73,7 @@ header {
   position: relative;
 }
 
-.new-link:active {
+.site-header-new-link:active {
   color: rgb(255, 255, 255);
   background-color: rgb(0, 0, 0, 0.5);
   border: none;
@@ -83,7 +83,7 @@ header {
 }
 
 /* Unread message badge */
-.unread-badge {
+.site-header-unread-badge {
   background: #ff4444;
   color: white;
   border-radius: 50%;
@@ -101,13 +101,13 @@ header {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.upload-icon {
+.site-header-upload-icon {
   height: 60px;
   width: 60px;
 }
 
 /* style for button */
-.signout-button {
+.site-header-signout-button {
   color: white;
   background-color: transparent;
   border: none;
@@ -127,7 +127,7 @@ header {
 
 /* style for button when hovered or focused */
 
-.signout-button:focus {
+.site-header-signout-button:focus {
   color: rgb(255, 255, 255);
   background-color: transparent;
   border: none;
@@ -138,17 +138,17 @@ header {
   transition: 400ms;
 }
 
-.signout-nav-icon {
+.site-header-signout-icon {
   height: 40px;
 }
-.user-email {
+.site-header-user-email {
   font-size: 0.8rem;
   color: rgb(0, 255, 64);
   text-decoration: none;
   font-weight: bold;
 }
 
-.menu-div {
+.site-header-menu-panel {
   z-index: 3000;
   display: grid;
   gap: 0.25rem;
@@ -163,17 +163,22 @@ header {
   transform: opacity(0%);
   opacity: 0;
   pointer-events: none;
+  /* Opacity alone leaves the closed menu's links in the tab order. Hidden
+     visibility takes them out, and it switches at the end of the transition,
+     so the fade-out still plays. */
+  visibility: hidden;
 }
 
-.menu-div.open {
+.site-header-menu-panel.site-header-menu-panel--open {
   transform: translateX(0);
   opacity: 1;
   pointer-events: auto;
+  visibility: visible;
   border-bottom: 2px solid #474747;
 }
 
-.menu-icon,
-.menu-no-user {
+.site-header-menu-icon,
+.site-header-signed-out-menu-icon {
   padding: 0px;
   border-radius: 50%;
   margin: 0 20px 0 0px;
@@ -183,33 +188,33 @@ header {
   box-shadow: 0 0 0 0.2rem rgba(50, 50, 50, 0.5);
 }
 
-.menu-no-user {
+.site-header-signed-out-menu-icon {
   display: block;
   width: 40px;
   margin-right: 20px;
 }
-.menu-icon:hover,
-.menu-no-user:hover {
+.site-header-menu-icon:hover,
+.site-header-signed-out-menu-icon:hover {
   cursor: pointer;
   transition: 200ms ease-in;
   box-shadow: 0 0 25px 0 rgba(255, 255, 255, 0.5);
 }
-.menu-icon:active,
-.menu-no-user:active {
+.site-header-menu-icon:active,
+.site-header-signed-out-menu-icon:active {
   background-color: #2f00ff;
   cursor: pointer;
   transition: 200ms ease-in;
   box-shadow: 0 0 25px 0 rgba(255, 255, 255, 0.5);
 }
-.new-post-span {
+.site-header-new-post-label {
   margin-top: -4px;
 }
 
-.menu-btn {
+.site-header-menu-toggle {
   display: none;
 }
 
-.username {
+.site-header-username {
   position: absolute;
   left: 75px;
   top: 18px;
@@ -217,7 +222,7 @@ header {
   font-size: 0.75rem;
 }
 
-.menu-icon-wrapper {
+.site-header-menu-button {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -228,7 +233,7 @@ header {
   cursor: pointer;
 }
 
-.menu-badge {
+.site-header-menu-unread-count {
   position: absolute;
   top: -4px;
   right: 4px;
@@ -258,29 +263,29 @@ header {
 */
 
 @media (min-width: 420px) {
-  .menu-btn {
+  .site-header-menu-toggle {
     display: block;
   }
 }
 
 @media (min-width: 768px) {
-  .new-link {
+  .site-header-new-link {
     font-size: 1.5rem;
   }
 }
 
 @media (min-width: 1024px) {
-  .signout-button {
+  .site-header-signout-button {
     font-size: 1rem;
   }
 
-  .new-link:active,
-  .signout-button:active {
+  .site-header-new-link:active,
+  .site-header-signout-button:active {
     transform: scale(1);
     transition: 500ms;
   }
-  .signout-button,
-  .new-link {
+  .site-header-signout-button,
+  .site-header-new-link {
     box-shadow: 0 0 10px 0 #7777f3bd;
   }
 }
@@ -290,7 +295,7 @@ header {
    icon off the right edge. Letting it size to its own text gives the row
    the slack that space-between needs. */
 @media (max-width: 480px) {
-  .biz-title {
+  .site-header-title {
     min-width: 0;
     font-size: 1.25em;
     left: -8px;
@@ -299,7 +304,7 @@ header {
 
 /* Request basket. Only rendered when it holds something, so it never
    crowds the header for a visitor who is just browsing. */
-.request-icon-wrapper {
+.site-header-request-button {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -314,16 +319,16 @@ header {
   transition: color 200ms ease-in;
 }
 
-.request-icon-wrapper:hover,
-.request-icon-wrapper:focus-visible {
+.site-header-request-button:hover,
+.site-header-request-button:focus-visible {
   color: #ffffff;
 }
 
-.request-icon {
+.site-header-request-icon {
   font-size: 32px;
 }
 
-.request-badge {
+.site-header-request-count {
   position: absolute;
   top: -6px;
   right: -8px;
@@ -342,7 +347,7 @@ header {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .request-icon-wrapper {
+  .site-header-request-button {
     transition: none;
   }
 }
