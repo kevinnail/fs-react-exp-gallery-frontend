@@ -518,6 +518,6 @@ div {
    attention red and the price being asked stays plain. */
 .recent-post-was {
   margin-right: 1rem;
-  color: var(--slg-alert);
+  color: var(--color-alert);
   text-decoration: line-through;
 }

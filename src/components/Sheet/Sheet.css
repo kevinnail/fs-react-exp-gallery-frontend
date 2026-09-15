@@ -10,9 +10,9 @@
      partly visible and long contents scroll inside the sheet. */
   max-height: 85vh;
   padding: 0;
-  color: var(--slg-ink);
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-bottom: none;
 }
 
@@ -31,34 +31,34 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.9rem;
-  background: var(--slg-lift);
-  border-bottom: 1px solid var(--slg-edge);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .bottom-sheet-title {
   margin: 0;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .bottom-sheet-done-button {
   min-height: 36px;
   padding: 0 0.9rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.06em;
-  color: var(--slg-ink);
-  background: var(--slg-control);
-  border: 1px solid var(--slg-edge);
+  color: var(--color-text);
+  background: var(--color-control);
+  border: 1px solid var(--color-border);
   cursor: pointer;
 }
 
 .bottom-sheet-done-button:hover {
-  background: var(--slg-control-hover);
+  background: var(--color-control-hover);
 }
 
 .bottom-sheet-content {

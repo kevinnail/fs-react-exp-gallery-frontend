@@ -21,12 +21,12 @@
   /* The left inset is the margin the deleted-state bar is drawn in —
      without it the thumbnail sits flush on the row edge and covers it. */
   padding: 0.7rem 0 0.7rem 8px;
-  border-bottom: 1px solid var(--slg-edge-soft);
+  border-bottom: 1px solid var(--color-border-subtle);
   transition: background 160ms ease;
 }
 
 .admin-post-row:hover {
-  background: var(--slg-lift);
+  background: var(--color-surface);
 }
 
 /* Mid-delete: visible but inert, so a double tap can't fire the request
@@ -45,7 +45,7 @@
   width: 52px;
   aspect-ratio: 1;
   overflow: hidden;
-  background: var(--slg-lift);
+  background: var(--color-surface);
 }
 
 .admin-post-row-thumbnail img {
@@ -70,7 +70,7 @@
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.3;
-  color: var(--slg-ink);
+  color: var(--color-text);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -80,7 +80,7 @@
 .admin-post-row-category {
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- price ---------- */
@@ -96,13 +96,13 @@
 
 .admin-post-row-current-price {
   font-weight: 500;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 /* Matches the public card: the struck original takes the attention red so a
    discounted row is legible at a glance down the list. */
 .admin-post-row-original-price {
-  color: var(--slg-alert);
+  color: var(--color-alert);
   text-decoration: line-through;
 }
 
@@ -126,8 +126,8 @@
   font-size: 0.5625rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: var(--slg-dim);
-  border: 1px solid var(--slg-edge);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
 }
 
 .admin-post-row-tag--sold {
@@ -136,8 +136,8 @@
 }
 
 .admin-post-row-tag--deleted {
-  color: var(--slg-alert);
-  border-color: var(--slg-alert);
+  color: var(--color-alert);
+  border-color: var(--color-alert);
 }
 
 /* A hidden post is still live inventory, so it dims rather than shouting.
@@ -148,11 +148,11 @@
 
 .admin-post-row--sold .admin-post-row-title,
 .admin-post-row--sold .admin-post-row-current-price {
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .admin-post-row--deleted {
-  box-shadow: inset 2px 0 0 var(--slg-alert);
+  box-shadow: inset 2px 0 0 var(--color-alert);
 }
 
 .admin-post-row--deleted .admin-post-row-thumbnail img {
@@ -160,7 +160,7 @@
 }
 
 .admin-post-row--deleted .admin-post-row-title {
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   text-decoration: line-through;
 }
 
@@ -176,13 +176,13 @@
   min-width: 60px;
   min-height: 34px;
   padding: 0 0.6rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.06em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   background: transparent;
-  border: 1px solid var(--slg-edge);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   transition:
     background 160ms ease,
@@ -191,14 +191,14 @@
 }
 
 .admin-post-row-button:hover:not(:disabled) {
-  color: var(--slg-ink);
-  border-color: var(--slg-ink);
+  color: var(--color-text);
+  border-color: var(--color-text);
 }
 
 .admin-post-row-button--danger:hover:not(:disabled) {
   color: #000000;
-  background: var(--slg-alert);
-  border-color: var(--slg-alert);
+  background: var(--color-alert);
+  border-color: var(--color-alert);
 }
 
 .admin-post-row-button:disabled {
@@ -208,7 +208,7 @@
 
 .admin-post-row a:focus-visible,
 .admin-post-row button:focus-visible {
-  outline: 2px solid var(--slg-accent);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
@@ -221,29 +221,29 @@
   align-items: center;
   gap: 0.6rem;
   margin-top: 1.25rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--slg-ink);
+  color: var(--color-text);
   cursor: pointer;
 }
 
 .admin-post-hard-delete-option input {
   width: 18px;
   height: 18px;
-  accent-color: var(--slg-alert);
+  accent-color: var(--color-alert);
   cursor: pointer;
 }
 
 .admin-post-delete-dialog-button {
   min-height: 42px;
   padding: 0 1.1rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.06em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   background: transparent;
-  border: 1px solid var(--slg-edge);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   transition:
     background 160ms ease,
@@ -252,40 +252,40 @@
 }
 
 .admin-post-delete-dialog-button:hover {
-  color: var(--slg-ink);
-  border-color: var(--slg-ink);
+  color: var(--color-text);
+  border-color: var(--color-text);
 }
 
 .admin-post-delete-dialog-button--confirm {
   color: #000000;
-  background: var(--slg-ink);
-  border-color: var(--slg-ink);
+  background: var(--color-text);
+  border-color: var(--color-text);
 }
 
 .admin-post-delete-dialog-button--confirm:hover {
-  color: var(--slg-ink);
+  color: var(--color-text);
   background: transparent;
 }
 
 .admin-post-delete-dialog-button--danger {
-  background: var(--slg-alert);
-  border-color: var(--slg-alert);
+  background: var(--color-alert);
+  border-color: var(--color-alert);
 }
 
 .admin-post-delete-dialog-button--danger:hover {
-  color: var(--slg-alert);
+  color: var(--color-alert);
 }
 
 .admin-post-delete-dialog-button:focus-visible {
-  outline: 2px solid var(--slg-accent);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
 .admin-post-delete-dialog-status {
   padding: 0 1.1rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- wider screens ----------

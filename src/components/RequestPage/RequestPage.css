@@ -9,9 +9,9 @@
 .request-page {
   max-width: 720px;
   margin: 0 auto;
-  padding: calc(var(--slg-header-height) + 1.5rem) var(--slg-gutter-tight) 4rem;
-  color: var(--slg-ink);
-  font-family: var(--slg-body);
+  padding: calc(var(--header-height) + 1.5rem) var(--page-gutter-tight) 4rem;
+  color: var(--color-text);
+  font-family: var(--font-body);
 }
 
 .request-page-header {
@@ -20,7 +20,7 @@
 
 .request-page-title {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: clamp(1.75rem, 6vw, 2.5rem);
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -29,15 +29,15 @@
 .request-page-explainer {
   margin: 0 0 2rem;
   padding: 1rem 1.1rem;
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   font-size: 0.9375rem;
   line-height: 1.55;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .request-page-explainer strong {
-  color: var(--slg-ink);
+  color: var(--color-text);
   font-weight: 600;
 }
 
@@ -51,7 +51,7 @@
 
 .request-page-empty-state p {
   margin: 0;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- item list ---------- */
@@ -70,8 +70,8 @@
   align-items: center;
   gap: 1rem;
   padding: 0.75rem;
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge-soft);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
 }
 
 .request-page-item--unavailable {
@@ -83,11 +83,11 @@
   height: 64px;
   object-fit: cover;
   display: block;
-  background: var(--slg-void);
+  background: var(--color-page-background);
 }
 
 .request-page-thumbnail--empty {
-  border: 1px solid var(--slg-edge-soft);
+  border: 1px solid var(--color-border-subtle);
 }
 
 .request-page-item-details {
@@ -97,7 +97,7 @@
 }
 
 .request-page-item-title {
-  color: var(--slg-ink);
+  color: var(--color-text);
   text-decoration: none;
   font-size: 0.9375rem;
   overflow-wrap: anywhere;
@@ -105,7 +105,7 @@
 
 .request-page-item-title:hover,
 .request-page-item-title:focus-visible {
-  color: var(--slg-ink);
+  color: var(--color-text);
   text-decoration: underline;
 }
 
@@ -115,32 +115,32 @@
 
 .request-page-item-price {
   font-size: 0.875rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .request-page-item-original-price {
   margin-right: 0.5rem;
   font-size: 0.875rem;
-  color: var(--slg-alert);
+  color: var(--color-alert);
   text-decoration: line-through;
 }
 
 .request-page-item-unavailable-note {
   font-size: 0.8125rem;
-  color: var(--slg-state-bad);
+  color: var(--color-status-bad);
 }
 
 .request-page-unavailable-summary {
   margin: 0 0 1.5rem;
   font-size: 0.875rem;
-  color: var(--slg-state-wait);
+  color: var(--color-status-wait);
 }
 
 .request-page-remove-button {
   background: transparent;
-  border: 1px solid var(--slg-edge);
-  color: var(--slg-dim);
-  font-family: var(--slg-body);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   letter-spacing: 0.01em;
   padding: 0.6rem 0.75rem;
@@ -152,8 +152,8 @@
 
 .request-page-remove-button:hover,
 .request-page-remove-button:focus-visible {
-  color: var(--slg-alert);
-  border-color: var(--slg-alert);
+  color: var(--color-alert);
+  border-color: var(--color-alert);
 }
 
 /* ---------- total and note ---------- */
@@ -164,23 +164,23 @@
   align-items: baseline;
   gap: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--slg-edge);
+  border-top: 1px solid var(--color-border);
   font-size: 0.9375rem;
   letter-spacing: 0.01em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .request-page-total-value {
   font-size: 1.375rem;
   letter-spacing: 0.02em;
   text-transform: none;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .request-page-shipping-note {
   margin: 0.35rem 0 2rem;
   font-size: 0.8125rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .request-page-note-label {
@@ -188,7 +188,7 @@
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
   letter-spacing: 0.01em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .request-page-note {
@@ -196,17 +196,17 @@
   box-sizing: border-box;
   padding: 0.75rem;
   margin-bottom: 1.5rem;
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge);
-  color: var(--slg-ink);
-  font-family: var(--slg-body);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-body);
   font-size: 1rem;
   resize: vertical;
 }
 
 .request-page-note:focus-visible {
   outline: none;
-  border-color: var(--slg-ink);
+  border-color: var(--color-text);
 }
 
 /* ---------- submit ---------- */
@@ -218,13 +218,13 @@
   width: 100%;
   height: 52px;
   padding: 0 1.25rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.01em;
   text-decoration: none;
-  border: 1px solid var(--slg-ink);
-  background: var(--slg-ink);
+  border: 1px solid var(--color-text);
+  background: var(--color-text);
   color: #000000;
   cursor: pointer;
   transition:
@@ -235,7 +235,7 @@
 .request-page-primary-button:hover:not(:disabled),
 .request-page-primary-button:focus-visible:not(:disabled) {
   background: transparent;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .request-page-primary-button:disabled {
@@ -246,13 +246,13 @@
 .request-page-sign-in-note {
   margin: 0.75rem 0 0;
   font-size: 0.8125rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 @media (min-width: 768px) {
   .request-page {
-    padding-left: var(--slg-gutter);
-    padding-right: var(--slg-gutter);
+    padding-left: var(--page-gutter);
+    padding-right: var(--page-gutter);
   }
 
   .request-page-primary-button {

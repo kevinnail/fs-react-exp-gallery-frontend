@@ -13,7 +13,7 @@
 .admin-active-auctions-empty-message {
   margin: 0;
   font-size: 0.8125rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .admin-active-auctions-list {
@@ -31,20 +31,20 @@
   gap: 0.75rem;
   padding: 0.4rem 0.5rem 0.4rem 0;
   text-decoration: none;
-  color: var(--slg-ink);
+  color: var(--color-text);
   transition: background 160ms ease;
 }
 
 .admin-active-auctions-row:hover,
 .admin-active-auctions-row:focus-visible {
-  background: var(--slg-lift-hover);
+  background: var(--color-surface-hover);
 }
 
 .admin-active-auctions-thumbnail {
   display: block;
   aspect-ratio: 1;
   overflow: hidden;
-  background: var(--slg-lift);
+  background: var(--color-surface);
 }
 
 .admin-active-auctions-thumbnail img {
@@ -64,6 +64,6 @@
 .admin-active-auctions-current-bid {
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--slg-state-good);
+  color: var(--color-status-good);
   font-variant-numeric: tabular-nums;
 }

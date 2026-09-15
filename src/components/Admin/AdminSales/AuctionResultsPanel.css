@@ -16,7 +16,7 @@
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: var(--slg-accent);
+  color: var(--color-accent);
 }
 
 .auction-results-live-label--detail {

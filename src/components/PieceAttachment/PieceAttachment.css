@@ -17,10 +17,10 @@
    attention red and the price being asked stays plain. */
 .piece-attachment-original-price {
   margin-right: 0.5rem;
-  color: var(--slg-alert);
+  color: var(--color-alert);
   text-decoration: line-through;
 }
 
 .piece-attachment-sale-price {
-  color: var(--slg-ink);
+  color: var(--color-text);
 }

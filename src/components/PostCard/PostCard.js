@@ -157,19 +157,19 @@ export default function PostCard({ id, post, posts, setPosts, discountedPrice, o
         aria-describedby="alert-dialog-description"
         PaperProps={{
           sx: {
-            backgroundColor: 'var(--slg-lift)',
+            backgroundColor: 'var(--color-surface)',
             backgroundImage: 'none',
-            border: '1px solid var(--slg-edge)',
+            border: '1px solid var(--color-border)',
             borderRadius: 0,
-            fontFamily: 'var(--slg-body)',
+            fontFamily: 'var(--font-body)',
           },
         }}
       >
-        <DialogTitle id="alert-dialog-title" sx={{ fontFamily: 'var(--slg-display)' }}>
+        <DialogTitle id="alert-dialog-title" sx={{ fontFamily: 'var(--font-display)' }}>
           {hardDelete ? 'Delete this post permanently?' : 'Hide this post from the gallery?'}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description" sx={{ fontFamily: 'var(--slg-body)' }}>
+          <DialogContentText id="alert-dialog-description" sx={{ fontFamily: 'var(--font-body)' }}>
             {hardDelete
               ? 'Hard delete will permanently remove this post and all images. This action cannot be undone.'
               : 'Soft delete will hide this post from the gallery but retain its record for sales and user history.'}

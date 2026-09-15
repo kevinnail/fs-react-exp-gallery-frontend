@@ -9,9 +9,9 @@
 .inventory-table {
   width: 100%;
   border-collapse: collapse;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .inventory-controls {
@@ -26,30 +26,30 @@
   text-align: left;
   font-size: 0.75rem;
   line-height: 1.45;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .inventory-all-categories-button {
   flex: 0 0 auto;
   padding: 0.35rem 0.7rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   letter-spacing: 0.01em;
   white-space: nowrap;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   background: none;
-  border: 1px solid var(--slg-edge);
+  border: 1px solid var(--color-border);
   border-radius: 999px;
   cursor: pointer;
 }
 
 .inventory-all-categories-button:hover {
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .inventory-all-categories-button--selected {
-  color: var(--slg-ink);
-  background: var(--slg-lift-hover);
+  color: var(--color-text);
+  background: var(--color-surface-hover);
 }
 
 .inventory-table th,
@@ -57,7 +57,7 @@
   padding: 0.5rem 0.6rem;
   text-align: left;
   font-weight: 400;
-  border-bottom: 1px solid var(--slg-edge-soft);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .inventory-table thead th {
@@ -65,8 +65,8 @@
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: var(--slg-dim);
-  border-bottom: 1px solid var(--slg-edge);
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .inventory-numeric-cell {
@@ -84,7 +84,7 @@
   display: block;
   width: 100%;
   padding: 0.15rem 0;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: inherit;
   text-align: left;
@@ -132,7 +132,7 @@
 }
 
 .inventory-table tbody tr:active {
-  background: var(--slg-lift-hover);
+  background: var(--color-surface-hover);
 }
 
 /* Selection is a deliberate act, not a problem, so it uses the neutral
@@ -147,7 +147,7 @@
 
 .inventory-row--selected .inventory-category-button {
   font-weight: 600;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 /* Rows tall enough for a thumb: 0.5rem cell padding on a 13px line is a
@@ -171,7 +171,7 @@
 
 .inventory-table tfoot tr:first-child th,
 .inventory-table tfoot tr:first-child td {
-  border-top: 1px solid var(--slg-edge);
+  border-top: 1px solid var(--color-border);
 }
 
 .inventory-table tfoot th {

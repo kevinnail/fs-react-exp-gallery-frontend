@@ -9,11 +9,11 @@
  */
 
 .about-page {
-  padding-top: var(--slg-header-height);
+  padding-top: var(--header-height);
   padding-bottom: 5rem;
-  background: var(--slg-void);
-  color: var(--slg-ink);
-  font-family: var(--slg-body);
+  background: var(--color-page-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
   text-align: left;
 }
 
@@ -25,7 +25,7 @@
   font-weight: 600;
   letter-spacing: 0.16em;
   /* text-transform: uppercase; */
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .about-intro-summary {
@@ -33,7 +33,7 @@
   max-width: 44ch;
   font-size: 1.0625rem;
   line-height: 1.6;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .about-paragraph {
@@ -41,7 +41,7 @@
   max-width: 52ch;
   font-size: 0.9375rem;
   line-height: 1.7;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- buttons ---------- */
@@ -58,14 +58,14 @@
   justify-content: center;
   height: 46px;
   padding: 0 1.5rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.06em;
   /* text-transform: uppercase; */
   text-decoration: none;
-  border: 1px solid var(--slg-ink);
-  background: var(--slg-ink);
+  border: 1px solid var(--color-text);
+  background: var(--color-text);
   color: #000000;
   cursor: pointer;
   transition:
@@ -77,20 +77,20 @@
 .about-button:hover,
 .about-button:focus-visible {
   background: transparent;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .about-button--secondary {
   background: transparent;
-  color: var(--slg-dim);
-  border-color: var(--slg-edge);
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
 }
 
 .about-button--secondary:hover,
 .about-button--secondary:focus-visible {
   background: transparent;
-  color: var(--slg-ink);
-  border-color: var(--slg-ink);
+  color: var(--color-text);
+  border-color: var(--color-text);
 }
 
 /* ---------- hero ---------- */
@@ -107,17 +107,17 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 1.25rem;
-  padding: 2.5rem var(--slg-gutter) 1rem;
+  padding: 2.5rem var(--page-gutter) 1rem;
 }
 
 .about-page-title {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: clamp(2.75rem, 9vw, 5rem);
   font-weight: 400;
   line-height: 0.95;
   letter-spacing: 0.01em;
-  color: var(--slg-ink);
+  color: var(--color-text);
   text-wrap: balance;
 }
 
@@ -161,16 +161,16 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
-  padding: 0 var(--slg-gutter);
+  padding: 0 var(--page-gutter);
 }
 
 .about-section-title {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: clamp(1.6rem, 4vw, 2.5rem);
   font-weight: 400;
   letter-spacing: 0.03em;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .about-section-media {
@@ -190,8 +190,8 @@
 .about-section-media--code-screenshot img {
   aspect-ratio: 4 / 3;
   object-fit: contain;
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
 }
 
 .about-section-media--portrait img {
@@ -217,9 +217,9 @@
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.06em;
-  color: var(--slg-dim);
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
 }
 
 /* ---------- pursuits tile grid ---------- */
@@ -247,23 +247,23 @@
   font-size: 0.6875rem;
   line-height: 1.35;
   letter-spacing: 0.04em;
-  color: var(--slg-ink);
+  color: var(--color-text);
   background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
 }
 
 /* ---------- elsewhere ---------- */
 
 .about-elsewhere {
-  padding: 4.5rem var(--slg-gutter) 0;
+  padding: 4.5rem var(--page-gutter) 0;
 }
 
 .about-elsewhere-title {
   margin: 0 0 1.75rem;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: clamp(1.6rem, 3.5vw, 2.25rem);
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .about-elsewhere-links {
@@ -281,9 +281,9 @@
   gap: 0.85rem;
   padding: 0.75rem;
   text-decoration: none;
-  color: var(--slg-dim);
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   transition:
     background 180ms ease,
     border-color 180ms ease,
@@ -292,9 +292,9 @@
 
 .about-elsewhere-link:hover,
 .about-elsewhere-link:focus-visible {
-  background: var(--slg-lift-hover);
-  border-color: var(--slg-ink);
-  color: var(--slg-ink);
+  background: var(--color-surface-hover);
+  border-color: var(--color-text);
+  color: var(--color-text);
 }
 
 .about-elsewhere-link img {
@@ -314,7 +314,7 @@
 
 .about-page a:focus-visible,
 .about-page button:focus-visible {
-  outline: 2px solid var(--slg-accent);
+  outline: 2px solid var(--color-accent);
   outline-offset: 4px;
 }
 
@@ -327,14 +327,14 @@
 @media (min-width: 900px) {
   .about-intro {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    gap: var(--slg-gutter);
+    gap: var(--page-gutter);
     min-height: 58vh;
   }
 
   .about-intro-details {
     order: 1;
     gap: 1.5rem;
-    padding: 2rem 0 2rem var(--slg-gutter);
+    padding: 2rem 0 2rem var(--page-gutter);
   }
 
   .about-intro-image {
@@ -352,12 +352,12 @@
   .about-section {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: center;
-    gap: var(--slg-gutter);
+    gap: var(--page-gutter);
     padding-top: 6rem;
   }
 
   .about-section-details {
-    padding-right: var(--slg-gutter);
+    padding-right: var(--page-gutter);
     padding-left: 0;
   }
 
@@ -367,7 +367,7 @@
 
   .about-section--image-right .about-section-details {
     order: 1;
-    padding-left: var(--slg-gutter);
+    padding-left: var(--page-gutter);
     padding-right: 0;
   }
 

@@ -19,10 +19,10 @@
   max-height: 80vh;
   box-sizing: border-box;
   padding: 1.25rem;
-  background: var(--slg-lift);
-  border-top: 1px solid var(--slg-edge);
-  color: var(--slg-ink);
-  font-family: var(--slg-body);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-body);
 }
 
 .request-tray-header {
@@ -34,7 +34,7 @@
 
 .request-tray-title {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: 1.375rem;
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -43,7 +43,7 @@
 .request-tray-close-button {
   background: transparent;
   border: 0;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   font-size: 1.75rem;
   line-height: 1;
   padding: 0 0.25rem;
@@ -52,19 +52,19 @@
 
 .request-tray-close-button:hover,
 .request-tray-close-button:focus-visible {
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .request-tray-payment-note {
   margin: 0.35rem 0 1rem;
   font-size: 0.8125rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .request-tray-empty-message {
   margin: 0 0 1.25rem;
   font-size: 0.875rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .request-tray-list {
@@ -88,11 +88,11 @@
   height: 48px;
   object-fit: cover;
   display: block;
-  background: var(--slg-void);
+  background: var(--color-page-background);
 }
 
 .request-tray-thumbnail--empty {
-  border: 1px solid var(--slg-edge-soft);
+  border: 1px solid var(--color-border-subtle);
 }
 
 .request-tray-item-title {
@@ -103,7 +103,7 @@
 .request-tray-remove-button {
   background: transparent;
   border: 0;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   font-size: 1.25rem;
   line-height: 1;
   padding: 0.5rem;
@@ -112,18 +112,18 @@
 
 .request-tray-remove-button:hover,
 .request-tray-remove-button:focus-visible {
-  color: var(--slg-alert);
+  color: var(--color-alert);
 }
 
 .request-tray-review-button {
   flex-shrink: 0;
   height: 48px;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.01em;
-  border: 1px solid var(--slg-ink);
-  background: var(--slg-ink);
+  border: 1px solid var(--color-text);
+  background: var(--color-text);
   color: #000000;
   cursor: pointer;
   transition:
@@ -134,7 +134,7 @@
 .request-tray-review-button:hover:not(:disabled),
 .request-tray-review-button:focus-visible:not(:disabled) {
   background: transparent;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .request-tray-review-button:disabled {
@@ -152,9 +152,9 @@
     width: 380px;
     max-height: none;
     height: 100%;
-    padding-top: calc(var(--slg-header-height) + 1rem);
+    padding-top: calc(var(--header-height) + 1rem);
     border-top: 0;
-    border-left: 1px solid var(--slg-edge);
+    border-left: 1px solid var(--color-border);
   }
 }
 
