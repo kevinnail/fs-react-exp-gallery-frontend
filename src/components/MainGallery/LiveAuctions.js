@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAuctions } from '../../services/fetch-auctions.js';
+import { getLiveAuctions } from '../../services/fetch-auctions.js';
 import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
 import { useAuctionCountdown } from '../../hooks/useAuctionCountdown.js';
 import './LiveAuctions.css';
@@ -12,14 +12,21 @@ const OVERFLOW_MARGIN_PX = 24;
 const RESUME_DELAY_MS = 750;
 const MAX_FRAME_SECONDS = 0.1;
 
-function LotClock({ endTime }) {
+function LotClock({ endTime, onEnded }) {
   const { label, hasEnded } = useAuctionCountdown(endTime);
 
-  return <span className="slg-lot-clock">{hasEnded ? 'Ended' : label}</span>;
+  useEffect(() => {
+    if (hasEnded) onEnded();
+  }, [hasEnded, onEnded]);
+
+  if (hasEnded) return null;
+
+  return <span className="slg-lot-clock">{label}</span>;
 }
 
-function Lot({ auction }) {
+function Lot({ auction, onEnded }) {
   const { id, title, imageUrls, currentBid, startPrice, endTime } = auction;
+  const handleEnded = useCallback(() => onEnded(id), [onEnded, id]);
   const coverImage = imageUrls?.[0];
 
   return (
@@ -39,7 +46,7 @@ function Lot({ auction }) {
           </>
         )}
       </p>
-      <LotClock endTime={endTime} />
+      <LotClock endTime={endTime} onEnded={handleEnded} />
     </Link>
   );
 }
@@ -69,19 +76,22 @@ export default function LiveAuctions() {
   const lastAuctionCreated = useAuctionEventsStore((state) => state.lastAuctionCreated);
   const lastAuctionEnded = useAuctionEventsStore((state) => state.lastAuctionEnded);
 
+  const handleLotEnded = useCallback((auctionId) => {
+    setAuctions((previousAuctions) =>
+      previousAuctions.filter((auction) => auction.id !== auctionId)
+    );
+  }, []);
+
   useEffect(() => {
-    const fetchActiveAuctions = async () => {
+    const fetchLiveAuctions = async () => {
       try {
-        const data = await getAuctions();
-        // `currentBid` already ships with each auction, so the front
-        // page needs one request rather than one per lot.
-        setAuctions(data.filter((auction) => auction.isActive));
+        setAuctions(await getLiveAuctions());
       } catch (error) {
-        console.error('Error fetching auctions:', error);
+        console.error('Error fetching live auctions:', error);
       }
     };
 
-    fetchActiveAuctions();
+    fetchLiveAuctions();
   }, [lastAuctionCreated, lastAuctionEnded]);
 
   useEffect(() => {
@@ -220,14 +230,14 @@ export default function LiveAuctions() {
         <div className="slg-lot-track">
           <div className="slg-lot-set" ref={lotSetRef}>
             {auctions.map((auction) => (
-              <Lot key={auction.id} auction={auction} />
+              <Lot key={auction.id} auction={auction} onEnded={handleLotEnded} />
             ))}
           </div>
 
           {isPanning ? (
             <div className="slg-lot-set" aria-hidden="true">
               {auctions.map((auction) => (
-                <Lot key={`${auction.id}-loop`} auction={auction} />
+                <Lot key={`${auction.id}-loop`} auction={auction} onEnded={handleLotEnded} />
               ))}
             </div>
           ) : null}
