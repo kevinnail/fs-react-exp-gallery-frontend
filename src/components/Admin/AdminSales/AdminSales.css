@@ -1,4 +1,4 @@
-.slg-sales {
+.admin-sales {
   padding-top: var(--slg-header-height);
   padding-bottom: 4rem;
   background: var(--slg-void);
@@ -9,14 +9,14 @@
 
 /* ---------- head ---------- */
 
-.slg-sales-head {
+.admin-sales-header {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
   padding: 1.75rem var(--slg-gutter-tight) 1.25rem;
 }
 
-.slg-sales-title {
+.admin-sales-title {
   margin: 0;
   font-family: var(--slg-display);
   font-size: clamp(1.75rem, 7vw, 2.75rem);
@@ -26,7 +26,7 @@
   color: var(--slg-ink);
 }
 
-.slg-sales-tabs {
+.admin-sales-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
   max-width: 340px;
@@ -36,7 +36,7 @@
   overflow: hidden;
 }
 
-.slg-sales-tab {
+.admin-sales-tab {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,28 +55,28 @@
     color 160ms ease;
 }
 
-.slg-sales-tab + .slg-sales-tab {
+.admin-sales-tab + .admin-sales-tab {
   border-left: 1px solid var(--slg-edge);
 }
 
-.slg-sales-tab:hover {
+.admin-sales-tab:hover {
   color: var(--slg-ink);
   background: var(--slg-lift-hover);
 }
 
-.slg-sales-tab:active {
+.admin-sales-tab:active {
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55);
 }
 
-.slg-sales-tab--on,
-.slg-sales-tab--on:hover {
+.admin-sales-tab--selected,
+.admin-sales-tab--selected:hover {
   color: #000000;
   background: var(--slg-ink);
 }
 
 /* ---------- stat strip ---------- */
 
-.slg-sales-stats {
+.admin-sales-stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1px;
@@ -84,7 +84,7 @@
   padding: 0 var(--slg-gutter-tight);
 }
 
-.slg-sales-stat {
+.admin-sales-stat {
   display: grid;
   gap: 0.3rem;
   align-content: start;
@@ -93,7 +93,7 @@
   border: 1px solid var(--slg-edge-soft);
 }
 
-.slg-sales-stat-label {
+.admin-sales-stat-label {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -101,7 +101,7 @@
   white-space: nowrap;
 }
 
-.slg-sales-stat-value {
+.admin-sales-stat-value {
   font-family: var(--slg-display);
   font-size: 1.5rem;
   line-height: 1;
@@ -109,45 +109,45 @@
   font-variant-numeric: tabular-nums;
 }
 
-.slg-sales-stat-value--owed {
+.admin-sales-stat-value--owed {
   color: var(--slg-state-good);
 }
 
-.slg-sales-stat--bad {
+.admin-sales-stat--bad {
   background: rgba(229, 72, 77, 0.12);
   border-color: rgba(229, 72, 77, 0.45);
 }
 
-.slg-sales-stat--bad .slg-sales-stat-label,
-.slg-sales-stat--bad .slg-sales-stat-value {
+.admin-sales-stat--bad .admin-sales-stat-label,
+.admin-sales-stat--bad .admin-sales-stat-value {
   color: var(--slg-state-bad);
 }
 
-.slg-sales-stat--wait {
+.admin-sales-stat--wait {
   background: rgba(242, 201, 76, 0.12);
   border-color: rgba(242, 201, 76, 0.45);
 }
 
-.slg-sales-stat--wait .slg-sales-stat-label,
-.slg-sales-stat--wait .slg-sales-stat-value {
+.admin-sales-stat--wait .admin-sales-stat-label,
+.admin-sales-stat--wait .admin-sales-stat-value {
   color: var(--slg-state-wait);
 }
 
 /* ---------- body ---------- */
 
-.slg-sales-body {
+.admin-sales-layout {
   display: grid;
   gap: 2.5rem;
   padding: 0 var(--slg-gutter-tight);
 }
 
-.slg-sales-main {
+.admin-sales-list-column {
   min-width: 0;
 }
 
 /* ---------- toolbar ---------- */
 
-.slg-sales-toolbar {
+.admin-sales-toolbar {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -156,7 +156,7 @@
   border-bottom: 1px solid var(--slg-edge);
 }
 
-.slg-sales-heading {
+.admin-sales-list-heading {
   margin: 0;
   font-size: 0.6875rem;
   font-weight: 600;
@@ -164,7 +164,7 @@
   color: var(--slg-dim);
 }
 
-.slg-sales-count {
+.admin-sales-list-count {
   margin: 0 0 0 auto;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
@@ -174,7 +174,7 @@
 
 /* ---------- buttons ---------- */
 
-.slg-sales-button {
+.admin-sales-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -201,42 +201,42 @@
     transform 90ms ease;
 }
 
-.slg-sales-button:hover:not(:disabled) {
+.admin-sales-button:hover:not(:disabled) {
   background: var(--slg-control-hover);
   border-color: rgba(255, 255, 255, 0.22);
 }
 
-.slg-sales-button:active:not(:disabled) {
+.admin-sales-button:active:not(:disabled) {
   transform: scale(0.97);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.55);
 }
 
-.slg-sales-button:disabled {
+.admin-sales-button:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
 
-.slg-sales-button--primary {
+.admin-sales-button--primary {
   color: #000000;
   background: var(--slg-ink);
   border-color: var(--slg-ink);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.28);
 }
 
-.slg-sales-button--primary:hover:not(:disabled) {
+.admin-sales-button--primary:hover:not(:disabled) {
   color: #000000;
   background: #ffffff;
   border-color: #ffffff;
 }
 
-.slg-sales-button--primary:active:not(:disabled) {
+.admin-sales-button--primary:active:not(:disabled) {
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
-.form-field .slg-sales-button {
+.form-field .admin-sales-button {
   justify-self: start;
 }
 
-.slg-sales-button--wide {
+.admin-sales-button--wide {
   height: 34px;
   min-width: 136px;
   padding: 0 1.25rem;
@@ -244,13 +244,13 @@
 
 /* ---------- list ---------- */
 
-.slg-sale-list {
+.admin-sales-list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.slg-sale-empty {
+.admin-sales-empty-message {
   margin: 0;
   padding: 2.5rem 0;
   max-width: 42ch;
@@ -259,7 +259,7 @@
   color: var(--slg-dim);
 }
 
-.slg-sale-row {
+.admin-sales-row {
   display: grid;
   grid-template-columns: 52px minmax(0, 1fr);
   grid-template-areas:
@@ -279,15 +279,15 @@
   transition: background 160ms ease;
 }
 
-.slg-sale-row:hover {
+.admin-sales-row:hover {
   background: var(--slg-lift);
 }
 
-.slg-sale-row--on {
+.admin-sales-row--selected {
   background: var(--slg-lift-hover);
 }
 
-.slg-sale-thumb {
+.admin-sales-row-thumbnail {
   grid-area: thumb;
   align-self: start;
   display: block;
@@ -297,21 +297,21 @@
   background: var(--slg-lift);
 }
 
-.slg-sale-thumb img {
+.admin-sales-row-thumbnail img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.slg-sale-identity {
+.admin-sales-row-details {
   grid-area: identity;
   display: grid;
   gap: 0.1rem;
   min-width: 0;
 }
 
-.slg-sale-title {
+.admin-sales-row-title {
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.3;
@@ -322,7 +322,7 @@
   overflow: hidden;
 }
 
-.slg-sale-buyer {
+.admin-sales-row-buyer {
   font-size: 0.6875rem;
   letter-spacing: 0.04em;
   line-height: 1.4;
@@ -330,7 +330,7 @@
   overflow-wrap: anywhere;
 }
 
-.slg-sale-price {
+.admin-sales-row-price {
   grid-area: price;
   font-size: 0.875rem;
   font-weight: 500;
@@ -340,110 +340,110 @@
 
 /* ---------- the pipeline ---------- */
 
-.slg-stages {
+.sale-stages {
   grid-area: stages;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.slg-stage-track {
+.sale-stages-track {
   display: flex;
   gap: 3px;
   flex: 0 0 auto;
 }
 
-.slg-stage-bar {
+.sale-stages-bar {
   display: block;
   width: 15px;
   height: 3px;
   background: var(--slg-edge);
 }
 
-.slg-stage-bar--done {
+.sale-stages-bar--done {
   background: var(--slg-ink);
 }
 
-.slg-stage-status {
+.sale-stages-status {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   color: var(--slg-dim);
 }
 
-.slg-stages--bad .slg-stage-bar--done,
-.slg-stages--bad .slg-stage-step--done .slg-stage-bar {
+.sale-stages--bad .sale-stages-bar--done,
+.sale-stages--bad .sale-stages-step--done .sale-stages-bar {
   background: var(--slg-state-bad);
 }
 
-.slg-stages--wait .slg-stage-bar--done,
-.slg-stages--wait .slg-stage-step--done .slg-stage-bar {
+.sale-stages--wait .sale-stages-bar--done,
+.sale-stages--wait .sale-stages-step--done .sale-stages-bar {
   background: var(--slg-state-wait);
 }
 
-.slg-stages--good .slg-stage-bar--done,
-.slg-stages--good .slg-stage-step--done .slg-stage-bar {
+.sale-stages--good .sale-stages-bar--done,
+.sale-stages--good .sale-stages-step--done .sale-stages-bar {
   background: var(--slg-state-good);
 }
 
-.slg-stages--bad .slg-stage-status,
-.slg-stages--bad .slg-stage-step--done .slg-stage-name {
+.sale-stages--bad .sale-stages-status,
+.sale-stages--bad .sale-stages-step--done .sale-stages-step-name {
   color: var(--slg-state-bad);
 }
 
-.slg-stages--wait .slg-stage-status,
-.slg-stages--wait .slg-stage-step--done .slg-stage-name {
+.sale-stages--wait .sale-stages-status,
+.sale-stages--wait .sale-stages-step--done .sale-stages-step-name {
   color: var(--slg-state-wait);
 }
 
-.slg-stages--good .slg-stage-status,
-.slg-stages--good .slg-stage-step--done .slg-stage-name {
+.sale-stages--good .sale-stages-status,
+.sale-stages--good .sale-stages-step--done .sale-stages-step-name {
   color: var(--slg-state-good);
 }
 
-.slg-stages--detail {
+.sale-stages--detail {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
 
-.slg-stage-step {
+.sale-stages-step {
   display: grid;
   gap: 0.45rem;
 }
 
-.slg-stage-step .slg-stage-bar {
+.sale-stages-step .sale-stages-bar {
   width: 100%;
 }
 
-.slg-stage-step--done .slg-stage-bar {
+.sale-stages-step--done .sale-stages-bar {
   background: var(--slg-ink);
 }
 
-.slg-stage-name {
+.sale-stages-step-name {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   color: var(--slg-dim);
 }
 
-.slg-stage-step--done .slg-stage-name {
+.sale-stages-step--done .sale-stages-step-name {
   color: var(--slg-ink);
 }
 
 /* ---------- detail rail ---------- */
 
-.slg-sales-rail {
+.admin-sales-detail-column {
   min-width: 0;
 }
 
-.slg-sale-panel {
+.admin-sales-detail-panel {
   background: var(--slg-lift);
   border: 1px solid var(--slg-edge-soft);
 }
 
-.slg-sale-panel-head {
+.admin-sales-detail-panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -453,7 +453,7 @@
   border-bottom: 1px solid var(--slg-edge-soft);
 }
 
-.slg-sale-panel-title {
+.admin-sales-detail-panel-title {
   margin: 0;
   font-size: 0.6875rem;
   font-weight: 600;
@@ -461,13 +461,13 @@
   color: var(--slg-ink);
 }
 
-.slg-sale-panel-body {
+.admin-sales-detail-panel-content {
   display: grid;
   gap: 1.25rem;
   padding: 1.1rem 0.9rem 1.25rem;
 }
 
-.slg-sale-placeholder {
+.admin-sales-placeholder-message {
   margin: 0;
   padding: 2rem 0.9rem;
   max-width: 34ch;
@@ -478,14 +478,14 @@
 
 /* ---------- detail: the piece ---------- */
 
-.slg-sale-piece {
+.admin-sales-detail-piece {
   display: grid;
   grid-template-columns: 96px minmax(0, 1fr);
   align-items: start;
   gap: 0.9rem;
 }
 
-.slg-sale-piece-image {
+.admin-sales-detail-piece-image {
   display: block;
   width: 96px;
   aspect-ratio: 1;
@@ -493,13 +493,13 @@
   background: var(--slg-void);
 }
 
-.slg-sale-piece-meta {
+.admin-sales-detail-piece-details {
   display: grid;
   gap: 0.25rem;
   min-width: 0;
 }
 
-.slg-sale-piece-title {
+.admin-sales-detail-piece-title {
   margin: 0;
   font-family: var(--slg-display);
   font-size: 1.25rem;
@@ -508,7 +508,7 @@
   color: var(--slg-ink);
 }
 
-.slg-sale-piece-price {
+.admin-sales-detail-piece-price {
   font-family: var(--slg-display);
   font-size: 1.5rem;
   line-height: 1;
@@ -518,25 +518,25 @@
 
 /* ---------- detail: facts ---------- */
 
-.slg-sale-facts {
+.admin-sales-detail-facts {
   display: grid;
   gap: 0.75rem;
   margin: 0;
 }
 
-.slg-sale-fact {
+.admin-sales-detail-fact {
   display: grid;
   gap: 0.2rem;
 }
 
-.slg-sale-fact-label {
+.admin-sales-detail-fact-label {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   color: var(--slg-dim);
 }
 
-.slg-sale-fact-value {
+.admin-sales-detail-fact-value {
   margin: 0;
   font-size: 0.875rem;
   line-height: 1.5;
@@ -544,17 +544,17 @@
   overflow-wrap: anywhere;
 }
 
-.slg-sale-fact-value--missing {
+.admin-sales-detail-fact-value--missing {
   color: var(--slg-alert);
 }
 
-.slg-sale-address {
+.admin-sales-detail-address {
   display: grid;
   gap: 0.5rem;
   justify-items: start;
 }
 
-.slg-sale-address-lines {
+.admin-sales-detail-address-lines {
   font-size: 0.875rem;
   line-height: 1.5;
   color: var(--slg-ink);
@@ -565,7 +565,7 @@
 /* The carrier mark and the number, the whole thing clickable. It sits at
    the start of the panel row so it stays the width of what it holds
    instead of stretching across the panel as a grid child. */
-.slg-sale-tracking-link {
+.admin-sales-tracking-link {
   display: inline-flex;
   align-items: center;
   justify-self: start;
@@ -580,11 +580,11 @@
   transition: border-color 160ms ease;
 }
 
-.slg-sale-tracking-link:hover {
+.admin-sales-tracking-link:hover {
   border-color: var(--slg-dim);
 }
 
-.slg-sale-tracking-mark {
+.admin-sales-tracking-carrier-logo {
   display: block;
   width: 40px;
   height: 40px;
@@ -592,7 +592,7 @@
   flex: 0 0 auto;
 }
 
-.slg-sale-tracking-number {
+.admin-sales-tracking-number {
   font-size: 0.75rem;
   line-height: 1.25;
   color: var(--slg-ink);
@@ -604,11 +604,11 @@
 
 /* The tracking field is the last thing in the panel, so it takes the
    full width instead of leaving the other half empty. */
-.slg-tracking-field {
+.admin-sales-tracking-field {
   grid-column: 1 / span 2;
 }
 
-.slg-save-tracking {
+.admin-sales-save-tracking-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -631,17 +631,17 @@
     transform 90ms ease;
 }
 
-.slg-save-tracking:hover {
+.admin-sales-save-tracking-button:hover {
   background: #ffffff;
 }
 
-.slg-save-tracking:active {
+.admin-sales-save-tracking-button:active {
   transform: scale(0.97);
 }
 
 /* ---------- detail: actions ---------- */
 
-.slg-sale-actions {
+.admin-sales-detail-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
@@ -881,7 +881,7 @@
 
 /* ---------- shared ---------- */
 
-.slg-sales-hidden {
+.admin-sales-visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -890,9 +890,9 @@
   white-space: nowrap;
 }
 
-.slg-sales button:focus-visible,
-.slg-sales a:focus-visible,
-.slg-sales input:focus-visible,
+.admin-sales button:focus-visible,
+.admin-sales a:focus-visible,
+.admin-sales input:focus-visible,
 .slg-modal-scrim button:focus-visible,
 .slg-modal-scrim input:focus-visible {
   outline: 2px solid var(--slg-accent);
@@ -1022,7 +1022,7 @@
 
 /* ---------- order items: the detail panel ---------- */
 
-.slg-sale-pieces {
+.admin-sales-detail-pieces {
   display: grid;
   gap: 1rem;
   margin: 0;
@@ -1030,11 +1030,11 @@
   list-style: none;
 }
 
-.slg-sale-thumb {
+.admin-sales-row-thumbnail {
   position: relative;
 }
 
-.slg-sale-thumb-count {
+.admin-sales-row-item-count {
   position: absolute;
   right: 0;
   bottom: 0;
@@ -1051,65 +1051,65 @@
 /* ---------- wider screens ---------- */
 
 @media (min-width: 700px) {
-  .slg-sales-head,
-  .slg-sales-stats,
-  .slg-sales-body {
+  .admin-sales-header,
+  .admin-sales-stats,
+  .admin-sales-layout {
     padding-left: var(--slg-gutter);
     padding-right: var(--slg-gutter);
   }
 
-  .slg-sales-tabs {
+  .admin-sales-tabs {
     margin-left: var(--slg-gutter);
     margin-right: var(--slg-gutter);
   }
 
-  .slg-sales-stats {
+  .admin-sales-stats {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 
-  .slg-sale-row {
+  .admin-sales-row {
     grid-template-columns: 64px minmax(0, 1fr) 90px 150px;
     grid-template-areas: 'thumb identity price stages';
     gap: 1rem;
     padding: 0.6rem 0.25rem;
   }
 
-  .slg-sale-thumb {
+  .admin-sales-row-thumbnail {
     width: 64px;
     align-self: center;
   }
 
-  .slg-sale-title {
+  .admin-sales-row-title {
     -webkit-line-clamp: 1;
   }
 }
 
 @media (min-width: 1100px) {
-  .slg-sales-body {
+  .admin-sales-layout {
     grid-template-columns: minmax(0, 1fr) 400px;
     gap: var(--slg-gutter);
     align-items: start;
   }
 
-  .slg-sales-rail {
+  .admin-sales-detail-column {
     position: sticky;
     top: calc(var(--slg-header-height) + 1.5rem);
   }
 }
 
 @media (min-width: 1800px) {
-  .slg-sales-body {
+  .admin-sales-layout {
     grid-template-columns: minmax(0, 1fr) 460px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slg-sales *,
+  .admin-sales *,
   .slg-modal-scrim * {
     transition-duration: 1ms;
   }
 
-  .slg-sales-button:active:not(:disabled),
+  .admin-sales-button:active:not(:disabled),
   .slg-modal-close:active {
     transform: none;
   }

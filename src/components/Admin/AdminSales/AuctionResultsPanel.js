@@ -368,7 +368,7 @@ const AuctionResultsPanel = () => {
     : 1;
 
   const renderAddressLines = (address) => (
-    <div className="slg-sale-address-lines">
+    <div className="admin-sales-detail-address-lines">
       <div>{address.addressLine1}</div>
       {address.addressLine2 ? <div>{address.addressLine2}</div> : null}
       <div>
@@ -380,15 +380,15 @@ const AuctionResultsPanel = () => {
 
   return (
     <>
-      <div className="slg-sales-stats">
+      <div className="admin-sales-stats">
         {statTiles.map((tile) => (
           <div
             key={tile.label}
-            className={`slg-sales-stat${tile.tone ? ` slg-sales-stat--${tile.tone}` : ''}`}
+            className={`admin-sales-stat${tile.tone ? ` admin-sales-stat--${tile.tone}` : ''}`}
           >
-            <span className="slg-sales-stat-label">{tile.label}</span>
+            <span className="admin-sales-stat-label">{tile.label}</span>
             <span
-              className={`slg-sales-stat-value${tile.isOwed ? ' slg-sales-stat-value--owed' : ''}`}
+              className={`admin-sales-stat-value${tile.isOwed ? ' admin-sales-stat-value--owed' : ''}`}
             >
               {tile.value}
             </span>
@@ -396,19 +396,19 @@ const AuctionResultsPanel = () => {
         ))}
       </div>
 
-      <div className="slg-sales-body">
-        <main className="slg-sales-main">
-          <div className="slg-sales-toolbar">
-            <h2 className="slg-sales-heading">Auction results</h2>
-            <p className="slg-sales-count">{auctions.length}</p>
+      <div className="admin-sales-layout">
+        <main className="admin-sales-list-column">
+          <div className="admin-sales-toolbar">
+            <h2 className="admin-sales-list-heading">Auction results</h2>
+            <p className="admin-sales-list-count">{auctions.length}</p>
           </div>
 
           {auctions.length === 0 ? (
-            <p className="slg-sale-empty">
+            <p className="admin-sales-empty-message">
               No auctions have taken a bid yet. Results appear here once bidding starts.
             </p>
           ) : (
-            <ul className="slg-sale-list">
+            <ul className="admin-sales-list">
               {auctions.map((auction) => {
                 const isClosed = !auction.isActive;
                 const winnerName = getWinnerName(getAuctionWinner(auction));
@@ -423,29 +423,29 @@ const AuctionResultsPanel = () => {
                   <li key={auction.id}>
                     <button
                       type="button"
-                      className={`slg-sale-row${selectedAuctionId === auction.id ? ' slg-sale-row--on' : ''}`}
+                      className={`admin-sales-row${selectedAuctionId === auction.id ? ' admin-sales-row--selected' : ''}`}
                       aria-pressed={selectedAuctionId === auction.id}
                       onClick={() => handleSelectAuction(auction.id)}
                     >
-                      <span className="slg-sale-thumb">
+                      <span className="admin-sales-row-thumbnail">
                         {image ? <img src={image} alt="" /> : null}
                       </span>
 
-                      <span className="slg-sale-identity">
-                        <span className="slg-sale-title">{auction.title}</span>
-                        <span className="slg-sale-buyer">
+                      <span className="admin-sales-row-details">
+                        <span className="admin-sales-row-title">{auction.title}</span>
+                        <span className="admin-sales-row-buyer">
                           {isClosed ? 'Winner' : 'High bidder'}: {winnerName || 'No bids'}
                         </span>
                       </span>
 
-                      <span className="slg-sale-price">
+                      <span className="admin-sales-row-price">
                         {highBid ? formatMoney(highBid) : 'No bids'}
                       </span>
 
                       {isClosed ? (
                         <SaleStages completedCount={completedStages} />
                       ) : (
-                        <span className="slg-stages slg-auction-live">Live</span>
+                        <span className="sale-stages auction-results-live-label">Live</span>
                       )}
                     </button>
                   </li>
@@ -455,49 +455,51 @@ const AuctionResultsPanel = () => {
           )}
         </main>
 
-        <aside className="slg-sales-rail" ref={auctionPanelRef}>
+        <aside className="admin-sales-detail-column" ref={auctionPanelRef}>
           {!currentAuction ? (
-            <div className="slg-sale-panel">
-              <div className="slg-sale-panel-head">
-                <h2 className="slg-sale-panel-title">Auction detail</h2>
+            <div className="admin-sales-detail-panel">
+              <div className="admin-sales-detail-panel-header">
+                <h2 className="admin-sales-detail-panel-title">Auction detail</h2>
               </div>
-              <p className="slg-sale-placeholder">
+              <p className="admin-sales-placeholder-message">
                 Pick an auction to see the winner, the address, and where it is in the pipeline.
               </p>
             </div>
           ) : (
-            <div className="slg-sale-panel">
-              <div className="slg-sale-panel-head">
-                <h2 className="slg-sale-panel-title">Auction detail</h2>
+            <div className="admin-sales-detail-panel">
+              <div className="admin-sales-detail-panel-header">
+                <h2 className="admin-sales-detail-panel-title">Auction detail</h2>
                 <button
                   type="button"
-                  className="slg-sales-button"
+                  className="admin-sales-button"
                   onClick={() => setSelectedAuctionId(null)}
                 >
                   Close
                 </button>
               </div>
 
-              <div className="slg-sale-panel-body">
+              <div className="admin-sales-detail-panel-content">
                 {currentAuctionClosed ? (
                   <SaleStages completedCount={currentAuctionStages} variant="detail" />
                 ) : (
-                  <p className="slg-auction-live slg-auction-live--detail">Live bidding</p>
+                  <p className="auction-results-live-label auction-results-live-label--detail">
+                    Live bidding
+                  </p>
                 )}
 
-                <div className="slg-sale-piece">
+                <div className="admin-sales-detail-piece">
                   {currentAuction.imageUrls?.[0] ? (
                     <img
                       src={currentAuction.imageUrls[0]}
                       alt=""
-                      className="slg-sale-piece-image"
+                      className="admin-sales-detail-piece-image"
                     />
                   ) : (
-                    <span className="slg-sale-piece-image" aria-hidden="true" />
+                    <span className="admin-sales-detail-piece-image" aria-hidden="true" />
                   )}
-                  <div className="slg-sale-piece-meta">
-                    <h3 className="slg-sale-piece-title">{currentAuction.title}</h3>
-                    <span className="slg-sale-piece-price">
+                  <div className="admin-sales-detail-piece-details">
+                    <h3 className="admin-sales-detail-piece-title">{currentAuction.title}</h3>
+                    <span className="admin-sales-detail-piece-price">
                       {currentAuction.topBid
                         ? formatMoney(currentAuction.topBid.bidAmount)
                         : 'No bids'}
@@ -505,10 +507,10 @@ const AuctionResultsPanel = () => {
                   </div>
                 </div>
 
-                <div className="slg-sale-actions">
+                <div className="admin-sales-detail-actions">
                   <button
                     type="button"
-                    className="slg-sales-button slg-sales-button--wide"
+                    className="admin-sales-button admin-sales-button--wide"
                     onClick={() => navigate(`/auctions/${currentAuction.id}`)}
                   >
                     View auction
@@ -516,11 +518,11 @@ const AuctionResultsPanel = () => {
                 </div>
 
                 {currentAuctionClosed && (
-                  <div className="slg-sale-actions">
+                  <div className="admin-sales-detail-actions">
                     <button
                       type="button"
-                      className={`slg-sales-button slg-sales-button--wide${
-                        currentAuction.isPaid ? '' : ' slg-sales-button--primary'
+                      className={`admin-sales-button admin-sales-button--wide${
+                        currentAuction.isPaid ? '' : ' admin-sales-button--primary'
                       }`}
                       onClick={handleTogglePaid}
                     >
@@ -529,39 +531,43 @@ const AuctionResultsPanel = () => {
                   </div>
                 )}
 
-                <dl className="slg-sale-facts">
-                  <div className="slg-sale-fact">
-                    <dt className="slg-sale-fact-label">
+                <dl className="admin-sales-detail-facts">
+                  <div className="admin-sales-detail-fact">
+                    <dt className="admin-sales-detail-fact-label">
                       {currentAuctionClosed ? 'Winner' : 'High bidder'}
                     </dt>
-                    <dd className="slg-sale-fact-value">{currentWinnerName || 'No bids'}</dd>
+                    <dd className="admin-sales-detail-fact-value">
+                      {currentWinnerName || 'No bids'}
+                    </dd>
                   </div>
 
-                  <div className="slg-sale-fact">
-                    <dt className="slg-sale-fact-label">Email</dt>
-                    <dd className="slg-sale-fact-value">
+                  <div className="admin-sales-detail-fact">
+                    <dt className="admin-sales-detail-fact-label">Email</dt>
+                    <dd className="admin-sales-detail-fact-value">
                       {currentWinnerEmail || (
-                        <span className="slg-sale-fact-value--missing">No email on file</span>
+                        <span className="admin-sales-detail-fact-value--missing">
+                          No email on file
+                        </span>
                       )}
                     </dd>
                   </div>
 
-                  <div className="slg-sale-fact">
-                    <dt className="slg-sale-fact-label">Ship to</dt>
-                    <dd className="slg-sale-fact-value">
+                  <div className="admin-sales-detail-fact">
+                    <dt className="admin-sales-detail-fact-label">Ship to</dt>
+                    <dd className="admin-sales-detail-fact-value">
                       {currentAddress ? (
-                        <div className="slg-sale-address">
+                        <div className="admin-sales-detail-address">
                           {renderAddressLines(currentAddress)}
                           <button
                             type="button"
-                            className="slg-sales-button"
+                            className="admin-sales-button"
                             onClick={copyAddressText}
                           >
                             Copy address
                           </button>
                         </div>
                       ) : (
-                        <span className="slg-sale-fact-value--missing">
+                        <span className="admin-sales-detail-fact-value--missing">
                           No shipping address on file
                         </span>
                       )}
@@ -571,30 +577,38 @@ const AuctionResultsPanel = () => {
 
                 {hasRealTracking(currentAuction.trackingNumber) && (
                   <a
-                    className="slg-sale-tracking-link"
+                    className="admin-sales-tracking-link"
                     href={buildTrackingUrl(currentAuction.trackingNumber)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <img alt="" className="slg-sale-tracking-mark" src="../../../usps.png" />
-                    <span className="slg-sale-tracking-number">
+                    <img
+                      alt=""
+                      className="admin-sales-tracking-carrier-logo"
+                      src="../../../usps.png"
+                    />
+                    <span className="admin-sales-tracking-number">
                       {currentAuction.trackingNumber}
                     </span>
                   </a>
                 )}
 
-                <div className="form-field slg-tracking-field">
-                  <label className="form-field-label" htmlFor="slg-auction-tracking">
+                <div className="form-field admin-sales-tracking-field">
+                  <label className="form-field-label" htmlFor="auction-results-tracking-number">
                     Tracking number
                   </label>
                   <input
-                    id="slg-auction-tracking"
+                    id="auction-results-tracking-number"
                     type="text"
                     className="form-input"
                     value={trackingInput}
                     onChange={(event) => setTrackingInput(event.target.value)}
                   />
-                  <button type="button" className="slg-save-tracking" onClick={handleSaveTracking}>
+                  <button
+                    type="button"
+                    className="admin-sales-save-tracking-button"
+                    onClick={handleSaveTracking}
+                  >
                     Save tracking
                   </button>
                 </div>

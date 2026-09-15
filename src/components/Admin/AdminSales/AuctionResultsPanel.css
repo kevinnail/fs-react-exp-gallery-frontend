@@ -12,13 +12,13 @@
 /* An open auction has no pipeline yet: nothing is owed and nothing can
    ship, so it says so in the accent the rest of the site reserves for
    live bidding, and the three segments stay off until it closes. */
-.slg-auction-live {
+.auction-results-live-label {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   color: var(--slg-accent);
 }
 
-.slg-auction-live--detail {
+.auction-results-live-label--detail {
   margin: 0;
 }
