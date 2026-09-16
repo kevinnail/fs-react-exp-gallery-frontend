@@ -1,4 +1,4 @@
-.profile-container {
+.account-page {
   min-height: 100vh;
   background-image: url(../../../public/ocean.jpg);
   background-size: cover;
@@ -10,13 +10,13 @@
   padding: 90px 0 0 0;
 }
 
-.menu-search-container {
+.account-search-container {
   width: 100%;
   max-width: 1200px;
   margin-bottom: 2rem;
 }
 
-.profile-content {
+.account-panel {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 15px;
   padding: 2rem;
@@ -30,7 +30,7 @@
   margin-top: 1rem;
 }
 
-.profile-content h1 {
+.account-panel h1 {
   color: white;
   font-size: 2.5rem;
   margin-bottom: 1rem;
@@ -38,7 +38,7 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.profile-content-p,
+.account-paragraph,
 div {
   color: rgba(255, 255, 255, 0.9);
   font-size: 1.2rem;
@@ -46,19 +46,19 @@ div {
   text-align: left;
 }
 
-.profile-dashboard-wide {
+.account-dashboard-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
 
 @media (max-width: 900px) {
-  .profile-dashboard-wide {
+  .account-dashboard-columns {
     grid-template-columns: 1fr;
   }
 }
 
-.profile-header {
+.account-identity-header {
   display: flex;
   align-items: center;
   gap: 2rem;
@@ -66,11 +66,11 @@ div {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.profile-picture-section {
+.account-avatar-section {
   flex-shrink: 0;
 }
 
-.profile-picture {
+.account-avatar {
   width: 120px;
   height: 120px;
   border-radius: 50%;
@@ -79,7 +79,7 @@ div {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.profile-picture-placeholder {
+.account-avatar-placeholder {
   width: 120px;
   height: 120px;
   border-radius: 50%;
@@ -94,24 +94,24 @@ div {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.profile-info {
+.account-identity {
   flex: 1;
 }
 
-.profile-info h1 {
+.account-identity h1 {
   margin: 0 0 0.5rem 0;
   font-size: 2.5rem;
   font-weight: 300;
   text-align: left;
 }
 
-.user-email {
+.account-email {
   color: rgba(255, 255, 255, 0.7);
   font-size: 1.1rem;
   margin: 0 0 0.35rem 0;
 }
 
-.edit-profile-btn {
+.account-edit-profile-button {
   background: linear-gradient(315deg, black, grey);
   color: white;
   border: none;
@@ -124,7 +124,7 @@ div {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 /* Subtle top-right icon button for editing */
-.edit-profile-icon-btn {
+.account-edit-settings-button {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -144,23 +144,23 @@ div {
     box-shadow 0.2s ease;
 }
 
-.edit-profile-icon-btn:hover {
+.account-edit-settings-button:hover {
   background: rgba(255, 255, 255, 0.16);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
-.edit-profile-btn:hover {
+.account-edit-profile-button:hover {
   background: linear-gradient(315deg, grey, black);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
-.profile-details {
+.account-welcome-message {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.detail-item {
+.account-detail-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -170,31 +170,31 @@ div {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.detail-label {
+.account-detail-label {
   color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
   font-size: 1rem;
 }
 
-.detail-value {
+.account-detail-value {
   color: white;
   margin: 0;
   text-align: left;
 }
 
-.new-work-content {
+.account-specials-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 1rem;
   justify-items: center;
 }
 
-.new-work-section {
+.account-specials-section {
   padding-top: 0.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.new-work-placeholder {
+.account-specials-placeholder {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   padding: 1.5rem;
@@ -202,7 +202,7 @@ div {
   text-align: center;
 }
 
-.new-work-msg {
+.account-section-heading {
   display: block;
   width: 90%;
   justify-self: center;
@@ -216,18 +216,18 @@ div {
   border-radius: 8px;
 }
 
-.new-work-placeholder p {
+.account-specials-placeholder p {
   color: rgba(255, 255, 255, 0.8);
   font-size: 1.1rem;
   margin: 0;
   font-style: italic;
 }
 
-.message-link {
+.account-message-link {
   color: #fff;
 }
 
-.recent-post-card {
+.account-special-card {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
   overflow: hidden;
@@ -240,11 +240,11 @@ div {
   cursor: pointer;
 }
 
-.recent-post-card:hover {
+.account-special-card:hover {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
-.recent-post-image {
+.account-special-image {
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
@@ -252,23 +252,23 @@ div {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.recent-post-image-title-wrapper {
+.account-special-image-wrapper {
   width: 100%;
   display: flex;
   gap: 30px;
 }
 
-.recent-post-image-title-wrapper h3 {
+.account-special-image-wrapper h3 {
   color: white;
   margin: 0;
 }
 
-.recent-post-details {
+.account-special-details {
   padding: 0.5rem 0.75rem;
   color: rgba(255, 255, 255, 0.9);
 }
 
-.recent-post-details p {
+.account-special-details p {
   display: flex;
   justify-content: space-between;
   font-size: 1rem;
@@ -276,7 +276,7 @@ div {
   width: 100%;
 }
 
-.recent-post-details h3 {
+.account-special-details h3 {
   font-size: 1rem;
   font-weight: 600;
   margin: 0;
@@ -286,7 +286,7 @@ div {
   overflow: hidden;
 }
 
-.recent-post-details p {
+.account-special-details p {
   margin: 0;
   font-size: 0.9rem;
   opacity: 0.85;
@@ -295,7 +295,7 @@ div {
   text-overflow: ellipsis;
 }
 
-.special-countdown {
+.account-special-countdown {
   display: block;
   margin-top: 0.25rem;
   font-size: 1rem;
@@ -303,11 +303,11 @@ div {
   color: white;
 }
 
-.recent-post-details .description {
+.account-special-details .account-special-description {
   display: none;
 }
 
-.got-it-button {
+.account-welcome-dismiss-button {
   font-size: 0.9rem;
   background-color: green;
   width: 75%;
@@ -317,11 +317,11 @@ div {
   text-align: center;
 }
 
-.got-it-button:hover {
+.account-welcome-dismiss-button:hover {
   cursor: pointer;
 }
 
-.got-it-button:active {
+.account-welcome-dismiss-button:active {
   transform: translateY(1px);
 }
 
@@ -407,23 +407,23 @@ div {
   background: rgba(255, 255, 255, 0.14);
 }
 
-.account-chip-dot {
+.account-chip-status-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: #5bd672;
 }
 
-.account-chip-off .account-chip-dot {
+.account-chip--notifications-off .account-chip-status-dot {
   background: rgba(255, 255, 255, 0.35);
 }
 
-.account-chip-warn {
+.account-chip--warning {
   color: #ffd86b;
   border-color: rgba(255, 216, 107, 0.45);
 }
 
-.account-chip-gear {
+.account-chip-settings-icon {
   font-size: 0.8rem;
   opacity: 0.7;
 }
@@ -441,14 +441,14 @@ div {
 
 */
 @media (max-width: 768px) {
-  .profile-header {
+  .account-identity-header {
     flex-direction: column;
     text-align: center;
     gap: 1.5rem;
     padding-bottom: 0;
   }
 
-  .profile-info h1 {
+  .account-identity h1 {
     font-size: 2rem;
   }
 
@@ -461,62 +461,62 @@ div {
     padding: 0.75rem 0.9rem;
   }
 
-  .detail-item {
+  .account-detail-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
 
-  .recent-post-card {
+  .account-special-card {
     max-width: 160px;
   }
 
-  .new-work-msg {
+  .account-section-heading {
     width: 85%;
     text-align: left;
     margin: auto;
   }
-  .new-work-content {
+  .account-specials-grid {
     grid-template-columns: 1fr;
     justify-items: stretch;
     gap: 0.75rem;
     padding: 0;
   }
 
-  .recent-post-card {
+  .account-special-card {
     width: 100%;
     max-width: none;
     border-radius: 0;
   }
 
-  .new-work-section {
+  .account-specials-section {
     margin: 0;
     padding: 0;
     border: none;
     margin-top: 1rem;
   }
-  .profile-content {
+  .account-panel {
     margin: 0;
     padding: 0;
   }
-  .profile-details {
+  .account-welcome-message {
     padding: 1rem;
   }
 }
 
 /* Summary tab carries the amount owed, so it reads as the priority tab */
-.account-tab-due .account-tab-badge {
+.account-tab--payment-due .account-tab-badge {
   background: rgb(246, 255, 0);
   font-size: 0.85rem;
 }
 
-.account-tab-due.Mui-selected {
+.account-tab--payment-due.Mui-selected {
   color: rgb(246, 255, 0);
 }
 
 /* Same treatment as the public gallery card: the struck original takes the
    attention red and the price being asked stays plain. */
-.recent-post-was {
+.account-special-original-price {
   margin-right: 1rem;
   color: var(--color-alert);
   text-decoration: line-through;

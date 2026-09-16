@@ -3,7 +3,7 @@
 }
 
 /* Mirror visual language from auctions summary */
-.user-auctions-summary {
+.payment-due-panel {
   border: 1px solid rgba(255, 255, 255, 0.297);
   border-radius: 10px;
   padding: 1rem;
@@ -14,7 +14,7 @@
   text-align: left;
 }
 
-.user-auctions-summary h4 {
+.payment-due-panel h4 {
   margin-top: 0;
   margin-bottom: 0.75rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
@@ -23,10 +23,10 @@
   color: #fff;
 }
 
-.summary-details {
+.payment-due-details {
 }
 
-.summary-details-p {
+.payment-due-row {
   font-size: 0.9rem;
   padding: 0 0.5rem;
   display: flex;
@@ -34,7 +34,7 @@
   margin: 0.25rem 0;
 }
 
-.summary-total {
+.payment-due-total {
   padding: 0 0.5rem;
   display: flex;
   justify-content: space-between;
@@ -45,7 +45,7 @@
   font-size: 1.3rem !important;
 }
 
-.payment-info-banner {
+.payment-due-banner {
   margin-top: 1rem;
   background: rgb(71, 71, 71);
   border: 1px solid rgb(246, 255, 0);
@@ -58,18 +58,18 @@
   text-align: left;
 }
 
-.payment-info-banner strong {
+.payment-due-banner strong {
   color: rgb(246, 255, 0);
   text-shadow: 0 0 6px black;
 }
 
-.payment-due {
+.payment-due-banner-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
 
-.pay-now-btn {
+.payment-due-pay-button {
   background: rgb(255, 255, 255);
   color: black;
   border: none;
@@ -83,7 +83,7 @@
   min-width: 120px;
 }
 
-.pay-now-btn:hover {
+.payment-due-pay-button:hover {
   opacity: 0.85;
 }
 
@@ -92,7 +92,7 @@
   margin: 0.5rem 0 1rem 0;
 }
 
-.quick-pay-header {
+.quick-pay-heading {
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
@@ -109,7 +109,7 @@
   margin-bottom: 0.6rem;
 }
 
-.quick-pay-thumb {
+.quick-pay-logo {
   width: 44px;
   height: 44px;
   border-radius: 8px;
@@ -122,17 +122,17 @@
   color: #fff;
 }
 
-.quick-pay-card.zelle .quick-pay-thumb {
+.quick-pay-card--zelle .quick-pay-logo {
   background: #6a1b9a; /* purple-ish */
 }
-.quick-pay-card.venmo .quick-pay-thumb {
+.quick-pay-card--venmo .quick-pay-logo {
   background: #3d95ce; /* venmo blue */
 }
-.quick-pay-card.cashapp .quick-pay-thumb {
+.quick-pay-card--cashapp .quick-pay-logo {
   background: #00c244; /* cash app green */
 }
 
-.quick-pay-content {
+.quick-pay-details {
   flex: 1;
   min-width: 0;
 }
@@ -148,14 +148,14 @@
   margin-bottom: 0.35rem;
 }
 
-.quick-pay-row {
+.quick-pay-actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-.code-chip {
+.quick-pay-code {
   padding: 2px 6px;
   background: #222;
   border-radius: 4px;
@@ -165,12 +165,12 @@
   font-size: 0.85rem;
 }
 
-.copied-indicator {
+.quick-pay-copied-indicator {
   color: rgb(246, 255, 0);
 }
 
 @media (max-width: 768px) {
-  .payment-info-banner {
+  .payment-due-banner {
     padding: 0.6rem 0.75rem;
     font-size: 0.95rem;
   }
@@ -180,7 +180,7 @@
 }
 
 /* Condensed summary heading with the amount owed up front */
-.summary-heading {
+.payment-due-heading {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -190,7 +190,7 @@
   margin-bottom: 0.6rem;
 }
 
-.summary-heading h4 {
+.payment-due-heading h4 {
   margin: 0;
   border: none;
   padding: 0;
@@ -198,14 +198,14 @@
   letter-spacing: 0.02em;
 }
 
-.summary-heading-total {
+.payment-due-heading-amount {
   font-size: 1.5rem;
   font-weight: 700;
   color: rgb(246, 255, 0);
 }
 
 /* Rows that jump to the tab holding the unpaid item */
-.summary-jump-row {
+.payment-due-jump-button {
   width: 100%;
   display: flex;
   align-items: center;
@@ -224,26 +224,26 @@
   transition: background-color 0.15s ease;
 }
 
-.summary-jump-row:hover:not(:disabled) {
+.payment-due-jump-button:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.12);
 }
 
-.summary-jump-row:disabled {
+.payment-due-jump-button:disabled {
   cursor: default;
 }
 
-.summary-jump-label {
+.payment-due-jump-label {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
 }
 
-.summary-jump-hint {
+.payment-due-jump-hint {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.6);
 }
 
-.payment-contact-line {
+.payment-due-contact-line {
   font-size: 0.95rem;
   margin: 0.5rem 0;
 }

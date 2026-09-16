@@ -213,26 +213,26 @@ export default function ProfileForm({ handleCloseForm }) {
     const prevBodyOverflow = document.body.style.overflow;
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
-    document.body.classList.add('modal-open');
+    document.body.classList.add('account-form-modal-open');
     return () => {
-      document.body.classList.remove('modal-open');
+      document.body.classList.remove('account-form-modal-open');
       document.documentElement.style.overflow = prevHtmlOverflow;
       document.body.style.overflow = prevBodyOverflow;
     };
   }, []);
 
   return (
-    <div className="profile-form-overlay">
-      <div className="profile-form-container">
-        <div className="profile-form-header">
+    <div className="account-form-overlay">
+      <div className="account-form-container">
+        <div className="account-form-header">
           <h2>Edit Profile</h2>
-          <button className="close-btn" onClick={handleCloseForm}>
+          <button className="account-form-close-button" onClick={handleCloseForm}>
             ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="profile-form">
-          <div className="form-group">
+        <form onSubmit={handleSubmit} className="account-form">
+          <div className="account-form-field">
             <label htmlFor="firstName">First Name</label>
             <input
               type="text"
@@ -245,7 +245,7 @@ export default function ProfileForm({ handleCloseForm }) {
             />
           </div>
 
-          <div className="form-group">
+          <div className="account-form-field">
             <label htmlFor="lastName">Last Name</label>
             <input
               type="text"
@@ -258,11 +258,11 @@ export default function ProfileForm({ handleCloseForm }) {
             />
           </div>
 
-          <div className="form-group">
+          <div className="account-form-field">
             <label htmlFor="imageUrl">Profile Picture</label>
-            <div className="image-upload-container">
+            <div className="account-form-image-upload">
               {previewImage && (
-                <div className="image-preview">
+                <div className="account-form-image-preview">
                   <img src={previewImage} alt="Profile preview" />
                 </div>
               )}
@@ -272,16 +272,16 @@ export default function ProfileForm({ handleCloseForm }) {
                 name="imageUrl"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="file-input"
+                className="account-form-file-input"
               />
-              <label htmlFor="imageUrl" className="file-input-label">
+              <label htmlFor="imageUrl" className="account-form-file-input-label">
                 {formData.imageUrl ? 'Change Image' : 'Choose Image'}
               </label>
             </div>
           </div>
 
           <div
-            className="form-group"
+            className="account-form-field"
             style={{ border: '1px solid yellow ', padding: '.5rem', borderRadius: '8px' }}
           >
             <label>
@@ -301,10 +301,10 @@ export default function ProfileForm({ handleCloseForm }) {
           </div>
 
           {/* Shipping Address Section */}
-          <div className="form-group address-section">
+          <div className="account-form-field account-form-address-section">
             <button
               type="button"
-              className="toggle-address-btn"
+              className="account-form-address-toggle-button"
               onClick={() => setShowAddress((prev) => !prev)}
               style={{
                 marginBottom: '0.5rem',
@@ -322,7 +322,7 @@ export default function ProfileForm({ handleCloseForm }) {
             </button>
             {showAddress && (
               <div
-                className="address-fields"
+                className="account-form-address-fields"
                 style={{
                   padding: '1rem',
                   borderRadius: '8px',
@@ -330,7 +330,7 @@ export default function ProfileForm({ handleCloseForm }) {
                 }}
               >
                 <div
-                  className="address-hint"
+                  className="account-form-address-hint"
                   style={{
                     fontSize: '.8rem',
                     marginBottom: '.5rem',
@@ -343,7 +343,7 @@ export default function ProfileForm({ handleCloseForm }) {
                     ? 'Provide all fields if adding an address, or leave all blank. Partial address not accepted.'
                     : 'Things look stokey!'}
                 </div>
-                <div className="form-group">
+                <div className="account-form-field">
                   <label htmlFor="addressLine1">Street Address</label>
                   <input
                     type="text"
@@ -355,7 +355,7 @@ export default function ProfileForm({ handleCloseForm }) {
                     autoComplete="address-line1"
                   />
                 </div>
-                <div className="form-group">
+                <div className="account-form-field">
                   <label htmlFor="addressLine2">Address Line 2 (optional)</label>
                   <input
                     type="text"
@@ -367,7 +367,7 @@ export default function ProfileForm({ handleCloseForm }) {
                     autoComplete="address-line2"
                   />
                 </div>
-                <div className="form-group">
+                <div className="account-form-field">
                   <label htmlFor="city">City</label>
                   <input
                     type="text"
@@ -380,7 +380,7 @@ export default function ProfileForm({ handleCloseForm }) {
                   />
                 </div>
 
-                <div className="form-group">
+                <div className="account-form-field">
                   <label htmlFor="state">State</label>
                   <input
                     type="text"
@@ -392,7 +392,7 @@ export default function ProfileForm({ handleCloseForm }) {
                     autoComplete="address-level1"
                   />
                 </div>
-                <div className="form-group">
+                <div className="account-form-field">
                   <label htmlFor="postalCode">Postal Code</label>
                   <input
                     type="text"
@@ -404,7 +404,7 @@ export default function ProfileForm({ handleCloseForm }) {
                     autoComplete="postal-code"
                   />
                 </div>
-                <div className="form-group">
+                <div className="account-form-field">
                   <label htmlFor="countryCode">Country</label>
                   <select
                     id="countryCode"
@@ -424,11 +424,11 @@ export default function ProfileForm({ handleCloseForm }) {
             )}
           </div>
 
-          <div className="form-actions">
-            <button type="button" onClick={handleCloseForm} className="cancel-btn-account">
+          <div className="account-form-actions">
+            <button type="button" onClick={handleCloseForm} className="account-form-cancel-button">
               Cancel
             </button>
-            <button type="submit" className="submit-btn-account" disabled={loading}>
+            <button type="submit" className="account-form-submit-button" disabled={loading}>
               {loading ? 'Updating...' : 'Update Profile'}
             </button>
           </div>

@@ -1,4 +1,4 @@
-.user-sales-widget {
+.user-sales-panel {
   margin-top: 1rem;
   padding: 0.5rem;
   border: 1px solid white;
@@ -7,7 +7,7 @@
   text-align: left;
 }
 
-.empty-msg {
+.user-sales-empty-message {
   color: rgba(255, 255, 255, 0.7);
   font-style: italic;
   margin-bottom: 1.5rem;

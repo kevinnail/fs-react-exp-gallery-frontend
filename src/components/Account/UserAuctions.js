@@ -207,19 +207,19 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
 
   if (loading || hydrating) {
     return (
-      <div className="user-auctions-widget">
+      <div className="user-auctions-panel">
         <p>Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="user-auctions-widget">
-      <span className="new-work-msg">
+    <div className="user-auctions-panel">
+      <span className="account-section-heading">
         <strong>Your Auction Bids & Wins</strong>
       </span>
 
-      <p className="empty-msg">
+      <p className="user-auctions-empty-message">
         Waiting for your item(s)? You can find your tracking number & link in the Won section below.
       </p>
 
@@ -227,14 +227,14 @@ export default function UserAuctions({ activeAuctionBids, wonAuctions, loading }
       {hydratedBids.length > 0 ? (
         <div className="item-card-grid">{hydratedBids.map(renderActiveBidCard)}</div>
       ) : (
-        <p className="empty-msg">No active bids.</p>
+        <p className="user-auctions-empty-message">No active bids.</p>
       )}
 
       <h3>Won</h3>
       {wonAuctions.length > 0 ? (
         <div className="item-card-grid">{wonAuctions.map(renderWonCard)}</div>
       ) : (
-        <p className="empty-msg">No completed wins yet.</p>
+        <p className="user-auctions-empty-message">No completed wins yet.</p>
       )}
     </div>
   );

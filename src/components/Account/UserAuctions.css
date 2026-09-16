@@ -1,4 +1,4 @@
-.user-auctions-widget {
+.user-auctions-panel {
   margin-top: 1rem;
   padding: 0.5rem;
   border: 1px solid white;
@@ -7,7 +7,7 @@
   background-color: black;
 }
 
-.user-auctions-widget h2 {
+.user-auctions-panel h2 {
   margin-bottom: 0.75rem;
   font-weight: 600;
   color: #fff;
@@ -19,7 +19,7 @@
   cursor: pointer;
 }
 
-.auction-win-message {
+.user-auctions-win-message {
   background: rgba(0, 255, 0, 0.1);
   border-top: 1px solid rgba(0, 255, 0, 0.2);
   padding: 0.75rem;
@@ -28,13 +28,13 @@
   font-weight: 500;
 }
 
-.empty-msg {
+.user-auctions-empty-message {
   color: rgba(255, 255, 255, 0.7);
   font-style: italic;
   margin-bottom: 1.5rem;
 }
 
-.user-auctions-summary {
+.user-auctions-payment-panel {
   border: 1px solid rgba(255, 255, 255, 0.297);
   border-radius: 10px;
   padding: 1rem;
@@ -43,7 +43,7 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
 }
 
-.user-auctions-summary h4 {
+.user-auctions-payment-panel h4 {
   margin-top: 0;
   margin-bottom: 0.75rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
@@ -52,11 +52,11 @@
   color: #fff;
 }
 
-.summary-details {
+.user-auctions-payment-details {
   background-color: black;
 }
 
-.summary-details-p {
+.user-auctions-payment-row {
   font-size: 0.9rem;
   padding: 0 0.5rem;
   display: flex;
@@ -64,7 +64,7 @@
   margin: 0.25rem 0;
 }
 
-.summary-total {
+.user-auctions-payment-total {
   padding: 0 0.5rem;
   display: flex;
   justify-content: space-between;
@@ -75,7 +75,7 @@
   font-size: 1.3rem !important;
 }
 
-.payment-info-banner {
+.user-auctions-payment-banner {
   margin-top: 1rem;
   background: rgb(71, 71, 71);
   border: 1px solid rgb(246, 255, 0);
@@ -88,23 +88,23 @@
   text-align: left;
 }
 
-.payment-info-banner strong {
+.user-auctions-payment-banner strong {
   color: rgb(246, 255, 0);
   text-shadow: 0 0 6px black;
 }
 
-.payment-due {
+.user-auctions-payment-banner-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
 
-.print-invoice {
+.user-auctions-print-invoice {
   top: 0.8rem;
   cursor: pointer;
 }
 
-.pay-now-btn {
+.user-auctions-pay-button {
   background: rgb(255, 255, 255);
   color: black;
   border: none;
@@ -117,7 +117,7 @@
   transition: opacity 0.15s ease;
 }
 
-.pay-now-btn:hover {
+.user-auctions-pay-button:hover {
   opacity: 0.85;
 }
 
@@ -127,16 +127,16 @@
 
 */
 @media (max-width: 768px) {
-  .payment-info-banner {
+  .user-auctions-payment-banner {
     padding: 0.6rem 0.75rem;
     font-size: 0.95rem;
   }
 
-  .user-auctions-summary {
+  .user-auctions-payment-panel {
     padding: 0.75rem;
   }
 
-  .summary-details p {
+  .user-auctions-payment-details p {
     font-size: 0.95rem;
   }
 }

@@ -28,20 +28,20 @@ export default function UserSales({ sales, loading }) {
 
   if (loading) {
     return (
-      <div className="user-sales-widget">
+      <div className="user-sales-panel">
         <p>Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="user-sales-widget">
-      <span className="new-work-msg">
+    <div className="user-sales-panel">
+      <span className="account-section-heading">
         <strong>Your Gallery Purchases</strong>
       </span>
 
       {sales.length === 0 ? (
-        <p className="empty-msg">No purchases yet.</p>
+        <p className="user-sales-empty-message">No purchases yet.</p>
       ) : (
         <div className="item-card-grid">
           {sales.map((order) => {
