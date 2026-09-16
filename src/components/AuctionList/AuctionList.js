@@ -49,7 +49,7 @@ function AuctionPreviewItem({ auction, onClick }) {
 
   return (
     <div className="auction-preview-item" onClick={onClick}>
-      <img src={auction.imageUrls?.[0]} alt={auction.title} className="auction-preview-img" />
+      <img src={auction.imageUrls?.[0]} alt={auction.title} className="auction-preview-image" />
       <div style={{ marginTop: '.4rem' }}>
         {hasEnded ? (
           <>
@@ -186,7 +186,10 @@ export default function AuctionList() {
     <div className="ocean-page">
       <div className="ocean-page-panel">
         {user && isAdmin && (
-          <button className="add-edit-auctions" onClick={() => navigate('/admin/auctions')}>
+          <button
+            className="auction-list-manage-button"
+            onClick={() => navigate('/admin/auctions')}
+          >
             Add/ Edit Auctions
           </button>
         )}

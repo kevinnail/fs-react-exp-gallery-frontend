@@ -47,7 +47,7 @@ export default function AuctionArchive() {
               className="auction-preview-item"
               onClick={() => navigate(`/auctions/${a.id}`)}
             >
-              <img src={a.imageUrls[0]} alt={a.title} className="auction-preview-img" />
+              <img src={a.imageUrls[0]} alt={a.title} className="auction-preview-image" />
               <h3>{a.title}</h3>
             </div>
           ))}
