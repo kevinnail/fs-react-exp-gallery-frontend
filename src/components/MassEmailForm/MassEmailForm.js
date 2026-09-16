@@ -52,7 +52,7 @@ export default function MassEmailForm() {
   return (
     <div className="mass-email-wrapper">
       <form className="mass-email-form" onSubmit={handleSubmit}>
-        <h2 className="form-title">Email Customers</h2>
+        <h2 className="mass-email-title">Email Customers</h2>
         <p className="mass-email-note">Goes to every customer with email notifications enabled.</p>
 
         <input
@@ -60,7 +60,7 @@ export default function MassEmailForm() {
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
           placeholder="Subject"
-          className="input-field"
+          className="mass-email-input"
           disabled={sending}
         />
 
@@ -69,11 +69,11 @@ export default function MassEmailForm() {
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Write your message to customers"
           rows="10"
-          className="input-field message-input"
+          className="mass-email-input mass-email-message-input"
           disabled={sending}
         />
 
-        <button className="submit-btn" type="submit" disabled={sending}>
+        <button className="mass-email-submit-button" type="submit" disabled={sending}>
           {sending ? 'Sending…' : 'Send Email'}
         </button>
       </form>

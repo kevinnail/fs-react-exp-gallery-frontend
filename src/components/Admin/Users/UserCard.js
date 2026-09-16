@@ -24,19 +24,19 @@ export default function UserCard({ user }) {
 
   return (
     <div className="user-card">
-      <div className="user-image">
+      <div className="user-card-image">
         {profile?.imageUrl ? (
           <img src={profile?.imageUrl} alt={profile?.firstName || 'User'} />
         ) : (
-          <div className="user-image-placeholder" />
+          <div className="user-card-image-placeholder" />
         )}
       </div>
-      <div className="user-email">{user.email}</div>
-      <div className="user-name">
+      <div className="user-card-email">{user.email}</div>
+      <div className="user-card-name">
         {profile ? profile?.firstName + ' ' + profile?.lastName : '—'}
       </div>
-      <div className="user-created">{formatDate(profile?.createdAt)}</div>
-      <div className="user-time-since">{getTimeSinceJoined(profile?.createdAt)}</div>
+      <div className="user-card-joined-date">{formatDate(profile?.createdAt)}</div>
+      <div className="user-card-time-since-joined">{getTimeSinceJoined(profile?.createdAt)}</div>
     </div>
   );
 }

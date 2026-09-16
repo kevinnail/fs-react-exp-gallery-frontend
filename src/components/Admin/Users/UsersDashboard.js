@@ -20,13 +20,13 @@ export default function UsersDashboard() {
   }, []);
 
   return (
-    <div className="users-page-container">
-      <div className="users-content">
+    <div className="users-page">
+      <div className="users-panel">
         <h1 className="users-title">Registered Users</h1>
         <p>Total users: {users.length - 4}</p>
 
-        <div className="users-list-wrapper">
-          <div className="user-list-header">
+        <div className="users-list">
+          <div className="users-list-header">
             <span>Avatar</span>
             <span>Email</span>
             <span>Name</span>
@@ -34,18 +34,18 @@ export default function UsersDashboard() {
             <span>User Since</span>
           </div>
 
-          <div className="user-list-body">
+          <div className="users-list-body">
             {paginatedUsers.length === 0 ? (
-              <div className="no-users">No users found</div>
+              <div className="users-empty-message">No users found</div>
             ) : (
               paginatedUsers.map((user) => <UserCard key={user.id} user={user} />)
             )}
           </div>
 
           {totalPages > 1 && (
-            <div className="pagination-controls">
+            <div className="users-pagination">
               <button
-                className="pagination-button"
+                className="users-pagination-button"
                 onClick={() => setPage((p) => Math.max(p - 1, 1))}
                 disabled={page === 1}
               >
@@ -57,7 +57,7 @@ export default function UsersDashboard() {
               </span>
 
               <button
-                className="pagination-button"
+                className="users-pagination-button"
                 onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                 disabled={page === totalPages}
               >
