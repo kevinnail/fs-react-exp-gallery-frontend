@@ -105,15 +105,6 @@
   top: 0;
 }
 
-.form-section {
-  flex: 1;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 .auth-form-content {
   display: flex;
   flex-direction: column;

@@ -97,7 +97,7 @@ export default function DiscountForm() {
           </label>
         </div>
 
-        <section className="discount-form-message-section">
+        <section>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}

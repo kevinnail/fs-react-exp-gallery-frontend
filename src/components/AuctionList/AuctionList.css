@@ -124,13 +124,6 @@
   color: #ffffff;
 }
 
-.auction-card-description {
-  font-size: 1rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 0.75rem;
-}
-
 .auction-card-details p {
   margin: 0.25rem 0;
   font-size: 0.95rem;
@@ -159,7 +152,6 @@
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
-.auction-list-view-bids-button,
 .auction-list-manage-button {
   margin-top: 1rem;
   background: rgba(255, 255, 255, 0.08);
@@ -177,7 +169,6 @@
     transform 0.1s ease;
 }
 
-.auction-list-view-bids-button:hover,
 .auction-list-manage-button:hover,
 .auction-card-edit-button:hover,
 .auction-card-swap-button:hover {
@@ -187,21 +178,10 @@
   transform: scale(1.01);
 }
 
-.auction-list-view-bids-button:active,
 .auction-list-manage-button:active,
 .auction-card-edit-button:active,
 .auction-card-swap-button:active {
   transform: scale(0.98);
-}
-
-.auction-card-bids-list {
-  list-style: none;
-  margin-top: 0.5rem;
-  padding: 0.5rem 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.9rem;
 }
 
 .auction-card-bid-entry {
@@ -409,10 +389,6 @@
     font-size: 1.25rem;
   }
 
-  .auction-card-description {
-    font-size: 0.9rem;
-  }
-
   .auction-card-details p {
     font-size: 0.9rem;
   }
@@ -454,10 +430,6 @@
 
   .auction-card-info h2 {
     font-size: 1rem;
-  }
-
-  .auction-card-description {
-    font-size: 0.85rem;
   }
 }
 

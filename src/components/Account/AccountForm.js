@@ -301,10 +301,9 @@ export default function ProfileForm({ handleCloseForm }) {
           </div>
 
           {/* Shipping Address Section */}
-          <div className="account-form-field account-form-address-section">
+          <div className="account-form-field">
             <button
               type="button"
-              className="account-form-address-toggle-button"
               onClick={() => setShowAddress((prev) => !prev)}
               style={{
                 marginBottom: '0.5rem',
@@ -322,7 +321,6 @@ export default function ProfileForm({ handleCloseForm }) {
             </button>
             {showAddress && (
               <div
-                className="account-form-address-fields"
                 style={{
                   padding: '1rem',
                   borderRadius: '8px',
@@ -330,7 +328,6 @@ export default function ProfileForm({ handleCloseForm }) {
                 }}
               >
                 <div
-                  className="account-form-address-hint"
                   style={{
                     fontSize: '.8rem',
                     marginBottom: '.5rem',

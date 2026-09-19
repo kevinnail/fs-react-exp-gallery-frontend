@@ -818,12 +818,6 @@
   border-color: var(--color-text-muted);
 }
 
-.admin-sales-modal-actions {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-}
-
 /* ---------- post finder ---------- */
 
 .admin-sales-piece-finder {
@@ -880,15 +874,6 @@
 }
 
 /* ---------- shared ---------- */
-
-.admin-sales-visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
 
 .admin-sales button:focus-visible,
 .admin-sales a:focus-visible,

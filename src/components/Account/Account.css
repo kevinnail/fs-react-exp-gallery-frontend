@@ -10,12 +10,6 @@
   padding: 90px 0 0 0;
 }
 
-.account-search-container {
-  width: 100%;
-  max-width: 1200px;
-  margin-bottom: 2rem;
-}
-
 .account-panel {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 15px;
@@ -44,18 +38,6 @@ div {
   font-size: 1.2rem;
   margin: 0;
   text-align: left;
-}
-
-.account-dashboard-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-@media (max-width: 900px) {
-  .account-dashboard-columns {
-    grid-template-columns: 1fr;
-  }
 }
 
 .account-identity-header {
@@ -111,18 +93,6 @@ div {
   margin: 0 0 0.35rem 0;
 }
 
-.account-edit-profile-button {
-  background: linear-gradient(315deg, black, grey);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
 /* Subtle top-right icon button for editing */
 .account-edit-settings-button {
   position: absolute;
@@ -149,37 +119,10 @@ div {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
-.account-edit-profile-button:hover {
-  background: linear-gradient(315deg, grey, black);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-}
-
 .account-welcome-message {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.account-detail-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.account-detail-label {
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 500;
-  font-size: 1rem;
-}
-
-.account-detail-value {
-  color: white;
-  margin: 0;
-  text-align: left;
 }
 
 .account-specials-grid {
@@ -194,14 +137,6 @@ div {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.account-specials-placeholder {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  text-align: center;
-}
-
 .account-section-heading {
   display: block;
   width: 90%;
@@ -214,13 +149,6 @@ div {
   border: 1px solid white;
   padding: 0.5rem 1rem;
   border-radius: 8px;
-}
-
-.account-specials-placeholder p {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 1.1rem;
-  margin: 0;
-  font-style: italic;
 }
 
 .account-message-link {
@@ -301,10 +229,6 @@ div {
   font-size: 1rem;
   font-weight: 600;
   color: white;
-}
-
-.account-special-details .account-special-description {
-  display: none;
 }
 
 .account-welcome-dismiss-button {
@@ -459,12 +383,6 @@ div {
   .account-tab {
     font-size: 1rem;
     padding: 0.75rem 0.9rem;
-  }
-
-  .account-detail-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
   }
 
   .account-special-card {

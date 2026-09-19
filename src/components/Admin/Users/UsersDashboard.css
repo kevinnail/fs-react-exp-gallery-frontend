@@ -163,12 +163,6 @@
   background-color: #f0f0f0;
 }
 
-.users-pagination-button--current {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
-}
-
 .users-pagination-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;

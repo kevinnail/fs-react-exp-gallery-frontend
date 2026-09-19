@@ -346,7 +346,7 @@ export default function Account() {
             />
           </Tabs>
         </div>
-        <div className="account-tab-content">
+        <div>
           {tab === TAB_SUMMARY && hasUnpaid && (
             <PaymentDueSummary
               unpaidData={unpaidData}

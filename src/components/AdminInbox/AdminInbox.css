@@ -141,11 +141,6 @@
   font-size: 0.8rem;
 }
 
-.admin-inbox-conversation-message-count {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-}
-
 .admin-inbox-conversation-last-activity {
   display: flex;
   justify-content: space-between;
@@ -155,24 +150,6 @@
 .admin-inbox-conversation-last-message-time {
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.8rem;
-}
-
-.admin-inbox-conversation-last-activity .admin-inbox-last-activity-unread-badge {
-  background: #ff4444;
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: bold;
-  position: static;
-  top: auto;
-  right: auto;
-  z-index: auto;
-  box-shadow: none;
 }
 
 .admin-inbox-unread-count {
@@ -213,40 +190,6 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-}
-
-.admin-inbox-message-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-  object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.admin-inbox-message-avatar-fallback {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 12px;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-
-.admin-inbox-message--from-admin .admin-inbox-message-avatar,
-.admin-inbox-message--from-admin .admin-inbox-message-avatar-fallback {
-  order: 2;
-  margin-right: 0;
-  margin-left: 0.5rem;
 }
 
 .admin-inbox-message--from-customer {
@@ -295,15 +238,6 @@
   line-height: 1.4;
   white-space: pre-wrap;
   word-wrap: break-word;
-}
-
-/* Enhanced styles for piece metadata in messages */
-.admin-inbox-message-bubble p:has-text('About this piece:') {
-  background: rgba(255, 215, 0, 0.1);
-  border-left: 3px solid #ffd700;
-  padding: 0.5rem;
-  border-radius: 4px;
-  margin: 0.5rem 0;
 }
 
 /* Alternative approach using CSS for piece metadata highlighting */

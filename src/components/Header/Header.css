@@ -39,115 +39,6 @@
   font-size: 0.7rem;
 }
 
-.site-header-new-link {
-  color: white;
-  text-decoration: none;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-  padding: 5px 4px 5px 4px;
-  background-image: linear-gradient(315deg, black, grey);
-  font-size: 1rem;
-  transition: 2000ms;
-  width: 120px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  position: relative;
-}
-
-.site-header-mobile-new-link-old {
-  color: white;
-  text-decoration: none;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-  padding: 5px 4px 5px 4px;
-  background-image: linear-gradient(315deg, black, grey);
-  font-size: 1rem;
-  display: flex;
-  transition: 2000ms;
-  width: 120px;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  position: relative;
-}
-
-.site-header-new-link:active {
-  color: rgb(255, 255, 255);
-  background-color: rgb(0, 0, 0, 0.5);
-  border: none;
-  cursor: pointer;
-  transition: 400ms ease-in-out;
-  transform: scale(1.1);
-}
-
-/* Unread message badge */
-.site-header-unread-badge {
-  background: #ff4444;
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: bold;
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  z-index: 10;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.site-header-upload-icon {
-  height: 60px;
-  width: 60px;
-}
-
-/* style for button */
-.site-header-signout-button {
-  color: white;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-  padding: 4px 4px 2px 4px;
-  background-image: linear-gradient(315deg, grey, black, grey);
-  font-size: 0.9rem;
-  display: flex;
-  transition: 100ms;
-  justify-content: center;
-  align-items: center;
-  width: 118px;
-  height: 40px;
-}
-
-/* style for button when hovered or focused */
-
-.site-header-signout-button:focus {
-  color: rgb(255, 255, 255);
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  transition: 250ms ease-in-out;
-  transform: scale(1.1);
-  background-color: rgb(0, 0, 0, 0.5);
-  transition: 400ms;
-}
-
-.site-header-signout-icon {
-  height: 40px;
-}
-.site-header-user-email {
-  font-size: 0.8rem;
-  color: rgb(0, 255, 64);
-  text-decoration: none;
-  font-weight: bold;
-}
-
 .site-header-menu-panel {
   z-index: 3000;
   display: grid;
@@ -206,22 +97,6 @@
   transition: 200ms ease-in;
   box-shadow: 0 0 25px 0 rgba(255, 255, 255, 0.5);
 }
-.site-header-new-post-label {
-  margin-top: -4px;
-}
-
-.site-header-menu-toggle {
-  display: none;
-}
-
-.site-header-username {
-  position: absolute;
-  left: 75px;
-  top: 18px;
-  color: white;
-  font-size: 0.75rem;
-}
-
 .site-header-menu-button {
   position: relative;
   display: inline-flex;
@@ -261,34 +136,6 @@
 
 
 */
-
-@media (min-width: 420px) {
-  .site-header-menu-toggle {
-    display: block;
-  }
-}
-
-@media (min-width: 768px) {
-  .site-header-new-link {
-    font-size: 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .site-header-signout-button {
-    font-size: 1rem;
-  }
-
-  .site-header-new-link:active,
-  .site-header-signout-button:active {
-    transform: scale(1);
-    transition: 500ms;
-  }
-  .site-header-signout-button,
-  .site-header-new-link {
-    box-shadow: 0 0 10px 0 #7777f3bd;
-  }
-}
 
 /* The title reserved a fixed 207px whether it needed it or not, which made
    the header a fixed 438px wide at every phone size and pushed the menu

@@ -103,7 +103,7 @@ export default function Header() {
     <>
       <header className="site-header">
         <DevIndicator />
-        <Link className="link" to={user && isAdmin ? '/admin' : '/'} onClick={handleHomeClick}>
+        <Link to={user && isAdmin ? '/admin' : '/'} onClick={handleHomeClick}>
           <img className="site-header-logo" src="../logo-sq.png" />
         </Link>{' '}
         <div>
@@ -144,9 +144,7 @@ export default function Header() {
 
       <div
         ref={menuRef}
-        className={`menu-icon-adapt site-header-menu-panel ${isMenuOpen ? ' site-header-menu-panel--open ' : ''}${
-          location.pathname === '/admin' ? ' menu-div-adapt ' : ''
-        }`}
+        className={`site-header-menu-panel ${isMenuOpen ? ' site-header-menu-panel--open ' : ''}`}
       >
         <Menu handleClick={handleClick} closeMenu={closeMenu} />
       </div>
