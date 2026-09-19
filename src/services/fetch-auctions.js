@@ -24,6 +24,29 @@ export async function getAuctions() {
   }
 }
 
+export async function getLiveAuctions() {
+  try {
+    const res = await fetch(`${BASE_URL}/api/v1/auctions/live`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!res.ok) {
+      throw new Error('Error fetching live auctions');
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    console.error('Error fetching live auctions', e);
+    throw new Error(e.message || 'Error in getLiveAuctions');
+  }
+}
+
 export async function getUserAuctions(userId) {
   try {
     const res = await fetch(`${BASE_URL}/api/v1/auctions/user-auctions/${userId}`, {

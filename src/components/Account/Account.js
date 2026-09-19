@@ -145,17 +145,17 @@ export default function Account() {
   function ProfileMessage() {
     return (
       <div>
-        <p className="profile-content-p">
+        <p className="account-paragraph">
           I&apos;ll be adding more features asap, I just built Messages and Auctions- and we&apos;ll
           see what else I get going down the line! One thing is I&apos;m looking into getting my
           blog going again for those interested in some long form content, free from doom scrolling.
           It&apos;ll be hikes/ nature, astronomy/ astrophotography, music, fun coding stuff I&apos;m
           working on, etc.- coming soon.
         </p>
-        <p className="profile-content-p" style={{ marginTop: '1rem' }}>
+        <p className="account-paragraph" style={{ marginTop: '1rem' }}>
           Let me know if you run into any bugs/ technical issues and I&apos;ll get &apos;em fixed.
         </p>
-        <p className="profile-content-p" style={{ textAlign: 'center', margin: '2rem' }}>
+        <p className="account-paragraph" style={{ textAlign: 'center', margin: '2rem' }}>
           Stay tuned, and thanks for being here.
         </p>
       </div>
@@ -164,15 +164,15 @@ export default function Account() {
 
   const newUserMessage = (
     <>
-      <p className="profile-content-p">
+      <p className="account-paragraph">
         Please add your name or whatever you want me to call you, and an avatar image, using the
         edit button above.
       </p>
 
-      <p className="profile-content-p">
+      <p className="account-paragraph">
         If you have questions about work or a problem with an order, feel free to use the private/
         secure/ encrypted in house{' '}
-        <Link className="message-link" to="/messages">
+        <Link className="account-message-link" to="/messages">
           messaging
         </Link>
         ! <span>(link in menu)</span>
@@ -231,39 +231,41 @@ export default function Account() {
   })();
 
   return (
-    <div className="profile-container">
-      <div className="profile-content">
+    <div className="account-page">
+      <div className="account-panel">
         <button
           onClick={handleEditProfile}
-          className="edit-profile-icon-btn"
+          className="account-edit-settings-button"
           aria-label="Edit Settings"
           title="Edit Settings"
         >
           <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>⚙️</span>
         </button>
-        <div className="profile-header">
-          <div className="profile-picture-section">
+        <div className="account-identity-header">
+          <div className="account-avatar-section">
             {profile?.imageUrl ? (
-              <img src={profile?.imageUrl} alt="Profile" className="profile-picture" />
+              <img src={profile?.imageUrl} alt="Profile" className="account-avatar" />
             ) : (
-              <div className="profile-picture-placeholder">
+              <div className="account-avatar-placeholder">
                 {profile?.firstName?.charAt(0) || user?.email?.charAt(0) || 'U'}
               </div>
             )}
           </div>
-          <div className="profile-info">
+          <div className="account-identity">
             <h1>
               {profile?.firstName || profile?.lastName
                 ? `${profile?.firstName || ''} ${profile?.lastName || ''}`
                 : ''}
             </h1>
-            <p className="user-email">{user?.email}</p>
+            <p className="account-email">{user?.email}</p>
             <p className="account-greeting">{displayGreeting}</p>
             <div className="account-status-row">
               <button
                 type="button"
                 className={`account-chip ${
-                  profile?.sendEmailNotifications ? 'account-chip-on' : 'account-chip-off'
+                  profile?.sendEmailNotifications
+                    ? 'account-chip--notifications-on'
+                    : 'account-chip--notifications-off'
                 }`}
                 onClick={handleEditProfile}
                 title={
@@ -272,20 +274,20 @@ export default function Account() {
                     : 'Only tracking info emails. Click to change in settings.'
                 }
               >
-                <span className="account-chip-dot" aria-hidden="true" />
+                <span className="account-chip-status-dot" aria-hidden="true" />
                 Email notifications {profile?.sendEmailNotifications ? 'on' : 'off'}
-                <span className="account-chip-gear" aria-hidden="true">
+                <span className="account-chip-settings-icon" aria-hidden="true">
                   ⚙️
                 </span>
               </button>
               {!isProfileComplete && (
                 <button
                   type="button"
-                  className="account-chip account-chip-warn"
+                  className="account-chip account-chip--warning"
                   onClick={handleEditProfile}
                 >
                   Account info incomplete
-                  <span className="account-chip-gear" aria-hidden="true">
+                  <span className="account-chip-settings-icon" aria-hidden="true">
                     ⚙️
                   </span>
                 </button>
@@ -295,9 +297,9 @@ export default function Account() {
         </div>
 
         {profile?.showWelcome && (
-          <div className="profile-details">
+          <div className="account-welcome-message">
             {customerMessage}
-            <span className="got-it-button" onClick={removeWelcomeMessage}>
+            <span className="account-welcome-dismiss-button" onClick={removeWelcomeMessage}>
               Got it! Don&apos;t show this message again
             </span>
           </div>
@@ -314,7 +316,7 @@ export default function Account() {
           >
             {hasUnpaid && (
               <Tab
-                className="account-tab account-tab-due"
+                className="account-tab account-tab--payment-due"
                 value={TAB_SUMMARY}
                 label={totalDueLabel(
                   'Summary',
@@ -344,7 +346,7 @@ export default function Account() {
             />
           </Tabs>
         </div>
-        <div className="tab-content-wrapper">
+        <div>
           {tab === TAB_SUMMARY && hasUnpaid && (
             <PaymentDueSummary
               unpaidData={unpaidData}
@@ -353,8 +355,8 @@ export default function Account() {
             />
           )}
           {tab === TAB_SPECIALS && (
-            <div className="new-work-section">
-              <span className="new-work-msg">
+            <div className="account-specials-section">
+              <span className="account-section-heading">
                 <span style={{ display: 'block', textAlign: 'center' }}>
                   <strong>Current Special:</strong>
                 </span>
@@ -365,7 +367,7 @@ export default function Account() {
                 </span>
               </span>
 
-              <div className="new-work-content">
+              <div className="account-specials-grid">
                 {recentPosts.length > 0 ? (
                   recentPosts.map((post) => {
                     const { salePrice } = getPiecePrice(post, { isSignedIn: true });
@@ -374,18 +376,18 @@ export default function Account() {
                     return (
                       <div
                         key={post.id}
-                        className="recent-post-card"
+                        className="account-special-card"
                         onClick={() => handleClickNewWork(post.id)}
                       >
-                        <div className="recent-post-image-title-wrapper">
+                        <div className="account-special-image-wrapper">
                           <img
                             src={post.image_url}
                             alt={post.title}
-                            className="recent-post-image"
+                            className="account-special-image"
                           />
                         </div>
 
-                        <div className="recent-post-details">
+                        <div className="account-special-details">
                           <p>
                             <span>Category:</span>
                             <span>{post.category}</span>
@@ -394,7 +396,7 @@ export default function Account() {
                           <p>
                             <span>Price:</span>
                             <span style={{ fontWeight: '600' }}>
-                              <span className="recent-post-was">
+                              <span className="account-special-original-price">
                                 {post.price ? `$${post.price}` : 'N/A'}
                               </span>
                               <i className="fa fa-arrow-right" aria-hidden="true"></i>
@@ -403,7 +405,7 @@ export default function Account() {
                           </p>
 
                           {countdownLabel && (
-                            <span className="special-countdown">{countdownLabel}</span>
+                            <span className="account-special-countdown">{countdownLabel}</span>
                           )}
                         </div>
                       </div>

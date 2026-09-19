@@ -48,29 +48,29 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="forgot-password-container">
+    <div className="forgot-password-page">
       <div className="forgot-password-card">
         <h2 className="forgot-password-title">Reset your password</h2>
 
         {hasSubmitted ? (
           <>
-            <p className="forgot-password-sent">
+            <p className="forgot-password-sent-message">
               If an account exists for that address, a password reset email is on its way. The link
               expires in 30 minutes.
             </p>
-            <Link className="forgot-password-back" to="/auth/sign-in">
+            <Link className="forgot-password-back-link" to="/auth/sign-in">
               Back to sign in
             </Link>
           </>
         ) : (
           <>
-            <p className="forgot-password-copy">
+            <p className="forgot-password-instructions">
               Enter the email address on your account and we&apos;ll send you a link to set a new
               password.
             </p>
             <form onSubmit={handleSubmit}>
               <input
-                className="input-auth"
+                className="auth-input"
                 type="email"
                 id="forgot-password-email"
                 name="email"
@@ -85,11 +85,11 @@ const ForgotPassword = () => {
                 autoCorrect="off"
                 spellCheck={false}
               />
-              <button className="button-auth" type="submit" disabled={submitting}>
+              <button className="auth-button" type="submit" disabled={submitting}>
                 {submitting ? 'Sending...' : 'Send reset link'}
               </button>
             </form>
-            <Link className="forgot-password-back" to="/auth/sign-in">
+            <Link className="forgot-password-back-link" to="/auth/sign-in">
               Back to sign in
             </Link>
           </>

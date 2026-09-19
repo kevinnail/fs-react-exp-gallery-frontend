@@ -593,31 +593,34 @@ const GallerySalesPanel = () => {
         <img
           src={user.profile.imageUrl || user.profile.image_url}
           alt=""
-          className="slg-user-avatar"
+          className="admin-sales-customer-avatar"
         />
       ) : (
-        <div className="slg-user-avatar slg-user-avatar--fallback" aria-hidden="true">
+        <div
+          className="admin-sales-customer-avatar admin-sales-customer-avatar--initial"
+          aria-hidden="true"
+        >
           {getInitial(user.profile?.firstName, user.email, user.user_email)}
         </div>
       )}
-      <span className="slg-user-meta">
-        <span className="slg-user-name">{getFullName(user)}</span>
-        <span className="slg-user-email">{user.email || user.user_email}</span>
+      <span className="admin-sales-customer-name-and-email">
+        <span className="admin-sales-customer-name">{getFullName(user)}</span>
+        <span className="admin-sales-customer-email">{user.email || user.user_email}</span>
       </span>
     </>
   );
 
   const renderOrderTotals = (itemsSubtotal, shippingAmount) => (
-    <dl className="slg-order-totals">
-      <div className="slg-order-total-line">
+    <dl className="admin-sales-order-totals">
+      <div className="admin-sales-order-total-row">
         <dt>Items</dt>
         <dd>{formatMoney(itemsSubtotal)}</dd>
       </div>
-      <div className="slg-order-total-line">
+      <div className="admin-sales-order-total-row">
         <dt>Shipping</dt>
         <dd>{formatMoney(shippingAmount)}</dd>
       </div>
-      <div className="slg-order-total-line slg-order-total-line--grand">
+      <div className="admin-sales-order-total-row admin-sales-order-total-row--grand-total">
         <dt>Total</dt>
         <dd>{formatMoney(itemsSubtotal + shippingAmount)}</dd>
       </div>
@@ -625,7 +628,7 @@ const GallerySalesPanel = () => {
   );
 
   const renderAddressLines = (address) => (
-    <div className="slg-sale-address-lines">
+    <div className="admin-sales-detail-address-lines">
       <div>{address.addressLine1}</div>
       {address.addressLine2 ? <div>{address.addressLine2}</div> : null}
       <div>
@@ -637,47 +640,47 @@ const GallerySalesPanel = () => {
 
   return (
     <>
-      <div className="slg-sales-stats">
+      <div className="admin-sales-stats">
         {statTiles.map((tile) => (
           <div
             key={tile.label}
-            className={`slg-sales-stat${tile.tone ? ` slg-sales-stat--${tile.tone}` : ''}`}
+            className={`admin-sales-stat${tile.tone ? ` admin-sales-stat--${tile.tone}` : ''}`}
           >
-            <span className="slg-sales-stat-label">{tile.label}</span>
-            <span className="slg-sales-stat-value">{tile.value}</span>
+            <span className="admin-sales-stat-label">{tile.label}</span>
+            <span className="admin-sales-stat-value">{tile.value}</span>
           </div>
         ))}
       </div>
 
-      <div className="slg-sales-body">
-        <main className="slg-sales-main">
-          <div className="slg-sales-toolbar">
-            <h2 className="slg-sales-heading">Gallery sales</h2>
+      <div className="admin-sales-layout">
+        <main className="admin-sales-list-column">
+          <div className="admin-sales-toolbar">
+            <h2 className="admin-sales-list-heading">Gallery sales</h2>
 
             <button
               type="button"
-              className="slg-sales-button slg-sales-button--primary"
+              className="admin-sales-button admin-sales-button--primary"
               onClick={handleStartNewSale}
             >
               Add sale
             </button>
 
-            <p className="slg-sales-count">{sales.length}</p>
+            <p className="admin-sales-list-count">{sales.length}</p>
           </div>
 
           {(() => {
             if (loading) {
-              return <p className="slg-sale-empty">Loading sales…</p>;
+              return <p className="admin-sales-empty-message">Loading sales…</p>;
             }
             if (sales.length === 0) {
               return (
-                <p className="slg-sale-empty">
+                <p className="admin-sales-empty-message">
                   No gallery sales yet. Add one to start tracking payment and shipping.
                 </p>
               );
             }
             return (
-              <ul className="slg-sale-list">
+              <ul className="admin-sales-list">
                 {sales.map((order) => {
                   const completedStages = countCompletedStages({
                     isPaid: order.is_paid,
@@ -689,31 +692,33 @@ const GallerySalesPanel = () => {
                     <li key={order.id}>
                       <button
                         type="button"
-                        className={`slg-sale-row${selectedSale === order.id ? ' slg-sale-row--on' : ''}`}
+                        className={`admin-sales-row${selectedSale === order.id ? ' admin-sales-row--selected' : ''}`}
                         aria-pressed={selectedSale === order.id}
                         onClick={() => handleSelectSale(order.id)}
                       >
-                        <span className="slg-sale-thumb">
+                        <span className="admin-sales-row-thumbnail">
                           <img src={firstItem?.post_image_url} alt="" />
                           {items.length > 1 && (
-                            <span className="slg-sale-thumb-count">{items.length}</span>
+                            <span className="admin-sales-row-item-count">{items.length}</span>
                           )}
                         </span>
 
-                        <span className="slg-sale-identity">
-                          <span className="slg-sale-title">
+                        <span className="admin-sales-row-details">
+                          <span className="admin-sales-row-title">
                             {items.length > 1
                               ? `${items.length} pieces · ${firstItem?.post_title}`
                               : firstItem?.post_title}
                           </span>
-                          <span className="slg-sale-buyer">
+                          <span className="admin-sales-row-buyer">
                             {`${order.buyer_first_name || ''} ${order.buyer_last_name || ''}`.trim()}
                             {' · '}
                             {order.buyer_email}
                           </span>
                         </span>
 
-                        <span className="slg-sale-price">{formatMoney(getOrderTotal(order))}</span>
+                        <span className="admin-sales-row-price">
+                          {formatMoney(getOrderTotal(order))}
+                        </span>
 
                         <SaleStages completedCount={completedStages} />
                       </button>
@@ -725,29 +730,29 @@ const GallerySalesPanel = () => {
           })()}
         </main>
 
-        <aside className="slg-sales-rail" ref={salesPanelRef}>
+        <aside className="admin-sales-detail-column" ref={salesPanelRef}>
           {(() => {
             if (isCreatingSale) {
               return (
-                <div className="slg-sale-panel">
-                  <div className="slg-sale-panel-head">
-                    <h2 className="slg-sale-panel-title">New sale</h2>
+                <div className="admin-sales-detail-panel">
+                  <div className="admin-sales-detail-panel-header">
+                    <h2 className="admin-sales-detail-panel-title">New sale</h2>
                     <button
                       type="button"
-                      className="slg-sales-button"
+                      className="admin-sales-button"
                       onClick={() => setIsCreatingSale(false)}
                     >
                       Cancel
                     </button>
                   </div>
 
-                  <div className="slg-sale-panel-body">
-                    <div className="form-field slg-user-search">
-                      <label className="form-field-label" htmlFor="slg-customer-search">
+                  <div className="admin-sales-detail-panel-content">
+                    <div className="form-field admin-sales-customer-search">
+                      <label className="form-field-label" htmlFor="gallery-sales-customer-search">
                         Find customer
                       </label>
                       <input
-                        id="slg-customer-search"
+                        id="gallery-sales-customer-search"
                         type="text"
                         className="form-input"
                         placeholder="Name or email"
@@ -759,15 +764,17 @@ const GallerySalesPanel = () => {
                         onFocus={() => setShowUserResults(true)}
                       />
                       {showUserResults && debouncedTerm && (
-                        <div className="slg-user-results">
+                        <div className="admin-sales-customer-results">
                           {filteredUsers.length === 0 ? (
-                            <p className="slg-user-results-empty">No customers match that.</p>
+                            <p className="admin-sales-customer-results-empty-message">
+                              No customers match that.
+                            </p>
                           ) : (
                             filteredUsers.map((user) => (
                               <button
                                 key={user.id}
                                 type="button"
-                                className="slg-user-result"
+                                className="admin-sales-customer-result"
                                 onClick={() => handleSelectUser(user)}
                               >
                                 {renderUserIdentity(user)}
@@ -779,22 +786,24 @@ const GallerySalesPanel = () => {
                     </div>
 
                     {selectedUser && (
-                      <div className="slg-user-card">
-                        <div className="slg-user-identity">{renderUserIdentity(selectedUser)}</div>
+                      <div className="admin-sales-selected-customer">
+                        <div className="admin-sales-customer-details">
+                          {renderUserIdentity(selectedUser)}
+                        </div>
 
                         {selectedUser.address ? (
-                          <div className="slg-sale-address">
+                          <div className="admin-sales-detail-address">
                             {renderAddressLines(selectedUser.address)}
                             <button
                               type="button"
-                              className="slg-sales-button"
+                              className="admin-sales-button"
                               onClick={handleCopyAddress}
                             >
                               Copy address
                             </button>
                           </div>
                         ) : (
-                          <p className="slg-sale-fact-value slg-sale-fact-value--missing">
+                          <p className="admin-sales-detail-fact-value admin-sales-detail-fact-value--missing">
                             No shipping address on file
                           </p>
                         )}
@@ -802,11 +811,11 @@ const GallerySalesPanel = () => {
                     )}
 
                     <div className="form-field">
-                      <label className="form-field-label" htmlFor="slg-buyer-email">
+                      <label className="form-field-label" htmlFor="gallery-sales-buyer-email">
                         Buyer email
                       </label>
                       <input
-                        id="slg-buyer-email"
+                        id="gallery-sales-buyer-email"
                         type="text"
                         className="form-input"
                         value={newBuyerEmail}
@@ -814,7 +823,7 @@ const GallerySalesPanel = () => {
                       />
                       <button
                         type="button"
-                        className="slg-sales-button"
+                        className="admin-sales-button"
                         onClick={handleSearchByEmail}
                       >
                         Find user by email
@@ -825,23 +834,27 @@ const GallerySalesPanel = () => {
                       <span className="form-field-label">Pieces</span>
 
                       {newItems.length === 0 ? (
-                        <p className="slg-sale-fact-value slg-sale-fact-value--missing">
+                        <p className="admin-sales-detail-fact-value admin-sales-detail-fact-value--missing">
                           No pieces on this sale yet.
                         </p>
                       ) : (
-                        <ul className="slg-sale-items">
+                        <ul className="admin-sales-new-sale-items">
                           {newItems.map((item) => (
-                            <li key={item.postId} className="slg-sale-item">
-                              <span className="slg-sale-item-thumb">
+                            <li key={item.postId} className="admin-sales-new-sale-item">
+                              <span className="admin-sales-new-sale-item-thumbnail">
                                 <img src={item.imageUrl} alt="" />
                               </span>
 
-                              <span className="slg-sale-item-meta">
-                                <span className="slg-sale-item-title">{item.title}</span>
-                                <span className="slg-sale-item-sub">ID {item.postId}</span>
+                              <span className="admin-sales-new-sale-item-details">
+                                <span className="admin-sales-new-sale-item-title">
+                                  {item.title}
+                                </span>
+                                <span className="admin-sales-new-sale-item-id">
+                                  ID {item.postId}
+                                </span>
                               </span>
 
-                              <span className="form-money-input-wrapper slg-sale-item-price">
+                              <span className="form-money-input-wrapper admin-sales-new-sale-item-price-field">
                                 <input
                                   type="number"
                                   className="form-input"
@@ -855,7 +868,7 @@ const GallerySalesPanel = () => {
 
                               <button
                                 type="button"
-                                className="slg-sale-item-remove"
+                                className="admin-sales-new-sale-item-remove-button"
                                 aria-label={`Remove ${item.title}`}
                                 onClick={() => handleRemoveItem(item.postId)}
                               >
@@ -868,7 +881,7 @@ const GallerySalesPanel = () => {
 
                       <button
                         type="button"
-                        className="slg-sales-button"
+                        className="admin-sales-button"
                         onClick={() => setShowPostModal(true)}
                       >
                         Add piece
@@ -876,12 +889,12 @@ const GallerySalesPanel = () => {
                     </div>
 
                     <div className="form-field">
-                      <label className="form-field-label" htmlFor="slg-sale-shipping">
+                      <label className="form-field-label" htmlFor="gallery-sales-shipping">
                         Shipping
                       </label>
                       <span className="form-money-input-wrapper">
                         <input
-                          id="slg-sale-shipping"
+                          id="gallery-sales-shipping"
                           type="number"
                           className="form-input"
                           value={newShipping}
@@ -894,11 +907,14 @@ const GallerySalesPanel = () => {
                     </div>
 
                     <div className="form-field">
-                      <label className="form-field-label" htmlFor="slg-new-tracking">
+                      <label
+                        className="form-field-label"
+                        htmlFor="gallery-sales-new-sale-tracking-number"
+                      >
                         Tracking number
                       </label>
                       <input
-                        id="slg-new-tracking"
+                        id="gallery-sales-new-sale-tracking-number"
                         type="text"
                         className="form-input"
                         value={newTracking}
@@ -908,10 +924,10 @@ const GallerySalesPanel = () => {
 
                     {renderOrderTotals(newItemsSubtotal, newShippingAmount)}
 
-                    <div className="slg-sale-actions">
+                    <div className="admin-sales-detail-actions">
                       <button
                         type="button"
-                        className="slg-sales-button slg-sales-button--primary slg-sales-button--wide"
+                        className="admin-sales-button admin-sales-button--primary admin-sales-button--wide"
                         onClick={handleCreateSale}
                       >
                         Save sale
@@ -924,11 +940,11 @@ const GallerySalesPanel = () => {
 
             if (!currentSale) {
               return (
-                <div className="slg-sale-panel">
-                  <div className="slg-sale-panel-head">
-                    <h2 className="slg-sale-panel-title">Sale detail</h2>
+                <div className="admin-sales-detail-panel">
+                  <div className="admin-sales-detail-panel-header">
+                    <h2 className="admin-sales-detail-panel-title">Sale detail</h2>
                   </div>
-                  <p className="slg-sale-placeholder">
+                  <p className="admin-sales-placeholder-message">
                     Pick a sale to see the buyer, the address, and where it is in the pipeline.
                   </p>
                 </div>
@@ -936,32 +952,38 @@ const GallerySalesPanel = () => {
             }
 
             return (
-              <div className="slg-sale-panel">
-                <div className="slg-sale-panel-head">
-                  <h2 className="slg-sale-panel-title">Sale detail</h2>
+              <div className="admin-sales-detail-panel">
+                <div className="admin-sales-detail-panel-header">
+                  <h2 className="admin-sales-detail-panel-title">Sale detail</h2>
                   <button
                     type="button"
-                    className="slg-sales-button"
+                    className="admin-sales-button"
                     onClick={() => setSelectedSale(null)}
                   >
                     Close
                   </button>
                 </div>
 
-                <div className="slg-sale-panel-body">
+                <div className="admin-sales-detail-panel-content">
                   <SaleStages completedCount={currentSaleStages} variant="detail" />
 
-                  <ul className="slg-sale-pieces">
+                  <ul className="admin-sales-detail-pieces">
                     {getOrderItems(currentSale).map((item) => (
-                      <li key={item.id} className="slg-sale-piece">
-                        <img src={item.post_image_url} alt="" className="slg-sale-piece-image" />
-                        <div className="slg-sale-piece-meta">
-                          <h3 className="slg-sale-piece-title">{item.post_title}</h3>
-                          <span className="slg-sale-piece-price">{formatMoney(item.price)}</span>
-                          <div className="slg-sale-actions">
+                      <li key={item.id} className="admin-sales-detail-piece">
+                        <img
+                          src={item.post_image_url}
+                          alt=""
+                          className="admin-sales-detail-piece-image"
+                        />
+                        <div className="admin-sales-detail-piece-details">
+                          <h3 className="admin-sales-detail-piece-title">{item.post_title}</h3>
+                          <span className="admin-sales-detail-piece-price">
+                            {formatMoney(item.price)}
+                          </span>
+                          <div className="admin-sales-detail-actions">
                             <button
                               type="button"
-                              className="slg-sales-button"
+                              className="admin-sales-button"
                               onClick={() => navigate(`/${item.post_id}`)}
                             >
                               View post
@@ -977,11 +999,11 @@ const GallerySalesPanel = () => {
                     Number(currentSale.shipping_cost) || 0
                   )}
 
-                  <div className="slg-sale-actions">
+                  <div className="admin-sales-detail-actions">
                     <button
                       type="button"
-                      className={`slg-sales-button slg-sales-button--wide${
-                        currentSale.is_paid ? '' : ' slg-sales-button--primary'
+                      className={`admin-sales-button admin-sales-button--wide${
+                        currentSale.is_paid ? '' : ' admin-sales-button--primary'
                       }`}
                       onClick={handleTogglePaid}
                     >
@@ -989,35 +1011,35 @@ const GallerySalesPanel = () => {
                     </button>
                   </div>
 
-                  <dl className="slg-sale-facts">
-                    <div className="slg-sale-fact">
-                      <dt className="slg-sale-fact-label">Buyer</dt>
-                      <dd className="slg-sale-fact-value">
+                  <dl className="admin-sales-detail-facts">
+                    <div className="admin-sales-detail-fact">
+                      <dt className="admin-sales-detail-fact-label">Buyer</dt>
+                      <dd className="admin-sales-detail-fact-value">
                         {currentSale.buyer_first_name} {currentSale.buyer_last_name?.slice(0, 1)}.
                       </dd>
                     </div>
 
-                    <div className="slg-sale-fact">
-                      <dt className="slg-sale-fact-label">Email</dt>
-                      <dd className="slg-sale-fact-value">{currentSale.buyer_email}</dd>
+                    <div className="admin-sales-detail-fact">
+                      <dt className="admin-sales-detail-fact-label">Email</dt>
+                      <dd className="admin-sales-detail-fact-value">{currentSale.buyer_email}</dd>
                     </div>
 
-                    <div className="slg-sale-fact">
-                      <dt className="slg-sale-fact-label">Ship to</dt>
-                      <dd className="slg-sale-fact-value">
+                    <div className="admin-sales-detail-fact">
+                      <dt className="admin-sales-detail-fact-label">Ship to</dt>
+                      <dd className="admin-sales-detail-fact-value">
                         {currentSaleAddress ? (
-                          <div className="slg-sale-address">
+                          <div className="admin-sales-detail-address">
                             {renderAddressLines(currentSaleAddress)}
                             <button
                               type="button"
-                              className="slg-sales-button"
+                              className="admin-sales-button"
                               onClick={handleCopyCurrentSaleAddress}
                             >
                               Copy address
                             </button>
                           </div>
                         ) : (
-                          <span className="slg-sale-fact-value--missing">
+                          <span className="admin-sales-detail-fact-value--missing">
                             No shipping address on file
                           </span>
                         )}
@@ -1027,24 +1049,28 @@ const GallerySalesPanel = () => {
 
                   {hasRealTracking(currentSale.tracking_number) && (
                     <a
-                      className="slg-sale-tracking-link"
+                      className="admin-sales-tracking-link"
                       href={buildTrackingUrl(currentSale.tracking_number)}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <img alt="" className="slg-sale-tracking-mark" src="../../../usps.png" />
-                      <span className="slg-sale-tracking-number">
+                      <img
+                        alt=""
+                        className="admin-sales-tracking-carrier-logo"
+                        src="../../../usps.png"
+                      />
+                      <span className="admin-sales-tracking-number">
                         {currentSale.tracking_number}
                       </span>
                     </a>
                   )}
 
-                  <div className="form-field slg-tracking-field">
-                    <label className="form-field-label" htmlFor="slg-sale-tracking">
+                  <div className="form-field admin-sales-tracking-field">
+                    <label className="form-field-label" htmlFor="gallery-sales-tracking-number">
                       Tracking number
                     </label>
                     <input
-                      id="slg-sale-tracking"
+                      id="gallery-sales-tracking-number"
                       type="text"
                       className="form-input"
                       value={trackingInput}
@@ -1052,7 +1078,7 @@ const GallerySalesPanel = () => {
                     />
                     <button
                       type="button"
-                      className="slg-save-tracking"
+                      className="admin-sales-save-tracking-button"
                       onClick={handleSaveTracking}
                     >
                       Save tracking
@@ -1066,13 +1092,17 @@ const GallerySalesPanel = () => {
       </div>
 
       {showPostModal && (
-        <div className="slg-modal-scrim">
-          <div className="slg-modal slg-modal--wide" role="dialog" aria-modal="true">
-            <div className="slg-modal-head">
-              <h2 className="slg-modal-title">Select a piece</h2>
+        <div className="admin-sales-modal-overlay">
+          <div
+            className="admin-sales-modal admin-sales-modal--wide"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="admin-sales-modal-header">
+              <h2 className="admin-sales-modal-title">Select a piece</h2>
               <button
                 type="button"
-                className="slg-modal-close"
+                className="admin-sales-modal-close-button"
                 onClick={() => setShowPostModal(false)}
                 aria-label="Close piece finder"
               >
@@ -1081,25 +1111,27 @@ const GallerySalesPanel = () => {
             </div>
 
             {posts && posts.length > 0 ? (
-              <div className="slg-post-picker">
+              <div className="admin-sales-piece-finder">
                 {posts.map((post) => (
                   <button
                     key={post.id}
                     type="button"
-                    className="slg-post-option"
+                    className="admin-sales-piece-option"
                     onClick={() => handleSelectPost(post)}
                   >
                     <img src={post.image_url || post.imageUrl} alt="" />
-                    <span className="slg-post-option-meta">
-                      <span className="slg-post-option-title">{post.title}</span>
-                      <span className="slg-post-option-sub">ID {post.id}</span>
-                      <span className="slg-post-option-sub">{formatMoney(getPostPrice(post))}</span>
+                    <span className="admin-sales-piece-option-details">
+                      <span className="admin-sales-piece-option-title">{post.title}</span>
+                      <span className="admin-sales-piece-option-secondary-text">ID {post.id}</span>
+                      <span className="admin-sales-piece-option-secondary-text">
+                        {formatMoney(getPostPrice(post))}
+                      </span>
                     </span>
                   </button>
                 ))}
               </div>
             ) : (
-              <p className="slg-sale-placeholder">No pieces to choose from.</p>
+              <p className="admin-sales-placeholder-message">No pieces to choose from.</p>
             )}
           </div>
         </div>

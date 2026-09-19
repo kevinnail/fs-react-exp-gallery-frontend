@@ -1,4 +1,4 @@
-.rules-modal-text {
+.auction-rules-modal-panel {
   font-size: 1rem;
   line-height: 20px;
   background: rgba(0, 0, 0, 1);
@@ -10,11 +10,11 @@
   color: white;
 }
 
-.rules-modal-text li {
+.auction-rules-modal-panel li {
   padding: 0.3rem;
 }
 
-.close-button-rules-modal {
+.auction-rules-modal-close-button {
   margin-top: 1.5rem;
   width: 100%;
   padding: 0.6rem;
@@ -26,7 +26,7 @@
   font-weight: 600;
 }
 
-.auction-rules-modal-wrapper {
+.auction-rules-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;

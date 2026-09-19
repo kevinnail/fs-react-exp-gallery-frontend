@@ -1,40 +1,3 @@
-.auction-details-header {
-  font-size: 1.2rem;
-  border-bottom: 1px solid grey;
-  padding: 0.5rem;
-}
-
-.auction-details-current {
-  color: #ffd500;
-}
-
-.auction-details-collected {
-  color: #ddd;
-}
-
-.high-bidder-text {
-  font-size: 0.9rem;
-  color: white;
-  display: block;
-  font-weight: bold;
-}
-
-.ends-panel {
-  background-color: black;
-  padding: 0.5rem;
-  display: block;
-  margin-top: 0.5rem;
-  text-align: center;
-  border: 1px solid yellow;
-  font-weight: bold;
-}
-
-.total-bids {
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0;
-}
-
 .bid-modal-overlay {
   position: fixed;
   top: 0;
@@ -58,7 +21,7 @@
   color: #fff;
 }
 
-.bid-input {
+.bid-modal-input {
   width: 100%;
   padding: 0.6rem;
   margin: 1rem 0;
@@ -68,14 +31,14 @@
   color: #fff;
 }
 
-.modal-actions {
+.bid-modal-actions {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
 }
 
-.confirm-bid-btn,
-.cancel-bid-btn {
+.bid-modal-confirm-button,
+.bid-modal-cancel-button {
   flex: 1;
   padding: 0.6rem;
   border-radius: 8px;
@@ -84,29 +47,29 @@
   font-weight: 600;
 }
 
-.confirm-bid-btn {
+.bid-modal-confirm-button {
   background: linear-gradient(135deg, #0056b3, #004085);
   color: #fff;
 }
 
-.cancel-bid-btn {
+.bid-modal-cancel-button {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
 
-.bid-avatar {
+.auction-card-bid-avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.bidding-closed {
+.auction-card-bidding-closed {
   font-weight: bold;
 }
 
-.swap-confirm-btn,
-.swap-cancel-btn {
+.auction-card-swap-confirm-button,
+.auction-card-swap-cancel-button {
   position: relative;
   padding: 0.5rem;
   background: rgba(255, 255, 255, 0.08);
@@ -123,12 +86,12 @@
     box-shadow 0.2s ease;
 }
 
-.swap-confirm-btn:hover,
-.swap-cancel-btn:hover {
+.auction-card-swap-confirm-button:hover,
+.auction-card-swap-cancel-button:hover {
   background-color: #555;
 }
 
-.swap-confirm-btn:active,
-.swap-cancel-btn:active {
+.auction-card-swap-confirm-button:active,
+.auction-card-swap-cancel-button:active {
   transform: scale(0.95);
 }

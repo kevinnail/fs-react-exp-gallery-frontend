@@ -98,7 +98,7 @@ const addPiece = async (user, pieceTitle) => {
 
 const shippingInput = () => screen.getByLabelText('Shipping');
 
-const totalsRow = (label) => screen.getByText(label).closest('.slg-order-total-line');
+const totalsRow = (label) => screen.getByText(label).closest('.admin-sales-order-total-row');
 
 describe('GallerySalesPanel', () => {
   beforeEach(() => {

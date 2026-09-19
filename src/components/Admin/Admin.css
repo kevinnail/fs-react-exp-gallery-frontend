@@ -12,64 +12,64 @@
  * styling the page around it. They're here now; PostCard.css is the row.
  */
 
-.slg-admin {
-  padding-top: var(--slg-header-height);
+.admin-dashboard {
+  padding-top: var(--header-height);
   padding-bottom: 4rem;
-  background: var(--slg-void);
-  color: var(--slg-ink);
-  font-family: var(--slg-body);
+  background: var(--color-page-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
   text-align: left;
 }
 
-.slg-admin-head {
+.admin-dashboard-header {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  padding: 1.75rem var(--slg-gutter-tight) 1.25rem;
+  padding: 1.75rem var(--page-gutter-tight) 1.25rem;
 }
 
-/* The dashboard's own eyebrow. Deliberately not `slg-eyebrow`: that one
+/* The dashboard's own eyebrow. Deliberately not `heading-label`: that one
    is declared in MainGallery.css and matches five components at once, so
    editing it here would have changed the gallery too. This name is the
    dashboard's alone. */
-.slg-admin-eyebrow {
+.admin-dashboard-heading-label {
   margin: 0;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.16em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-admin-title {
+.admin-dashboard-title {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: clamp(1.75rem, 7vw, 2.75rem);
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0.02em;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
-.slg-admin-title-row {
+.admin-dashboard-title-row {
   display: flex;
   align-items: center;
   gap: 1.25rem;
 }
 
-.slg-admin-actions {
+.admin-dashboard-create-links {
   display: flex;
   gap: 0.4rem;
 }
 
-.slg-chip--create {
-  color: var(--slg-ink);
-  border-color: var(--slg-dim);
+.admin-dashboard-chip--create {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
   text-decoration: none;
   white-space: nowrap;
 }
 
-.slg-chip--create .slg-chip-icon {
+.admin-dashboard-chip--create .admin-dashboard-chip-icon {
   margin-right: -0.2rem;
 }
 
@@ -82,24 +82,24 @@
    colour through as hairlines, so the tiles read as a single table of
    figures rather than four separate cards. */
 
-.slg-admin-stats {
+.admin-dashboard-stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1px;
-  margin: 0 var(--slg-gutter-tight) 1.75rem;
-  background: var(--slg-edge);
-  border: 1px solid var(--slg-edge);
+  margin: 0 var(--page-gutter-tight) 1.75rem;
+  background: var(--color-border);
+  border: 1px solid var(--color-border);
 }
 
-.slg-stat {
+.admin-dashboard-stat {
   display: grid;
   gap: 0.3rem;
   align-content: start;
   padding: 0.8rem 0.9rem;
-  background: var(--slg-lift);
+  background: var(--color-surface);
 }
 
-.slg-stat--action {
+.admin-dashboard-stat--button {
   font: inherit;
   text-align: left;
   border: none;
@@ -107,75 +107,75 @@
   transition: background 160ms ease;
 }
 
-.slg-stat--action:hover {
-  background: var(--slg-lift-hover);
+.admin-dashboard-stat--button:hover {
+  background: var(--color-surface-hover);
 }
 
-.slg-stat-label {
+.admin-dashboard-stat-label {
   display: flex;
   align-items: center;
   gap: 0.35rem;
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-stat-caret {
+.admin-dashboard-stat-caret {
   font-size: 0.875rem;
   line-height: 1;
   letter-spacing: 0;
 }
 
-.slg-stat-value {
-  font-family: var(--slg-display);
+.admin-dashboard-stat-value {
+  font-family: var(--font-display);
   font-size: 1.5rem;
   line-height: 1;
-  color: var(--slg-ink);
+  color: var(--color-text);
   font-variant-numeric: tabular-nums;
 }
 
 /* ---------- body ---------- */
 
-.slg-admin-body {
+.admin-dashboard-layout {
   display: grid;
   gap: 2.5rem;
-  padding: 0 var(--slg-gutter-tight);
+  padding: 0 var(--page-gutter-tight);
 }
 
-.slg-admin-main {
+.admin-dashboard-posts {
   min-width: 0;
 }
 
 /* ---------- toolbar ---------- */
 
-.slg-admin-toolbar {
+.admin-dashboard-toolbar {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
   padding-bottom: 0.85rem;
-  border-bottom: 1px solid var(--slg-edge);
+  border-bottom: 1px solid var(--color-border);
 }
 
-.slg-chips {
+.admin-dashboard-visibility-filters {
   display: flex;
   gap: 0.4rem;
 }
 
-.slg-chip {
+.admin-dashboard-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   min-height: 36px;
   padding: 0 0.75rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.06em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   background: transparent;
-  border: 1px solid var(--slg-edge);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   transition:
     background 160ms ease,
@@ -183,63 +183,63 @@
     color 160ms ease;
 }
 
-.slg-chip:hover {
-  color: var(--slg-ink);
-  border-color: var(--slg-dim);
+.admin-dashboard-chip:hover {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
 }
 
-.slg-chip--on {
+.admin-dashboard-chip--selected {
   color: #000000;
-  background: var(--slg-ink);
-  border-color: var(--slg-ink);
+  background: var(--color-text);
+  border-color: var(--color-text);
 }
 
-.slg-chip--picker {
-  color: var(--slg-ink);
-  border-color: var(--slg-dim);
+.admin-dashboard-chip--category-picker {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
 }
 
-.slg-chip--clear {
+.admin-dashboard-chip--clear-category {
   color: #ffffff;
-  background: var(--slg-info);
-  border-color: var(--slg-info);
+  background: var(--color-info);
+  border-color: var(--color-info);
 }
 
-.slg-chip--clear:hover {
+.admin-dashboard-chip--clear-category:hover {
   background: #1d4fd8;
   border-color: #1d4fd8;
 }
 
 /* Pushed to the far end of the toolbar so the count sits opposite the
    controls that change it. */
-.slg-admin-count {
+.admin-dashboard-post-count {
   margin: 0 0 0 auto;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 /* ---------- list ---------- */
 
-.slg-admin-list {
+.admin-dashboard-post-list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.slg-admin-empty {
+.admin-dashboard-empty-message {
   margin: 0;
   padding: 2.5rem 0;
   max-width: 40ch;
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- pager ---------- */
 
-.slg-pager {
+.admin-dashboard-pagination {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -247,19 +247,19 @@
   padding-top: 1.75rem;
 }
 
-.slg-pager-button {
+.admin-dashboard-page-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 40px;
   min-height: 40px;
   padding: 0 0.6rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   background: transparent;
-  border: 1px solid var(--slg-edge);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   font-variant-numeric: tabular-nums;
   transition:
@@ -268,42 +268,42 @@
     color 160ms ease;
 }
 
-.slg-pager-button:hover:not(:disabled) {
-  color: var(--slg-ink);
-  border-color: var(--slg-dim);
+.admin-dashboard-page-button:hover:not(:disabled) {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
 }
 
-.slg-pager-button--on {
+.admin-dashboard-page-button--current {
   color: #000000;
-  background: var(--slg-ink);
-  border-color: var(--slg-ink);
+  background: var(--color-text);
+  border-color: var(--color-text);
 }
 
-.slg-pager-button:disabled {
+.admin-dashboard-page-button:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
 
-.slg-pager-gap {
+.admin-dashboard-page-gap {
   padding: 0 0.15rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- rail panels ---------- */
 
-.slg-admin-rail {
+.admin-dashboard-sidebar {
   display: grid;
   gap: 1px;
   align-content: start;
   min-width: 0;
 }
 
-.slg-panel {
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge-soft);
+.admin-dashboard-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
 }
 
-.slg-panel-summary {
+.admin-dashboard-panel-summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -313,23 +313,23 @@
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   cursor: pointer;
   list-style: none;
   transition: color 160ms ease;
 }
 
-.slg-panel-summary::-webkit-details-marker {
+.admin-dashboard-panel-summary::-webkit-details-marker {
   display: none;
 }
 
-.slg-panel-summary:hover {
-  color: var(--slg-ink);
+.admin-dashboard-panel-summary:hover {
+  color: var(--color-text);
 }
 
 /* Chevron drawn rather than shipped as an icon font, and it rotates with
    the panel's own open state so it needs no JS. */
-.slg-panel-summary::after {
+.admin-dashboard-panel-summary::after {
   content: '';
   flex: 0 0 auto;
   width: 7px;
@@ -340,27 +340,27 @@
   transition: transform 180ms ease;
 }
 
-.slg-panel[open] > .slg-panel-summary::after {
+.admin-dashboard-panel[open] > .admin-dashboard-panel-summary::after {
   transform: translateY(2px) rotate(225deg);
 }
 
-.slg-panel[open] > .slg-panel-summary {
-  color: var(--slg-ink);
-  border-bottom: 1px solid var(--slg-edge-soft);
+.admin-dashboard-panel[open] > .admin-dashboard-panel-summary {
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
-.slg-panel-body {
+.admin-dashboard-panel-content {
   padding: 0.9rem;
 }
 
-.slg-panel--inventory,
-.slg-panel--auctions {
+.admin-dashboard-panel--inventory,
+.admin-dashboard-panel--auctions {
   display: none;
 }
 
 /* ---------- shared ---------- */
 
-.slg-visually-hidden {
+.visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -369,60 +369,60 @@
   white-space: nowrap;
 }
 
-.slg-admin button:focus-visible,
-.slg-admin a:focus-visible,
-.slg-admin summary:focus-visible {
-  outline: 2px solid var(--slg-accent);
+.admin-dashboard button:focus-visible,
+.admin-dashboard a:focus-visible,
+.admin-dashboard summary:focus-visible {
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
 /* ---------- wider screens ---------- */
 
 @media (min-width: 700px) {
-  .slg-admin-head,
-  .slg-admin-body {
-    padding-left: var(--slg-gutter);
-    padding-right: var(--slg-gutter);
+  .admin-dashboard-header,
+  .admin-dashboard-layout {
+    padding-left: var(--page-gutter);
+    padding-right: var(--page-gutter);
   }
 
-  .slg-admin-stats {
+  .admin-dashboard-stats {
     grid-template-columns: repeat(4, 1fr);
-    margin-left: var(--slg-gutter);
-    margin-right: var(--slg-gutter);
+    margin-left: var(--page-gutter);
+    margin-right: var(--page-gutter);
   }
 }
 
 @media (min-width: 1200px) {
-  .slg-panel--inventory,
-  .slg-panel--auctions {
+  .admin-dashboard-panel--inventory,
+  .admin-dashboard-panel--auctions {
     display: block;
   }
 
-  .slg-chip--picker {
+  .admin-dashboard-chip--category-picker {
     display: none;
   }
 
-  .slg-admin-body {
+  .admin-dashboard-layout {
     grid-template-columns: minmax(0, 1fr) 360px;
-    gap: var(--slg-gutter);
+    gap: var(--page-gutter);
     align-items: start;
   }
 
-  .slg-admin-rail {
+  .admin-dashboard-sidebar {
     position: sticky;
-    top: calc(var(--slg-header-height) + 1.5rem);
+    top: calc(var(--header-height) + 1.5rem);
     gap: 1.5rem;
   }
 }
 
 @media (min-width: 1800px) {
-  .slg-admin-body {
+  .admin-dashboard-layout {
     grid-template-columns: minmax(0, 1fr) 400px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slg-admin * {
+  .admin-dashboard * {
     transition-duration: 1ms;
   }
 }

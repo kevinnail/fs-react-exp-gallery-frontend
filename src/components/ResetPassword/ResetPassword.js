@@ -71,17 +71,17 @@ const ResetPassword = () => {
 
   if (!token || isTokenDead) {
     return (
-      <div className="reset-password-container">
+      <div className="reset-password-page">
         <div className="reset-password-card">
           <h2 className="reset-password-title">This link is no longer valid</h2>
-          <p className="reset-password-copy">
+          <p className="reset-password-instructions">
             Reset links expire after 30 minutes and can only be used once. Request a new one and
             we&apos;ll email it over.
           </p>
-          <Link className="button-auth" to="/auth/forgot-password">
+          <Link className="auth-button" to="/auth/forgot-password">
             Request a new link
           </Link>
-          <Link className="reset-password-back" to="/auth/sign-in">
+          <Link className="reset-password-back-link" to="/auth/sign-in">
             Back to sign in
           </Link>
         </div>
@@ -90,18 +90,18 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="reset-password-container">
+    <div className="reset-password-page">
       <div className="reset-password-card">
         <h2 className="reset-password-title">Choose a new password</h2>
-        <p className="reset-password-copy">
+        <p className="reset-password-instructions">
           At least 8 characters, with an uppercase letter, a lowercase letter, a number, and a
           symbol.
         </p>
 
         <form onSubmit={handleSubmit}>
-          <div className="reset-password-field">
+          <div className="reset-password-new-password-field">
             <input
-              className="input-auth"
+              className="auth-input"
               type={showPassword ? 'text' : 'password'}
               id="new-password"
               name="new-password"
@@ -116,7 +116,7 @@ const ResetPassword = () => {
               spellCheck={false}
             />
             <span
-              className="reset-password-toggle"
+              className="reset-password-visibility-toggle"
               onClick={() => setShowPassword((wasShown) => !wasShown)}
             >
               {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
@@ -124,7 +124,7 @@ const ResetPassword = () => {
           </div>
 
           <input
-            className="input-auth"
+            className="auth-input"
             type={showPassword ? 'text' : 'password'}
             id="confirm-password"
             name="confirm-password"
@@ -139,12 +139,12 @@ const ResetPassword = () => {
             spellCheck={false}
           />
 
-          <button className="button-auth" type="submit" disabled={submitting}>
+          <button className="auth-button" type="submit" disabled={submitting}>
             {submitting ? 'Saving...' : 'Set new password'}
           </button>
         </form>
 
-        <Link className="reset-password-back" to="/auth/sign-in">
+        <Link className="reset-password-back-link" to="/auth/sign-in">
           Back to sign in
         </Link>
       </div>

@@ -20,14 +20,14 @@
 }
 
 .status-chip--unpaid {
-  color: var(--slg-state-bad);
+  color: var(--color-status-bad);
 }
 
 .status-chip--paid,
 .status-chip--shipped {
-  color: var(--slg-state-good);
+  color: var(--color-status-good);
 }
 
 .status-chip--shipping-soon {
-  color: var(--slg-state-wait);
+  color: var(--color-status-wait);
 }

@@ -9,18 +9,18 @@
   opacity: 0.75;
 }
 
-.piece-attachment .piece-metadata-highlight + .piece-metadata-highlight {
+.piece-attachment .piece-attachment-card + .piece-attachment-card {
   margin-top: 0.5rem;
 }
 
 /* Same treatment as the public gallery card: the struck original takes the
    attention red and the price being asked stays plain. */
-.piece-attachment-was {
+.piece-attachment-original-price {
   margin-right: 0.5rem;
-  color: var(--slg-alert);
+  color: var(--color-alert);
   text-decoration: line-through;
 }
 
-.piece-attachment-now {
-  color: var(--slg-ink);
+.piece-attachment-sale-price {
+  color: var(--color-text);
 }

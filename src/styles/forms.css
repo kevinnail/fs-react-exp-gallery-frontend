@@ -22,11 +22,11 @@
  */
 
 .admin-form-page {
-  padding-top: var(--slg-header-height);
+  padding-top: var(--header-height);
   padding-bottom: 4rem;
-  background: var(--slg-void);
-  color: var(--slg-ink);
-  font-family: var(--slg-body);
+  background: var(--color-page-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
   text-align: left;
 }
 
@@ -34,17 +34,17 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  padding: 1.75rem var(--slg-gutter-tight) 1.5rem;
+  padding: 1.75rem var(--page-gutter-tight) 1.5rem;
 }
 
 .admin-form-title {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: clamp(1.75rem, 7vw, 2.75rem);
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0.02em;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 /* ---------- layout ---------- */
@@ -52,7 +52,7 @@
 .admin-form {
   display: grid;
   gap: 2.5rem;
-  padding: 0 var(--slg-gutter-tight);
+  padding: 0 var(--page-gutter-tight);
 }
 
 .admin-form-column {
@@ -75,8 +75,8 @@
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.16em;
-  color: var(--slg-dim);
-  border-bottom: 1px solid var(--slg-edge-soft);
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 /* ---------- fields ---------- */
@@ -95,7 +95,7 @@
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.08em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* Counts up against a maxLength the admin can otherwise only discover
@@ -103,11 +103,11 @@
 .form-field-character-count {
   font-size: 0.6875rem;
   font-variant-numeric: tabular-nums;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 .form-field-character-count--at-limit {
-  color: var(--slg-alert);
+  color: var(--color-alert);
 }
 
 .form-input,
@@ -116,11 +116,11 @@
   width: 100%;
   min-width: 0;
   padding: 0 0.75rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 1rem; /* 16px — anything smaller and iOS zooms on focus */
-  color: var(--slg-ink);
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 0;
   appearance: none;
   transition:
@@ -148,15 +148,15 @@
 .form-input:hover,
 .form-select:hover,
 .form-textarea:hover {
-  background: var(--slg-lift-hover);
+  background: var(--color-surface-hover);
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: var(--slg-ink);
-  background: var(--slg-lift-hover);
+  border-color: var(--color-text);
+  background: var(--color-surface-hover);
 }
 
 .form-select {
@@ -178,14 +178,14 @@
   width: 7px;
   height: 7px;
   margin-top: -5px;
-  border-right: 1px solid var(--slg-dim);
-  border-bottom: 1px solid var(--slg-dim);
+  border-right: 1px solid var(--color-text-muted);
+  border-bottom: 1px solid var(--color-text-muted);
   transform: rotate(45deg);
   pointer-events: none;
 }
 
 .form-select option {
-  color: var(--slg-ink);
+  color: var(--color-text);
   background: #0d0f13;
 }
 
@@ -203,7 +203,7 @@
   left: 0.75rem;
   transform: translateY(-50%);
   font-size: 1rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   pointer-events: none;
 }
 
@@ -226,9 +226,9 @@
 
 .form-field-hint {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 1rem;
   line-height: 1.4;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- segmented toggles ----------
@@ -239,7 +239,7 @@
 .form-segmented-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border: 1px solid var(--slg-edge);
+  border: 1px solid var(--color-border);
 }
 
 .form-segmented-toggle-option {
@@ -252,8 +252,8 @@
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.06em;
-  color: var(--slg-dim);
-  background: var(--slg-lift);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
   cursor: pointer;
   transition:
     background 160ms ease,
@@ -261,7 +261,7 @@
 }
 
 .form-segmented-toggle-option + .form-segmented-toggle-option {
-  border-left: 1px solid var(--slg-edge);
+  border-left: 1px solid var(--color-border);
 }
 
 .form-segmented-toggle-option input {
@@ -273,24 +273,24 @@
 }
 
 .form-segmented-toggle-option:hover {
-  color: var(--slg-ink);
-  background: var(--slg-lift-hover);
+  color: var(--color-text);
+  background: var(--color-surface-hover);
 }
 
 .form-segmented-toggle-option--selected {
   color: #000000;
-  background: var(--slg-ink);
+  background: var(--color-text);
 }
 
 .form-segmented-toggle-option--selected:hover {
   color: #000000;
-  background: var(--slg-ink);
+  background: var(--color-text);
 }
 
 /* Keyboard focus lands on the hidden radio, so the segment has to show
    it on the admin's behalf. */
 .form-segmented-toggle-option:focus-within {
-  outline: 2px solid var(--slg-accent);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
@@ -305,8 +305,8 @@
   min-height: 130px;
   padding: 1.5rem 1rem;
   text-align: center;
-  background: var(--slg-lift);
-  border: 1px dashed var(--slg-edge);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
   cursor: pointer;
   transition:
     border-color 160ms ease,
@@ -314,31 +314,31 @@
 }
 
 .form-image-dropzone:hover {
-  background: var(--slg-lift-hover);
-  border-color: var(--slg-dim);
+  background: var(--color-surface-hover);
+  border-color: var(--color-text-muted);
 }
 
 .form-image-dropzone--dragging {
-  background: var(--slg-lift-hover);
-  border-color: var(--slg-accent);
+  background: var(--color-surface-hover);
+  border-color: var(--color-accent);
   border-style: solid;
 }
 
 .form-image-dropzone:focus-within {
-  outline: 2px solid var(--slg-accent);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
 .form-image-dropzone-instructions {
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 .form-image-dropzone-file-types {
   font-size: 0.75rem;
   letter-spacing: 0.04em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- thumbnails ---------- */
@@ -353,8 +353,8 @@
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
 }
 
 .form-image-preview img {
@@ -374,7 +374,7 @@
   font-size: 0.5625rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: var(--slg-ink);
+  color: var(--color-text);
   background: rgba(0, 0, 0, 0.7);
 }
 
@@ -388,14 +388,14 @@
   width: 30px;
   height: 30px;
   padding: 0;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   line-height: 1;
-  color: var(--slg-ink);
+  color: var(--color-text);
   background: rgba(0, 0, 0, 0.7);
   border: none;
-  border-left: 1px solid var(--slg-edge);
-  border-bottom: 1px solid var(--slg-edge);
+  border-left: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
   cursor: pointer;
   transition:
     background 160ms ease,
@@ -405,7 +405,7 @@
 .form-image-preview-remove-button:hover,
 .form-image-preview-remove-button:focus-visible {
   color: #000000;
-  background: var(--slg-alert);
+  background: var(--color-alert);
 }
 
 /* ---------- actions ---------- */
@@ -423,13 +423,13 @@
   flex: 1 1 auto;
   min-height: 50px;
   padding: 0 1.5rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.9375rem;
   font-weight: 500;
   letter-spacing: 0.06em;
   color: #000000;
-  background: var(--slg-ink);
-  border: 1px solid var(--slg-ink);
+  background: var(--color-text);
+  border: 1px solid var(--color-text);
   cursor: pointer;
   transition:
     background 180ms ease,
@@ -438,7 +438,7 @@
 
 .admin-form-submit-button:hover,
 .admin-form-submit-button:focus-visible {
-  color: var(--slg-ink);
+  color: var(--color-text);
   background: transparent;
 }
 
@@ -450,13 +450,13 @@
 @media (min-width: 900px) {
   .admin-form-header,
   .admin-form {
-    padding-left: var(--slg-gutter);
-    padding-right: var(--slg-gutter);
+    padding-left: var(--page-gutter);
+    padding-right: var(--page-gutter);
   }
 
   .admin-form {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 2.5rem var(--slg-gutter);
+    gap: 2.5rem var(--page-gutter);
     align-items: start;
   }
 

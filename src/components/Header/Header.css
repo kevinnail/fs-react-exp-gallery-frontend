@@ -1,4 +1,4 @@
-header {
+.site-header {
   background-color: #000000;
   height: 90px;
   width: 100%;
@@ -11,12 +11,12 @@ header {
   position: fixed;
   z-index: 3000;
 }
-.logo {
+.site-header-logo {
   height: 80px;
   margin-top: 5px;
 }
 
-.biz-title {
+.site-header-title {
   font-size: 1.5em;
   grid-area: title;
   margin: 0;
@@ -28,127 +28,18 @@ header {
   min-width: 207px;
 }
 
-.header-section {
+.site-header-actions {
   display: flex;
   align-items: center;
 }
 
-.header-section p {
+.site-header-actions p {
   margin: 0;
   padding: 0;
   font-size: 0.7rem;
 }
 
-.new-link {
-  color: white;
-  text-decoration: none;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-  padding: 5px 4px 5px 4px;
-  background-image: linear-gradient(315deg, black, grey);
-  font-size: 1rem;
-  transition: 2000ms;
-  width: 120px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  position: relative;
-}
-
-.mobile-new-link-OLD {
-  color: white;
-  text-decoration: none;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-  padding: 5px 4px 5px 4px;
-  background-image: linear-gradient(315deg, black, grey);
-  font-size: 1rem;
-  display: flex;
-  transition: 2000ms;
-  width: 120px;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  position: relative;
-}
-
-.new-link:active {
-  color: rgb(255, 255, 255);
-  background-color: rgb(0, 0, 0, 0.5);
-  border: none;
-  cursor: pointer;
-  transition: 400ms ease-in-out;
-  transform: scale(1.1);
-}
-
-/* Unread message badge */
-.unread-badge {
-  background: #ff4444;
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: bold;
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  z-index: 10;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.upload-icon {
-  height: 60px;
-  width: 60px;
-}
-
-/* style for button */
-.signout-button {
-  color: white;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-  padding: 4px 4px 2px 4px;
-  background-image: linear-gradient(315deg, grey, black, grey);
-  font-size: 0.9rem;
-  display: flex;
-  transition: 100ms;
-  justify-content: center;
-  align-items: center;
-  width: 118px;
-  height: 40px;
-}
-
-/* style for button when hovered or focused */
-
-.signout-button:focus {
-  color: rgb(255, 255, 255);
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  transition: 250ms ease-in-out;
-  transform: scale(1.1);
-  background-color: rgb(0, 0, 0, 0.5);
-  transition: 400ms;
-}
-
-.signout-nav-icon {
-  height: 40px;
-}
-.user-email {
-  font-size: 0.8rem;
-  color: rgb(0, 255, 64);
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.menu-div {
+.site-header-menu-panel {
   z-index: 3000;
   display: grid;
   gap: 0.25rem;
@@ -163,17 +54,22 @@ header {
   transform: opacity(0%);
   opacity: 0;
   pointer-events: none;
+  /* Opacity alone leaves the closed menu's links in the tab order. Hidden
+     visibility takes them out, and it switches at the end of the transition,
+     so the fade-out still plays. */
+  visibility: hidden;
 }
 
-.menu-div.open {
+.site-header-menu-panel.site-header-menu-panel--open {
   transform: translateX(0);
   opacity: 1;
   pointer-events: auto;
+  visibility: visible;
   border-bottom: 2px solid #474747;
 }
 
-.menu-icon,
-.menu-no-user {
+.site-header-menu-icon,
+.site-header-signed-out-menu-icon {
   padding: 0px;
   border-radius: 50%;
   margin: 0 20px 0 0px;
@@ -183,41 +79,25 @@ header {
   box-shadow: 0 0 0 0.2rem rgba(50, 50, 50, 0.5);
 }
 
-.menu-no-user {
+.site-header-signed-out-menu-icon {
   display: block;
   width: 40px;
   margin-right: 20px;
 }
-.menu-icon:hover,
-.menu-no-user:hover {
+.site-header-menu-icon:hover,
+.site-header-signed-out-menu-icon:hover {
   cursor: pointer;
   transition: 200ms ease-in;
   box-shadow: 0 0 25px 0 rgba(255, 255, 255, 0.5);
 }
-.menu-icon:active,
-.menu-no-user:active {
+.site-header-menu-icon:active,
+.site-header-signed-out-menu-icon:active {
   background-color: #2f00ff;
   cursor: pointer;
   transition: 200ms ease-in;
   box-shadow: 0 0 25px 0 rgba(255, 255, 255, 0.5);
 }
-.new-post-span {
-  margin-top: -4px;
-}
-
-.menu-btn {
-  display: none;
-}
-
-.username {
-  position: absolute;
-  left: 75px;
-  top: 18px;
-  color: white;
-  font-size: 0.75rem;
-}
-
-.menu-icon-wrapper {
+.site-header-menu-button {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -228,7 +108,7 @@ header {
   cursor: pointer;
 }
 
-.menu-badge {
+.site-header-menu-unread-count {
   position: absolute;
   top: -4px;
   right: 4px;
@@ -257,40 +137,12 @@ header {
 
 */
 
-@media (min-width: 420px) {
-  .menu-btn {
-    display: block;
-  }
-}
-
-@media (min-width: 768px) {
-  .new-link {
-    font-size: 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .signout-button {
-    font-size: 1rem;
-  }
-
-  .new-link:active,
-  .signout-button:active {
-    transform: scale(1);
-    transition: 500ms;
-  }
-  .signout-button,
-  .new-link {
-    box-shadow: 0 0 10px 0 #7777f3bd;
-  }
-}
-
 /* The title reserved a fixed 207px whether it needed it or not, which made
    the header a fixed 438px wide at every phone size and pushed the menu
    icon off the right edge. Letting it size to its own text gives the row
    the slack that space-between needs. */
 @media (max-width: 480px) {
-  .biz-title {
+  .site-header-title {
     min-width: 0;
     font-size: 1.25em;
     left: -8px;
@@ -299,7 +151,7 @@ header {
 
 /* Request basket. Only rendered when it holds something, so it never
    crowds the header for a visitor who is just browsing. */
-.request-icon-wrapper {
+.site-header-request-button {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -308,26 +160,26 @@ header {
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   text-decoration: none;
   cursor: pointer;
   transition: color 200ms ease-in;
 }
 
-.request-icon-wrapper:hover,
-.request-icon-wrapper:focus-visible {
+.site-header-request-button:hover,
+.site-header-request-button:focus-visible {
   color: #ffffff;
 }
 
-.request-icon {
+.site-header-request-icon {
   font-size: 32px;
 }
 
-.request-badge {
+.site-header-request-count {
   position: absolute;
   top: -6px;
   right: -8px;
-  background: var(--slg-info);
+  background: var(--color-info);
   color: #ffffff;
   border-radius: 50%;
   width: 18px;
@@ -342,7 +194,7 @@ header {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .request-icon-wrapper {
+  .site-header-request-button {
     transition: none;
   }
 }

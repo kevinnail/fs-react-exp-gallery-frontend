@@ -4,10 +4,10 @@ export default function AgreementModal({ isOpen, onAgree, onDecline }) {
   if (!isOpen) return null;
 
   return (
-    <div className="agreement-overlay">
+    <div className="agreement-modal-overlay">
       <div className="agreement-modal">
-        <h2 className="agreement-title">User Agreement & Age Confirmation</h2>
-        <div className="agreement-content">
+        <h2 className="agreement-modal-title">User Agreement & Age Confirmation</h2>
+        <div className="agreement-modal-terms">
           <p>
             <strong>Last Updated:</strong> October 2025
           </p>
@@ -32,11 +32,11 @@ export default function AgreementModal({ isOpen, onAgree, onDecline }) {
           </p>
         </div>
 
-        <div className="agreement-actions">
-          <button className="decline-btn" onClick={onDecline}>
+        <div className="agreement-modal-actions">
+          <button className="agreement-modal-decline-button" onClick={onDecline}>
             Decline
           </button>
-          <button className="agree-btn" onClick={onAgree}>
+          <button className="agreement-modal-agree-button" onClick={onAgree}>
             Agree & Continue
           </button>
         </div>

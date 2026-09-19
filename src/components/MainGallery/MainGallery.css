@@ -3,144 +3,144 @@
  * Front-page only — the admin gallery keeps Gallery.css.
  */
 
-.slg-page {
+.home-page {
   /* Clears the fixed header rather than each section guessing at it. */
-  padding-top: var(--slg-header-height);
-  background: var(--slg-void);
-  color: var(--slg-ink);
-  font-family: var(--slg-body);
+  padding-top: var(--header-height);
+  background: var(--color-page-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
   text-align: left;
 }
 
-.slg-notice {
+.home-site-message {
   display: flex;
   align-items: center;
   min-height: 40px;
-  padding: 0.6rem var(--slg-gutter);
-  background: var(--slg-lift);
-  border-bottom: 1px solid var(--slg-edge-soft);
+  padding: 0.6rem var(--page-gutter);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
-.slg-notice p {
+.home-site-message p {
   margin: 0;
   font-size: 1.2rem;
   line-height: 1.5;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- section headings ---------- */
 
-.slg-section-head {
+.home-section-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  padding: 0 var(--slg-gutter);
+  padding: 0 var(--page-gutter);
   margin-bottom: 1.75rem;
 }
 
-.slg-section-title {
+.home-section-title {
   display: flex;
   align-items: baseline;
   gap: 0.75rem;
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: clamp(1.6rem, 3.5vw, 2.25rem);
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
-.slg-count {
-  font-family: var(--slg-body);
+.home-section-count {
+  font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.04em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
-.slg-eyebrow {
+.heading-label {
   margin: 0;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.16em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-text-link {
+.all-auctions-link {
   padding-bottom: 2px;
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.04em;
   text-decoration: none;
-  color: var(--slg-dim);
-  border: 2px solid var(--slg-edge);
+  color: var(--color-text-muted);
+  border: 2px solid var(--color-border);
   transition:
     color 180ms ease,
     border-color 180ms ease;
   padding: 8px;
 }
 
-.slg-live-auctions-link {
+.live-auctions-heading-link {
   padding-bottom: 2px;
   font-weight: 500;
   letter-spacing: 0.04em;
   text-decoration: none;
-  color: var(--slg-dim);
-  border-bottom: 1px solid var(--slg-edge);
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
   transition:
     color 180ms ease,
     border-color 180ms ease;
 }
 
-.slg-text-link:hover,
-.slg-text-link:focus-visible {
-  color: var(--slg-ink);
-  border-color: var(--slg-ink);
+.all-auctions-link:hover,
+.all-auctions-link:focus-visible {
+  color: var(--color-text);
+  border-color: var(--color-text);
 }
 
 /* ---------- gallery grid ---------- */
 
-.slg-gallery {
+.available-pieces {
   padding: 4rem 0 5rem;
 }
 
-.slg-grid {
+.available-pieces-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 3rem 1.75rem;
-  padding: 0 var(--slg-gutter);
+  padding: 0 var(--page-gutter);
 }
 
-.slg-empty {
+.available-pieces-empty-message {
   margin: 0;
-  padding: 0 var(--slg-gutter);
+  padding: 0 var(--page-gutter);
   font-size: 0.9375rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- focus ---------- */
 
-.slg-page a:focus-visible,
-.slg-page button:focus-visible {
-  outline: 2px solid var(--slg-accent);
+.home-page a:focus-visible,
+.home-page button:focus-visible {
+  outline: 2px solid var(--color-accent);
   outline-offset: 4px;
 }
 
 @media (max-width: 599px) {
   /* Two up on phones — scanning inventory beats one giant photo per
      screen. */
-  .slg-grid {
+  .available-pieces-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem 1rem;
   }
 }
 
 @media (min-width: 700px) {
-  .slg-grid {
+  .available-pieces-grid {
     gap: 3.5rem 2rem;
   }
 }

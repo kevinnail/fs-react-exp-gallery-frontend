@@ -310,7 +310,7 @@ export default function Auth() {
         toast.info(
           <div>
             <p>Email not verified.</p>
-            <button className="button-auth" onClick={onResend}>
+            <button className="auth-button" onClick={onResend}>
               Resend verification email
             </button>
           </div>,
@@ -372,10 +372,10 @@ export default function Auth() {
   };
   return (
     <>
-      <div className="auth-container">
-        <div className="scene">
+      <div className="auth-page">
+        <div className="auth-gallery-cube-scene">
           {!isMobile && (
-            <div className="cube">
+            <div className="auth-gallery-cube">
               {['front', 'back', 'right', 'left', 'top', 'bottom'].map((pos, idx) => {
                 const post = recentImages[idx];
                 const img = post?.image_url || post?.imageUrl || post?.image;
@@ -385,7 +385,7 @@ export default function Auth() {
                   return (
                     <div
                       key={post?.id ?? pos}
-                      className={`face ${pos} placeholder`}
+                      className={`auth-gallery-cube-face auth-gallery-cube-face--${pos} auth-gallery-cube-face--loading`}
                       style={{
                         width: '100%',
                         paddingBottom: '100%',
@@ -399,7 +399,7 @@ export default function Auth() {
                       }}
                     >
                       {' '}
-                      <Link className="hidden-text-link" to={href}>
+                      <Link className="auth-cube-face-hidden-link" to={href}>
                         {
                           'This is a link to the gallery page if you are clever enough you might find it! '
                         }
@@ -411,14 +411,14 @@ export default function Auth() {
                 return (
                   <div
                     key={post?.id ?? pos}
-                    className={`face ${pos}`}
+                    className={`auth-gallery-cube-face auth-gallery-cube-face--${pos}`}
                     style={{
                       backgroundImage: `url(${img})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                     }}
                   >
-                    <Link className="hidden-text-link" to={href}>
+                    <Link className="auth-cube-face-hidden-link" to={href}>
                       {
                         'This is a link to the gallery page if you are clever enough you might find it! '
                       }
@@ -430,54 +430,54 @@ export default function Auth() {
           )}
         </div>
 
-        <div className="scene2">
-          <div className="cube2">
-            <div className="face2 front2">
-              <Link className="hidden-text-link" to="/about-me">
+        <div className="auth-about-cube-scene">
+          <div className="auth-about-cube">
+            <div className="auth-about-cube-face auth-about-cube-face--front">
+              <Link className="auth-cube-face-hidden-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>
-            <div className="face2 back2">
-              <Link className="hidden-text-link" to="/about-me">
+            <div className="auth-about-cube-face auth-about-cube-face--back">
+              <Link className="auth-cube-face-hidden-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>
-            <div className="face2 right2">
-              <Link className="hidden-text-link" to="/about-me">
+            <div className="auth-about-cube-face auth-about-cube-face--right">
+              <Link className="auth-cube-face-hidden-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>
-            <div className="face2 left2">
-              <Link className="hidden-text-link" to="/about-me">
+            <div className="auth-about-cube-face auth-about-cube-face--left">
+              <Link className="auth-cube-face-hidden-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>
-            <div className="face2 top2">
-              <Link className="hidden-text-link" to="/about-me">
+            <div className="auth-about-cube-face auth-about-cube-face--top">
+              <Link className="auth-cube-face-hidden-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>
-            <div className="face2 bottom2">
-              <Link className="hidden-text-link" to="/about-me">
+            <div className="auth-about-cube-face auth-about-cube-face--bottom">
+              <Link className="auth-cube-face-hidden-link" to="/about-me">
                 {'About me '}
               </Link>
             </div>
           </div>
         </div>
 
-        <div className={`auth-section-container ${isFormRetracted ? 'retracted' : ''}`}>
-          <div className="auth-content-wrapper">
-            <div className="welcome-section">
-              <h2 className="welcome-title">Welcome to Stress Less Glass</h2>
-              <div className="welcome-message-wrapper">
-                <h5 className="welcome-message">Create your free account!</h5>
-                <div className="welcome-features">
+        <div className={`auth-panel${isFormRetracted ? ' auth-panel--retracted' : ''}`}>
+          <div className="auth-panel-layout">
+            <div className="auth-welcome">
+              <h2 className="auth-welcome-title">Welcome to Stress Less Glass</h2>
+              <div className="auth-welcome-box">
+                <h5 className="auth-welcome-subtitle">Create your free account!</h5>
+                <div className="auth-welcome-benefits">
                   <ul>
                     <li>Get exclusive discounts & early access to new work</li>
                     <li>
                       Bid on secure, <strong>scammer-free </strong> in-house{' '}
                       <span
-                        className="auth-auction-link"
+                        className="auth-auctions-link"
                         onClick={() => {
                           handleAuthNavAuctions();
                         }}
@@ -494,12 +494,20 @@ export default function Auth() {
             </div>
 
             <div className="auth-form-section">
-              <div className="sign-in-sign-out">
-                <NavLink className="auth-link" to="/auth/sign-in" onClick={() => setIsSignIn(true)}>
+              <div className="auth-mode-links">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? 'auth-mode-link auth-mode-link--selected' : 'auth-mode-link'
+                  }
+                  to="/auth/sign-in"
+                  onClick={() => setIsSignIn(true)}
+                >
                   Sign-in
                 </NavLink>
                 <NavLink
-                  className="auth-link"
+                  className={({ isActive }) =>
+                    isActive ? 'auth-mode-link auth-mode-link--selected' : 'auth-mode-link'
+                  }
                   to="/auth/sign-up"
                   onClick={() => setIsSignIn(false)}
                 >
@@ -507,11 +515,11 @@ export default function Auth() {
                 </NavLink>
               </div>
 
-              <div className="form-inputs">
+              <div className="auth-form-content">
                 <form className="auth-form" onSubmit={handleFormSubmit}>
-                  <div className="email-container">
+                  <div className="auth-email-field">
                     <input
-                      className="input-auth"
+                      className="auth-input"
                       type="email"
                       id="auth-email"
                       name="email"
@@ -527,7 +535,7 @@ export default function Auth() {
                       spellCheck={false}
                     />
                   </div>
-                  <div className="password-field">
+                  <div className="auth-password-field">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       id="auth-password"
@@ -535,7 +543,7 @@ export default function Auth() {
                       value={password}
                       onChange={handlePasswordChange}
                       placeholder="Password"
-                      className="input-auth"
+                      className="auth-input"
                       autoComplete={type === 'sign-up' ? 'new-password' : 'current-password'}
                       autoCapitalize="none"
                       autoCorrect="off"
@@ -543,7 +551,7 @@ export default function Auth() {
                     />
 
                     <span
-                      className="toggle-visibility"
+                      className="auth-password-visibility-toggle"
                       onClick={() => setShowPassword((wasShown) => !wasShown)}
                     >
                       {showPassword ? (
@@ -553,12 +561,12 @@ export default function Auth() {
                       )}
                     </span>
                   </div>
-                  <button className="button-auth" type="submit">
+                  <button className="auth-button" type="submit">
                     {isSignIn ? 'Sign In' : 'Sign Up'}
                   </button>
                 </form>
                 <Link
-                  className={`forgot-password-link ${type === 'sign-in' ? 'visible' : ''}`}
+                  className={`auth-forgot-password-link${type === 'sign-in' ? ' auth-forgot-password-link--visible' : ''}`}
                   to="/auth/forgot-password"
                   tabIndex={type === 'sign-in' ? 0 : -1}
                   aria-hidden={type !== 'sign-in'}
@@ -567,7 +575,7 @@ export default function Auth() {
                 </Link>
                 {isSignIn && shouldOfferResend && (
                   <button
-                    className="button-auth"
+                    className="auth-button"
                     style={{ marginTop: '8px', backgroundColor: '#444' }}
                     onClick={async () => {
                       const normalizedEmail = email.trim();
@@ -613,7 +621,7 @@ export default function Auth() {
       </div>
 
       <button
-        className="retract-button"
+        className="auth-panel-toggle-button"
         title="Hide form if you feel like spacing out and watching the animation.  For the nerds:  this is 100% raw CSS, nothing else, no frameworks!"
         onClick={() => setIsFormRetracted(!isFormRetracted)}
       >

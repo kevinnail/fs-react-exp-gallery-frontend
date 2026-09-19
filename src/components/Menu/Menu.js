@@ -65,7 +65,7 @@ export default function Menu({ handleClick, closeMenu }) {
   };
 
   return (
-    <div className="menu">
+    <div className="site-menu">
       <>
         {user && (
           <div
@@ -88,27 +88,27 @@ export default function Menu({ handleClick, closeMenu }) {
             </span>
           </div>
         )}
-        <NavLink className="menu-new-link" to="/" title="Shop" onClick={handleLinkClick}>
+        <NavLink className="site-menu-link" to="/" title="Shop" onClick={handleLinkClick}>
           Available Work
         </NavLink>{' '}
-        {/* <NavLink className="menu-new-link" to="/gallery" title="Gallery" onClick={handleLinkClick}>
+        {/* <NavLink className="site-menu-link" to="/gallery" title="Gallery" onClick={handleLinkClick}>
           Gallery
         </NavLink>{' '} */}
         <div style={{ position: 'relative', padding: '0' }}>
-          <NavLink className="menu-new-link" to="/auctions" onClick={handleAuctionsClick}>
+          <NavLink className="site-menu-link" to="/auctions" onClick={handleAuctionsClick}>
             Auctions
             {unreadAuctionCount > 0 && location.pathname !== '/auctions' && (
-              <span className="unread-badge">{unreadAuctionCount}</span>
+              <span className="site-menu-unread-count">{unreadAuctionCount}</span>
             )}
           </NavLink>
         </div>
       </>
       {!user && (
         <>
-          <NavLink className="menu-new-link" to="/about-me" onClick={handleLinkClick}>
+          <NavLink className="site-menu-link" to="/about-me" onClick={handleLinkClick}>
             About
           </NavLink>
-          <NavLink className="menu-new-link" to="/auth/sign-in" onClick={handleLinkClick}>
+          <NavLink className="site-menu-link" to="/auth/sign-in" onClick={handleLinkClick}>
             Sign In
           </NavLink>
         </>
@@ -119,7 +119,7 @@ export default function Menu({ handleClick, closeMenu }) {
           {isAdmin && (
             <>
               <NavLink
-                className="menu-new-link"
+                className="site-menu-link"
                 to="/admin"
                 title="Dashboard"
                 onClick={handleLinkClick}
@@ -128,7 +128,7 @@ export default function Menu({ handleClick, closeMenu }) {
                 Dashboard
               </NavLink>
               <NavLink
-                className="menu-new-link"
+                className="site-menu-link"
                 to="/admin/sales"
                 title="Dashboard"
                 onClick={handleLinkClick}
@@ -142,18 +142,18 @@ export default function Menu({ handleClick, closeMenu }) {
           {!isAdmin && (
             <>
               <div style={{ position: 'relative', padding: '0' }}>
-                <NavLink className="menu-new-link" to="/account" onClick={handleProfileClick}>
+                <NavLink className="site-menu-link" to="/account" onClick={handleProfileClick}>
                   Account
                   {wonAuctionCount > 0 && location.pathname !== '/account' && (
-                    <span className="unread-badge">{wonAuctionCount}</span>
+                    <span className="site-menu-unread-count">{wonAuctionCount}</span>
                   )}
                 </NavLink>
               </div>
               <div style={{ position: 'relative', padding: '0' }}>
-                <NavLink className="menu-new-link" to="/messages" onClick={handleLinkClick}>
+                <NavLink className="site-menu-link" to="/messages" onClick={handleLinkClick}>
                   Messages
                   {unreadMessageCount > 0 && location.pathname !== '/messages' && (
-                    <span className="unread-badge">{unreadMessageCount}</span>
+                    <span className="site-menu-unread-count">{unreadMessageCount}</span>
                   )}
                 </NavLink>
               </div>
@@ -164,19 +164,19 @@ export default function Menu({ handleClick, closeMenu }) {
               {' '}
               <div style={{ position: 'relative', padding: '0' }}>
                 <NavLink
-                  className="menu-new-link"
+                  className="site-menu-link"
                   to="/admin/inbox"
                   title="Inbox"
                   onClick={handleLinkClick}
                 >
                   Inbox{' '}
                   {unreadMessageCount > 0 && location.pathname !== '/messages' && (
-                    <span className="unread-badge">{unreadMessageCount}</span>
+                    <span className="site-menu-unread-count">{unreadMessageCount}</span>
                   )}
                 </NavLink>
               </div>
               <NavLink
-                className="menu-new-link"
+                className="site-menu-link"
                 to="/admin/discounts"
                 title="Post a new sale"
                 onClick={handleLinkClick}
@@ -184,7 +184,7 @@ export default function Menu({ handleClick, closeMenu }) {
                 Promotions!
               </NavLink>
               <NavLink
-                className="menu-new-link"
+                className="site-menu-link"
                 to="/admin/users"
                 title="Users Dashboard"
                 onClick={handleLinkClick}
@@ -192,7 +192,7 @@ export default function Menu({ handleClick, closeMenu }) {
                 Users
               </NavLink>
               <NavLink
-                className="menu-new-link"
+                className="site-menu-link"
                 to="/admin/email"
                 title="Email Customers"
                 onClick={handleLinkClick}
@@ -200,7 +200,7 @@ export default function Menu({ handleClick, closeMenu }) {
                 Email
               </NavLink>
               <button
-                className="menu-new-link download-button"
+                className="site-menu-link site-menu-download-button"
                 title="Download Inventory CSV"
                 onClick={() => {
                   handleDownloadCSV();
@@ -213,7 +213,7 @@ export default function Menu({ handleClick, closeMenu }) {
           )}
 
           <NavLink
-            className="menu-new-link"
+            className="site-menu-link"
             to="/about-me"
             title="About Kevin"
             onClick={handleLinkClick}
@@ -223,14 +223,14 @@ export default function Menu({ handleClick, closeMenu }) {
           </NavLink>
 
           {isAdmin && (
-            <NavLink className="menu-new-link" to="/account" onClick={handleProfileClick}>
+            <NavLink className="site-menu-link" to="/account" onClick={handleProfileClick}>
               Account
             </NavLink>
           )}
 
           <button
             title="Sign Out"
-            className="signout-button signout-button-adapt"
+            className="site-menu-signout-button site-menu-signout-button--separated"
             onClick={handleSignOut}
           >
             Sign Out

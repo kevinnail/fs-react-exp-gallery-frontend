@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAuctions } from '../../services/fetch-auctions.js';
+import { getLiveAuctions } from '../../services/fetch-auctions.js';
 import { useAuctionEventsStore } from '../../stores/auctionEventsStore.js';
 import { useAuctionCountdown } from '../../hooks/useAuctionCountdown.js';
 import './LiveAuctions.css';
@@ -12,23 +12,32 @@ const OVERFLOW_MARGIN_PX = 24;
 const RESUME_DELAY_MS = 750;
 const MAX_FRAME_SECONDS = 0.1;
 
-function LotClock({ endTime }) {
+function LotClock({ endTime, onEnded }) {
   const { label, hasEnded } = useAuctionCountdown(endTime);
 
-  return <span className="slg-lot-clock">{hasEnded ? 'Ended' : label}</span>;
+  useEffect(() => {
+    if (hasEnded) onEnded();
+  }, [hasEnded, onEnded]);
+
+  if (hasEnded) return null;
+
+  return <span className="live-auctions-lot-countdown">{label}</span>;
 }
 
-function Lot({ auction }) {
+function Lot({ auction, onEnded }) {
   const { id, title, imageUrls, currentBid, startPrice, endTime } = auction;
+  const handleEnded = useCallback(() => onEnded(id), [onEnded, id]);
   const coverImage = imageUrls?.[0];
 
   return (
-    <Link className="slg-lot" to={`/auctions/${id}`}>
-      <div className={`slg-lot-image${coverImage ? '' : ' slg-lot-image--empty'}`}>
+    <Link className="live-auctions-lot" to={`/auctions/${id}`}>
+      <div
+        className={`live-auctions-lot-image${coverImage ? '' : ' live-auctions-lot-image--empty'}`}
+      >
         {coverImage ? <img src={coverImage} alt={title} loading="lazy" /> : 'No photo yet'}
       </div>
-      <p className="slg-lot-name">{title}</p>
-      <p className="slg-lot-meta">
+      <p className="live-auctions-lot-title">{title}</p>
+      <p className="live-auctions-lot-bid">
         {currentBid ? (
           <>
             High bid <strong>${currentBid}</strong>
@@ -39,7 +48,7 @@ function Lot({ auction }) {
           </>
         )}
       </p>
-      <LotClock endTime={endTime} />
+      <LotClock endTime={endTime} onEnded={handleEnded} />
     </Link>
   );
 }
@@ -69,19 +78,22 @@ export default function LiveAuctions() {
   const lastAuctionCreated = useAuctionEventsStore((state) => state.lastAuctionCreated);
   const lastAuctionEnded = useAuctionEventsStore((state) => state.lastAuctionEnded);
 
+  const handleLotEnded = useCallback((auctionId) => {
+    setAuctions((previousAuctions) =>
+      previousAuctions.filter((auction) => auction.id !== auctionId)
+    );
+  }, []);
+
   useEffect(() => {
-    const fetchActiveAuctions = async () => {
+    const fetchLiveAuctions = async () => {
       try {
-        const data = await getAuctions();
-        // `currentBid` already ships with each auction, so the front
-        // page needs one request rather than one per lot.
-        setAuctions(data.filter((auction) => auction.isActive));
+        setAuctions(await getLiveAuctions());
       } catch (error) {
-        console.error('Error fetching auctions:', error);
+        console.error('Error fetching live auctions:', error);
       }
     };
 
-    fetchActiveAuctions();
+    fetchLiveAuctions();
   }, [lastAuctionCreated, lastAuctionEnded]);
 
   useEffect(() => {
@@ -200,34 +212,37 @@ export default function LiveAuctions() {
   if (!auctions.length) return null;
 
   return (
-    <section className="slg-live" aria-labelledby="slg-live-heading">
-      <div className="slg-section-head">
-        <Link className="slg-live-auctions-link" to="/auctions">
-          <h2 className="slg-section-title" id="slg-live-heading">
-            <span className="slg-live-dot" aria-hidden="true" />
+    <section className="live-auctions" aria-labelledby="live-auctions-heading">
+      <div className="home-section-header">
+        <Link className="live-auctions-heading-link" to="/auctions">
+          <h2 className="home-section-title" id="live-auctions-heading">
+            <span className="live-auctions-indicator" aria-hidden="true" />
             Live auctions{`  `}
-            <span className="slg-count">
+            <span className="home-section-count">
               {auctions.length} {auctions.length === 1 ? 'lot' : 'lots'} ending soon
             </span>
           </h2>
         </Link>
-        <Link className="slg-text-link" to="/auctions">
+        <Link className="all-auctions-link" to="/auctions">
           All auctions &amp; archive
         </Link>
       </div>
 
-      <div className={`slg-lot-rail${isPanning ? ' slg-lot-rail--panning' : ''}`} ref={railRef}>
-        <div className="slg-lot-track">
-          <div className="slg-lot-set" ref={lotSetRef}>
+      <div
+        className={`live-auctions-rail${isPanning ? ' live-auctions-rail--panning' : ''}`}
+        ref={railRef}
+      >
+        <div className="live-auctions-track">
+          <div className="live-auctions-lot-set" ref={lotSetRef}>
             {auctions.map((auction) => (
-              <Lot key={auction.id} auction={auction} />
+              <Lot key={auction.id} auction={auction} onEnded={handleLotEnded} />
             ))}
           </div>
 
           {isPanning ? (
-            <div className="slg-lot-set" aria-hidden="true">
+            <div className="live-auctions-lot-set" aria-hidden="true">
               {auctions.map((auction) => (
-                <Lot key={`${auction.id}-loop`} auction={auction} />
+                <Lot key={`${auction.id}-loop`} auction={auction} onEnded={handleLotEnded} />
               ))}
             </div>
           ) : null}

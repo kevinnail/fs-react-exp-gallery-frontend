@@ -1,4 +1,4 @@
-.users-page-container {
+.users-page {
   min-height: 100vh;
   background-size: cover;
   background-position: center;
@@ -9,7 +9,7 @@
   padding-top: 95px;
 }
 
-.users-content {
+.users-panel {
   background: rgba(0, 0, 0, 0.75);
   border-radius: 15px;
   padding: 0.5rem 1.5rem 2rem 1.5rem;
@@ -30,7 +30,7 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.users-list-wrapper {
+.users-list {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -39,7 +39,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.user-list-header {
+.users-list-header {
   display: grid;
   grid-template-columns: 80px 2fr 1fr 1.2fr 1fr;
   background: linear-gradient(90deg, rgba(15, 15, 15, 0.95), rgba(30, 30, 30, 0.95));
@@ -50,7 +50,7 @@
   gap: 15px;
 }
 
-.user-list-body {
+.users-list-body {
   display: flex;
   flex-direction: column;
 }
@@ -76,7 +76,7 @@
   background: rgba(45, 45, 45, 0.9);
 }
 
-.user-image img {
+.user-card-image img {
   width: 60px;
   height: 60px;
   border-radius: 8px;
@@ -85,23 +85,23 @@
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
 
-.user-image-placeholder {
+.user-card-image-placeholder {
   width: 60px;
   height: 60px;
   border-radius: 8px;
   background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
   background-size: 200% 100%;
-  animation: loading-pulse 1.5s infinite;
+  animation: users-image-loading 1.5s infinite;
   border: 1px solid none;
   margin-bottom: 6px;
 }
 
-.user-name {
+.user-card-name {
   font-weight: 500;
   color: rgba(255, 255, 255, 0.95);
 }
 
-.user-email {
+.user-card-email {
   font-family: monospace;
   color: rgba(220, 220, 220, 0.9);
   overflow: hidden;
@@ -109,21 +109,21 @@
   white-space: nowrap;
 }
 
-.user-created,
-.user-time-since {
+.user-card-joined-date,
+.user-card-time-since-joined {
   color: rgba(200, 200, 200, 0.85);
   font-size: 0.95rem;
   white-space: nowrap;
 }
 
-.no-users {
+.users-empty-message {
   color: rgba(255, 255, 255, 0.6);
   text-align: center;
   padding: 30px;
   font-style: italic;
 }
 
-@keyframes loading-pulse {
+@keyframes users-image-loading {
   0% {
     background-position: 200% 0;
   }
@@ -136,7 +136,7 @@
    global stylesheet. The dashboard's pager has been rebuilt on the design
    tokens, so this page keeps its own copy until it gets the same
    treatment. */
-.pagination-controls {
+.users-pagination {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -145,11 +145,11 @@
   width: 100%;
 }
 
-.pagination-controls button {
+.users-pagination button {
   cursor: pointer;
 }
 
-.pagination-button {
+.users-pagination-button {
   padding: 8px 16px;
   border: 1px solid #2f44ff;
   background-color: rgba(0, 0, 0, 0.507);
@@ -159,17 +159,11 @@
   transition: all 0.2s ease-in-out;
 }
 
-.pagination-button:hover:not(:disabled) {
+.users-pagination-button:hover:not(:disabled) {
   background-color: #f0f0f0;
 }
 
-.pagination-button.active {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
-}
-
-.pagination-button:disabled {
+.users-pagination-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
@@ -180,20 +174,20 @@
 
 */
 @media (max-width: 768px) {
-  .user-list-header,
+  .users-list-header,
   .user-card {
     grid-template-columns: 1fr 3fr;
     grid-row-gap: 2px;
     font-size: 0.8rem;
     padding: 0.25rem 1rem;
   }
-  .user-email {
+  .user-card-email {
     font-size: 0.9rem;
   }
-  .user-list-header {
+  .users-list-header {
     display: none;
   }
-  .users-content {
+  .users-panel {
     padding: 0;
     width: 100%;
   }

@@ -45,7 +45,7 @@ export default function Header() {
           top: '55px',
           right: '225px',
           zIndex: 9999,
-          background: 'var(--slg-state-wait)',
+          background: 'var(--color-status-wait)',
           color: 'black',
           fontWeight: 'bold',
           padding: '4px 8px',
@@ -101,37 +101,41 @@ export default function Header() {
 
   return (
     <>
-      <header>
+      <header className="site-header">
         <DevIndicator />
-        <Link className="link" to={user && isAdmin ? '/admin' : '/'} onClick={handleHomeClick}>
-          <img className="logo" src="../logo-sq.png" />
+        <Link to={user && isAdmin ? '/admin' : '/'} onClick={handleHomeClick}>
+          <img className="site-header-logo" src="../logo-sq.png" />
         </Link>{' '}
         <div>
-          <h1 className="biz-title">Stress Less Glass </h1>{' '}
+          <h1 className="site-header-title">Stress Less Glass </h1>{' '}
         </div>
-        <div className="header-section">
+        <div className="site-header-actions">
           <SearchBar />
           {requestCount > 0 && (
             <button
               type="button"
-              className="request-icon-wrapper"
+              className="site-header-request-button"
               onClick={() => setIsTrayOpen(true)}
               aria-label={`Your request, ${requestCount} ${requestCount === 1 ? 'piece' : 'pieces'}`}
             >
-              <LocalMallOutlinedIcon className="request-icon" />
-              <span className="request-badge">{requestCount}</span>
+              <LocalMallOutlinedIcon className="site-header-request-icon" />
+              <span className="site-header-request-count">{requestCount}</span>
             </button>
           )}
-          <div className="menu-icon-wrapper" ref={buttonRef} onClick={handleMenuClick}>
+          <div className="site-header-menu-button" ref={buttonRef} onClick={handleMenuClick}>
             <button
               type="button"
-              className="menu-icon-wrapper"
+              className="site-header-menu-button"
               onClick={handleMenuClick}
               aria-label="Open menu"
             >
-              <img className={user ? 'menu-icon' : 'menu-no-user'} src="../menu.png" alt="" />
+              <img
+                className={user ? 'site-header-menu-icon' : 'site-header-signed-out-menu-icon'}
+                src="../menu.png"
+                alt=""
+              />
               {user && totalUnread > 0 && location.pathname !== '/messages' && (
-                <span className="menu-badge">{totalUnread}</span>
+                <span className="site-header-menu-unread-count">{totalUnread}</span>
               )}
             </button>
           </div>
@@ -140,9 +144,7 @@ export default function Header() {
 
       <div
         ref={menuRef}
-        className={`menu-icon-adapt menu-div ${isMenuOpen ? ' open ' : ''}${
-          location.pathname === '/admin' ? ' menu-div-adapt ' : ''
-        }`}
+        className={`site-header-menu-panel ${isMenuOpen ? ' site-header-menu-panel--open ' : ''}`}
       >
         <Menu handleClick={handleClick} closeMenu={closeMenu} />
       </div>

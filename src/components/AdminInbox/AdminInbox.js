@@ -449,9 +449,9 @@ export default function AdminInbox() {
   };
 
   return (
-    <div className="admin-inbox-container">
-      <div className="admin-inbox-content">
-        <div className="inbox-header">
+    <div className="admin-inbox-page">
+      <div className="admin-inbox-panel">
+        <div className="admin-inbox-header">
           <h1>Message Inbox</h1>
           <p>Customer conversations and messages</p>
         </div>
@@ -465,19 +465,21 @@ export default function AdminInbox() {
               value={searchTerm}
               onChange={(e) => handleSearchInput(e.target.value)}
               onFocus={() => setShowUserResults(true)}
-              className="tracking-input"
+              className="admin-inbox-user-search-input"
               style={{ width: '250px' }}
             />
 
             {showUserResults && debouncedTerm && (
-              <div className="user-search-results" role="listbox">
+              <div className="admin-inbox-user-search-results" role="listbox">
                 {filteredUsers.length === 0 ? (
-                  <div className="user-result-item empty">No users found</div>
+                  <div className="admin-inbox-user-result admin-inbox-user-result--empty">
+                    No users found
+                  </div>
                 ) : (
                   filteredUsers.map((u) => (
                     <div
                       key={u.id}
-                      className="user-result-item"
+                      className="admin-inbox-user-result"
                       role="option"
                       onClick={() => handleSelectUser(u)}
                     >
@@ -485,21 +487,23 @@ export default function AdminInbox() {
                         <img
                           src={u.profile.imageUrl || u.profile.image_url}
                           alt="avatar"
-                          className="user-avatar"
+                          className="admin-inbox-user-result-avatar"
                         />
                       ) : (
-                        <div className="user-avatar-fallback">
+                        <div className="admin-inbox-user-result-avatar-fallback">
                           {(u.profile?.firstName || u.email || u.user_email || '?')
                             .charAt(0)
                             .toUpperCase()}
                         </div>
                       )}
 
-                      <div className="user-meta">
-                        <div className="user-name">
+                      <div className="admin-inbox-user-result-details">
+                        <div className="admin-inbox-user-result-name">
                           {(u.profile?.firstName || 'Unknown') + ' ' + (u.profile?.lastName || '')}
                         </div>
-                        <div className="user-email">{u.email || u.user_email}</div>
+                        <div className="admin-inbox-user-result-email">
+                          {u.email || u.user_email}
+                        </div>
                       </div>
                     </div>
                   ))
@@ -532,27 +536,29 @@ export default function AdminInbox() {
           {startError && <div style={{ color: 'red' }}>{startError}</div>}
         </div>
 
-        <div className="inbox-layout">
-          <div className="conversations-list">
+        <div className="admin-inbox-layout">
+          <div className="admin-inbox-conversation-list">
             <h2>Conversations</h2>
             {/* Loading state */}
             {loading && (
-              <div className="loading-conversations">
+              <div className="admin-inbox-loading">
                 <p>Loading conversations...</p>
               </div>
             )}
             {/* No conversations state */}
             {!loading && conversations.length === 0 && (
-              <div className="no-conversations">
+              <div className="admin-inbox-empty-message">
                 <p>No conversations yet</p>
               </div>
             )}
             {/* Conversations list */}
             {!loading && conversations.length > 0 && (
-              <div className="conversation-items">
+              <div className="admin-inbox-conversation-items">
                 {conversations.map((conversation) => {
                   const isSelected = selectedConversation === conversation.conversation_id;
-                  const itemClass = 'conversation-item' + (isSelected ? ' selected' : '');
+                  const itemClass =
+                    'admin-inbox-conversation' +
+                    (isSelected ? ' admin-inbox-conversation--selected' : '');
                   return (
                     <div
                       key={conversation.conversation_id}
@@ -561,41 +567,45 @@ export default function AdminInbox() {
                         loadConversationMessages(conversation.conversation_id);
                       }}
                     >
-                      <div className="conversation-header">
-                        <div className="conversation-header-content">
-                          <div className="conversation-header-content-wrapper">
+                      <div className="admin-inbox-conversation-header">
+                        <div className="admin-inbox-conversation-sender-row">
+                          <div className="admin-inbox-conversation-sender">
                             {/* Avatar or fallback */}
                             {conversation.image_url ? (
                               <img
                                 src={conversation.image_url}
                                 alt="Customer avatar"
-                                className="conversation-avatar"
+                                className="admin-inbox-conversation-avatar"
                               />
                             ) : (
-                              <div className="conversation-avatar-fallback">
+                              <div className="admin-inbox-conversation-avatar-fallback">
                                 {conversation.email
                                   ? conversation.email.charAt(0).toUpperCase()
                                   : '?'}
                               </div>
                             )}
-                            <div className="sender-info-wrapper">
-                              <span className="sender-name">
+                            <div className="admin-inbox-conversation-sender-details">
+                              <span className="admin-inbox-conversation-sender-name">
                                 {conversation.first_name}{' '}
-                                <span className="sender-name">
+                                <span className="admin-inbox-conversation-sender-name">
                                   {conversation.last_name ? conversation.last_name.slice(0, 1) : ''}
                                 </span>
                               </span>
-                              <span className="sender-email">{conversation.email}</span>
+                              <span className="admin-inbox-conversation-sender-email">
+                                {conversation.email}
+                              </span>
                             </div>
                           </div>
                           {/* Unread badge */}
                           {conversation.unread_count > 0 ? (
-                            <span className="admin-unread-badge">{conversation.unread_count}</span>
+                            <span className="admin-inbox-unread-count">
+                              {conversation.unread_count}
+                            </span>
                           ) : null}
                         </div>
                       </div>
-                      <div className="conversation-meta">
-                        <span className="last-message-time">
+                      <div className="admin-inbox-conversation-last-activity">
+                        <span className="admin-inbox-conversation-last-message-time">
                           {formatDate(conversation.last_message_at)}
                         </span>
                       </div>
@@ -606,7 +616,7 @@ export default function AdminInbox() {
             )}
           </div>
 
-          <div className="messages-panel messages-panel-desktop">
+          <div className="admin-inbox-thread-panel admin-inbox-thread-panel--desktop">
             {selectedConversation ? (
               <>
                 {(() => {
@@ -625,30 +635,32 @@ export default function AdminInbox() {
                       <img
                         src={convo.image_url}
                         alt="Customer avatar"
-                        className="conversation-avatar"
+                        className="admin-inbox-conversation-avatar"
                       />
                       <span>{convo.first_name}</span>
                       <span>{convo.last_name?.slice(0, 1)}</span>
                     </div>
                   ) : null;
                 })()}
-                <div className="messages-list" ref={messagesListRef}>
+                <div className="admin-inbox-message-list" ref={messagesListRef}>
                   {messages.map((message) => {
                     const isCustomerMessage = !message.isFromAdmin && isAdmin;
 
                     return (
                       <div
                         key={message.id}
-                        className={`admin-message-item ${isCustomerMessage ? 'admin-customer-message' : 'admin-admin-message'}`}
+                        className={`admin-inbox-message ${isCustomerMessage ? 'admin-inbox-message--from-customer' : 'admin-inbox-message--from-admin'}`}
                       >
-                        <span className="admin-message-time">{formatDate(message.sentAt)}</span>
+                        <span className="admin-inbox-message-time">
+                          {formatDate(message.sentAt)}
+                        </span>
                         {isCustomerMessage ? (
-                          <div className="admin-message-content">
+                          <div className="admin-inbox-message-bubble">
                             {renderMessageWithPieceMetadata(message.messageContent)}
                           </div>
                         ) : (
-                          <div className="admin-message-content-wrapper">
-                            <div className="admin-message-content">
+                          <div className="admin-inbox-message-row">
+                            <div className="admin-inbox-message-bubble">
                               {renderMessageWithPieceMetadata(message.messageContent)}
                             </div>
                           </div>
@@ -659,23 +671,23 @@ export default function AdminInbox() {
                 </div>
                 {/* Typing indicator */}
                 {typingUsers.length > 0 && (
-                  <div className="typing-indicator">
+                  <div className="admin-inbox-typing-indicator">
                     <p>Customer is typing...</p>
                   </div>
                 )}
                 {/* Connection status indicator */}
                 {!isConnected && (
-                  <div className="connection-status">
+                  <div className="admin-inbox-connection-status">
                     <p>Connecting to real-time messaging...</p>
                   </div>
                 )}
-                <form onSubmit={handleSendReply} className="reply-form">
-                  <div className="input-container">
+                <form onSubmit={handleSendReply} className="admin-inbox-reply-form">
+                  <div className="admin-inbox-reply-row">
                     <textarea
                       value={newReply}
                       onChange={handleTyping}
                       placeholder="Type your reply..."
-                      className="reply-input"
+                      className="admin-inbox-reply-input"
                       rows="3"
                       disabled={sending}
                       onKeyDown={(e) => {
@@ -688,7 +700,7 @@ export default function AdminInbox() {
                     <button
                       type="submit"
                       disabled={!newReply.trim() || sending}
-                      className="reply-button"
+                      className="admin-inbox-reply-button"
                     >
                       {sending ? 'Sending...' : 'Reply'}
                     </button>
@@ -713,20 +725,20 @@ export default function AdminInbox() {
                 </div>
 
                 {/* No messages yet- just the reply form */}
-                <div className="messages-list" ref={messagesListRef}>
+                <div className="admin-inbox-message-list" ref={messagesListRef}>
                   <p style={{ padding: '.5rem' }}>
                     No messages yet- your first message will start this chat.
                   </p>
                 </div>
 
                 {/* Typing and connection status can stay if you want or omit for new */}
-                <form onSubmit={handleSendReply} className="reply-form">
-                  <div className="input-container">
+                <form onSubmit={handleSendReply} className="admin-inbox-reply-form">
+                  <div className="admin-inbox-reply-row">
                     <textarea
                       value={newReply}
                       onChange={handleTyping}
                       placeholder="Type your first message..."
-                      className="reply-input"
+                      className="admin-inbox-reply-input"
                       rows="3"
                       disabled={sending}
                       onKeyDown={(e) => {
@@ -739,7 +751,7 @@ export default function AdminInbox() {
                     <button
                       type="submit"
                       disabled={!newReply.trim() || sending}
-                      className="reply-button"
+                      className="admin-inbox-reply-button"
                     >
                       {sending ? 'Sending...' : 'Send'}
                     </button>
@@ -747,7 +759,7 @@ export default function AdminInbox() {
                 </form>
               </>
             ) : (
-              <div className="no-conversation-selected">
+              <div className="admin-inbox-no-selection-message">
                 <p>Select a conversation or start a new one from search</p>
               </div>
             )}
@@ -756,16 +768,16 @@ export default function AdminInbox() {
       </div>
       {/* Mobile full-screen messages modal */}
       {showMobileModal && (
-        <div className="mobile-messages-modal" role="dialog" aria-modal="true">
+        <div className="admin-inbox-mobile-thread-modal" role="dialog" aria-modal="true">
           <button
             type="button"
-            className="close-mobile-modal"
+            className="admin-inbox-mobile-thread-close-button"
             onClick={() => setShowMobileModal(false)}
             aria-label="Back"
           >
             ← Back
           </button>
-          <div className="messages-panel messages-panel-mobile">
+          <div className="admin-inbox-thread-panel admin-inbox-thread-panel--mobile">
             {selectedConversation ? (
               <>
                 {(() => {
@@ -784,30 +796,32 @@ export default function AdminInbox() {
                       <img
                         src={convo.image_url}
                         alt="Customer avatar"
-                        className="conversation-avatar"
+                        className="admin-inbox-conversation-avatar"
                       />
                       <span>{convo.first_name}</span>
                       <span>{convo.last_name?.slice(0, 1)}</span>
                     </div>
                   ) : null;
                 })()}
-                <div className="messages-list" ref={messagesListRef}>
+                <div className="admin-inbox-message-list" ref={messagesListRef}>
                   {messages.map((message) => {
                     const isCustomerMessage = !message.isFromAdmin && isAdmin;
 
                     return (
                       <div
                         key={message.id}
-                        className={`admin-message-item ${isCustomerMessage ? 'admin-customer-message' : 'admin-admin-message'}`}
+                        className={`admin-inbox-message ${isCustomerMessage ? 'admin-inbox-message--from-customer' : 'admin-inbox-message--from-admin'}`}
                       >
-                        <span className="admin-message-time">{formatDate(message.sentAt)}</span>
+                        <span className="admin-inbox-message-time">
+                          {formatDate(message.sentAt)}
+                        </span>
                         {isCustomerMessage ? (
-                          <div className="admin-message-content">
+                          <div className="admin-inbox-message-bubble">
                             {renderMessageWithPieceMetadata(message.messageContent)}
                           </div>
                         ) : (
-                          <div className="admin-message-content-wrapper">
-                            <div className="admin-message-content">
+                          <div className="admin-inbox-message-row">
+                            <div className="admin-inbox-message-bubble">
                               {renderMessageWithPieceMetadata(message.messageContent)}
                             </div>
                           </div>
@@ -817,22 +831,22 @@ export default function AdminInbox() {
                   })}
                 </div>
                 {typingUsers.length > 0 && (
-                  <div className="typing-indicator">
+                  <div className="admin-inbox-typing-indicator">
                     <p>Customer is typing...</p>
                   </div>
                 )}
                 {!isConnected && (
-                  <div className="connection-status">
+                  <div className="admin-inbox-connection-status">
                     <p>Connecting to real-time messaging...</p>
                   </div>
                 )}
-                <form onSubmit={handleSendReply} className="reply-form">
-                  <div className="input-container">
+                <form onSubmit={handleSendReply} className="admin-inbox-reply-form">
+                  <div className="admin-inbox-reply-row">
                     <textarea
                       value={newReply}
                       onChange={handleTyping}
                       placeholder="Type your reply..."
-                      className="reply-input"
+                      className="admin-inbox-reply-input"
                       rows="3"
                       disabled={sending}
                       onKeyDown={(e) => {
@@ -845,7 +859,7 @@ export default function AdminInbox() {
                     <button
                       type="submit"
                       disabled={!newReply.trim() || sending}
-                      className="reply-button"
+                      className="admin-inbox-reply-button"
                     >
                       {sending ? 'Sending...' : 'Reply'}
                     </button>
