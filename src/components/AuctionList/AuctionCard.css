@@ -57,6 +57,11 @@
   color: #fff;
 }
 
+.bid-modal-confirm-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .auction-card-bid-avatar {
   width: 36px;
   height: 36px;
@@ -66,32 +71,4 @@
 
 .auction-card-bidding-closed {
   font-weight: bold;
-}
-
-.auction-card-swap-confirm-button,
-.auction-card-swap-cancel-button {
-  position: relative;
-  padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.auction-card-swap-confirm-button:hover,
-.auction-card-swap-cancel-button:hover {
-  background-color: #555;
-}
-
-.auction-card-swap-confirm-button:active,
-.auction-card-swap-cancel-button:active {
-  transform: scale(0.95);
 }
