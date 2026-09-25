@@ -21,7 +21,6 @@ export default function ProfileForm({ handleCloseForm }) {
     postalCode: '',
     countryCode: 'US',
   });
-  const [showAddress, setShowAddress] = useState(false);
   const [previewImage, setPreviewImage] = useState(profile?.imageUrl || null);
 
   // Helper: check if any required address field is filled
@@ -34,10 +33,6 @@ export default function ProfileForm({ handleCloseForm }) {
   // Also highlight when no address is provided at all
   const needsAttention = !allAddressFieldsFilled; // true for partial OR empty
 
-  // Button style values (avoid long ternaries inline)
-  const addressBtnBackground = needsAttention ? '#e74c3c' : '#fffbe6';
-  const addressBtnColor = needsAttention ? '#fff' : '#222';
-  const addressBtnWeight = needsAttention ? 700 : 500;
   const countries = [
     { code: 'US', name: 'United States' },
     { code: 'CA', name: 'Canada' },
@@ -213,26 +208,26 @@ export default function ProfileForm({ handleCloseForm }) {
     const prevBodyOverflow = document.body.style.overflow;
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
-    document.body.classList.add('modal-open');
+    document.body.classList.add('account-form-modal-open');
     return () => {
-      document.body.classList.remove('modal-open');
+      document.body.classList.remove('account-form-modal-open');
       document.documentElement.style.overflow = prevHtmlOverflow;
       document.body.style.overflow = prevBodyOverflow;
     };
   }, []);
 
   return (
-    <div className="profile-form-overlay">
-      <div className="profile-form-container">
-        <div className="profile-form-header">
+    <div className="account-form-overlay">
+      <div className="account-form-container">
+        <div className="account-form-header">
           <h2>Edit Profile</h2>
-          <button className="close-btn" onClick={handleCloseForm}>
+          <button className="account-form-close-button" onClick={handleCloseForm}>
             ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="profile-form">
-          <div className="form-group">
+        <form onSubmit={handleSubmit} className="account-form">
+          <div className="account-form-field">
             <label htmlFor="firstName">First Name</label>
             <input
               type="text"
@@ -245,7 +240,7 @@ export default function ProfileForm({ handleCloseForm }) {
             />
           </div>
 
-          <div className="form-group">
+          <div className="account-form-field">
             <label htmlFor="lastName">Last Name</label>
             <input
               type="text"
@@ -258,11 +253,11 @@ export default function ProfileForm({ handleCloseForm }) {
             />
           </div>
 
-          <div className="form-group">
+          <div className="account-form-field">
             <label htmlFor="imageUrl">Profile Picture</label>
-            <div className="image-upload-container">
+            <div className="account-form-image-upload">
               {previewImage && (
-                <div className="image-preview">
+                <div className="account-form-image-preview">
                   <img src={previewImage} alt="Profile preview" />
                 </div>
               )}
@@ -272,16 +267,16 @@ export default function ProfileForm({ handleCloseForm }) {
                 name="imageUrl"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="file-input"
+                className="account-form-file-input"
               />
-              <label htmlFor="imageUrl" className="file-input-label">
+              <label htmlFor="imageUrl" className="account-form-file-input-label">
                 {formData.imageUrl ? 'Change Image' : 'Choose Image'}
               </label>
             </div>
           </div>
 
           <div
-            className="form-group"
+            className="account-form-field"
             style={{ border: '1px solid yellow ', padding: '.5rem', borderRadius: '8px' }}
           >
             <label>
@@ -301,134 +296,113 @@ export default function ProfileForm({ handleCloseForm }) {
           </div>
 
           {/* Shipping Address Section */}
-          <div className="form-group address-section">
-            <button
-              type="button"
-              className="toggle-address-btn"
-              onClick={() => setShowAddress((prev) => !prev)}
+          <div className="account-form-field">
+            <div
               style={{
-                marginBottom: '0.5rem',
-                background: addressBtnBackground,
-                border: '1px solid #ccc',
-                borderRadius: '6px',
-                padding: '0.5rem 1rem',
-                cursor: 'pointer',
-                color: addressBtnColor,
-                fontWeight: addressBtnWeight,
-                transition: 'background 0.2s',
+                padding: '1rem',
+                borderRadius: '8px',
+                border: '1px solid #ffe066',
               }}
             >
-              {showAddress ? 'Hide Shipping Address' : 'Add shipping address'}
-            </button>
-            {showAddress && (
+              <p className="account-form-address-heading">Shipping Address</p>
               <div
-                className="address-fields"
                 style={{
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  border: '1px solid #ffe066',
+                  fontSize: '.8rem',
+                  marginBottom: '.5rem',
+                  color: needsAttention ? '#e74c3c' : '#555',
+                  padding: needsAttention ? '0.25rem 0.5rem' : 0,
+                  borderRadius: '4px',
                 }}
               >
-                <div
-                  className="address-hint"
-                  style={{
-                    fontSize: '.8rem',
-                    marginBottom: '.5rem',
-                    color: needsAttention ? '#e74c3c' : '#555',
-                    padding: needsAttention ? '0.25rem 0.5rem' : 0,
-                    borderRadius: '4px',
-                  }}
-                >
-                  {needsAttention
-                    ? 'Provide all fields if adding an address, or leave all blank. Partial address not accepted.'
-                    : 'Things look stokey!'}
-                </div>
-                <div className="form-group">
-                  <label htmlFor="addressLine1">Street Address</label>
-                  <input
-                    type="text"
-                    id="addressLine1"
-                    name="addressLine1"
-                    value={formData.addressLine1}
-                    onChange={handleInputChange}
-                    placeholder="123 Main St"
-                    autoComplete="address-line1"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="addressLine2">Address Line 2 (optional)</label>
-                  <input
-                    type="text"
-                    id="addressLine2"
-                    name="addressLine2"
-                    value={formData.addressLine2}
-                    onChange={handleInputChange}
-                    placeholder="Apt, suite, etc. (optional)"
-                    autoComplete="address-line2"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="city">City</label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    placeholder="City"
-                    autoComplete="address-level2"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="state">State</label>
-                  <input
-                    type="text"
-                    id="state"
-                    name="state"
-                    value={formData.state}
-                    onChange={handleInputChange}
-                    placeholder="State"
-                    autoComplete="address-level1"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="postalCode">Postal Code</label>
-                  <input
-                    type="text"
-                    id="postalCode"
-                    name="postalCode"
-                    value={formData.postalCode}
-                    onChange={handleInputChange}
-                    placeholder="ZIP or postal code"
-                    autoComplete="postal-code"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="countryCode">Country</label>
-                  <select
-                    id="countryCode"
-                    name="countryCode"
-                    value={formData.countryCode}
-                    onChange={handleInputChange}
-                    autoComplete="country-name"
-                  >
-                    {countries.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                {needsAttention
+                  ? 'Provide all fields if adding an address, or leave all blank. Partial address not accepted.'
+                  : 'Things look stokey!'}
               </div>
-            )}
+              <div className="account-form-field">
+                <label htmlFor="addressLine1">Street Address</label>
+                <input
+                  type="text"
+                  id="addressLine1"
+                  name="addressLine1"
+                  value={formData.addressLine1}
+                  onChange={handleInputChange}
+                  placeholder="123 Main St"
+                  autoComplete="address-line1"
+                />
+              </div>
+              <div className="account-form-field">
+                <label htmlFor="addressLine2">Address Line 2 (optional)</label>
+                <input
+                  type="text"
+                  id="addressLine2"
+                  name="addressLine2"
+                  value={formData.addressLine2}
+                  onChange={handleInputChange}
+                  placeholder="Apt, suite, etc. (optional)"
+                  autoComplete="address-line2"
+                />
+              </div>
+              <div className="account-form-field">
+                <label htmlFor="city">City</label>
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                  placeholder="City"
+                  autoComplete="address-level2"
+                />
+              </div>
+
+              <div className="account-form-field">
+                <label htmlFor="state">State</label>
+                <input
+                  type="text"
+                  id="state"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleInputChange}
+                  placeholder="State"
+                  autoComplete="address-level1"
+                />
+              </div>
+              <div className="account-form-field">
+                <label htmlFor="postalCode">Postal Code</label>
+                <input
+                  type="text"
+                  id="postalCode"
+                  name="postalCode"
+                  value={formData.postalCode}
+                  onChange={handleInputChange}
+                  placeholder="ZIP or postal code"
+                  autoComplete="postal-code"
+                />
+              </div>
+              <div className="account-form-field">
+                <label htmlFor="countryCode">Country</label>
+                <select
+                  id="countryCode"
+                  name="countryCode"
+                  value={formData.countryCode}
+                  onChange={handleInputChange}
+                  autoComplete="country-name"
+                >
+                  {countries.map((c) => (
+                    <option key={c.code} value={c.code}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
 
-          <div className="form-actions">
-            <button type="button" onClick={handleCloseForm} className="cancel-btn-account">
+          <div className="account-form-actions">
+            <button type="button" onClick={handleCloseForm} className="account-form-cancel-button">
               Cancel
             </button>
-            <button type="submit" className="submit-btn-account" disabled={loading}>
+            <button type="submit" className="account-form-submit-button" disabled={loading}>
               {loading ? 'Updating...' : 'Update Profile'}
             </button>
           </div>

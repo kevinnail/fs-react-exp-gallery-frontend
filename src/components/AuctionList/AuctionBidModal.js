@@ -83,7 +83,7 @@ export default function AuctionBidModal({
                   value={bidAmount}
                   onChange={(e) => setBidAmount(e.target.value)}
                   placeholder={`Enter bid amount`}
-                  className="bid-input"
+                  className="bid-modal-input"
                   onKeyDown={async (e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -96,7 +96,7 @@ export default function AuctionBidModal({
           })()}
         </div>
 
-        <div className="modal-actions">
+        <div className="bid-modal-actions">
           <button
             onClick={async () => {
               try {
@@ -152,11 +152,11 @@ export default function AuctionBidModal({
                 });
               }
             }}
-            className="confirm-bid-btn"
+            className="bid-modal-confirm-button"
           >
             Submit Bid
           </button>
-          <button onClick={() => onClose()} className="cancel-bid-btn">
+          <button onClick={() => onClose()} className="bid-modal-cancel-button">
             Cancel
           </button>
         </div>

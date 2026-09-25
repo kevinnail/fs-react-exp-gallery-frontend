@@ -28,19 +28,19 @@ const RequestTray = ({ isOpen, onClose }) => {
   };
 
   return createPortal(
-    <div className="slg-tray-overlay" onClick={onClose}>
+    <div className="request-tray-overlay" onClick={onClose}>
       <aside
-        className="slg-tray"
+        className="request-tray"
         role="dialog"
         aria-modal="true"
         aria-label="Your request"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="slg-tray-head">
-          <h2 className="slg-tray-title">Your request</h2>
+        <div className="request-tray-header">
+          <h2 className="request-tray-title">Your request</h2>
           <button
             type="button"
-            className="slg-tray-close"
+            className="request-tray-close-button"
             onClick={onClose}
             aria-label="Close your request"
           >
@@ -48,29 +48,32 @@ const RequestTray = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <p className="slg-tray-note">
+        <p className="request-tray-payment-note">
           Sends Kevin a message. No card payment, nothing charged or held.
         </p>
 
         {items.length === 0 ? (
-          <p className="slg-tray-empty">
+          <p className="request-tray-empty-message">
             Nothing here yet. Tap Add to request on any piece you like.
           </p>
         ) : (
-          <ul className="slg-tray-list">
+          <ul className="request-tray-list">
             {items.map((item) => (
-              <li className="slg-tray-item" key={item.postId}>
+              <li className="request-tray-item" key={item.postId}>
                 {item.imageUrl ? (
-                  <img className="slg-tray-thumb" src={item.imageUrl} alt="" />
+                  <img className="request-tray-thumbnail" src={item.imageUrl} alt="" />
                 ) : (
-                  <span className="slg-tray-thumb slg-tray-thumb--empty" aria-hidden="true" />
+                  <span
+                    className="request-tray-thumbnail request-tray-thumbnail--empty"
+                    aria-hidden="true"
+                  />
                 )}
 
-                <span className="slg-tray-item-title">{item.title}</span>
+                <span className="request-tray-item-title">{item.title}</span>
 
                 <button
                   type="button"
-                  className="slg-tray-remove"
+                  className="request-tray-remove-button"
                   onClick={() => removeItem(item.postId)}
                   aria-label={`Remove ${item.title} from your request`}
                 >
@@ -83,7 +86,7 @@ const RequestTray = ({ isOpen, onClose }) => {
 
         <button
           type="button"
-          className="slg-tray-review"
+          className="request-tray-review-button"
           onClick={handleReview}
           disabled={items.length === 0}
         >

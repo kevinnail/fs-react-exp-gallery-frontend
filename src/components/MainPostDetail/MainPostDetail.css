@@ -1,53 +1,53 @@
-.slg-detail {
-  padding-top: var(--slg-header-height);
+.piece-detail-page {
+  padding-top: var(--header-height);
   padding-bottom: 4rem;
-  background: var(--slg-void);
-  color: var(--slg-ink);
-  font-family: var(--slg-body);
+  background: var(--color-page-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
   text-align: left;
 }
 
 /* ---------- top bar ---------- */
 
-.slg-detail-bar {
+.piece-detail-top-bar {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem var(--slg-gutter) 0.5rem;
+  padding: 1rem var(--page-gutter) 0.5rem;
 }
 
-.slg-detail-back {
+.piece-detail-back-button {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.4rem 0;
   background: none;
   border: none;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.9375rem;
   font-weight: 500;
   letter-spacing: 0.01em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: color 180ms ease;
 }
 
-.slg-detail-back:hover,
-.slg-detail-back:focus-visible {
-  color: var(--slg-ink);
+.piece-detail-back-button:hover,
+.piece-detail-back-button:focus-visible {
+  color: var(--color-text);
 }
 
-.slg-detail-share--bar {
+.piece-detail-top-bar-share-button {
   margin-left: auto;
 }
 
-.slg-detail-share--rail {
+.piece-detail-info-column-share-button {
   display: none;
 }
 
 /* ---------- layout ---------- */
 
-.slg-detail-layout {
+.piece-detail-layout {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
@@ -55,24 +55,24 @@
 
 /* ---------- stage ---------- */
 
-.slg-detail-stage {
+.piece-detail-media-column {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   min-width: 0;
 }
 
-.slg-detail-figure {
+.piece-detail-main-media {
   position: relative;
   margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--slg-void);
+  background: var(--color-page-background);
 }
 
-.slg-detail-figure img,
-.slg-detail-figure video {
+.piece-detail-main-media img,
+.piece-detail-main-media video {
   display: block;
   width: 100%;
   height: auto;
@@ -80,21 +80,21 @@
   transition: opacity 300ms ease;
 }
 
-.slg-detail-figure--zoomable img {
+.piece-detail-main-media--zoomable img {
   cursor: zoom-in;
 }
 
 /* Holds the square the first photo will occupy so the rail below does
    not jump upward as the image decodes. */
-.slg-detail-skeleton {
+.piece-detail-image-skeleton {
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg, #0d0f13 25%, #191d23 50%, #0d0f13 75%);
   background-size: 200% 100%;
-  animation: slg-detail-skeleton 1.5s linear infinite;
+  animation: piece-detail-image-skeleton-shimmer 1.5s linear infinite;
 }
 
-@keyframes slg-detail-skeleton {
+@keyframes piece-detail-image-skeleton-shimmer {
   from {
     background-position: 200% 0;
   }
@@ -103,7 +103,7 @@
   }
 }
 
-.slg-detail-sold {
+.piece-detail-sold-badge {
   position: absolute;
   top: 1rem;
   left: 1rem;
@@ -112,37 +112,37 @@
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: var(--slg-ink);
+  color: var(--color-text);
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(6px);
-  border: 1px solid var(--slg-edge);
+  border: 1px solid var(--color-border);
 }
 
-.slg-detail-zoom-hint {
+.piece-detail-zoom-hint {
   align-self: flex-end;
-  padding: 0 var(--slg-gutter);
+  padding: 0 var(--page-gutter);
   font-size: 0.8125rem;
   letter-spacing: 0.02em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- thumbnails ---------- */
 
-.slg-detail-thumbs {
+.piece-detail-thumbnails {
   display: flex;
   gap: 0.5rem;
   overflow-x: auto;
-  padding: 0 var(--slg-gutter);
+  padding: 0 var(--page-gutter);
   scrollbar-width: thin;
 }
 
-.slg-detail-thumb {
+.piece-detail-thumbnail {
   flex: 0 0 auto;
   width: 64px;
   height: 64px;
   padding: 0;
   overflow: hidden;
-  background: var(--slg-lift);
+  background: var(--color-surface);
   border: 1px solid transparent;
   cursor: pointer;
   opacity: 0.55;
@@ -151,57 +151,57 @@
     border-color 180ms ease;
 }
 
-.slg-detail-thumb img {
+.piece-detail-thumbnail img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.slg-detail-thumb:hover,
-.slg-detail-thumb:focus-visible {
+.piece-detail-thumbnail:hover,
+.piece-detail-thumbnail:focus-visible {
   opacity: 1;
 }
 
-.slg-detail-thumb--active {
+.piece-detail-thumbnail--selected {
   opacity: 1;
-  border-color: var(--slg-ink);
+  border-color: var(--color-text);
 }
 
 /* ---------- information rail ---------- */
 
-.slg-detail-rail {
+.piece-detail-info-column {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1.25rem;
-  padding: 0 var(--slg-gutter);
+  padding: 0 var(--page-gutter);
 }
 
-.slg-detail-eyebrow {
+.piece-detail-category {
   margin: 0;
   padding: 0;
   background: none;
   border: none;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-detail-title {
+.piece-detail-title {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: clamp(2rem, 6vw, 3.25rem);
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0.01em;
-  color: var(--slg-ink);
+  color: var(--color-text);
   text-wrap: balance;
 }
 
-.slg-detail-price {
+.piece-detail-price {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
@@ -209,61 +209,61 @@
   margin: 0;
   font-size: 1.5rem;
   font-weight: 500;
-  color: var(--slg-ink);
+  color: var(--color-text);
   font-variant-numeric: tabular-nums;
 }
 
-.slg-detail-was {
-  color: var(--slg-alert);
+.piece-detail-original-price {
+  color: var(--color-alert);
   font-weight: 400;
   text-decoration: line-through;
 }
 
-.slg-detail-sold-flag {
+.piece-detail-sold-label {
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-detail-desc {
+.piece-detail-description {
   margin: 0;
   max-width: 46ch;
   font-size: 0.9375rem;
   line-height: 1.65;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   white-space: pre-line;
 }
 
-.slg-detail-rule {
+.piece-detail-divider {
   width: 100%;
   height: 1px;
-  background: var(--slg-edge-soft);
+  background: var(--color-border-subtle);
 }
 
 /* ---------- actions ---------- */
 
-.slg-detail-actions {
+.piece-detail-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
   width: 100%;
 }
 
-.slg-detail-button {
+.piece-detail-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
   height: 48px;
   padding: 0 1.25rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.01em;
   text-decoration: none;
-  border: 1px solid var(--slg-ink);
-  background: var(--slg-ink);
+  border: 1px solid var(--color-text);
+  background: var(--color-text);
   color: #000000;
   cursor: pointer;
   transition:
@@ -272,26 +272,26 @@
     border-color 180ms ease;
 }
 
-.slg-detail-button:hover,
-.slg-detail-button:focus-visible {
+.piece-detail-button:hover,
+.piece-detail-button:focus-visible {
   background: transparent;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
-.slg-detail-button--quiet {
+.piece-detail-button--secondary {
   background: transparent;
-  color: var(--slg-dim);
-  border-color: var(--slg-edge);
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
 }
 
-.slg-detail-button--quiet:hover,
-.slg-detail-button--quiet:focus-visible {
+.piece-detail-button--secondary:hover,
+.piece-detail-button--secondary:focus-visible {
   background: transparent;
-  color: var(--slg-ink);
-  border-color: var(--slg-ink);
+  color: var(--color-text);
+  border-color: var(--color-text);
 }
 
-.slg-detail-store-logo {
+.piece-detail-store-logo {
   width: 24px;
   height: 24px;
   object-fit: contain;
@@ -299,31 +299,31 @@
 
 /* ---------- contact ---------- */
 
-.slg-detail-contact {
+.piece-detail-contact-links {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.slg-detail-contact-label {
+.piece-detail-contact-label {
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-detail-contact a {
+.piece-detail-contact-links a {
   display: inline-flex;
   opacity: 0.7;
   transition: opacity 180ms ease;
 }
 
-.slg-detail-contact a:hover,
-.slg-detail-contact a:focus-visible {
+.piece-detail-contact-links a:hover,
+.piece-detail-contact-links a:focus-visible {
   opacity: 1;
 }
 
-.slg-detail-contact img {
+.piece-detail-contact-links img {
   width: 32px;
   height: 32px;
   object-fit: contain;
@@ -331,7 +331,7 @@
 
 /* ---------- lightbox ---------- */
 
-.slg-lightbox-overlay {
+.piece-detail-lightbox-overlay {
   position: fixed;
   inset: 0;
   z-index: 4000;
@@ -341,7 +341,7 @@
   background: rgba(0, 0, 0, 0.94);
 }
 
-.slg-lightbox {
+.piece-detail-lightbox {
   position: relative;
   width: 100%;
   height: 100%;
@@ -351,15 +351,15 @@
   outline: none;
 }
 
-.slg-lightbox img,
-.slg-lightbox video {
+.piece-detail-lightbox img,
+.piece-detail-lightbox video {
   max-width: 100%;
   max-height: 100vh;
   object-fit: contain;
 }
 
-.slg-lightbox-close,
-.slg-lightbox-nav {
+.piece-detail-lightbox-close-button,
+.piece-detail-lightbox-arrow {
   position: absolute;
   z-index: 2;
   display: flex;
@@ -368,8 +368,8 @@
   width: 44px;
   height: 44px;
   background: rgba(0, 0, 0, 0.5);
-  border: 1px solid var(--slg-edge);
-  color: var(--slg-ink);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
   font-size: 1.25rem;
   line-height: 1;
   cursor: pointer;
@@ -378,104 +378,104 @@
     background 180ms ease;
 }
 
-.slg-lightbox-close:hover,
-.slg-lightbox-nav:hover,
-.slg-lightbox-close:focus-visible,
-.slg-lightbox-nav:focus-visible {
+.piece-detail-lightbox-close-button:hover,
+.piece-detail-lightbox-arrow:hover,
+.piece-detail-lightbox-close-button:focus-visible,
+.piece-detail-lightbox-arrow:focus-visible {
   background: rgba(0, 0, 0, 0.8);
-  border-color: var(--slg-ink);
+  border-color: var(--color-text);
 }
 
-.slg-lightbox-close {
+.piece-detail-lightbox-close-button {
   top: 1rem;
   right: 1rem;
 }
 
-.slg-lightbox-nav--previous {
+.piece-detail-lightbox-arrow--previous {
   left: 1rem;
 }
 
-.slg-lightbox-nav--next {
+.piece-detail-lightbox-arrow--next {
   right: 1rem;
 }
 
-.slg-lightbox-counter {
+.piece-detail-lightbox-image-counter {
   position: absolute;
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
   letter-spacing: 0.02em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 /* ---------- focus ---------- */
 
-.slg-detail a:focus-visible,
-.slg-detail button:focus-visible,
-.slg-lightbox button:focus-visible {
-  outline: 2px solid var(--slg-accent);
+.piece-detail-page a:focus-visible,
+.piece-detail-page button:focus-visible,
+.piece-detail-lightbox button:focus-visible {
+  outline: 2px solid var(--color-accent);
   outline-offset: 4px;
 }
 
 @media (max-width: 599px) {
-  .slg-detail-actions .slg-detail-button {
+  .piece-detail-actions .piece-detail-button {
     flex: 1 1 100%;
   }
 }
 
 @media (min-width: 900px) {
-  .slg-detail-layout {
+  .piece-detail-layout {
     grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
-    gap: var(--slg-gutter);
+    gap: var(--page-gutter);
     align-items: start;
-    padding-right: var(--slg-gutter);
+    padding-right: var(--page-gutter);
   }
 
-  .slg-detail-figure {
+  .piece-detail-main-media {
     height: 68vh;
   }
 
-  .slg-detail-figure img,
-  .slg-detail-figure video {
+  .piece-detail-main-media img,
+  .piece-detail-main-media video {
     width: auto;
     max-width: 100%;
     height: 100%;
   }
 
-  .slg-detail-thumbs {
+  .piece-detail-thumbnails {
     padding-right: 0;
   }
 
-  .slg-detail-zoom-hint {
+  .piece-detail-zoom-hint {
     padding-right: 0;
   }
 
   /* The rail follows the eye down the photo rather than scrolling off. */
-  .slg-detail-rail {
+  .piece-detail-info-column {
     position: sticky;
-    top: calc(var(--slg-header-height) + 1.5rem);
+    top: calc(var(--header-height) + 1.5rem);
     padding: 0;
   }
 
-  .slg-detail-share--bar {
+  .piece-detail-top-bar-share-button {
     display: none;
   }
 
-  .slg-detail-share--rail {
+  .piece-detail-info-column-share-button {
     display: inline-flex;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slg-detail-skeleton {
+  .piece-detail-image-skeleton {
     animation: none;
   }
 
-  .slg-detail-figure img,
-  .slg-detail-figure video {
+  .piece-detail-main-media img,
+  .piece-detail-main-media video {
     transition-duration: 1ms;
   }
 }

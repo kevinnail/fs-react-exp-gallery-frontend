@@ -31,7 +31,7 @@ export default function ConfirmBINModal({ isOpen, onClose, onConfirm, auction })
         <p style={{ marginBottom: '1rem' }}>
           Are you sure you want to buy <strong>{auction.title}</strong> for ${auction.buyNowPrice}?
         </p>
-        <div className="modal-actions">
+        <div className="bid-modal-actions">
           <button
             onClick={async () => {
               try {
@@ -40,11 +40,11 @@ export default function ConfirmBINModal({ isOpen, onClose, onConfirm, auction })
                 onClose();
               }
             }}
-            className="confirm-bid-btn"
+            className="bid-modal-confirm-button"
           >
             Yes, Buy Now
           </button>
-          <button onClick={() => onClose()} className="cancel-bid-btn">
+          <button onClick={() => onClose()} className="bid-modal-cancel-button">
             Cancel
           </button>
         </div>

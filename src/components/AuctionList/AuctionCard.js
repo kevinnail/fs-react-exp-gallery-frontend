@@ -346,8 +346,8 @@ export default function AuctionCard({ auction }) {
   function SwapConfirmationModal({ isOpen, onConfirm, onCancel }) {
     if (!isOpen) return null;
     return (
-      <div className="modal-overlay">
-        <div className="modal-content">
+      <div className="auction-card-swap-modal-overlay">
+        <div className="auction-card-swap-modal">
           <h3>Confirm Swap</h3>
           <p>
             Are you sure you want to swap this auction to a gallery post? This action cannot be
@@ -356,10 +356,10 @@ export default function AuctionCard({ auction }) {
           <div
             style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}
           >
-            <button className="swap-confirm-btn" onClick={onConfirm}>
+            <button className="auction-card-swap-confirm-button" onClick={onConfirm}>
               Confirm
             </button>
-            <button className="swap-cancel-btn" onClick={onCancel}>
+            <button className="auction-card-swap-cancel-button" onClick={onCancel}>
               Cancel
             </button>
           </div>
@@ -371,27 +371,27 @@ export default function AuctionCard({ auction }) {
   return (
     <>
       <div className="auction-card">
-        <div className="auction-image-section">
+        <div className="auction-card-images">
           <img
-            className="main-image"
+            className="auction-card-main-image"
             src={selectedImage}
             alt={auction.title}
             onClick={() => (!isMobile ? window.open(selectedImage, '_blank') : '')}
           />
-          <div className="thumbnail-row">
+          <div className="auction-card-thumbnail-row">
             {auction.imageUrls.map((url) => (
               <img
                 key={url}
                 src={url}
-                alt="thumbnail"
-                className={`thumbnail ${url === selectedImage ? 'active' : ''}`}
+                alt="auction-card-thumbnail"
+                className={`auction-card-thumbnail ${url === selectedImage ? 'auction-card-thumbnail--selected' : ''}`}
                 onClick={() => handleImageClick(url)}
               />
             ))}
           </div>
         </div>
 
-        <div className="auction-info-section">
+        <div className="auction-card-info">
           <div
             style={{
               width: '110%',
@@ -402,11 +402,11 @@ export default function AuctionCard({ auction }) {
             {user && isAdmin && (
               <>
                 {(isActive || bids.length === 0) && (
-                  <button className="swap-auction-icon-btn" onClick={handleOpenSwapModal}>
+                  <button className="auction-card-swap-button" onClick={handleOpenSwapModal}>
                     ↳↰
                   </button>
                 )}
-                <button className="edit-auction-icon-btn" onClick={handleEdit}>
+                <button className="auction-card-edit-button" onClick={handleEdit}>
                   ✎
                 </button>
               </>
@@ -416,7 +416,7 @@ export default function AuctionCard({ auction }) {
           <h2>{auction.title}</h2>
           <p style={{ whiteSpace: 'pre-wrap' }}>{auction.description}</p>
 
-          <div className="auction-details">
+          <div className="auction-card-details">
             <p
               style={{
                 fontSize: '1.2rem',
@@ -435,16 +435,16 @@ export default function AuctionCard({ auction }) {
             {!hasBids && (
               <p>
                 <span>Opening Bid:</span>
-                <span className="bid-prices">
+                <span className="auction-card-price">
                   {' '}
                   <strong> ${auction.startPrice || ' - '}</strong>{' '}
                 </span>
               </p>
             )}
-            <div className="bin-end-time-wrapper">
+            <div className="auction-card-buy-now-row">
               <p>
                 <span>BIN:</span>
-                <span className="bid-prices">
+                <span className="auction-card-price">
                   <strong> ${auction.buyNowPrice || ' - '}</strong>
                 </span>
               </p>
@@ -480,28 +480,32 @@ export default function AuctionCard({ auction }) {
             </div>
           </div>
 
-          <div className="auction-actions">
+          <div className="auction-card-actions">
             {isActive ? (
               <>
                 <button
                   type="button"
                   onClick={handleBidClick}
-                  className="bid-btn"
+                  className="auction-card-bid-button"
                   style={{ background: isCurrentUserHighBidder ? 'green' : '' }}
                 >
                   {isCurrentUserHighBidder ? "You're the high bidder" : 'Place Bid'}
                 </button>
                 {auction.buyNowPrice && (
-                  <button type="button" onClick={handleBuyNowClick} className="buy-btn">
+                  <button
+                    type="button"
+                    onClick={handleBuyNowClick}
+                    className="auction-card-buy-button"
+                  >
                     Buy Now
                   </button>
                 )}
               </>
             ) : (
               <div>
-                <p className="bidding-closed">Bidding is CLOSED</p>
+                <p className="auction-card-bidding-closed">Bidding is CLOSED</p>
                 {hasHighBidder && <span style={{ fontSize: '.9rem' }}>Winner:</span>}
-                <div className="bid-entry">
+                <div className="auction-card-bid-entry">
                   {hasHighBidder && (
                     <span
                       style={{
@@ -515,7 +519,7 @@ export default function AuctionCard({ auction }) {
                       <img
                         src={auctionResults?.profile?.imageUrl}
                         alt={auctionResults?.profile?.firstName}
-                        className="bid-avatar"
+                        className="auction-card-bid-avatar"
                       />
                       {auctionResults?.profile?.firstName}
                     </span>
@@ -550,18 +554,18 @@ export default function AuctionCard({ auction }) {
             <p style={{ fontStyle: 'italic', marginTop: '.5rem', opacity: 0.7 }}></p>
           ) : (
             bids.length > 0 && (
-              <div className="bid-history">
+              <div className="auction-card-bid-history">
                 {bids.map((bid) => (
-                  <div key={bid.id} className="bid-entry">
+                  <div key={bid.id} className="auction-card-bid-entry">
                     <img
                       src={bid.user?.imageUrl}
                       alt={bid.user?.firstName}
-                      className="bid-avatar"
+                      className="auction-card-bid-avatar"
                     />
-                    <div className="bid-info">
-                      <span className="bid-name">{bid.user?.firstName}</span>
-                      <span className="bid-amount">${bid.bidAmount}</span>
-                      <span className="bid-time">
+                    <div className="auction-card-bid-details">
+                      <span className="auction-card-bid-name">{bid.user?.firstName}</span>
+                      <span className="auction-card-bid-amount">${bid.bidAmount}</span>
+                      <span className="auction-card-bid-time">
                         {new Date(bid.createdAt).toLocaleTimeString([], {
                           hour: '2-digit',
                           minute: '2-digit',

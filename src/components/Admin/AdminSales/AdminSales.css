@@ -1,53 +1,53 @@
-.slg-sales {
-  padding-top: var(--slg-header-height);
+.admin-sales {
+  padding-top: var(--header-height);
   padding-bottom: 4rem;
-  background: var(--slg-void);
-  color: var(--slg-ink);
-  font-family: var(--slg-body);
+  background: var(--color-page-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
   text-align: left;
 }
 
 /* ---------- head ---------- */
 
-.slg-sales-head {
+.admin-sales-header {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  padding: 1.75rem var(--slg-gutter-tight) 1.25rem;
+  padding: 1.75rem var(--page-gutter-tight) 1.25rem;
 }
 
-.slg-sales-title {
+.admin-sales-title {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: clamp(1.75rem, 7vw, 2.75rem);
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0.02em;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
-.slg-sales-tabs {
+.admin-sales-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
   max-width: 340px;
-  margin: 0 var(--slg-gutter-tight) 1.75rem;
-  border: 1px solid var(--slg-edge);
+  margin: 0 var(--page-gutter-tight) 1.75rem;
+  border: 1px solid var(--color-border);
   border-radius: 999px;
   overflow: hidden;
 }
 
-.slg-sales-tab {
+.admin-sales-tab {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 44px;
   padding: 0 0.75rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.06em;
-  color: var(--slg-dim);
-  background: var(--slg-lift);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
   border: none;
   cursor: pointer;
   transition:
@@ -55,141 +55,141 @@
     color 160ms ease;
 }
 
-.slg-sales-tab + .slg-sales-tab {
-  border-left: 1px solid var(--slg-edge);
+.admin-sales-tab + .admin-sales-tab {
+  border-left: 1px solid var(--color-border);
 }
 
-.slg-sales-tab:hover {
-  color: var(--slg-ink);
-  background: var(--slg-lift-hover);
+.admin-sales-tab:hover {
+  color: var(--color-text);
+  background: var(--color-surface-hover);
 }
 
-.slg-sales-tab:active {
+.admin-sales-tab:active {
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55);
 }
 
-.slg-sales-tab--on,
-.slg-sales-tab--on:hover {
+.admin-sales-tab--selected,
+.admin-sales-tab--selected:hover {
   color: #000000;
-  background: var(--slg-ink);
+  background: var(--color-text);
 }
 
 /* ---------- stat strip ---------- */
 
-.slg-sales-stats {
+.admin-sales-stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1px;
   margin-bottom: 1.75rem;
-  padding: 0 var(--slg-gutter-tight);
+  padding: 0 var(--page-gutter-tight);
 }
 
-.slg-sales-stat {
+.admin-sales-stat {
   display: grid;
   gap: 0.3rem;
   align-content: start;
   padding: 0.85rem 0.9rem;
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge-soft);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
 }
 
-.slg-sales-stat-label {
+.admin-sales-stat-label {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   white-space: nowrap;
 }
 
-.slg-sales-stat-value {
-  font-family: var(--slg-display);
+.admin-sales-stat-value {
+  font-family: var(--font-display);
   font-size: 1.5rem;
   line-height: 1;
-  color: var(--slg-ink);
+  color: var(--color-text);
   font-variant-numeric: tabular-nums;
 }
 
-.slg-sales-stat-value--owed {
-  color: var(--slg-state-good);
+.admin-sales-stat-value--owed {
+  color: var(--color-status-good);
 }
 
-.slg-sales-stat--bad {
+.admin-sales-stat--bad {
   background: rgba(229, 72, 77, 0.12);
   border-color: rgba(229, 72, 77, 0.45);
 }
 
-.slg-sales-stat--bad .slg-sales-stat-label,
-.slg-sales-stat--bad .slg-sales-stat-value {
-  color: var(--slg-state-bad);
+.admin-sales-stat--bad .admin-sales-stat-label,
+.admin-sales-stat--bad .admin-sales-stat-value {
+  color: var(--color-status-bad);
 }
 
-.slg-sales-stat--wait {
+.admin-sales-stat--wait {
   background: rgba(242, 201, 76, 0.12);
   border-color: rgba(242, 201, 76, 0.45);
 }
 
-.slg-sales-stat--wait .slg-sales-stat-label,
-.slg-sales-stat--wait .slg-sales-stat-value {
-  color: var(--slg-state-wait);
+.admin-sales-stat--wait .admin-sales-stat-label,
+.admin-sales-stat--wait .admin-sales-stat-value {
+  color: var(--color-status-wait);
 }
 
 /* ---------- body ---------- */
 
-.slg-sales-body {
+.admin-sales-layout {
   display: grid;
   gap: 2.5rem;
-  padding: 0 var(--slg-gutter-tight);
+  padding: 0 var(--page-gutter-tight);
 }
 
-.slg-sales-main {
+.admin-sales-list-column {
   min-width: 0;
 }
 
 /* ---------- toolbar ---------- */
 
-.slg-sales-toolbar {
+.admin-sales-toolbar {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem 0.75rem;
   padding-bottom: 0.85rem;
-  border-bottom: 1px solid var(--slg-edge);
+  border-bottom: 1px solid var(--color-border);
 }
 
-.slg-sales-heading {
+.admin-sales-list-heading {
   margin: 0;
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-sales-count {
+.admin-sales-list-count {
   margin: 0 0 0 auto;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 /* ---------- buttons ---------- */
 
-.slg-sales-button {
+.admin-sales-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
   padding: 0.5rem 0.9rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 600;
   line-height: 1.15;
   letter-spacing: 0.01em;
   white-space: nowrap;
   text-decoration: none; /* the tracking link wears this too */
-  color: var(--slg-ink);
-  background: var(--slg-control);
-  border: 1px solid var(--slg-edge);
+  color: var(--color-text);
+  background: var(--color-control);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   cursor: pointer;
@@ -201,42 +201,42 @@
     transform 90ms ease;
 }
 
-.slg-sales-button:hover:not(:disabled) {
-  background: var(--slg-control-hover);
+.admin-sales-button:hover:not(:disabled) {
+  background: var(--color-control-hover);
   border-color: rgba(255, 255, 255, 0.22);
 }
 
-.slg-sales-button:active:not(:disabled) {
+.admin-sales-button:active:not(:disabled) {
   transform: scale(0.97);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.55);
 }
 
-.slg-sales-button:disabled {
+.admin-sales-button:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
 
-.slg-sales-button--primary {
+.admin-sales-button--primary {
   color: #000000;
-  background: var(--slg-ink);
-  border-color: var(--slg-ink);
+  background: var(--color-text);
+  border-color: var(--color-text);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.28);
 }
 
-.slg-sales-button--primary:hover:not(:disabled) {
+.admin-sales-button--primary:hover:not(:disabled) {
   color: #000000;
   background: #ffffff;
   border-color: #ffffff;
 }
 
-.slg-sales-button--primary:active:not(:disabled) {
+.admin-sales-button--primary:active:not(:disabled) {
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
-.form-field .slg-sales-button {
+.form-field .admin-sales-button {
   justify-self: start;
 }
 
-.slg-sales-button--wide {
+.admin-sales-button--wide {
   height: 34px;
   min-width: 136px;
   padding: 0 1.25rem;
@@ -244,22 +244,22 @@
 
 /* ---------- list ---------- */
 
-.slg-sale-list {
+.admin-sales-list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.slg-sale-empty {
+.admin-sales-empty-message {
   margin: 0;
   padding: 2.5rem 0;
   max-width: 42ch;
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-sale-row {
+.admin-sales-row {
   display: grid;
   grid-template-columns: 52px minmax(0, 1fr);
   grid-template-areas:
@@ -270,294 +270,294 @@
   gap: 0.2rem 0.85rem;
   width: 100%;
   padding: 0.7rem 0.25rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   text-align: left;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--slg-edge-soft);
+  border-bottom: 1px solid var(--color-border-subtle);
   cursor: pointer;
   transition: background 160ms ease;
 }
 
-.slg-sale-row:hover {
-  background: var(--slg-lift);
+.admin-sales-row:hover {
+  background: var(--color-surface);
 }
 
-.slg-sale-row--on {
-  background: var(--slg-lift-hover);
+.admin-sales-row--selected {
+  background: var(--color-surface-hover);
 }
 
-.slg-sale-thumb {
+.admin-sales-row-thumbnail {
   grid-area: thumb;
   align-self: start;
   display: block;
   width: 52px;
   aspect-ratio: 1;
   overflow: hidden;
-  background: var(--slg-lift);
+  background: var(--color-surface);
 }
 
-.slg-sale-thumb img {
+.admin-sales-row-thumbnail img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.slg-sale-identity {
+.admin-sales-row-details {
   grid-area: identity;
   display: grid;
   gap: 0.1rem;
   min-width: 0;
 }
 
-.slg-sale-title {
+.admin-sales-row-title {
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.3;
-  color: var(--slg-ink);
+  color: var(--color-text);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.slg-sale-buyer {
+.admin-sales-row-buyer {
   font-size: 0.6875rem;
   letter-spacing: 0.04em;
   line-height: 1.4;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   overflow-wrap: anywhere;
 }
 
-.slg-sale-price {
+.admin-sales-row-price {
   grid-area: price;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--slg-ink);
+  color: var(--color-text);
   font-variant-numeric: tabular-nums;
 }
 
 /* ---------- the pipeline ---------- */
 
-.slg-stages {
+.sale-stages {
   grid-area: stages;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.slg-stage-track {
+.sale-stages-track {
   display: flex;
   gap: 3px;
   flex: 0 0 auto;
 }
 
-.slg-stage-bar {
+.sale-stages-bar {
   display: block;
   width: 15px;
   height: 3px;
-  background: var(--slg-edge);
+  background: var(--color-border);
 }
 
-.slg-stage-bar--done {
-  background: var(--slg-ink);
+.sale-stages-bar--done {
+  background: var(--color-text);
 }
 
-.slg-stage-status {
+.sale-stages-status {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-stages--bad .slg-stage-bar--done,
-.slg-stages--bad .slg-stage-step--done .slg-stage-bar {
-  background: var(--slg-state-bad);
+.sale-stages--bad .sale-stages-bar--done,
+.sale-stages--bad .sale-stages-step--done .sale-stages-bar {
+  background: var(--color-status-bad);
 }
 
-.slg-stages--wait .slg-stage-bar--done,
-.slg-stages--wait .slg-stage-step--done .slg-stage-bar {
-  background: var(--slg-state-wait);
+.sale-stages--wait .sale-stages-bar--done,
+.sale-stages--wait .sale-stages-step--done .sale-stages-bar {
+  background: var(--color-status-wait);
 }
 
-.slg-stages--good .slg-stage-bar--done,
-.slg-stages--good .slg-stage-step--done .slg-stage-bar {
-  background: var(--slg-state-good);
+.sale-stages--good .sale-stages-bar--done,
+.sale-stages--good .sale-stages-step--done .sale-stages-bar {
+  background: var(--color-status-good);
 }
 
-.slg-stages--bad .slg-stage-status,
-.slg-stages--bad .slg-stage-step--done .slg-stage-name {
-  color: var(--slg-state-bad);
+.sale-stages--bad .sale-stages-status,
+.sale-stages--bad .sale-stages-step--done .sale-stages-step-name {
+  color: var(--color-status-bad);
 }
 
-.slg-stages--wait .slg-stage-status,
-.slg-stages--wait .slg-stage-step--done .slg-stage-name {
-  color: var(--slg-state-wait);
+.sale-stages--wait .sale-stages-status,
+.sale-stages--wait .sale-stages-step--done .sale-stages-step-name {
+  color: var(--color-status-wait);
 }
 
-.slg-stages--good .slg-stage-status,
-.slg-stages--good .slg-stage-step--done .slg-stage-name {
-  color: var(--slg-state-good);
+.sale-stages--good .sale-stages-status,
+.sale-stages--good .sale-stages-step--done .sale-stages-step-name {
+  color: var(--color-status-good);
 }
 
-.slg-stages--detail {
+.sale-stages--detail {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
 
-.slg-stage-step {
+.sale-stages-step {
   display: grid;
   gap: 0.45rem;
 }
 
-.slg-stage-step .slg-stage-bar {
+.sale-stages-step .sale-stages-bar {
   width: 100%;
 }
 
-.slg-stage-step--done .slg-stage-bar {
-  background: var(--slg-ink);
+.sale-stages-step--done .sale-stages-bar {
+  background: var(--color-text);
 }
 
-.slg-stage-name {
+.sale-stages-step-name {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-stage-step--done .slg-stage-name {
-  color: var(--slg-ink);
+.sale-stages-step--done .sale-stages-step-name {
+  color: var(--color-text);
 }
 
 /* ---------- detail rail ---------- */
 
-.slg-sales-rail {
+.admin-sales-detail-column {
   min-width: 0;
 }
 
-.slg-sale-panel {
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge-soft);
+.admin-sales-detail-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
 }
 
-.slg-sale-panel-head {
+.admin-sales-detail-panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
   min-height: 48px;
   padding: 0 0.9rem;
-  border-bottom: 1px solid var(--slg-edge-soft);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
-.slg-sale-panel-title {
+.admin-sales-detail-panel-title {
   margin: 0;
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
-.slg-sale-panel-body {
+.admin-sales-detail-panel-content {
   display: grid;
   gap: 1.25rem;
   padding: 1.1rem 0.9rem 1.25rem;
 }
 
-.slg-sale-placeholder {
+.admin-sales-placeholder-message {
   margin: 0;
   padding: 2rem 0.9rem;
   max-width: 34ch;
   font-size: 0.875rem;
   line-height: 1.6;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
 /* ---------- detail: the piece ---------- */
 
-.slg-sale-piece {
+.admin-sales-detail-piece {
   display: grid;
   grid-template-columns: 96px minmax(0, 1fr);
   align-items: start;
   gap: 0.9rem;
 }
 
-.slg-sale-piece-image {
+.admin-sales-detail-piece-image {
   display: block;
   width: 96px;
   aspect-ratio: 1;
   object-fit: cover;
-  background: var(--slg-void);
+  background: var(--color-page-background);
 }
 
-.slg-sale-piece-meta {
+.admin-sales-detail-piece-details {
   display: grid;
   gap: 0.25rem;
   min-width: 0;
 }
 
-.slg-sale-piece-title {
+.admin-sales-detail-piece-title {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 400;
   line-height: 1.15;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
-.slg-sale-piece-price {
-  font-family: var(--slg-display);
+.admin-sales-detail-piece-price {
+  font-family: var(--font-display);
   font-size: 1.5rem;
   line-height: 1;
-  color: var(--slg-ink);
+  color: var(--color-text);
   font-variant-numeric: tabular-nums;
 }
 
 /* ---------- detail: facts ---------- */
 
-.slg-sale-facts {
+.admin-sales-detail-facts {
   display: grid;
   gap: 0.75rem;
   margin: 0;
 }
 
-.slg-sale-fact {
+.admin-sales-detail-fact {
   display: grid;
   gap: 0.2rem;
 }
 
-.slg-sale-fact-label {
+.admin-sales-detail-fact-label {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-sale-fact-value {
+.admin-sales-detail-fact-value {
   margin: 0;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: var(--slg-ink);
+  color: var(--color-text);
   overflow-wrap: anywhere;
 }
 
-.slg-sale-fact-value--missing {
-  color: var(--slg-alert);
+.admin-sales-detail-fact-value--missing {
+  color: var(--color-alert);
 }
 
-.slg-sale-address {
+.admin-sales-detail-address {
   display: grid;
   gap: 0.5rem;
   justify-items: start;
 }
 
-.slg-sale-address-lines {
+.admin-sales-detail-address-lines {
   font-size: 0.875rem;
   line-height: 1.5;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 /* ---------- detail: tracking ---------- */
@@ -565,7 +565,7 @@
 /* The carrier mark and the number, the whole thing clickable. It sits at
    the start of the panel row so it stays the width of what it holds
    instead of stretching across the panel as a grid child. */
-.slg-sale-tracking-link {
+.admin-sales-tracking-link {
   display: inline-flex;
   align-items: center;
   justify-self: start;
@@ -574,17 +574,17 @@
   height: 48px;
   padding: 0 0.5rem;
   text-decoration: none;
-  background: var(--slg-void);
-  border: 1px solid var(--slg-edge);
+  background: var(--color-page-background);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   transition: border-color 160ms ease;
 }
 
-.slg-sale-tracking-link:hover {
-  border-color: var(--slg-dim);
+.admin-sales-tracking-link:hover {
+  border-color: var(--color-text-muted);
 }
 
-.slg-sale-tracking-mark {
+.admin-sales-tracking-carrier-logo {
   display: block;
   width: 40px;
   height: 40px;
@@ -592,10 +592,10 @@
   flex: 0 0 auto;
 }
 
-.slg-sale-tracking-number {
+.admin-sales-tracking-number {
   font-size: 0.75rem;
   line-height: 1.25;
-  color: var(--slg-ink);
+  color: var(--color-text);
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
@@ -604,26 +604,26 @@
 
 /* The tracking field is the last thing in the panel, so it takes the
    full width instead of leaving the other half empty. */
-.slg-tracking-field {
+.admin-sales-tracking-field {
   grid-column: 1 / span 2;
 }
 
-.slg-save-tracking {
+.admin-sales-save-tracking-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   justify-self: end;
   width: 136px;
   height: 34px;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 600;
   line-height: 1.15;
   letter-spacing: 0.01em;
   white-space: nowrap;
   color: #000000;
-  background: var(--slg-ink);
-  border: 1px solid var(--slg-ink);
+  background: var(--color-text);
+  border: 1px solid var(--color-text);
   border-radius: 6px;
   cursor: pointer;
   transition:
@@ -631,17 +631,17 @@
     transform 90ms ease;
 }
 
-.slg-save-tracking:hover {
+.admin-sales-save-tracking-button:hover {
   background: #ffffff;
 }
 
-.slg-save-tracking:active {
+.admin-sales-save-tracking-button:active {
   transform: scale(0.97);
 }
 
 /* ---------- detail: actions ---------- */
 
-.slg-sale-actions {
+.admin-sales-detail-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
@@ -650,55 +650,55 @@
 
 /* ---------- customer search ---------- */
 
-.slg-user-search {
+.admin-sales-customer-search {
   position: relative;
 }
 
-.slg-user-results {
+.admin-sales-customer-results {
   position: absolute;
   top: calc(100% + 2px);
   left: 0;
   right: 0;
   max-height: 280px;
   overflow-y: auto;
-  background: var(--slg-void);
-  border: 1px solid var(--slg-edge);
+  background: var(--color-page-background);
+  border: 1px solid var(--color-border);
   z-index: 20;
 }
 
-.slg-user-result {
+.admin-sales-customer-result {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   width: 100%;
   padding: 0.5rem 0.6rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   text-align: left;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--slg-edge-soft);
+  border-bottom: 1px solid var(--color-border-subtle);
   cursor: pointer;
   transition: background 160ms ease;
 }
 
-.slg-user-result:hover {
-  background: var(--slg-lift-hover);
+.admin-sales-customer-result:hover {
+  background: var(--color-surface-hover);
 }
 
-.slg-user-results-empty {
+.admin-sales-customer-results-empty-message {
   padding: 0.75rem 0.6rem;
   font-size: 0.8125rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-user-identity {
+.admin-sales-customer-details {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   min-width: 0;
 }
 
-.slg-user-avatar {
+.admin-sales-customer-avatar {
   width: 30px;
   height: 30px;
   object-fit: cover;
@@ -706,46 +706,46 @@
   flex: 0 0 auto;
 }
 
-.slg-user-avatar--fallback {
+.admin-sales-customer-avatar--initial {
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--slg-ink);
-  background: var(--slg-lift-hover);
-  border: 1px solid var(--slg-edge);
+  color: var(--color-text);
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-border);
 }
 
-.slg-user-meta {
+.admin-sales-customer-name-and-email {
   display: grid;
   gap: 0.1rem;
   min-width: 0;
 }
 
-.slg-user-name {
+.admin-sales-customer-name {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
-.slg-user-email {
+.admin-sales-customer-email {
   font-size: 0.6875rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   overflow-wrap: anywhere;
 }
 
-.slg-user-card {
+.admin-sales-selected-customer {
   display: grid;
   gap: 0.75rem;
   padding: 0.75rem;
-  background: var(--slg-void);
-  border: 1px solid var(--slg-edge);
+  background: var(--color-page-background);
+  border: 1px solid var(--color-border);
 }
 
 /* ---------- modals ---------- */
 
-.slg-modal-scrim {
+.admin-sales-modal-overlay {
   position: fixed;
   inset: 0;
   z-index: 1000;
@@ -756,7 +756,7 @@
   background: rgba(0, 0, 0, 0.75);
 }
 
-.slg-modal {
+.admin-sales-modal {
   display: grid;
   gap: 1rem;
   width: 100%;
@@ -764,43 +764,43 @@
   max-height: 85vh;
   overflow-y: auto;
   padding: 1.25rem;
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
 }
 
-.slg-modal--wide {
+.admin-sales-modal--wide {
   max-width: 760px;
 }
 
-.slg-modal-head {
+.admin-sales-modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
 }
 
-.slg-modal-title {
+.admin-sales-modal-title {
   margin: 0;
-  font-family: var(--slg-display);
+  font-family: var(--font-display);
   font-size: 1.375rem;
   font-weight: 400;
   line-height: 1;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
-.slg-modal-close {
+.admin-sales-modal-close-button {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
   padding: 0;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   background: transparent;
-  border: 1px solid var(--slg-edge);
+  border: 1px solid var(--color-border);
   border-radius: 999px;
   cursor: pointer;
   transition:
@@ -809,93 +809,78 @@
     transform 90ms ease;
 }
 
-.slg-modal-close:active {
+.admin-sales-modal-close-button:active {
   transform: scale(0.94);
 }
 
-.slg-modal-close:hover {
-  color: var(--slg-ink);
-  border-color: var(--slg-dim);
-}
-
-.slg-modal-actions {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
+.admin-sales-modal-close-button:hover {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
 }
 
 /* ---------- post finder ---------- */
 
-.slg-post-picker {
+.admin-sales-piece-finder {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1px;
 }
 
-.slg-post-option {
+.admin-sales-piece-option {
   display: grid;
   grid-template-columns: 64px minmax(0, 1fr);
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem;
-  font-family: var(--slg-body);
+  font-family: var(--font-body);
   text-align: left;
   background: transparent;
-  border: 1px solid var(--slg-edge-soft);
+  border: 1px solid var(--color-border-subtle);
   cursor: pointer;
   transition: background 160ms ease;
 }
 
-.slg-post-option:hover {
-  background: var(--slg-lift-hover);
+.admin-sales-piece-option:hover {
+  background: var(--color-surface-hover);
 }
 
-.slg-post-option img {
+.admin-sales-piece-option img {
   display: block;
   width: 64px;
   aspect-ratio: 1;
   object-fit: cover;
-  background: var(--slg-void);
+  background: var(--color-page-background);
 }
 
-.slg-post-option-meta {
+.admin-sales-piece-option-details {
   display: grid;
   gap: 0.15rem;
   min-width: 0;
 }
 
-.slg-post-option-title {
+.admin-sales-piece-option-title {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--slg-ink);
+  color: var(--color-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.slg-post-option-sub {
+.admin-sales-piece-option-secondary-text {
   font-size: 0.6875rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 /* ---------- shared ---------- */
 
-.slg-sales-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-.slg-sales button:focus-visible,
-.slg-sales a:focus-visible,
-.slg-sales input:focus-visible,
-.slg-modal-scrim button:focus-visible,
-.slg-modal-scrim input:focus-visible {
-  outline: 2px solid var(--slg-accent);
+.admin-sales button:focus-visible,
+.admin-sales a:focus-visible,
+.admin-sales input:focus-visible,
+.admin-sales-modal-overlay button:focus-visible,
+.admin-sales-modal-overlay input:focus-visible {
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
@@ -905,7 +890,7 @@
   display: block;
 }
 
-.slg-sale-items {
+.admin-sales-new-sale-items {
   display: grid;
   gap: 0.5rem;
   margin: 0 0 0.6rem;
@@ -913,116 +898,116 @@
   list-style: none;
 }
 
-.slg-sale-item {
+.admin-sales-new-sale-item {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr) 96px 28px;
   align-items: center;
   gap: 0.6rem;
   padding: 0.4rem;
-  background: var(--slg-lift);
-  border: 1px solid var(--slg-edge-soft);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
 }
 
-.slg-sale-item-thumb {
+.admin-sales-new-sale-item-thumbnail {
   display: block;
   width: 44px;
   aspect-ratio: 1;
   overflow: hidden;
-  background: var(--slg-void);
+  background: var(--color-page-background);
 }
 
-.slg-sale-item-thumb img {
+.admin-sales-new-sale-item-thumbnail img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.slg-sale-item-meta {
+.admin-sales-new-sale-item-details {
   display: grid;
   gap: 0.1rem;
   min-width: 0;
 }
 
-.slg-sale-item-title {
+.admin-sales-new-sale-item-title {
   font-size: 0.8125rem;
   font-weight: 500;
   line-height: 1.3;
-  color: var(--slg-ink);
+  color: var(--color-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.slg-sale-item-sub {
+.admin-sales-new-sale-item-id {
   font-size: 0.6875rem;
   letter-spacing: 0.04em;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-sale-item-price .form-input {
+.admin-sales-new-sale-item-price-field .form-input {
   width: 100%;
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-.slg-sale-item-remove {
+.admin-sales-new-sale-item-remove-button {
   width: 28px;
   height: 28px;
   font-size: 0.75rem;
   line-height: 1;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
   background: transparent;
-  border: 1px solid var(--slg-edge);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   transition:
     color 140ms ease,
     border-color 140ms ease;
 }
 
-.slg-sale-item-remove:hover {
-  color: var(--slg-alert);
-  border-color: var(--slg-alert);
+.admin-sales-new-sale-item-remove-button:hover {
+  color: var(--color-alert);
+  border-color: var(--color-alert);
 }
 
 /* ---------- order totals ---------- */
 
-.slg-order-totals {
+.admin-sales-order-totals {
   display: grid;
   gap: 0.35rem;
   margin: 0.4rem 0 0;
   padding-top: 0.6rem;
-  border-top: 1px solid var(--slg-edge-soft);
+  border-top: 1px solid var(--color-border-subtle);
 }
 
-.slg-order-total-line {
+.admin-sales-order-total-row {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   font-size: 0.8125rem;
-  color: var(--slg-dim);
+  color: var(--color-text-muted);
 }
 
-.slg-order-total-line dt,
-.slg-order-total-line dd {
+.admin-sales-order-total-row dt,
+.admin-sales-order-total-row dd {
   margin: 0;
 }
 
-.slg-order-total-line dd {
+.admin-sales-order-total-row dd {
   font-variant-numeric: tabular-nums;
 }
 
-.slg-order-total-line--grand {
+.admin-sales-order-total-row--grand-total {
   padding-top: 0.35rem;
-  border-top: 1px solid var(--slg-edge-soft);
-  font-family: var(--slg-display);
+  border-top: 1px solid var(--color-border-subtle);
+  font-family: var(--font-display);
   font-size: 1.125rem;
-  color: var(--slg-ink);
+  color: var(--color-text);
 }
 
 /* ---------- order items: the detail panel ---------- */
 
-.slg-sale-pieces {
+.admin-sales-detail-pieces {
   display: grid;
   gap: 1rem;
   margin: 0;
@@ -1030,11 +1015,11 @@
   list-style: none;
 }
 
-.slg-sale-thumb {
+.admin-sales-row-thumbnail {
   position: relative;
 }
 
-.slg-sale-thumb-count {
+.admin-sales-row-item-count {
   position: absolute;
   right: 0;
   bottom: 0;
@@ -1044,73 +1029,76 @@
   font-weight: 600;
   line-height: 18px;
   text-align: center;
-  color: var(--slg-void);
-  background: var(--slg-ink);
+  color: var(--color-page-background);
+  background: var(--color-text);
 }
 
 /* ---------- wider screens ---------- */
 
 @media (min-width: 700px) {
-  .slg-sales-head,
-  .slg-sales-stats,
-  .slg-sales-body {
-    padding-left: var(--slg-gutter);
-    padding-right: var(--slg-gutter);
+  .admin-sales-header,
+  .admin-sales-stats,
+  .admin-sales-layout {
+    padding-left: var(--page-gutter);
+    padding-right: var(--page-gutter);
   }
 
-  .slg-sales-tabs {
-    margin-left: var(--slg-gutter);
-    margin-right: var(--slg-gutter);
+  .admin-sales-tabs {
+    margin-left: var(--page-gutter);
+    margin-right: var(--page-gutter);
   }
 
-  .slg-sales-stats {
+  .admin-sales-stats {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 
-  .slg-sale-row {
+  .admin-sales-row {
     grid-template-columns: 64px minmax(0, 1fr) 90px 150px;
     grid-template-areas: 'thumb identity price stages';
     gap: 1rem;
     padding: 0.6rem 0.25rem;
   }
 
-  .slg-sale-thumb {
+  .admin-sales-row-thumbnail {
     width: 64px;
     align-self: center;
   }
 
-  .slg-sale-title {
+  .admin-sales-row-title {
     -webkit-line-clamp: 1;
   }
 }
 
 @media (min-width: 1100px) {
-  .slg-sales-body {
+  .admin-sales-layout {
     grid-template-columns: minmax(0, 1fr) 400px;
-    gap: var(--slg-gutter);
+    gap: var(--page-gutter);
     align-items: start;
   }
 
-  .slg-sales-rail {
+  .admin-sales-detail-column {
     position: sticky;
-    top: calc(var(--slg-header-height) + 1.5rem);
+    top: calc(var(--header-height) + 1.5rem);
+    max-height: calc(100vh - var(--header-height) - 3rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 }
 
 @media (min-width: 1800px) {
-  .slg-sales-body {
+  .admin-sales-layout {
     grid-template-columns: minmax(0, 1fr) 460px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slg-sales *,
-  .slg-modal-scrim * {
+  .admin-sales *,
+  .admin-sales-modal-overlay * {
     transition-duration: 1ms;
   }
 
-  .slg-sales-button:active:not(:disabled),
-  .slg-modal-close:active {
+  .admin-sales-button:active:not(:disabled),
+  .admin-sales-modal-close-button:active {
     transform: none;
   }
 }

@@ -7,8 +7,8 @@ export const renderPieceSalePrice = (price, discountedPrice) => {
   if (discountedPrice && discounted < listed) {
     return (
       <>
-        <span className="piece-attachment-was">${listed.toFixed(2)}</span>
-        <span className="piece-attachment-now">${discounted.toFixed(2)}</span>
+        <span className="piece-attachment-original-price">${listed.toFixed(2)}</span>
+        <span className="piece-attachment-sale-price">${discounted.toFixed(2)}</span>
       </>
     );
   }
@@ -30,8 +30,8 @@ const PieceAttachment = ({ items = [], onCreateSale }) => {
       )}
 
       {items.map((item, index) => (
-        <div className="piece-metadata-highlight" key={item.postId ?? `${item.title}-${index}`}>
-          <div className="piece-metadata-highlight-content">
+        <div className="piece-attachment-card" key={item.postId ?? `${item.title}-${index}`}>
+          <div className="piece-attachment-card-header">
             <p>
               {item.imageUrl ? <img width="50px" src={item.imageUrl} alt={item.title} /> : null}
             </p>
@@ -64,7 +64,7 @@ const PieceAttachment = ({ items = [], onCreateSale }) => {
       {onCreateSale ? (
         <button
           type="button"
-          className="create-sale-button"
+          className="piece-attachment-create-sale-button"
           onClick={() => onCreateSale(items)}
           disabled={Boolean(itemWithoutId)}
           title={itemWithoutId ? `No piece id for "${itemWithoutId.title}"` : undefined}

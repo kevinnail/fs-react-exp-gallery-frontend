@@ -19,8 +19,8 @@ export default function AuctionArchive() {
   }, []);
 
   return (
-    <div className="messages-container">
-      <div className="messages-content">
+    <div className="ocean-page">
+      <div className="ocean-page-panel">
         <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
           <button
             onClick={() => navigate(-1)}
@@ -47,7 +47,7 @@ export default function AuctionArchive() {
               className="auction-preview-item"
               onClick={() => navigate(`/auctions/${a.id}`)}
             >
-              <img src={a.imageUrls[0]} alt={a.title} className="auction-preview-img" />
+              <img src={a.imageUrls[0]} alt={a.title} className="auction-preview-image" />
               <h3>{a.title}</h3>
             </div>
           ))}

@@ -51,8 +51,8 @@ export default function AuctionDetail() {
 
   if (loading) {
     return (
-      <div className="messages-container">
-        <div className="messages-content">
+      <div className="ocean-page">
+        <div className="ocean-page-panel">
           <p>Loading auction...</p>
           <Loading />
         </div>
@@ -65,8 +65,8 @@ export default function AuctionDetail() {
   }
 
   return (
-    <div className="messages-container">
-      <div className="messages-content">
+    <div className="ocean-page">
+      <div className="ocean-page-panel">
         <div
           style={{
             display: 'flex',
@@ -88,7 +88,7 @@ export default function AuctionDetail() {
           >
             ← Back
           </button>
-          <Link className="slg-text-link" to="/auctions">
+          <Link className="all-auctions-link" to="/auctions">
             All auctions &amp; archive
           </Link>
         </div>

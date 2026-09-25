@@ -3,8 +3,8 @@ export default function AuctionRulesModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="auction-rules-modal-wrapper" onClick={onClose}>
-      <div className="rules-modal-text" onClick={(e) => e.stopPropagation()}>
+    <div className="auction-rules-modal-overlay" onClick={onClose}>
+      <div className="auction-rules-modal-panel" onClick={(e) => e.stopPropagation()}>
         <h2 style={{ marginTop: 0, marginBottom: '1rem', fontSize: '1.25rem' }}>Auction Rules</h2>
 
         <ul style={{ paddingLeft: '1rem' }}>
@@ -26,7 +26,7 @@ export default function AuctionRulesModal({ isOpen, onClose }) {
         </p>
         <h4> Thank you everyone, and good luck!</h4>
 
-        <button className="close-button-rules-modal" onClick={onClose}>
+        <button className="auction-rules-modal-close-button" onClick={onClose}>
           Close
         </button>
       </div>

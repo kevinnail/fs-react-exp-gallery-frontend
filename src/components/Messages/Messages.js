@@ -244,8 +244,8 @@ export default function Messages() {
   };
 
   return (
-    <div className="messages-container">
-      <div className="messages-content">
+    <div className="ocean-page messages-page">
+      <div className="ocean-page-panel">
         <div style={{ display: 'flex', justifyContent: 'flex-start', position: 'absolute' }}>
           <button
             onClick={() => navigate(-1)}
@@ -262,50 +262,50 @@ export default function Messages() {
             ← Back
           </button>
         </div>
-        <div className="messages-header">
+        <div className="ocean-page-header">
           <h1 style={{ marginTop: '1rem' }}>Contact Kevin</h1>
         </div>
 
-        <div className="conversation-container">
+        <div className="messages-conversation">
           {loading ? (
-            <div className="loading-messages">
+            <div className="messages-loading">
               <p>Loading messages...</p>
             </div>
           ) : messages.length === 0 ? (
-            <div className="no-messages">
+            <div className="messages-empty-message">
               <p>No messages yet. Start a conversation below!</p>
             </div>
           ) : (
-            <div className="messages-list" ref={messagesListRef}>
+            <div className="messages-message-list" ref={messagesListRef}>
               {messages.map((message) => {
                 // In user view: user messages go right, admin messages go left
                 const isUserMessage = !message.isFromAdmin && !isAdmin;
                 return (
                   <div
                     key={message.id}
-                    className={`message-item ${isUserMessage ? 'messages-user-message' : 'messages-admin-message'}`}
+                    className={`messages-message ${isUserMessage ? 'messages-message--from-customer' : 'messages-message--from-admin'}`}
                   >
-                    <span className="message-time">{formatDate(message.sentAt)}</span>
+                    <span className="messages-message-time">{formatDate(message.sentAt)}</span>
                     {isUserMessage ? (
-                      <div className="message-content">
+                      <div className="messages-message-bubble">
                         {renderMessageWithPieceMetadata(message.messageContent)}
                       </div>
                     ) : (
-                      <div className="message-content-wrapper">
+                      <div className="messages-admin-message-row">
                         {adminProfile?.imageUrl ? (
                           <img
                             src={adminProfile.imageUrl}
                             alt="Admin avatar"
-                            className="admin-avatar"
+                            className="messages-admin-avatar"
                           />
                         ) : (
-                          <div className="admin-avatar-fallback">
+                          <div className="messages-admin-avatar-fallback">
                             {adminProfile?.firstName
                               ? adminProfile.firstName.charAt(0).toUpperCase()
                               : 'K'}
                           </div>
                         )}
-                        <div className="message-content">
+                        <div className="messages-message-bubble">
                           {renderMessageWithPieceMetadata(message.messageContent)}
                         </div>
                       </div>
@@ -317,10 +317,10 @@ export default function Messages() {
           )}
 
           {pieceMetadata && (
-            <div className="piece-metadata-display">
+            <div className="messages-piece-context">
               <h3>Message about: {pieceMetadata.title}</h3>
 
-              <div className="piece-info">
+              <div className="messages-piece-context-details">
                 <p>
                   <img width="50px" src={pieceMetadata.imageUrl} />
                 </p>
@@ -341,20 +341,20 @@ export default function Messages() {
 
           {/* Typing indicator */}
           {typingUsers.length > 0 && (
-            <div className="typing-indicator">
+            <div className="messages-typing-indicator">
               <p>Kevin is typing...</p>
             </div>
           )}
 
           {/* Connection status indicator */}
           {!isConnected && (
-            <div className="connection-status">
+            <div className="messages-connection-status">
               <p>Connecting to real-time messaging...</p>
             </div>
           )}
 
-          <form onSubmit={handleSendMessage} className="message-form">
-            <div className="input-container">
+          <form onSubmit={handleSendMessage} className="messages-reply-form">
+            <div className="messages-reply-row">
               <textarea
                 value={newMessage}
                 onChange={handleTyping}
@@ -363,7 +363,7 @@ export default function Messages() {
                     ? `Ask about ${pieceMetadata.title}...`
                     : 'Type your message here...'
                 }
-                className="message-input"
+                className="messages-reply-input"
                 rows="3"
                 disabled={sending}
                 onKeyDown={(e) => {
@@ -379,7 +379,7 @@ export default function Messages() {
               <button
                 type="submit"
                 disabled={!newMessage.trim() || sending}
-                className="send-button"
+                className="messages-send-button"
               >
                 {sending ? 'Sending...' : 'Send'}
               </button>

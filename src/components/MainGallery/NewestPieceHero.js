@@ -25,27 +25,27 @@ const NewestPieceHero = ({ post, availableCount }) => {
   const coverImage = coverImageFor(post);
 
   return (
-    <section className="slg-hero" aria-labelledby="slg-hero-heading">
-      <div className="slg-hero-copy">
-        <p className="slg-eyebrow">Newest piece</p>
-        <h1 className="slg-hero-title" id="slg-hero-heading">
+    <section className="newest-piece" aria-labelledby="newest-piece-heading">
+      <div className="newest-piece-details">
+        <p className="heading-label">Newest piece</p>
+        <h1 className="newest-piece-title" id="newest-piece-heading">
           {title}
         </h1>
-        {description ? <p className="slg-hero-spec">{description}</p> : null}
-        <p className="slg-hero-price">
+        {description ? <p className="newest-piece-description">{description}</p> : null}
+        <p className="newest-piece-price">
           {salePrice !== null ? (
             <>
-              <span className="slg-was">${listedPrice}</span>${Math.floor(salePrice)}
+              <span className="original-price">${listedPrice}</span>${Math.floor(salePrice)}
             </>
           ) : (
             <>${listedPrice}</>
           )}
         </p>
-        <div className="slg-hero-actions">
-          <Link className="slg-button" to={`/${id}`}>
+        <div className="newest-piece-links">
+          <Link className="button-link" to={`/${id}`}>
             View this piece
           </Link>
-          <a className="slg-button slg-button--quiet" href="#slg-available">
+          <a className="button-link button-link--secondary" href="#available-pieces">
             See all {availableCount} available
           </a>
         </div>
@@ -54,9 +54,9 @@ const NewestPieceHero = ({ post, availableCount }) => {
       {/* The photo navigates to the same place the button does. A Link
           rather than an onClick handler so it keeps keyboard focus,
           middle-click and open-in-new-tab. */}
-      <figure className="slg-hero-figure">
+      <figure className="newest-piece-image">
         {coverImage ? (
-          <Link className="slg-hero-figure-link" to={`/${id}`} aria-label={`View ${title}`}>
+          <Link className="newest-piece-image-link" to={`/${id}`} aria-label={`View ${title}`}>
             <img src={coverImage} alt={title} />
           </Link>
         ) : null}

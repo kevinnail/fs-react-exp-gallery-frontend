@@ -59,12 +59,12 @@ export default function DiscountForm() {
   };
 
   return (
-    <div className="form-wrapper">
+    <div className="discount-form-wrapper">
       <form className="discount-form" onSubmit={handleSubmit}>
-        <h2 className="form-title">
+        <h2 className="discount-form-title">
           {action === 'apply' ? 'Enter Discount Percentage' : 'Undo Discount'}
         </h2>
-        <section className="form-section">
+        <section className="discount-form-section">
           <input
             type="number"
             value={percentage}
@@ -72,12 +72,12 @@ export default function DiscountForm() {
             placeholder="%"
             max="99"
             min="0"
-            className="input-field percentage-input"
+            className="discount-form-input discount-form-percentage-input"
             disabled={action === 'undo'}
           />
         </section>
-        <div className="radio-group">
-          <label className="radio-label">
+        <div className="discount-form-radio-group">
+          <label className="discount-form-radio-label">
             <input
               type="radio"
               value="apply"
@@ -86,7 +86,7 @@ export default function DiscountForm() {
             />
             Apply Discount to ALL posts
           </label>
-          <label className="radio-label">
+          <label className="discount-form-radio-label">
             <input
               type="radio"
               value="undo"
@@ -97,17 +97,17 @@ export default function DiscountForm() {
           </label>
         </div>
 
-        <section className="form-section2">
+        <section>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Enter a message for your customers"
             rows="8"
-            className="input-field message-input"
+            className="discount-form-input discount-form-message-input"
           />
         </section>
         <div>
-          <button className="submit-btn" type="submit">
+          <button className="discount-form-submit-button" type="submit">
             <img src="/upload.png" alt="upload" />
           </button>
         </div>

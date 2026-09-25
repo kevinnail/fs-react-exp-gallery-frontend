@@ -185,23 +185,23 @@ export default function PaymentDueSummary({
 
   return (
     <div className="payment-due-summary">
-      <div className="user-auctions-summary">
-        <div className="summary-heading">
+      <div className="payment-due-panel">
+        <div className="payment-due-heading">
           <h4>Payment needed</h4>
-          <span className="summary-heading-total">${unpaidData.total.toLocaleString()}</span>
+          <span className="payment-due-heading-amount">${unpaidData.total.toLocaleString()}</span>
         </div>
 
-        <div className="summary-details">
+        <div className="payment-due-details">
           {unpaidAuctionCount > 0 && (
             <button
               type="button"
-              className="summary-jump-row"
+              className="payment-due-jump-button"
               onClick={onViewUnpaidAuctions}
               disabled={typeof onViewUnpaidAuctions !== 'function'}
             >
-              <span className="summary-jump-label">
+              <span className="payment-due-jump-label">
                 {unpaidAuctionCount} auction{unpaidAuctionCount === 1 ? '' : 's'} won
-                <span className="summary-jump-hint">View in the Auctions tab</span>
+                <span className="payment-due-jump-hint">View in the Auctions tab</span>
               </span>
               <span>${unpaidData.auctionSubtotal.toLocaleString()}</span>
             </button>
@@ -209,32 +209,32 @@ export default function PaymentDueSummary({
           {unpaidPurchaseCount > 0 && (
             <button
               type="button"
-              className="summary-jump-row"
+              className="payment-due-jump-button"
               onClick={onViewUnpaidPurchases}
               disabled={typeof onViewUnpaidPurchases !== 'function'}
             >
-              <span className="summary-jump-label">
+              <span className="payment-due-jump-label">
                 {unpaidPurchaseCount} purchase{unpaidPurchaseCount === 1 ? '' : 's'}
-                <span className="summary-jump-hint">View in the Purchases tab</span>
+                <span className="payment-due-jump-hint">View in the Purchases tab</span>
               </span>
               <span>${unpaidData.purchaseSubtotal.toLocaleString()}</span>
             </button>
           )}
-          <p className="summary-details-p">
+          <p className="payment-due-row">
             <span>Shipping</span> ${unpaidData.shipping.toLocaleString()}
           </p>
-          <p className="summary-total">
+          <p className="payment-due-total">
             <strong>Total due</strong> ${unpaidData.total.toLocaleString()}
           </p>
         </div>
 
-        <div className="payment-info-banner">
-          <div className="payment-due">
+        <div className="payment-due-banner">
+          <div className="payment-due-banner-row">
             <strong>How to pay</strong>
 
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <button
-                className="pay-now-btn"
+                className="payment-due-pay-button"
                 onClick={handlePrintInvoice}
                 style={{ cursor: 'pointer' }}
               >
@@ -243,7 +243,7 @@ export default function PaymentDueSummary({
             </div>
           </div>
 
-          <p className="payment-contact-line">
+          <p className="payment-due-contact-line">
             Contact me through{' '}
             <span onClick={handleMsgNav} style={{ cursor: 'pointer', textDecoration: 'underline' }}>
               Messages
@@ -253,14 +253,14 @@ export default function PaymentDueSummary({
 
           {/* Quick Pay options as cards */}
           <div className="quick-pay-section">
-            <div className="quick-pay-header">Easy Pay Options</div>
+            <div className="quick-pay-heading">Easy Pay Options</div>
             <div className="quick-pay-grid">
               {/* Zelle Card */}
-              <div className="quick-pay-card zelle">
-                <div className="quick-pay-thumb" aria-hidden>
+              <div className="quick-pay-card quick-pay-card--zelle">
+                <div className="quick-pay-logo" aria-hidden>
                   Z
                 </div>
-                <div className="quick-pay-content">
+                <div className="quick-pay-details">
                   <div className="quick-pay-title">
                     Zelle{' '}
                     <span style={{ fontWeight: '300', fontSize: '1rem' }}>
@@ -271,21 +271,21 @@ export default function PaymentDueSummary({
                   <div className="quick-pay-subtitle">
                     Preferred: instant and always free (available at most banks)
                   </div>
-                  <div className="quick-pay-row">
-                    <button className="pay-now-btn" onClick={handleCopyZelle}>
+                  <div className="quick-pay-actions">
+                    <button className="payment-due-pay-button" onClick={handleCopyZelle}>
                       Copy Zelle info
                     </button>
-                    {copied ? <span className="copied-indicator">Copied!</span> : null}
+                    {copied ? <span className="quick-pay-copied-indicator">Copied!</span> : null}
                   </div>
                 </div>
               </div>
 
               {/* Venmo Card */}
-              <div className="quick-pay-card venmo">
-                <div className="quick-pay-thumb" aria-hidden>
+              <div className="quick-pay-card quick-pay-card--venmo">
+                <div className="quick-pay-logo" aria-hidden>
                   V
                 </div>
-                <div className="quick-pay-content">
+                <div className="quick-pay-details">
                   <div className="quick-pay-title">
                     Venmo
                     <span style={{ fontWeight: '300', fontSize: '1rem' }}>
@@ -293,9 +293,9 @@ export default function PaymentDueSummary({
                       {VENMO_HANDLE}
                     </span>
                   </div>
-                  <div className="quick-pay-row">
+                  <div className="quick-pay-actions">
                     <a
-                      className="pay-now-btn"
+                      className="payment-due-pay-button"
                       style={{
                         textDecoration: 'none',
                         fontSize: '.9rem',
@@ -317,20 +317,20 @@ export default function PaymentDueSummary({
               </div>
 
               {/* Cash App Card */}
-              <div className="quick-pay-card cashapp">
-                <div className="quick-pay-thumb" aria-hidden>
+              <div className="quick-pay-card quick-pay-card--cashapp">
+                <div className="quick-pay-logo" aria-hidden>
                   $
                 </div>
-                <div className="quick-pay-content">
+                <div className="quick-pay-details">
                   <div className="quick-pay-title">
                     Cash App
                     <span style={{ fontWeight: '300', fontSize: '1rem' }}>
                       {`  `}${CASHAPP_HANDLE}
                     </span>
                   </div>
-                  <div className="quick-pay-row">
+                  <div className="quick-pay-actions">
                     <button
-                      className="pay-now-btn"
+                      className="payment-due-pay-button"
                       onClick={() => {
                         if (
                           typeof window !== 'undefined' &&
@@ -346,7 +346,9 @@ export default function PaymentDueSummary({
                     >
                       Copy Cash App
                     </button>
-                    {copiedCashApp ? <span className="copied-indicator">Copied!</span> : null}
+                    {copiedCashApp ? (
+                      <span className="quick-pay-copied-indicator">Copied!</span>
+                    ) : null}
                   </div>
                 </div>
               </div>

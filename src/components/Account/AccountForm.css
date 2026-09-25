@@ -1,4 +1,4 @@
-.profile-form-overlay {
+.account-form-overlay {
   position: fixed;
   top: 90px;
   left: 0;
@@ -13,7 +13,7 @@
   overflow: hidden; /* prevent overlay from having its own scroll */
 }
 
-.profile-form-container {
+.account-form-container {
   background: rgba(0, 0, 0, 0.9);
   border-radius: 15px;
   padding: 1.5rem;
@@ -26,7 +26,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-.profile-form-header {
+.account-form-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -35,14 +35,14 @@
   padding-bottom: 1rem;
 }
 
-.profile-form-header h2 {
+.account-form-header h2 {
   color: white;
   margin: 0;
   font-size: 1.8rem;
   font-weight: 300;
 }
 
-.close-btn {
+.account-form-close-button {
   background: none;
   border: none;
   color: white;
@@ -58,30 +58,37 @@
   transition: background-color 0.3s ease;
 }
 
-.close-btn:hover {
+.account-form-close-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.profile-form {
+.account-form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   padding-bottom: 5rem;
 }
 
-.form-group {
+.account-form-field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.form-group label {
+.account-form-field label {
   color: white;
   font-weight: 500;
   font-size: 1rem;
 }
 
-.form-group input[type='text'] {
+.account-form-address-heading {
+  margin: 0 0 0.5rem 0;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.account-form-field input[type='text'] {
   padding: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
@@ -93,7 +100,7 @@
     background-color 0.3s ease;
 }
 
-.form-group select {
+.account-form-field select {
   padding: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
@@ -116,13 +123,13 @@
   background-repeat: no-repeat;
 }
 
-.form-group select:focus {
+.account-form-field select:focus {
   outline: none;
   border-color: rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.15);
 }
 
-.form-group select option {
+.account-form-field select option {
   background: rgba(0, 0, 0, 0.9);
   color: #fff;
   /* font-family: monospace !important; */
@@ -130,29 +137,29 @@
   font-weight: normal;
 }
 
-.form-group input[type='text']:focus {
+.account-form-field input[type='text']:focus {
   outline: none;
   border-color: rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.15);
 }
 
-.form-group input[type='text']::placeholder {
+.account-form-field input[type='text']::placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
 
-.image-upload-container {
+.account-form-image-upload {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.image-preview {
+.account-form-image-preview {
   display: flex;
   justify-content: center;
   margin-bottom: 1rem;
 }
 
-.image-preview img {
+.account-form-image-preview img {
   width: 120px;
   height: 120px;
   border-radius: 50%;
@@ -160,11 +167,11 @@
   border: 3px solid rgba(255, 255, 255, 0.2);
 }
 
-.file-input {
+.account-form-file-input {
   display: none;
 }
 
-.file-input-label {
+.account-form-file-input-label {
   display: inline-block;
   padding: 0.75rem 1.5rem;
   background: rgba(255, 255, 255, 0.1);
@@ -179,12 +186,12 @@
   font-size: 1rem;
 }
 
-.file-input-label:hover {
+.account-form-file-input-label:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-.form-actions {
+.account-form-actions {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
@@ -193,8 +200,8 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.cancel-btn-account,
-.submit-btn-account {
+.account-form-cancel-button,
+.account-form-submit-button {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 8px;
@@ -205,36 +212,36 @@
   max-height: 150px;
 }
 
-.cancel-btn-account {
+.account-form-cancel-button {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.cancel-btn-account:hover {
+.account-form-cancel-button:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-.submit-btn-account {
+.account-form-submit-button {
   background: linear-gradient(315deg, black, grey);
   color: white;
   border: none;
 }
 
-.submit-btn-account:hover:not(:disabled) {
+.account-form-submit-button:hover:not(:disabled) {
   background: linear-gradient(315deg, grey, black);
   transform: translateY(-1px);
 }
 
-.submit-btn-account:disabled {
+.account-form-submit-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
 @media (max-width: 768px) {
-  .profile-form-overlay {
+  .account-form-overlay {
     display: block;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -242,7 +249,7 @@
     padding: 0;
   }
 
-  .profile-form-container {
+  .account-form-container {
     position: static;
     width: 100%;
     max-width: none;
@@ -257,17 +264,17 @@
     overflow: visible;
   }
 
-  .form-actions {
+  .account-form-actions {
     flex-direction: column;
   }
 
-  .cancel-btn,
-  .submit-btn {
+  .account-form-cancel-button,
+  .account-form-submit-button {
     width: 100%;
   }
 }
 
 /* body scroll lock helper class */
-body.modal-open {
+body.account-form-modal-open {
   overflow: hidden;
 }

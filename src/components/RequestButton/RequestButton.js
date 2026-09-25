@@ -26,8 +26,8 @@ const RequestButton = ({ piece, variant = 'detail' }) => {
   return (
     <button
       type="button"
-      className={`slg-request-button slg-request-button--${variant}${
-        isInCart ? ' slg-request-button--active' : ''
+      className={`request-button request-button--${variant}${
+        isInCart ? ' request-button--added' : ''
       }`}
       onClick={handleClick}
       aria-pressed={isInCart}
@@ -36,13 +36,13 @@ const RequestButton = ({ piece, variant = 'detail' }) => {
         isInCart ? `Remove ${piece.title} from your request` : `Add ${piece.title} to your request`
       }
     >
-      <span className="slg-request-button-mark" aria-hidden="true">
+      <span className="request-button-icon" aria-hidden="true">
         {isInCart ? '✓' : '+'}
       </span>
-      <span className="slg-request-button-label slg-request-button-label--full" aria-hidden="true">
+      <span className="request-button-label request-button-label--full" aria-hidden="true">
         {label}
       </span>
-      <span className="slg-request-button-label slg-request-button-label--short" aria-hidden="true">
+      <span className="request-button-label request-button-label--short" aria-hidden="true">
         {shortLabel}
       </span>
     </button>
