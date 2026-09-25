@@ -54,7 +54,6 @@
 
 .inventory-table th,
 .inventory-table td {
-  padding: 0.5rem 0.6rem;
   text-align: left;
   font-weight: 400;
   border-bottom: 1px solid var(--color-border-subtle);
@@ -78,8 +77,6 @@
   text-align: right;
 }
 
-/* The category name is the control, so it fills the cell rather than
-   relying on a click handler bolted to the row. */
 .inventory-category-button {
   display: block;
   width: 100%;
@@ -94,8 +91,6 @@
   cursor: pointer;
 }
 
-/* The row itself is clickable (see Inventory.js), so it gets the hand
-   cursor rather than only the category name having one. */
 .inventory-table tbody tr {
   cursor: pointer;
 }
@@ -117,14 +112,10 @@
   color: var(--inventory-stock-out-color);
 }
 
-/* An empty category is the row you are hunting for, so it is also the
-   only one set in bold. */
 .inventory-row--stock-out .inventory-category-button {
   font-weight: 600;
 }
 
-/* Hover only where there is a pointer to hover with: on a phone it
-   sticks to the last row touched and competes with the selected row. */
 @media (hover: hover) {
   .inventory-table tbody tr:hover {
     background: rgba(255, 255, 255, 0.035);
@@ -135,11 +126,6 @@
   background: var(--color-surface-hover);
 }
 
-/* Selection is a deliberate act, not a problem, so it uses the neutral
-   blue and never the accent: red in this table already means out of
-   stock (--inventory-stock-out-color), and the accent is reserved for heat.
-   The name goes white and bold rather than blue, which would not hold
-   contrast against the dark ground at this size. */
 .inventory-row--selected,
 .inventory-table tbody tr.inventory-row--selected:hover {
   background: rgba(37, 99, 235, 0.22);
@@ -148,15 +134,6 @@
 .inventory-row--selected .inventory-category-button {
   font-weight: 600;
   color: var(--color-text);
-}
-
-/* Rows tall enough for a thumb: 0.5rem cell padding on a 13px line is a
-   30px row, under the 44px target. Applied everywhere rather than only
-   on touch, so there is one row height to reason about. */
-.inventory-table tbody th,
-.inventory-table tbody td {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
 }
 
 /* ---------- footer totals ---------- */
