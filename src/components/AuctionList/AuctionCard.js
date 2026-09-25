@@ -12,6 +12,7 @@ import './AuctionCard.css';
 import AuctionBidModal from './AuctionBidModal';
 import ConfirmBINModal from './ConfirmBINModal';
 import AuctionRulesModal from './AuctionRulesModal.js';
+import { CATEGORIES } from '../PostForm/PostForm.js';
 
 export default function AuctionCard({ auction }) {
   const isUserRestricted = () => {
@@ -44,6 +45,7 @@ export default function AuctionCard({ auction }) {
 
   const [showRules, setShowRules] = useState(false);
   const [showSwapModal, setShowSwapModal] = useState(false);
+  const [swapCategory, setSwapCategory] = useState('');
 
   // set up listener for websocket auction end event
   useEffect(() => {
@@ -311,9 +313,9 @@ export default function AuctionCard({ auction }) {
 
   const handleSwap = async () => {
     try {
-      await swapAuctionOrPost('auction', id);
+      await swapAuctionOrPost('auction', id, swapCategory);
       setShowSwapModal(false);
-      navigate('/auctions/archive');
+      navigate('/auctions');
       toast.success('Auction successfully swapped to gallery post.', {
         theme: 'colored',
         toastId: 'auction-swap-success',
@@ -340,33 +342,8 @@ export default function AuctionCard({ auction }) {
 
   const handleCloseSwapModal = () => {
     setShowSwapModal(false);
+    setSwapCategory('');
   };
-
-  // Simple Swap Confirmation Modal
-  function SwapConfirmationModal({ isOpen, onConfirm, onCancel }) {
-    if (!isOpen) return null;
-    return (
-      <div className="auction-card-swap-modal-overlay">
-        <div className="auction-card-swap-modal">
-          <h3>Confirm Swap</h3>
-          <p>
-            Are you sure you want to swap this auction to a gallery post? This action cannot be
-            undone.
-          </p>
-          <div
-            style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}
-          >
-            <button className="auction-card-swap-confirm-button" onClick={onConfirm}>
-              Confirm
-            </button>
-            <button className="auction-card-swap-cancel-button" onClick={onCancel}>
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -618,11 +595,45 @@ export default function AuctionCard({ auction }) {
         }}
       />
       <AuctionRulesModal isOpen={showRules} onClose={() => setShowRules(false)} />
-      <SwapConfirmationModal
-        isOpen={showSwapModal}
-        onConfirm={handleSwap}
-        onCancel={handleCloseSwapModal}
-      />
+      {showSwapModal && (
+        <div className="bid-modal-overlay" role="dialog" aria-modal="true">
+          <div className="bid-modal">
+            <h3>Confirm Swap</h3>
+            <p>
+              Are you sure you want to swap this auction to a gallery post? This action cannot be
+              undone.
+            </p>
+            <div className="form-select-wrapper">
+              <select
+                className="form-select"
+                value={swapCategory}
+                onChange={(event) => setSwapCategory(event.target.value)}
+              >
+                <option value="" disabled>
+                  Choose category
+                </option>
+                {CATEGORIES.map((categoryName) => (
+                  <option key={categoryName} value={categoryName}>
+                    {categoryName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="bid-modal-actions">
+              <button
+                className="bid-modal-confirm-button"
+                onClick={handleSwap}
+                disabled={!swapCategory}
+              >
+                Confirm
+              </button>
+              <button className="bid-modal-cancel-button" onClick={handleCloseSwapModal}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
