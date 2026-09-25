@@ -920,7 +920,7 @@ export async function putProfile({
   }
 }
 
-export async function swapAuctionOrPost(type, id) {
+export async function swapAuctionOrPost(type, id, category) {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/admin/swap/${id}`, {
       method: 'PUT',
@@ -929,7 +929,7 @@ export async function swapAuctionOrPost(type, id) {
         Accept: 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify({ type }),
+      body: JSON.stringify({ type, category }),
     });
 
     const data = await response.json();
