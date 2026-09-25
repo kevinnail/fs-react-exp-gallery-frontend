@@ -163,8 +163,6 @@ export default function AuctionForm() {
 
       <form className="admin-form" onSubmit={handleSubmit}>
         <div className="admin-form-column">
-          <p className="admin-form-section-heading">Lot</p>
-
           {hasBids && (
             <p className="auction-form-live-warning">
               <strong>Live</strong>

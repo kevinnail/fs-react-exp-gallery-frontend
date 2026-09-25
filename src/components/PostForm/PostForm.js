@@ -6,7 +6,7 @@ import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const CATEGORIES = [
+export const CATEGORIES = [
   'Beads',
   'Blunt Tips',
   'Bubblers',
