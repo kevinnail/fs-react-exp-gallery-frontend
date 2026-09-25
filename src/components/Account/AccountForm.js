@@ -21,7 +21,6 @@ export default function ProfileForm({ handleCloseForm }) {
     postalCode: '',
     countryCode: 'US',
   });
-  const [showAddress, setShowAddress] = useState(false);
   const [previewImage, setPreviewImage] = useState(profile?.imageUrl || null);
 
   // Helper: check if any required address field is filled
@@ -34,10 +33,6 @@ export default function ProfileForm({ handleCloseForm }) {
   // Also highlight when no address is provided at all
   const needsAttention = !allAddressFieldsFilled; // true for partial OR empty
 
-  // Button style values (avoid long ternaries inline)
-  const addressBtnBackground = needsAttention ? '#e74c3c' : '#fffbe6';
-  const addressBtnColor = needsAttention ? '#fff' : '#222';
-  const addressBtnWeight = needsAttention ? 700 : 500;
   const countries = [
     { code: 'US', name: 'United States' },
     { code: 'CA', name: 'Canada' },
@@ -302,123 +297,105 @@ export default function ProfileForm({ handleCloseForm }) {
 
           {/* Shipping Address Section */}
           <div className="account-form-field">
-            <button
-              type="button"
-              onClick={() => setShowAddress((prev) => !prev)}
+            <div
               style={{
-                marginBottom: '0.5rem',
-                background: addressBtnBackground,
-                border: '1px solid #ccc',
-                borderRadius: '6px',
-                padding: '0.5rem 1rem',
-                cursor: 'pointer',
-                color: addressBtnColor,
-                fontWeight: addressBtnWeight,
-                transition: 'background 0.2s',
+                padding: '1rem',
+                borderRadius: '8px',
+                border: '1px solid #ffe066',
               }}
             >
-              {showAddress ? 'Hide Shipping Address' : 'Add shipping address'}
-            </button>
-            {showAddress && (
+              <p className="account-form-address-heading">Shipping Address</p>
               <div
                 style={{
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  border: '1px solid #ffe066',
+                  fontSize: '.8rem',
+                  marginBottom: '.5rem',
+                  color: needsAttention ? '#e74c3c' : '#555',
+                  padding: needsAttention ? '0.25rem 0.5rem' : 0,
+                  borderRadius: '4px',
                 }}
               >
-                <div
-                  style={{
-                    fontSize: '.8rem',
-                    marginBottom: '.5rem',
-                    color: needsAttention ? '#e74c3c' : '#555',
-                    padding: needsAttention ? '0.25rem 0.5rem' : 0,
-                    borderRadius: '4px',
-                  }}
-                >
-                  {needsAttention
-                    ? 'Provide all fields if adding an address, or leave all blank. Partial address not accepted.'
-                    : 'Things look stokey!'}
-                </div>
-                <div className="account-form-field">
-                  <label htmlFor="addressLine1">Street Address</label>
-                  <input
-                    type="text"
-                    id="addressLine1"
-                    name="addressLine1"
-                    value={formData.addressLine1}
-                    onChange={handleInputChange}
-                    placeholder="123 Main St"
-                    autoComplete="address-line1"
-                  />
-                </div>
-                <div className="account-form-field">
-                  <label htmlFor="addressLine2">Address Line 2 (optional)</label>
-                  <input
-                    type="text"
-                    id="addressLine2"
-                    name="addressLine2"
-                    value={formData.addressLine2}
-                    onChange={handleInputChange}
-                    placeholder="Apt, suite, etc. (optional)"
-                    autoComplete="address-line2"
-                  />
-                </div>
-                <div className="account-form-field">
-                  <label htmlFor="city">City</label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    placeholder="City"
-                    autoComplete="address-level2"
-                  />
-                </div>
-
-                <div className="account-form-field">
-                  <label htmlFor="state">State</label>
-                  <input
-                    type="text"
-                    id="state"
-                    name="state"
-                    value={formData.state}
-                    onChange={handleInputChange}
-                    placeholder="State"
-                    autoComplete="address-level1"
-                  />
-                </div>
-                <div className="account-form-field">
-                  <label htmlFor="postalCode">Postal Code</label>
-                  <input
-                    type="text"
-                    id="postalCode"
-                    name="postalCode"
-                    value={formData.postalCode}
-                    onChange={handleInputChange}
-                    placeholder="ZIP or postal code"
-                    autoComplete="postal-code"
-                  />
-                </div>
-                <div className="account-form-field">
-                  <label htmlFor="countryCode">Country</label>
-                  <select
-                    id="countryCode"
-                    name="countryCode"
-                    value={formData.countryCode}
-                    onChange={handleInputChange}
-                    autoComplete="country-name"
-                  >
-                    {countries.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                {needsAttention
+                  ? 'Provide all fields if adding an address, or leave all blank. Partial address not accepted.'
+                  : 'Things look stokey!'}
               </div>
-            )}
+              <div className="account-form-field">
+                <label htmlFor="addressLine1">Street Address</label>
+                <input
+                  type="text"
+                  id="addressLine1"
+                  name="addressLine1"
+                  value={formData.addressLine1}
+                  onChange={handleInputChange}
+                  placeholder="123 Main St"
+                  autoComplete="address-line1"
+                />
+              </div>
+              <div className="account-form-field">
+                <label htmlFor="addressLine2">Address Line 2 (optional)</label>
+                <input
+                  type="text"
+                  id="addressLine2"
+                  name="addressLine2"
+                  value={formData.addressLine2}
+                  onChange={handleInputChange}
+                  placeholder="Apt, suite, etc. (optional)"
+                  autoComplete="address-line2"
+                />
+              </div>
+              <div className="account-form-field">
+                <label htmlFor="city">City</label>
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                  placeholder="City"
+                  autoComplete="address-level2"
+                />
+              </div>
+
+              <div className="account-form-field">
+                <label htmlFor="state">State</label>
+                <input
+                  type="text"
+                  id="state"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleInputChange}
+                  placeholder="State"
+                  autoComplete="address-level1"
+                />
+              </div>
+              <div className="account-form-field">
+                <label htmlFor="postalCode">Postal Code</label>
+                <input
+                  type="text"
+                  id="postalCode"
+                  name="postalCode"
+                  value={formData.postalCode}
+                  onChange={handleInputChange}
+                  placeholder="ZIP or postal code"
+                  autoComplete="postal-code"
+                />
+              </div>
+              <div className="account-form-field">
+                <label htmlFor="countryCode">Country</label>
+                <select
+                  id="countryCode"
+                  name="countryCode"
+                  value={formData.countryCode}
+                  onChange={handleInputChange}
+                  autoComplete="country-name"
+                >
+                  {countries.map((c) => (
+                    <option key={c.code} value={c.code}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
 
           <div className="account-form-actions">
