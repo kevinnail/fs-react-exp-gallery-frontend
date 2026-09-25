@@ -293,6 +293,26 @@ export default function Account() {
                 </button>
               )}
             </div>
+            {hasAddress ? (
+              <address className="account-shipping-address">
+                <span className="account-shipping-address-heading">Shipping address</span>
+                <span>{address.addressLine1}</span>
+                {address.addressLine2 && <span>{address.addressLine2}</span>}
+                <span>
+                  {address.city}, {address.state} {address.postalCode}
+                </span>
+                <span>{address.countryCode}</span>
+              </address>
+            ) : (
+              <button
+                type="button"
+                className="account-shipping-address-missing-notice"
+                onClick={handleEditProfile}
+              >
+                No shipping address on file. Add one so your orders can ship without a follow-up
+                message.
+              </button>
+            )}
           </div>
         </div>
 
