@@ -81,6 +81,13 @@
   font-size: 1rem;
 }
 
+.account-form-address-heading {
+  margin: 0 0 0.5rem 0;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
 .account-form-field input[type='text'] {
   padding: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
