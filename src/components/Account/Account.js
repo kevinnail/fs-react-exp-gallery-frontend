@@ -15,6 +15,7 @@ import {
   getPiecePrice,
   getSpecialCountdownLabel,
   isSpecialActive,
+  isSpecialEndingSoon,
 } from '../../services/userSpecial.js';
 
 const TAB_SUMMARY = 'summary';
@@ -413,20 +414,32 @@ export default function Account() {
                             <span>{post.category}</span>
                           </p>
 
-                          <p>
-                            <span>Price:</span>
-                            <span style={{ fontWeight: '600' }}>
-                              <span className="account-special-original-price">
-                                {post.price ? `$${post.price}` : 'N/A'}
+                          <div className="special-countdown-wrapper">
+                            <p>
+                              <span>Price:</span>
+                              <span style={{ fontWeight: '600' }}>
+                                <span className="account-special-original-price">
+                                  {post.price ? `$${post.price}` : 'N/A'}
+                                </span>
+                                <i className="fa fa-arrow-right" aria-hidden="true"></i>
+                                <span style={{ marginLeft: '.25rem' }}>
+                                  ${salePrice.toFixed(0)}
+                                </span>
                               </span>
-                              <i className="fa fa-arrow-right" aria-hidden="true"></i>
-                              <span style={{ marginLeft: '.25rem' }}>${salePrice.toFixed(0)}</span>
-                            </span>
-                          </p>
+                            </p>
 
-                          {countdownLabel && (
-                            <span className="account-special-countdown">{countdownLabel}</span>
-                          )}
+                            {countdownLabel && (
+                              <span
+                                className={
+                                  isSpecialEndingSoon(post)
+                                    ? 'account-special-countdown account-special-countdown--ending-soon'
+                                    : 'account-special-countdown'
+                                }
+                              >
+                                {countdownLabel}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     );

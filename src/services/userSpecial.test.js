@@ -1,4 +1,9 @@
-import { getPiecePrice, getSpecialCountdownLabel, isSpecialActive } from './userSpecial.js';
+import {
+  getPiecePrice,
+  getSpecialCountdownLabel,
+  isSpecialActive,
+  isSpecialEndingSoon,
+} from './userSpecial.js';
 
 const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 const now = new Date('2026-09-13T12:00:00Z');
@@ -60,17 +65,34 @@ describe('isSpecialActive', () => {
 });
 
 describe('getSpecialCountdownLabel', () => {
-  it('counts down through the last three days', () => {
-    expect(getSpecialCountdownLabel(postedDaysAgo(11.5), now)).toBe('3 days left');
-    expect(getSpecialCountdownLabel(postedDaysAgo(12.5), now)).toBe('2 days left');
-    expect(getSpecialCountdownLabel(postedDaysAgo(13.5), now)).toBe('Last day!');
+  it('shows the days left for the whole two weeks', () => {
+    expect(getSpecialCountdownLabel(postedDaysAgo(0.5), now)).toBe('14 days left');
+    expect(getSpecialCountdownLabel(postedDaysAgo(7.5), now)).toBe('7 days left');
+    expect(getSpecialCountdownLabel(postedDaysAgo(10.5), now)).toBe('4 days left');
   });
 
-  it('shows nothing before the last three days', () => {
-    expect(getSpecialCountdownLabel(postedDaysAgo(10.5), now)).toBeNull();
+  it('adds urgency through the last three days', () => {
+    expect(getSpecialCountdownLabel(postedDaysAgo(11.5), now)).toBe('Only 3 days left!');
+    expect(getSpecialCountdownLabel(postedDaysAgo(12.5), now)).toBe('Only 2 days left!');
+    expect(getSpecialCountdownLabel(postedDaysAgo(13.5), now)).toBe('Last day!');
   });
 
   it('shows nothing once the special has ended', () => {
     expect(getSpecialCountdownLabel(postedDaysAgo(15), now)).toBeNull();
+  });
+});
+
+describe('isSpecialEndingSoon', () => {
+  it('is true inside the last three days', () => {
+    expect(isSpecialEndingSoon(postedDaysAgo(11.5), now)).toBe(true);
+    expect(isSpecialEndingSoon(postedDaysAgo(13.5), now)).toBe(true);
+  });
+
+  it('is false earlier in the special', () => {
+    expect(isSpecialEndingSoon(postedDaysAgo(10.5), now)).toBe(false);
+  });
+
+  it('is false once the special has ended', () => {
+    expect(isSpecialEndingSoon(postedDaysAgo(15), now)).toBe(false);
   });
 });
