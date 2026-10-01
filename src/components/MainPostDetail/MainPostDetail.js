@@ -7,7 +7,7 @@ import Loading from '../Loading/Loading.js';
 import NotFound from '../NotFound/NotFound.js';
 import ShareButton from '../ShareButton/ShareButton.js';
 import RequestButton from '../RequestButton/RequestButton.js';
-import { useUserStore } from '../../stores/userStore.js';
+import { useSignedUpAt } from '../../hooks/useSignedUpAt.js';
 import { getPiecePrice } from '../../services/userSpecial.js';
 import './MainPostDetail.css';
 
@@ -41,11 +41,11 @@ export default function MainPostDetail() {
   const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
-  const user = useUserStore((state) => state.user);
+  const signedUpAt = useSignedUpAt();
 
   const store = storeFor(postDetail?.selling_link);
 
-  const { listedPrice, salePrice } = getPiecePrice(postDetail ?? {}, { isSignedIn: Boolean(user) });
+  const { listedPrice, salePrice } = getPiecePrice(postDetail ?? {}, { signedUpAt });
 
   const currentSource = imageUrls[currentIndex];
   const isVideo = Boolean(currentSource?.endsWith('.mp4'));
