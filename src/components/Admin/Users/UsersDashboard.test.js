@@ -109,6 +109,23 @@ describe('UsersDashboard', () => {
     ).toHaveTextContent('17');
   });
 
+  it('narrows the table to the chosen filter and leaves the admin out', async () => {
+    const admin = customerWith({ id: 9, email: 'admin@example.com', isAdmin: true });
+    getCustomerMetrics.mockResolvedValue([buyer, browser, admin]);
+    const user = userEvent.setup();
+    render(<UsersDashboard />);
+
+    await screen.findByText('buyer@example.com');
+    expect(screen.queryByText('admin@example.com')).not.toBeInTheDocument();
+    expect(screen.getByText('2 of 2 customers')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Owes money' }));
+
+    expect(screen.getByText('1 of 2 customers')).toBeInTheDocument();
+    expect(screen.getByText('buyer@example.com')).toBeInTheDocument();
+    expect(screen.queryByText('browser@example.com')).not.toBeInTheDocument();
+  });
+
   it('shows the error when the customers cannot be loaded', async () => {
     getCustomerMetrics.mockRejectedValue(new Error('Could not load customers (500)'));
     render(<UsersDashboard />);

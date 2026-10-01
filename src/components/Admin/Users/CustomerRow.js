@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
+import { daysSince, getAverageOrderValue } from '../../../services/customerMetrics.js';
 
-const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
 export const CUSTOMER_COLUMN_COUNT = 11;
 
 const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
@@ -16,12 +16,9 @@ const formatDate = (dateString) =>
       })
     : 'Never';
 
-const daysBetween = (startDateString, endDate) =>
-  Math.floor((endDate - new Date(startDateString)) / MILLISECONDS_PER_DAY);
-
 const formatTenure = (joinedAt, now) => {
   if (!joinedAt) return '';
-  const days = daysBetween(joinedAt, now);
+  const days = daysSince(joinedAt, now);
   if (days < 30) return `${days} days`;
   if (days < 365) return `${Math.floor(days / 30)} months`;
   return `${Math.floor(days / 365)} years`;
@@ -31,13 +28,11 @@ const formatYesNo = (value) => (value ? 'Yes' : 'No');
 
 const CustomerRow = ({ customer, isExpanded, onToggle, now = new Date() }) => {
   const fullName = [customer.firstName, customer.lastName].filter(Boolean).join(' ');
-  const averageOrderValue = customer.orderCount > 0 ? customer.gross / customer.orderCount : 0;
-  const daysSinceLastPurchase = customer.lastPurchaseAt
-    ? daysBetween(customer.lastPurchaseAt, now)
-    : null;
+  const averageOrderValue = getAverageOrderValue(customer);
+  const daysSinceLastPurchase = daysSince(customer.lastPurchaseAt, now);
   const daysToFirstPurchase =
     customer.joinedAt && customer.firstPurchaseAt
-      ? Math.max(0, daysBetween(customer.joinedAt, new Date(customer.firstPurchaseAt)))
+      ? Math.max(0, daysSince(customer.joinedAt, new Date(customer.firstPurchaseAt)))
       : null;
 
   return (
