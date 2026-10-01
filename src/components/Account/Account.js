@@ -15,8 +15,10 @@ import {
   getPiecePrice,
   getSpecialCountdownLabel,
   isSpecialActive,
+  isSpecialAvailableTo,
   isSpecialEndingSoon,
 } from '../../services/userSpecial.js';
+import { useSignedUpAt } from '../../hooks/useSignedUpAt.js';
 
 const TAB_SUMMARY = 'summary';
 const TAB_SPECIALS = 'specials';
@@ -49,6 +51,7 @@ export default function Account() {
   const { profile, address, setShowWelcome, fetchUserProfile } = useProfileStore();
   const [showEditForm, setShowEditForm] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
+  const signedUpAt = useSignedUpAt();
   const navigate = useNavigate();
   const [tab, setTab] = useState(TAB_SPECIALS);
   const tabsRef = useRef(null);
@@ -113,10 +116,10 @@ export default function Account() {
     loadRecentPosts();
   }, []);
 
-  // Check if user has added name or image
+  const specialPosts = recentPosts.filter((post) => isSpecialAvailableTo(post, signedUpAt));
+
   const hasNameOrImage = profile?.firstName || profile?.lastName || profile?.imageUrl;
 
-  // Determine if profile is complete: firstName, lastName, avatar image, and address fields
   const hasFirstName = Boolean(profile?.firstName && String(profile.firstName).trim());
   const hasLastName = Boolean(profile?.lastName && String(profile.lastName).trim());
   const hasAvatar = Boolean(profile?.imageUrl && String(profile.imageUrl).trim());
@@ -389,9 +392,9 @@ export default function Account() {
               </span>
 
               <div className="account-specials-grid">
-                {recentPosts.length > 0 ? (
-                  recentPosts.map((post) => {
-                    const { salePrice } = getPiecePrice(post, { isSignedIn: true });
+                {specialPosts.length > 0 ? (
+                  specialPosts.map((post) => {
+                    const { salePrice } = getPiecePrice(post, { signedUpAt });
                     const countdownLabel = getSpecialCountdownLabel(post);
 
                     return (
