@@ -64,7 +64,8 @@ describe('MassEmailForm', () => {
         message: 'Please disregard the earlier email.',
       });
     });
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    // MUI plays an exit transition before removing the dialog
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(toast.success).toHaveBeenCalledWith('Sent to 5 of 5 customers', expect.any(Object));
     expect(mockNavigate).toHaveBeenCalledWith('/admin');
   });
@@ -145,7 +146,8 @@ describe('MassEmailForm', () => {
     });
     await user.click(within(dialog).getByRole('button', { name: 'Cancel' }));
 
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    // MUI plays an exit transition before removing the dialog
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(sendMassEmail).not.toHaveBeenCalled();
   });
 
@@ -156,7 +158,8 @@ describe('MassEmailForm', () => {
     await fillAndSubmit(user, { subject: 'Hi', message: 'Body', sendLabel: 'Send announcement' });
     await user.keyboard('{Escape}');
 
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    // MUI plays an exit transition before removing the dialog
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(sendMassEmail).not.toHaveBeenCalled();
   });
 });
