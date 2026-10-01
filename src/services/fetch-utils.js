@@ -712,7 +712,7 @@ export async function bulkPostEdit(action, percentage = 0) {
   }
 }
 
-export async function sendMassEmail({ subject, message }) {
+export async function sendMassEmail({ subject, message, userIds }) {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/admin/mass-email`, {
       method: 'POST',
@@ -720,7 +720,7 @@ export async function sendMassEmail({ subject, message }) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ subject, message }),
+      body: JSON.stringify({ subject, message, userIds }),
     });
 
     if (!response.ok) {

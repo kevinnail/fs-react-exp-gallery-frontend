@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getCustomerMetrics } from '../../../services/fetch-customers.js';
+import { useUserStore } from '../../../stores/userStore.js';
 import {
   CUSTOMER_FILTERS,
   filterCustomers,
@@ -26,7 +28,7 @@ const COLUMNS = [
 ];
 
 const UsersDashboard = () => {
-  const [customers, setCustomers] = useState([]);
+  const [allCustomers, setAllCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
@@ -35,12 +37,12 @@ const UsersDashboard = () => {
   const [sortDirection, setSortDirection] = useState('desc');
   const [activeFilter, setActiveFilter] = useState('all');
   const [joinedBefore, setJoinedBefore] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadCustomers = async () => {
       try {
-        const allCustomers = await getCustomerMetrics();
-        setCustomers(allCustomers.filter((customer) => !customer.isAdmin));
+        setAllCustomers(await getCustomerMetrics());
       } catch (loadError) {
         setError(loadError.message);
       } finally {
@@ -50,6 +52,14 @@ const UsersDashboard = () => {
     loadCustomers();
   }, []);
 
+  // This page is admin-only, so the signed-in user is the admin. Their own
+  // account comes back in the rollup and is left out here.
+  const adminEmail = useUserStore((state) => state.user?.email);
+  const customers = useMemo(
+    () => allCustomers.filter((customer) => customer.email !== adminEmail),
+    [allCustomers, adminEmail]
+  );
+
   const summary = useMemo(() => summarizeCustomers(customers), [customers]);
 
   const visibleCustomers = useMemo(
@@ -57,6 +67,12 @@ const UsersDashboard = () => {
       sortCustomers(filterCustomers(customers, activeFilter, joinedBefore), sortKey, sortDirection),
     [customers, activeFilter, joinedBefore, sortKey, sortDirection]
   );
+
+  const emailableCustomers = useMemo(
+    () => visibleCustomers.filter((customer) => customer.sendEmailNotifications),
+    [visibleCustomers]
+  );
+  const optedOutCount = visibleCustomers.length - emailableCustomers.length;
 
   const totalPages = Math.ceil(visibleCustomers.length / PAGE_SIZE);
   const pageCustomers = visibleCustomers.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -79,6 +95,18 @@ const UsersDashboard = () => {
   const changeJoinedBefore = (event) => {
     setJoinedBefore(event.target.value);
     setPage(1);
+  };
+
+  const emailVisibleCustomers = () => {
+    const filterLabel = CUSTOMER_FILTERS.find((filter) => filter.key === activeFilter).label;
+    navigate('/admin/email', {
+      state: {
+        segment: {
+          label: joinedBefore ? `${filterLabel}, joined before ${joinedBefore}` : filterLabel,
+          userIds: emailableCustomers.map((customer) => Number(customer.id)),
+        },
+      },
+    });
   };
 
   const toggleExpanded = (customerId) =>
@@ -148,9 +176,22 @@ const UsersDashboard = () => {
           </label>
         </div>
 
-        <p className="customer-match-count">
-          {visibleCustomers.length} of {customers.length} customers
-        </p>
+        <div className="customer-match-row">
+          <p className="customer-match-count">
+            {visibleCustomers.length} of {customers.length} customers
+            {optedOutCount > 0 ? `, ${optedOutCount} opted out of email` : ''}
+          </p>
+          <button
+            type="button"
+            className="customer-email-button"
+            onClick={emailVisibleCustomers}
+            disabled={emailableCustomers.length === 0}
+          >
+            {emailableCustomers.length === 1
+              ? 'Email this customer'
+              : `Email these ${emailableCustomers.length} customers`}
+          </button>
+        </div>
 
         <div className="customers-table-wrapper">
           <table className="customers-table">

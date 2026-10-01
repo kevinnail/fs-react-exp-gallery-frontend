@@ -1,17 +1,31 @@
 import { useState } from 'react';
 import './MassEmailForm.css';
 import { sendMassEmail } from '../../services/fetch-utils.js';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
 
-export default function MassEmailForm() {
+const MassEmailForm = () => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const segment = useLocation().state?.segment ?? null;
+  const recipientsText = segment
+    ? `Goes to the ${segment.userIds.length} customers in "${segment.label}" who have email notifications on.`
+    : 'Goes to every customer, including those who turned notifications off.';
+  const sendLabel = segment ? 'Send promotion' : 'Send announcement';
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!subject.trim() || !message.trim()) {
@@ -23,14 +37,18 @@ export default function MassEmailForm() {
       return;
     }
 
-    const confirmed = window.confirm(
-      'Send this email to all customers with email notifications enabled? This cannot be undone.'
-    );
-    if (!confirmed) return;
+    setConfirming(true);
+  };
 
+  const sendEmail = async () => {
+    setConfirming(false);
     setSending(true);
     try {
-      const { total, sent, failed } = await sendMassEmail({ subject, message });
+      const { total, sent, failed } = await sendMassEmail({
+        subject,
+        message,
+        userIds: segment?.userIds,
+      });
       toast.success(`Sent to ${sent} of ${total} customers${failed ? `, ${failed} failed` : ''}`, {
         theme: 'colored',
         toastId: 'mass-email-success',
@@ -39,7 +57,7 @@ export default function MassEmailForm() {
       navigate('/admin');
     } catch (error) {
       console.error('An error occurred:', error);
-      toast.error('An error occurred — the email was not sent', {
+      toast.error('An error occurred. The email was not sent.', {
         theme: 'colored',
         toastId: 'mass-email-error',
         autoClose: true,
@@ -52,8 +70,15 @@ export default function MassEmailForm() {
   return (
     <div className="mass-email-wrapper">
       <form className="mass-email-form" onSubmit={handleSubmit}>
-        <h2 className="mass-email-title">Email Customers</h2>
-        <p className="mass-email-note">Goes to every customer with email notifications enabled.</p>
+        <h2 className="mass-email-title">
+          {segment ? 'Promotion to filtered customers' : 'Announcement to all customers'}
+        </h2>
+        <p className="mass-email-mode">
+          {recipientsText}{' '}
+          {segment
+            ? 'For sales and specials.'
+            : 'For site news and business updates, not sales or promotions.'}
+        </p>
 
         <input
           type="text"
@@ -74,9 +99,58 @@ export default function MassEmailForm() {
         />
 
         <button className="mass-email-submit-button" type="submit" disabled={sending}>
-          {sending ? 'Sending…' : 'Send Email'}
+          {sending ? 'Sending…' : sendLabel}
         </button>
       </form>
+
+      <Dialog
+        open={confirming}
+        onClose={() => setConfirming(false)}
+        aria-labelledby="mass-email-dialog-title"
+        aria-describedby="mass-email-dialog-description"
+        PaperProps={{
+          sx: {
+            backgroundColor: 'var(--color-surface)',
+            backgroundImage: 'none',
+            border: '1px solid var(--color-border)',
+            borderRadius: 0,
+            fontFamily: 'var(--font-body)',
+          },
+        }}
+      >
+        <DialogTitle id="mass-email-dialog-title" sx={{ fontFamily: 'var(--font-display)' }}>
+          {segment ? 'Send promotion?' : 'Send announcement?'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            id="mass-email-dialog-description"
+            sx={{ fontFamily: 'var(--font-body)' }}
+          >
+            {recipientsText} {segment ? '' : 'Not for sales or promotions. '}This cannot be undone.
+          </DialogContentText>
+          <DialogContentText sx={{ fontFamily: 'var(--font-body)', marginTop: '1rem' }}>
+            Subject: {subject}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <button
+            type="button"
+            className="mass-email-dialog-button"
+            onClick={() => setConfirming(false)}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="mass-email-dialog-button mass-email-dialog-button--confirm"
+            onClick={sendEmail}
+          >
+            {sendLabel}
+          </button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
-}
+};
+
+export default MassEmailForm;
