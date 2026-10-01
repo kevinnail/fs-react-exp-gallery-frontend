@@ -1,9 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getCustomerMetrics } from '../../../services/fetch-customers.js';
+import {
+  CUSTOMER_FILTERS,
+  filterCustomers,
+  sortCustomers,
+  summarizeCustomers,
+} from '../../../services/customerMetrics.js';
 import CustomerRow, { CUSTOMER_COLUMN_COUNT } from './CustomerRow.js';
+import CustomerSummary from './CustomerSummary.js';
 import './UsersDashboard.css';
 
 const PAGE_SIZE = 25;
+
+const COLUMNS = [
+  { sortKey: 'customer', label: 'Customer' },
+  { sortKey: 'joined', label: 'Joined' },
+  { sortKey: 'tenure', label: 'Tenure' },
+  { sortKey: 'orders', label: 'Orders', isNumeric: true },
+  { sortKey: 'items', label: 'Items', isNumeric: true },
+  { sortKey: 'spend', label: 'Lifetime spend', isNumeric: true },
+  { sortKey: 'averageOrder', label: 'Average order', isNumeric: true },
+  { sortKey: 'outstanding', label: 'Outstanding', isNumeric: true },
+  { sortKey: 'lastPurchase', label: 'Last purchase' },
+  { sortKey: 'daysSinceLastPurchase', label: 'Days since', isNumeric: true },
+];
 
 const UsersDashboard = () => {
   const [customers, setCustomers] = useState([]);
@@ -11,15 +31,16 @@ const UsersDashboard = () => {
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [expandedCustomerId, setExpandedCustomerId] = useState(null);
-
-  const totalPages = Math.ceil(customers.length / PAGE_SIZE);
-  const pageCustomers = customers.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const dev = process.env.NODE_ENV === 'development';
+  const [sortKey, setSortKey] = useState('joined');
+  const [sortDirection, setSortDirection] = useState('desc');
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [joinedBefore, setJoinedBefore] = useState('');
 
   useEffect(() => {
     const loadCustomers = async () => {
       try {
-        setCustomers(await getCustomerMetrics());
+        const allCustomers = await getCustomerMetrics();
+        setCustomers(allCustomers.filter((customer) => !customer.isAdmin));
       } catch (loadError) {
         setError(loadError.message);
       } finally {
@@ -29,8 +50,44 @@ const UsersDashboard = () => {
     loadCustomers();
   }, []);
 
+  const summary = useMemo(() => summarizeCustomers(customers), [customers]);
+
+  const visibleCustomers = useMemo(
+    () =>
+      sortCustomers(filterCustomers(customers, activeFilter, joinedBefore), sortKey, sortDirection),
+    [customers, activeFilter, joinedBefore, sortKey, sortDirection]
+  );
+
+  const totalPages = Math.ceil(visibleCustomers.length / PAGE_SIZE);
+  const pageCustomers = visibleCustomers.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  const changeSort = (columnSortKey) => {
+    if (columnSortKey === sortKey) {
+      setSortDirection((current) => (current === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(columnSortKey);
+      setSortDirection(columnSortKey === 'customer' ? 'asc' : 'desc');
+    }
+    setPage(1);
+  };
+
+  const changeFilter = (filterKey) => {
+    setActiveFilter(filterKey);
+    setPage(1);
+  };
+
+  const changeJoinedBefore = (event) => {
+    setJoinedBefore(event.target.value);
+    setPage(1);
+  };
+
   const toggleExpanded = (customerId) =>
     setExpandedCustomerId((current) => (current === customerId ? null : customerId));
+
+  const ariaSortFor = (columnSortKey) => {
+    if (columnSortKey !== sortKey) return 'none';
+    return sortDirection === 'asc' ? 'ascending' : 'descending';
+  };
 
   const renderBody = () => {
     if (loading) {
@@ -65,26 +122,56 @@ const UsersDashboard = () => {
       />
     ));
   };
+
   return (
     <div className="users-page">
       <div className="users-panel">
         <h1 className="users-title">Registered Users</h1>
-        <p>Total users: {dev ? customers.length : customers.length - 4}</p>
+
+        <CustomerSummary summary={summary} />
+
+        <div className="customer-filters">
+          {CUSTOMER_FILTERS.map((filter) => (
+            <button
+              key={filter.key}
+              type="button"
+              className="customer-filter-button"
+              aria-pressed={activeFilter === filter.key}
+              onClick={() => changeFilter(filter.key)}
+            >
+              {filter.label}
+            </button>
+          ))}
+          <label className="customer-joined-before">
+            Joined before
+            <input type="date" value={joinedBefore} onChange={changeJoinedBefore} />
+          </label>
+        </div>
+
+        <p className="customer-match-count">
+          {visibleCustomers.length} of {customers.length} customers
+        </p>
 
         <div className="customers-table-wrapper">
           <table className="customers-table">
             <thead>
               <tr>
-                <th>Customer</th>
-                <th>Joined</th>
-                <th>Tenure</th>
-                <th className="numeric-cell">Orders</th>
-                <th className="numeric-cell">Items</th>
-                <th className="numeric-cell">Lifetime spend</th>
-                <th className="numeric-cell">Average order</th>
-                <th className="numeric-cell">Outstanding</th>
-                <th>Last purchase</th>
-                <th className="numeric-cell">Days since</th>
+                {COLUMNS.map((column) => (
+                  <th
+                    key={column.sortKey}
+                    className={column.isNumeric ? 'numeric-cell' : undefined}
+                    aria-sort={ariaSortFor(column.sortKey)}
+                  >
+                    <button
+                      type="button"
+                      className="customer-sort-button"
+                      onClick={() => changeSort(column.sortKey)}
+                    >
+                      {column.label}
+                      {column.sortKey === sortKey ? (sortDirection === 'asc' ? ' ▲' : ' ▼') : ''}
+                    </button>
+                  </th>
+                ))}
                 <th aria-label="Details" />
               </tr>
             </thead>
