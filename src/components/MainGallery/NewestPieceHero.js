@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useUserStore } from '../../stores/userStore.js';
+import { useSignedUpAt } from '../../hooks/useSignedUpAt.js';
 import { getPiecePrice } from '../../services/userSpecial.js';
 import './NewestPieceHero.css';
 
@@ -10,18 +10,13 @@ const coverImageFor = (post) => {
   return source.endsWith('.mp4') ? `${source.slice(0, -4)}.jpg` : source;
 };
 
-/**
- * The hero is the newest unsold piece, shown at scale with no frame.
- * The photo's black background is the page's black background, so the
- * glass reads as floating in the page itself.
- */
 const NewestPieceHero = ({ post, availableCount }) => {
-  const user = useUserStore((state) => state.user);
+  const signedUpAt = useSignedUpAt();
 
   if (!post) return null;
 
   const { id, title, description } = post;
-  const { listedPrice, salePrice } = getPiecePrice(post, { isSignedIn: Boolean(user) });
+  const { listedPrice, salePrice } = getPiecePrice(post, { signedUpAt });
   const coverImage = coverImageFor(post);
 
   return (

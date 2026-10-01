@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import RequestPage from './RequestPage.js';
 import { useCartStore } from '../../stores/cartStore.js';
 import { useUserStore } from '../../stores/userStore.js';
+import { useProfileStore } from '../../stores/profileStore.js';
 import { getGalleryPostDetail } from '../../services/fetch-utils.js';
 import { sendCustomerMessage } from '../../services/sendCustomerMessage.js';
 
@@ -61,6 +62,9 @@ const asServerPost = (item, overrides = {}) => ({
   ...overrides,
 });
 
+const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+const daysAgo = (days) => new Date(Date.now() - days * MILLISECONDS_PER_DAY).toISOString();
+
 const renderPage = () => render(<RequestPage />, { wrapper: MemoryRouter });
 
 const estimatedTotal = () =>
@@ -72,6 +76,8 @@ describe('RequestPage', () => {
     localStorage.clear();
     useCartStore.setState({ items: [blueRig, slymeSpoon] });
     useUserStore.setState({ user: { id: 3, email: 'buyer@example.com' } });
+    // Signed up well before any piece in these tests, so the special applies.
+    useProfileStore.setState({ profile: { userId: 3, createdAt: daysAgo(365) } });
     getGalleryPostDetail.mockImplementation((id) =>
       Promise.resolve(asServerPost(Number(id) === 42 ? blueRig : slymeSpoon))
     );
@@ -108,6 +114,23 @@ describe('RequestPage', () => {
     expect(wasPrice).toHaveClass('request-page-item-original-price');
     expect(wasPrice.parentElement).toHaveTextContent('$250.00$175.00');
     expect(estimatedTotal().getByText('$265.00')).toBeInTheDocument();
+  });
+
+  it('charges full price on a piece posted before the account signed up', async () => {
+    useProfileStore.setState({ profile: { userId: 3, createdAt: daysAgo(1) } });
+    getGalleryPostDetail.mockImplementation((id) =>
+      Promise.resolve(
+        Number(id) === 42
+          ? asServerPost(blueRig, { created_at: daysAgo(3) })
+          : asServerPost(slymeSpoon)
+      )
+    );
+
+    renderPage();
+
+    await screen.findByText('Estimated total');
+    expect(screen.getByText('$250.00')).not.toHaveClass('request-page-item-original-price');
+    expect(estimatedTotal().getByText('$340.00')).toBeInTheDocument();
   });
 
   it('charges full price once the 14-day special has ended', async () => {
