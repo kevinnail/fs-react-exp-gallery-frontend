@@ -3,6 +3,12 @@ import userEvent from '@testing-library/user-event';
 import UsersDashboard from './UsersDashboard.js';
 import { getCustomerMetrics } from '../../../services/fetch-customers.js';
 
+const mockNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  useNavigate: () => mockNavigate,
+}));
+
 jest.mock('../../../services/fetch-customers.js', () => ({
   getCustomerMetrics: jest.fn(),
 }));
@@ -124,6 +130,46 @@ describe('UsersDashboard', () => {
     expect(screen.getByText('1 of 2 customers')).toBeInTheDocument();
     expect(screen.getByText('buyer@example.com')).toBeInTheDocument();
     expect(screen.queryByText('browser@example.com')).not.toBeInTheDocument();
+  });
+
+  it('sends only the opted-in filtered customers to the email form', async () => {
+    const optedOutDebtor = customerWith({
+      id: '5',
+      email: 'quiet-debtor@example.com',
+      outstanding: 20,
+      sendEmailNotifications: false,
+    });
+    getCustomerMetrics.mockResolvedValue([buyer, browser, optedOutDebtor]);
+    const user = userEvent.setup();
+    render(<UsersDashboard />);
+
+    await screen.findByText('buyer@example.com');
+    await user.click(screen.getByRole('button', { name: 'Owes money' }));
+    expect(screen.getByText('2 of 3 customers, 1 opted out of email')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Email this customer' }));
+
+    expect(mockNavigate).toHaveBeenCalledWith('/admin/email', {
+      state: {
+        segment: { label: 'Owes money', userIds: [2] },
+      },
+    });
+  });
+
+  it('disables the email button when every filtered customer has opted out', async () => {
+    const optedOut = customerWith({
+      id: 6,
+      email: 'opted-out@example.com',
+      sendEmailNotifications: false,
+    });
+    getCustomerMetrics.mockResolvedValue([buyer, optedOut]);
+    const user = userEvent.setup();
+    render(<UsersDashboard />);
+
+    await screen.findByText('buyer@example.com');
+    await user.click(screen.getByRole('button', { name: 'Opted out of email' }));
+
+    expect(screen.getByText('1 of 2 customers, 1 opted out of email')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Email these 0 customers' })).toBeDisabled();
   });
 
   it('shows the error when the customers cannot be loaded', async () => {
