@@ -62,7 +62,14 @@ describe('sortCustomers', () => {
 });
 
 describe('filterCustomers', () => {
-  const buyer = customerWith({ id: 1, orderCount: 2, gross: 200, outstanding: 50, bidCount: 3 });
+  const buyer = customerWith({
+    id: 1,
+    orderCount: 2,
+    gross: 200,
+    outstanding: 50,
+    bidCount: 3,
+    auctionsWon: 1,
+  });
   const loser = customerWith({ id: 2, bidCount: 4, auctionsWon: 0, hasAddress: false });
   const quiet = customerWith({ id: 3, sendEmailNotifications: false, joinedAt: daysAgo(5) });
   const customers = [buyer, loser, quiet];
@@ -72,10 +79,16 @@ describe('filterCustomers', () => {
   });
 
   it('finds bidders who never won, owes money, no address and opted out', () => {
-    expect(idsOf(filterCustomers(customers, 'bidNeverWon'))).toEqual([2]);
+    expect(idsOf(filterCustomers(customers, 'bidNeverBought'))).toEqual([2]);
     expect(idsOf(filterCustomers(customers, 'owesMoney'))).toEqual([1]);
     expect(idsOf(filterCustomers(customers, 'noAddress'))).toEqual([2]);
     expect(idsOf(filterCustomers(customers, 'optedOut'))).toEqual([3]);
+  });
+
+  it('leaves a gallery buyer who lost every auction out of "bid but never bought"', () => {
+    const galleryBuyer = customerWith({ id: 4, orderCount: 1, gross: 90, bidCount: 2 });
+
+    expect(filterCustomers([galleryBuyer], 'bidNeverBought')).toEqual([]);
   });
 
   it('combines a filter with a joined-before date', () => {
