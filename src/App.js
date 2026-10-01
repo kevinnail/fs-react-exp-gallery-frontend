@@ -112,6 +112,12 @@ function App() {
   }, [user, profile, fetchUserProfile]);
 
   useEffect(() => {
+    if (!user && profile) {
+      useProfileStore.setState({ profile: null, address: null });
+    }
+  }, [user, profile]);
+
+  useEffect(() => {
     const handleOutbid = () => {
       toast.warn(`You’ve been outbid!`, {
         theme: 'dark',
