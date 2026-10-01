@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import UsersDashboard from './UsersDashboard.js';
 import { getCustomerMetrics } from '../../../services/fetch-customers.js';
+import { useUserStore } from '../../../stores/userStore.js';
 
 const mockNavigate = jest.fn();
 
@@ -39,7 +40,6 @@ const customerWith = (overrides) => ({
   lastBidAt: null,
   messageCount: 0,
   lastMessageAt: null,
-  isAdmin: false,
   ...overrides,
 });
 
@@ -67,6 +67,7 @@ const rowFor = (email) => screen.getByText(email).closest('tr');
 describe('UsersDashboard', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    useUserStore.setState({ user: { email: 'admin@example.com' }, isAdmin: true });
   });
 
   it('shows each customer with lifetime spend, average order and outstanding', async () => {
@@ -116,7 +117,7 @@ describe('UsersDashboard', () => {
   });
 
   it('narrows the table to the chosen filter and leaves the admin out', async () => {
-    const admin = customerWith({ id: 9, email: 'admin@example.com', isAdmin: true });
+    const admin = customerWith({ id: 9, email: 'admin@example.com' });
     getCustomerMetrics.mockResolvedValue([buyer, browser, admin]);
     const user = userEvent.setup();
     render(<UsersDashboard />);

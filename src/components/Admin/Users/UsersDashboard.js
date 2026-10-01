@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCustomerMetrics } from '../../../services/fetch-customers.js';
+import { useUserStore } from '../../../stores/userStore.js';
 import {
   CUSTOMER_FILTERS,
   filterCustomers,
@@ -27,7 +28,7 @@ const COLUMNS = [
 ];
 
 const UsersDashboard = () => {
-  const [customers, setCustomers] = useState([]);
+  const [allCustomers, setAllCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
@@ -41,8 +42,7 @@ const UsersDashboard = () => {
   useEffect(() => {
     const loadCustomers = async () => {
       try {
-        const allCustomers = await getCustomerMetrics();
-        setCustomers(allCustomers.filter((customer) => !customer.isAdmin));
+        setAllCustomers(await getCustomerMetrics());
       } catch (loadError) {
         setError(loadError.message);
       } finally {
@@ -51,6 +51,14 @@ const UsersDashboard = () => {
     };
     loadCustomers();
   }, []);
+
+  // This page is admin-only, so the signed-in user is the admin. Their own
+  // account comes back in the rollup and is left out here.
+  const adminEmail = useUserStore((state) => state.user?.email);
+  const customers = useMemo(
+    () => allCustomers.filter((customer) => customer.email !== adminEmail),
+    [allCustomers, adminEmail]
+  );
 
   const summary = useMemo(() => summarizeCustomers(customers), [customers]);
 
