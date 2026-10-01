@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import RequestButton from '../RequestButton/RequestButton.js';
-import { useUserStore } from '../../stores/userStore.js';
+import { useSignedUpAt } from '../../hooks/useSignedUpAt.js';
 import { getPiecePrice } from '../../services/userSpecial.js';
 import './MainGalleryPostCard.css';
 
@@ -20,11 +20,11 @@ export default function MainGalleryPostCard({
   const [isVisible, setIsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const containerRef = useRef(null);
-  const user = useUserStore((state) => state.user);
+  const signedUpAt = useSignedUpAt();
 
   const { listedPrice, salePrice } = getPiecePrice(
     { price, discountedPrice, originalPrice, sold, created_at },
-    { isSignedIn: Boolean(user) }
+    { signedUpAt }
   );
 
   // Video posts store a matching .jpg poster frame alongside the .mp4.
