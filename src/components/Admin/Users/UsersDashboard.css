@@ -16,8 +16,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   border: 2px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(6px);
-  width: 95%;
-  max-width: 1200px;
+
   margin-bottom: 3rem;
 }
 
@@ -30,97 +29,138 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.users-list {
+.customers-table-wrapper {
   width: 100%;
+  overflow-x: auto;
+}
+
+.customers-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.customers-table th,
+.customers-table td {
+  border: 1px solid var(--color-border);
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+.customers-table thead th {
+  background: var(--color-control);
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 0.5rem 1rem;
+}
+
+.customers-table .numeric-cell {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.customer-row:hover {
+  background: var(--color-surface-hover);
+}
+
+.customer-cell {
+  padding: 0.15rem 1rem;
   display: flex;
-  flex-direction: column;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.users-list-header {
-  display: grid;
-  grid-template-columns: 80px 2fr 1fr 1.2fr 1fr;
-  background: linear-gradient(90deg, rgba(15, 15, 15, 0.95), rgba(30, 30, 30, 0.95));
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: 500;
-  padding: 12px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  gap: 15px;
-}
-
-.users-list-body {
-  display: flex;
-  flex-direction: column;
-}
-
-.user-card {
-  display: grid;
-  grid-template-columns: 80px 1.5fr 1.5fr 1.2fr 1fr;
   align-items: center;
-  justify-items: start;
-  padding: 10px 20px;
-  color: white;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(20, 20, 20, 0.7);
-  transition:
-    background 0.2s ease-in-out,
-    transform 0.1s ease-in-out;
-  width: 100%;
-  box-sizing: border-box;
-  gap: 15px;
+  gap: 0.5rem;
 }
 
-.user-card:hover {
-  background: rgba(45, 45, 45, 0.9);
-}
-
-.user-card-image img {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
+.customer-avatar,
+.customer-avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 4px;
   object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
 
-.user-card-image-placeholder {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
+.customer-avatar-placeholder {
   background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
   background-size: 200% 100%;
   animation: users-image-loading 1.5s infinite;
-  border: 1px solid none;
-  margin-bottom: 6px;
 }
 
-.user-card-name {
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.95);
+.customer-name {
+  font-size: 1rem;
+  font-weight: 600;
 }
 
-.user-card-email {
+.customer-email {
   font-family: monospace;
-  color: rgba(220, 220, 220, 0.9);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 1rem;
 }
 
-.user-card-joined-date,
-.user-card-time-since-joined {
-  color: rgba(200, 200, 200, 0.85);
-  font-size: 0.95rem;
-  white-space: nowrap;
+.owes-money {
+  color: var(--color-alert);
+  font-weight: 600;
 }
 
-.users-empty-message {
-  color: rgba(255, 255, 255, 0.6);
-  text-align: center;
-  padding: 30px;
-  font-style: italic;
+.customer-details-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 0.5rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+  margin: 0 1rem;
+}
+
+.customer-details-button:hover {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
+}
+
+.customer-details-button[aria-expanded='true'] {
+  color: #000000;
+  background: var(--color-text);
+  border-color: var(--color-text);
+}
+
+.customer-details-row {
+  background: var(--color-surface);
+}
+
+.customer-details {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  column-gap: 10rem;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.customer-details dt {
+  text-align: left;
+  padding: 0.25rem 0;
+}
+
+.customer-details dd {
+  margin: 0;
+  text-align: left;
+}
+
+.customers-error {
+  color: var(--color-alert);
 }
 
 @keyframes users-image-loading {
@@ -132,10 +172,11 @@
   }
 }
 
-/* Legacy pagination, previously inherited from Admin.css through CRA's
-   global stylesheet. The dashboard's pager has been rebuilt on the design
-   tokens, so this page keeps its own copy until it gets the same
-   treatment. */
+/*^ Legacy pagination styles */
+/*^ global stylesheet. The dashboard's pager has been rebuilt on the design */
+/*^ tokens, so this page keeps its own copy until it gets the same */
+/*^ treatment. ` */
+
 .users-pagination {
   display: flex;
   justify-content: center;
@@ -174,19 +215,6 @@
 
 */
 @media (max-width: 768px) {
-  .users-list-header,
-  .user-card {
-    grid-template-columns: 1fr 3fr;
-    grid-row-gap: 2px;
-    font-size: 0.8rem;
-    padding: 0.25rem 1rem;
-  }
-  .user-card-email {
-    font-size: 0.9rem;
-  }
-  .users-list-header {
-    display: none;
-  }
   .users-panel {
     padding: 0;
     width: 100%;

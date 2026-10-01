@@ -1,72 +1,123 @@
 import { useEffect, useState } from 'react';
-import { getAllUsers } from '../../../services/fetch-utils.js';
-import UserCard from './UserCard';
+import { getCustomerMetrics } from '../../../services/fetch-customers.js';
+import CustomerRow, { CUSTOMER_COLUMN_COUNT } from './CustomerRow.js';
 import './UsersDashboard.css';
 
-export default function UsersDashboard() {
-  const [users, setUsers] = useState([]);
-  const [page, setPage] = useState(1);
-  const pageSize = 7;
+const PAGE_SIZE = 25;
 
-  const totalPages = Math.ceil(users.length / pageSize);
-  const paginatedUsers = users.slice((page - 1) * pageSize, page * pageSize);
+const UsersDashboard = () => {
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [page, setPage] = useState(1);
+  const [expandedCustomerId, setExpandedCustomerId] = useState(null);
+
+  const totalPages = Math.ceil(customers.length / PAGE_SIZE);
+  const pageCustomers = customers.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const dev = process.env.NODE_ENV === 'development';
 
   useEffect(() => {
-    const getData = async () => {
-      const res = await getAllUsers();
-      setUsers(res || []);
+    const loadCustomers = async () => {
+      try {
+        setCustomers(await getCustomerMetrics());
+      } catch (loadError) {
+        setError(loadError.message);
+      } finally {
+        setLoading(false);
+      }
     };
-    getData();
+    loadCustomers();
   }, []);
 
+  const toggleExpanded = (customerId) =>
+    setExpandedCustomerId((current) => (current === customerId ? null : customerId));
+
+  const renderBody = () => {
+    if (loading) {
+      return (
+        <tr>
+          <td colSpan={CUSTOMER_COLUMN_COUNT}>Loading customers</td>
+        </tr>
+      );
+    }
+    if (error) {
+      return (
+        <tr>
+          <td colSpan={CUSTOMER_COLUMN_COUNT} className="customers-error">
+            {error}
+          </td>
+        </tr>
+      );
+    }
+    if (pageCustomers.length === 0) {
+      return (
+        <tr>
+          <td colSpan={CUSTOMER_COLUMN_COUNT}>No users found</td>
+        </tr>
+      );
+    }
+    return pageCustomers.map((customer) => (
+      <CustomerRow
+        key={customer.id}
+        customer={customer}
+        isExpanded={expandedCustomerId === customer.id}
+        onToggle={() => toggleExpanded(customer.id)}
+      />
+    ));
+  };
   return (
     <div className="users-page">
       <div className="users-panel">
         <h1 className="users-title">Registered Users</h1>
-        <p>Total users: {users.length - 4}</p>
+        <p>Total users: {dev ? customers.length : customers.length - 4}</p>
 
-        <div className="users-list">
-          <div className="users-list-header">
-            <span>Avatar</span>
-            <span>Email</span>
-            <span>Name</span>
-            <span>Joined</span>
-            <span>User Since</span>
-          </div>
-
-          <div className="users-list-body">
-            {paginatedUsers.length === 0 ? (
-              <div className="users-empty-message">No users found</div>
-            ) : (
-              paginatedUsers.map((user) => <UserCard key={user.id} user={user} />)
-            )}
-          </div>
-
-          {totalPages > 1 && (
-            <div className="users-pagination">
-              <button
-                className="users-pagination-button"
-                onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                disabled={page === 1}
-              >
-                Prev
-              </button>
-
-              <span>
-                Page {page} of {totalPages}
-              </span>
-
-              <button
-                className="users-pagination-button"
-                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                disabled={page === totalPages}
-              >
-                Next
-              </button>
-            </div>
-          )}
+        <div className="customers-table-wrapper">
+          <table className="customers-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Joined</th>
+                <th>Tenure</th>
+                <th className="numeric-cell">Orders</th>
+                <th className="numeric-cell">Items</th>
+                <th className="numeric-cell">Lifetime spend</th>
+                <th className="numeric-cell">Average order</th>
+                <th className="numeric-cell">Outstanding</th>
+                <th>Last purchase</th>
+                <th className="numeric-cell">Days since</th>
+                <th aria-label="Details" />
+              </tr>
+            </thead>
+            <tbody>{renderBody()}</tbody>
+          </table>
         </div>
+
+        {totalPages > 1 && (
+          <div className="users-pagination">
+            <button
+              className="users-pagination-button"
+              onClick={() => setPage((current) => Math.max(current - 1, 1))}
+              disabled={page === 1}
+            >
+              Prev
+            </button>
+
+            <span>
+              Page {page} of {totalPages}
+            </span>
+
+            <button
+              className="users-pagination-button"
+              onClick={() => setPage((current) => Math.min(current + 1, totalPages))}
+              disabled={page === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
-}
+};
+
+export default UsersDashboard;
