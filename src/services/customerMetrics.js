@@ -46,10 +46,12 @@ export const CUSTOMER_FILTERS = [
   { key: 'buyers', label: 'Buyers', matches: isBuyer },
   { key: 'neverPurchased', label: 'Never purchased', matches: (customer) => !isBuyer(customer) },
   { key: 'owesMoney', label: 'Owes money', matches: (customer) => customer.outstanding > 0 },
+  // First-time-customer targeting: bid on an auction but have never bought
+  // anything, by auction win or gallery order (orderCount counts both).
   {
-    key: 'bidNeverWon',
-    label: 'Bid but never won',
-    matches: (customer) => customer.bidCount > 0 && customer.auctionsWon === 0,
+    key: 'bidNeverBought',
+    label: 'Bid but never bought',
+    matches: (customer) => customer.bidCount > 0 && !isBuyer(customer),
   },
   { key: 'noAddress', label: 'No address on file', matches: (customer) => !customer.hasAddress },
   {
