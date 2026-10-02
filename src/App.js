@@ -25,6 +25,7 @@ import { ThemeProvider } from '@emotion/react';
 import { toast, ToastContainer } from 'react-toastify';
 import websocketService, { attachAdminListener } from './services/websocket.js';
 import NotFound from './components/NotFound/NotFound.js';
+import Unsubscribe from './components/Unsubscribe/Unsubscribe.js';
 import UserDashboard from './components/Admin/Users/UsersDashboard.js';
 import AuctionList from './components/AuctionList/AuctionList.js';
 import AuctionForm from './components/AuctionForm/AuctionForm.js';
@@ -228,6 +229,7 @@ function App() {
             <Route path="/auctions/:id" element={<AuctionDetail />} />
             <Route path="/auctions/archive" element={<AuctionArchive />} />
             <Route path="/request" element={<RequestPage />} />
+            <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="/:id" element={<MainPostDetail />} />
 
             <Route

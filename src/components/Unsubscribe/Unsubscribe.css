@@ -1,0 +1,37 @@
+.unsubscribe-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 1rem;
+}
+
+.unsubscribe-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+}
+
+.unsubscribe-title {
+  color: white;
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 0 0 1rem;
+}
+
+.unsubscribe-text {
+  color: white;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0 0 1rem;
+}
+
+.unsubscribe-account-link {
+  color: white;
+  font-size: 1rem;
+  text-align: center;
+  text-decoration: underline;
+  margin-top: 1rem;
+}
