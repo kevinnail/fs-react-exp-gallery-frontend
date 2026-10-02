@@ -5,6 +5,13 @@ import './AccountForm.css';
 import { useProfileStore } from '../../stores/profileStore.js';
 import { toast } from 'react-toastify';
 
+const EMAIL_PREFERENCES = [
+  { name: 'emailAuctions', label: 'Email me about new auctions' },
+  { name: 'emailGalleryPosts', label: 'Email me about new gallery posts' },
+  { name: 'emailPromotions', label: 'Email me about sales and promotions' },
+  { name: 'emailMessages', label: 'Email me when I get a new message' },
+];
+
 export default function ProfileForm({ handleCloseForm }) {
   const { updateUserProfile, profile, loading, address } = useProfileStore();
 
@@ -12,8 +19,10 @@ export default function ProfileForm({ handleCloseForm }) {
     firstName: profile?.firstName || '',
     lastName: profile?.lastName || '',
     imageUrl: null,
-    sendEmailNotifications:
-      profile?.sendEmailNotifications !== undefined ? profile.sendEmailNotifications : true,
+    emailAuctions: profile?.emailAuctions ?? true,
+    emailGalleryPosts: profile?.emailGalleryPosts ?? true,
+    emailPromotions: profile?.emailPromotions ?? true,
+    emailMessages: profile?.emailMessages ?? true,
     addressLine1: '',
     addressLine2: '',
     city: '',
@@ -56,7 +65,10 @@ export default function ProfileForm({ handleCloseForm }) {
         firstName: profile.firstName || '',
         lastName: profile.lastName || '',
         imageUrl: null,
-        sendEmailNotifications: profile.sendEmailNotifications,
+        emailAuctions: profile.emailAuctions,
+        emailGalleryPosts: profile.emailGalleryPosts,
+        emailPromotions: profile.emailPromotions,
+        emailMessages: profile.emailMessages,
         addressLine1: address?.addressLine1 || '',
         addressLine2: address?.addressLine2 || '',
         city: address?.city || '',
@@ -180,7 +192,10 @@ export default function ProfileForm({ handleCloseForm }) {
         lastName: formData.lastName,
         file: formData.imageUrl,
         existingImageUrl: profile?.imageUrl || null,
-        sendEmailNotifications: formData.sendEmailNotifications,
+        emailAuctions: formData.emailAuctions,
+        emailGalleryPosts: formData.emailGalleryPosts,
+        emailPromotions: formData.emailPromotions,
+        emailMessages: formData.emailMessages,
         ...addressPayload,
       });
 
@@ -275,25 +290,33 @@ export default function ProfileForm({ handleCloseForm }) {
             </div>
           </div>
 
-          <div
+          <fieldset
             className="account-form-field"
-            style={{ border: '1px solid yellow ', padding: '.5rem', borderRadius: '8px' }}
+            aria-label="Email notifications"
+            style={{
+              border: '1px solid yellow ',
+              padding: '.5rem',
+              borderRadius: '8px',
+              margin: 0,
+            }}
           >
-            <label>
-              <input
-                type="checkbox"
-                name="sendEmailNotifications"
-                checked={formData.sendEmailNotifications}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    sendEmailNotifications: e.target.checked,
-                  }))
-                }
-              />
-              Receive email notifications for new work/ auctions
-            </label>
-          </div>
+            {EMAIL_PREFERENCES.map((preference) => (
+              <label key={preference.name}>
+                <input
+                  type="checkbox"
+                  name={preference.name}
+                  checked={formData[preference.name]}
+                  onChange={(event) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      [preference.name]: event.target.checked,
+                    }))
+                  }
+                />
+                {preference.label}
+              </label>
+            ))}
+          </fieldset>
 
           {/* Shipping Address Section */}
           <div className="account-form-field">

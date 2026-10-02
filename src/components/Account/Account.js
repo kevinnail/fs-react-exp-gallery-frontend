@@ -118,6 +118,14 @@ export default function Account() {
 
   const specialPosts = recentPosts.filter((post) => isSpecialAvailableTo(post, signedUpAt));
 
+  const emailCategoriesOn = [
+    profile?.emailAuctions && 'Auctions',
+    profile?.emailGalleryPosts && 'Gallery Posts',
+    profile?.emailPromotions && 'Sales',
+    profile?.emailMessages && 'Messages',
+  ].filter(Boolean);
+  const hasEmailCategoryOn = emailCategoriesOn.length > 0;
+
   const hasNameOrImage = profile?.firstName || profile?.lastName || profile?.imageUrl;
 
   const hasFirstName = Boolean(profile?.firstName && String(profile.firstName).trim());
@@ -267,19 +275,17 @@ export default function Account() {
               <button
                 type="button"
                 className={`account-chip ${
-                  profile?.sendEmailNotifications
+                  hasEmailCategoryOn
                     ? 'account-chip--notifications-on'
                     : 'account-chip--notifications-off'
                 }`}
                 onClick={handleEditProfile}
-                title={
-                  profile?.sendEmailNotifications
-                    ? 'Emails for new messages, new work, auctions, and tracking info. Click to change in settings.'
-                    : 'Only tracking info emails. Click to change in settings.'
-                }
+                title="Choose which emails you get. Click to change in settings."
               >
                 <span className="account-chip-status-dot" aria-hidden="true" />
-                Email notifications {profile?.sendEmailNotifications ? 'on' : 'off'}
+                {hasEmailCategoryOn
+                  ? `Emails: ${emailCategoriesOn.join(', ')}`
+                  : 'Email notifications off'}
                 <span className="account-chip-settings-icon" aria-hidden="true">
                   ⚙️
                 </span>

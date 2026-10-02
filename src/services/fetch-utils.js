@@ -806,7 +806,10 @@ export async function updateProfileWithImage(
   imageUrl,
   firstName = null,
   lastName = null,
-  sendEmailNotifications
+  emailAuctions,
+  emailGalleryPosts,
+  emailPromotions,
+  emailMessages
 ) {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/profile/images`, {
@@ -818,7 +821,10 @@ export async function updateProfileWithImage(
         image_url: imageUrl,
         firstName,
         lastName,
-        sendEmailNotifications,
+        emailAuctions,
+        emailGalleryPosts,
+        emailPromotions,
+        emailMessages,
       }),
       credentials: 'include',
     });
@@ -863,7 +869,10 @@ export async function putProfile({
   firstName,
   lastName,
   imageUrl,
-  sendEmailNotifications,
+  emailAuctions,
+  emailGalleryPosts,
+  emailPromotions,
+  emailMessages,
   addressLine1,
   addressLine2,
   city,
@@ -876,7 +885,10 @@ export async function putProfile({
       firstName: firstName ?? null,
       lastName: lastName ?? null,
       imageUrl: imageUrl ?? null,
-      sendEmailNotifications,
+      emailAuctions,
+      emailGalleryPosts,
+      emailPromotions,
+      emailMessages,
     };
 
     // Only attach address fields if caller provided them (all-or-nothing handled upstream)

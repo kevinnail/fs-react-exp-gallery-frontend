@@ -22,7 +22,7 @@ const customerWith = (overrides) => ({
   imageUrl: null,
   isVerified: true,
   joinedAt: '2025-01-15T12:00:00.000Z',
-  sendEmailNotifications: true,
+  emailPromotions: true,
   hasAddress: false,
   orderCount: 0,
   itemCount: 0,
@@ -138,7 +138,7 @@ describe('UsersDashboard', () => {
       id: '5',
       email: 'quiet-debtor@example.com',
       outstanding: 20,
-      sendEmailNotifications: false,
+      emailPromotions: false,
     });
     getCustomerMetrics.mockResolvedValue([buyer, browser, optedOutDebtor]);
     const user = userEvent.setup();
@@ -146,7 +146,7 @@ describe('UsersDashboard', () => {
 
     await screen.findByText('buyer@example.com');
     await user.click(screen.getByRole('button', { name: 'Owes money' }));
-    expect(screen.getByText('2 of 3 customers, 1 opted out of email')).toBeInTheDocument();
+    expect(screen.getByText('2 of 3 customers, 1 opted out of promotions')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Email this customer' }));
 
     expect(mockNavigate).toHaveBeenCalledWith('/admin/email', {
@@ -160,16 +160,16 @@ describe('UsersDashboard', () => {
     const optedOut = customerWith({
       id: 6,
       email: 'opted-out@example.com',
-      sendEmailNotifications: false,
+      emailPromotions: false,
     });
     getCustomerMetrics.mockResolvedValue([buyer, optedOut]);
     const user = userEvent.setup();
     render(<UsersDashboard />);
 
     await screen.findByText('buyer@example.com');
-    await user.click(screen.getByRole('button', { name: 'Opted out of email' }));
+    await user.click(screen.getByRole('button', { name: 'Opted out of promotions' }));
 
-    expect(screen.getByText('1 of 2 customers, 1 opted out of email')).toBeInTheDocument();
+    expect(screen.getByText('1 of 2 customers, 1 opted out of promotions')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Email these 0 customers' })).toBeDisabled();
   });
 

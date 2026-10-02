@@ -56,8 +56,8 @@ export const CUSTOMER_FILTERS = [
   { key: 'noAddress', label: 'No address on file', matches: (customer) => !customer.hasAddress },
   {
     key: 'optedOut',
-    label: 'Opted out of email',
-    matches: (customer) => !customer.sendEmailNotifications,
+    label: 'Opted out of promotions',
+    matches: (customer) => !customer.emailPromotions,
   },
 ];
 
@@ -103,6 +103,6 @@ export const summarizeCustomers = (customers, now = new Date()) => {
       const daysAgo = daysSince(customer.joinedAt, now);
       return daysAgo !== null && daysAgo < RECENT_SIGNUP_DAYS;
     }),
-    reachableByEmail: countOf((customer) => customer.sendEmailNotifications),
+    reachableByEmail: countOf((customer) => customer.emailPromotions),
   };
 };

@@ -96,8 +96,8 @@ const CustomerRow = ({ customer, isExpanded, onToggle, now = new Date() }) => {
               <dd>{formatDate(customer.lastMessageAt)}</dd>
               <dt>Shipping address on file</dt>
               <dd>{formatYesNo(customer.hasAddress)}</dd>
-              <dt>Email opt-in</dt>
-              <dd>{formatYesNo(customer.sendEmailNotifications)}</dd>
+              <dt>Promotion emails</dt>
+              <dd>{formatYesNo(customer.emailPromotions)}</dd>
             </dl>
           </td>
         </tr>
