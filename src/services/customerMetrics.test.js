@@ -13,7 +13,7 @@ const customerWith = (overrides) => ({
   id: 1,
   email: 'customer@example.com',
   joinedAt: daysAgo(100),
-  sendEmailNotifications: true,
+  emailPromotions: true,
   hasAddress: true,
   orderCount: 0,
   itemCount: 0,
@@ -71,7 +71,7 @@ describe('filterCustomers', () => {
     auctionsWon: 1,
   });
   const loser = customerWith({ id: 2, bidCount: 4, auctionsWon: 0, hasAddress: false });
-  const quiet = customerWith({ id: 3, sendEmailNotifications: false, joinedAt: daysAgo(5) });
+  const quiet = customerWith({ id: 3, emailPromotions: false, joinedAt: daysAgo(5) });
   const customers = [buyer, loser, quiet];
 
   it('excludes anyone with an order from "never purchased"', () => {
@@ -131,7 +131,7 @@ describe('summarizeCustomers', () => {
       customerWith({ id: 1, orderCount: 3, gross: 300, collected: 200, outstanding: 100 }),
       customerWith({ id: 2, orderCount: 1, gross: 100, collected: 100 }),
       customerWith({ id: 3 }),
-      customerWith({ id: 4, joinedAt: daysAgo(3), sendEmailNotifications: false }),
+      customerWith({ id: 4, joinedAt: daysAgo(3), emailPromotions: false }),
     ];
 
     expect(summarizeCustomers(customers, now)).toMatchObject({
