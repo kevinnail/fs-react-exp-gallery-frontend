@@ -69,7 +69,7 @@ const UsersDashboard = () => {
   );
 
   const emailableCustomers = useMemo(
-    () => visibleCustomers.filter((customer) => customer.sendEmailNotifications),
+    () => visibleCustomers.filter((customer) => customer.emailPromotions),
     [visibleCustomers]
   );
   const optedOutCount = visibleCustomers.length - emailableCustomers.length;
@@ -179,7 +179,7 @@ const UsersDashboard = () => {
         <div className="customer-match-row">
           <p className="customer-match-count">
             {visibleCustomers.length} of {customers.length} customers
-            {optedOutCount > 0 ? `, ${optedOutCount} opted out of email` : ''}
+            {optedOutCount > 0 ? `, ${optedOutCount} opted out of promotions` : ''}
           </p>
           <button
             type="button"
