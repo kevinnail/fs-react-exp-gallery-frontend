@@ -32,7 +32,7 @@ const CustomerSummary = ({ summary }) => {
       detail: `${formatMoney(summary.averageRevenuePerCustomer)} per customer`,
     },
     { label: 'New signups, last 30 days', value: summary.newSignupsLast30Days },
-    { label: 'Reachable by email', value: summary.reachableByEmail },
+    { label: 'Reachable for promotions', value: summary.reachableByEmail },
   ];
 
   return (
