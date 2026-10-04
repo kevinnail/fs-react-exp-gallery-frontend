@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getChartSeries } from '../../../services/fetch-chart-series.js';
 import { classifyTrend } from '../../../services/trendVerdict.js';
-import { formatCount, formatMoney, formatPercent } from './chartFormat.js';
+import { formatCount, formatDays, formatMoney, formatPercent } from './chartFormat.js';
 import MetricCard from './MetricCard.js';
 import MetricDetailChart from './MetricDetailChart.js';
 import './ChartsPage.css';
@@ -32,6 +32,9 @@ const buildSections = ({
   firstTimeBuyers,
   returningBuyerOrders,
   conversionRate,
+  piecesPosted,
+  piecesSold,
+  medianDaysToSell,
 }) => {
   const galleryPart = { label: 'Gallery', values: galleryRevenue, colorToken: '--color-accent' };
   const auctionPart = { label: 'Auction', values: auctionRevenue, colorToken: '--color-info' };
@@ -103,9 +106,23 @@ const buildSections = ({
     },
   ];
 
+  const galleryMetrics = [
+    countMetric('piecesPosted', 'Pieces posted', piecesPosted),
+    countMetric('piecesSold', 'Pieces sold', piecesSold),
+    {
+      key: 'medianDaysToSell',
+      name: 'Median days to sell',
+      values: medianDaysToSell,
+      parts: singleSeries('Median days to sell', medianDaysToSell),
+      formatValue: formatDays,
+      trendOptions: { higherIsBetter: false },
+    },
+  ];
+
   return [
     { heading: 'Revenue', metrics: revenueMetrics },
     { heading: 'Orders and customers', metrics: ordersAndCustomersMetrics },
+    { heading: 'Gallery', metrics: galleryMetrics },
   ];
 };
 
@@ -115,7 +132,9 @@ const ChartsPage = () => {
   const [chartSeries, setChartSeries] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedSectionHeading, setSelectedSectionHeading] = useState('Revenue');
   const [selectedMetricKey, setSelectedMetricKey] = useState('totalRevenue');
+  const tabRefs = useRef([]);
 
   useEffect(() => {
     // A slower earlier request must not overwrite the one for the current controls.
@@ -154,9 +173,25 @@ const ChartsPage = () => {
     }));
   }, [chartSeries]);
 
-  const selectedMetric = sections
-    .flatMap((section) => section.metrics)
-    .find((metric) => metric.key === selectedMetricKey);
+  const selectedSection = sections.find((section) => section.heading === selectedSectionHeading);
+  const selectedMetric = selectedSection?.metrics.find(
+    (metric) => metric.key === selectedMetricKey
+  );
+
+  const selectSection = (section) => {
+    setSelectedSectionHeading(section.heading);
+    setSelectedMetricKey(section.metrics[0].key);
+  };
+
+  // Left and right arrows move between tabs, per the WAI-ARIA tabs pattern.
+  const handleTabKeyDown = (event, index) => {
+    const steps = { ArrowRight: 1, ArrowLeft: -1 };
+    if (!(event.key in steps)) return;
+    event.preventDefault();
+    const nextIndex = (index + steps[event.key] + sections.length) % sections.length;
+    selectSection(sections[nextIndex]);
+    tabRefs.current[nextIndex].focus();
+  };
 
   const lastCompleteBucket =
     chartSeries && chartSeries.buckets.length > 1 ? chartSeries.buckets.at(-2) : null;
@@ -167,11 +202,35 @@ const ChartsPage = () => {
 
     return (
       <>
-        {sections.map((section) => (
-          <section key={section.heading} className="charts-section">
-            <h2 className="charts-section-title">{section.heading}</h2>
+        <div className="charts-tabs" role="tablist" aria-label="Chart sections">
+          {sections.map((section, index) => (
+            <button
+              key={section.heading}
+              ref={(element) => {
+                tabRefs.current[index] = element;
+              }}
+              id={`charts-tab-${index}`}
+              type="button"
+              role="tab"
+              className="charts-tab"
+              aria-selected={section === selectedSection}
+              aria-controls="charts-tab-panel"
+              tabIndex={section === selectedSection ? 0 : -1}
+              onClick={() => selectSection(section)}
+              onKeyDown={(event) => handleTabKeyDown(event, index)}
+            >
+              {section.heading}
+            </button>
+          ))}
+        </div>
+        {selectedSection ? (
+          <section
+            id="charts-tab-panel"
+            role="tabpanel"
+            aria-labelledby={`charts-tab-${sections.indexOf(selectedSection)}`}
+          >
             <div className="charts-card-grid">
-              {section.metrics.map((metric) => (
+              {selectedSection.metrics.map((metric) => (
                 <MetricCard
                   key={metric.key}
                   name={metric.name}
@@ -186,7 +245,7 @@ const ChartsPage = () => {
               ))}
             </div>
           </section>
-        ))}
+        ) : null}
         {selectedMetric ? (
           <MetricDetailChart
             metric={selectedMetric}
