@@ -10,6 +10,11 @@ export const formatCount = (count) => count.toLocaleString('en-US');
 
 export const formatPercent = (ratio) => `${Math.round(ratio * 100)}%`;
 
+export const formatDays = (days) => {
+  const wholeDays = Math.round(days);
+  return `${wholeDays} ${wholeDays === 1 ? 'day' : 'days'}`;
+};
+
 export const formatChange = (change) => {
   const percent = Math.round(change * 100);
   return `${percent > 0 ? '+' : ''}${percent}%`;
