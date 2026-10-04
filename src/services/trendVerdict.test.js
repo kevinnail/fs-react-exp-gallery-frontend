@@ -70,6 +70,11 @@ describe('classifyTrend', () => {
     expect(Object.values(result)).not.toContain(Infinity);
   });
 
+  it('returns not enough data when the latest or a baseline period is null', () => {
+    expect(classifyTrend([100, 100, 100, 100, null, 0])).toEqual({ verdict: NOT_ENOUGH_DATA });
+    expect(classifyTrend([100, null, 100, 100, 120, 0])).toEqual({ verdict: NOT_ENOUGH_DATA });
+  });
+
   it('returns not enough data when the baseline is under the minimum', () => {
     expect(classifyTrend([10, 0, 0, 10, 300, 0], { minimumBaseline: 100 })).toMatchObject({
       verdict: NOT_ENOUGH_DATA,
