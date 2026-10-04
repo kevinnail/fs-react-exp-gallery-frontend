@@ -1,0 +1,174 @@
+.charts-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 95px;
+}
+
+.charts-panel {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1rem 2rem 1rem;
+  background: rgba(0, 0, 0, 0.75);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  box-sizing: border-box;
+}
+
+.charts-title {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+  font-weight: 300;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.charts-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.charts-control-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Same two states as .customer-filter-button: outlined, filled when active. */
+.charts-control-button {
+  min-height: 40px;
+  padding: 0 0.5rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+}
+
+.charts-control-button:hover {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
+}
+
+.charts-control-button[aria-pressed='true'] {
+  color: #000000;
+  background: var(--color-text);
+  border-color: var(--color-text);
+}
+
+.charts-control-button:disabled {
+  cursor: wait;
+}
+
+.charts-section-title {
+  margin: 1.5rem 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.charts-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1px;
+  background: var(--color-border);
+  border: 1px solid var(--color-border);
+}
+
+.metric-card {
+  display: grid;
+  align-content: start;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-body);
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: none;
+  cursor: pointer;
+}
+
+.metric-card:hover {
+  background: var(--color-surface-hover);
+}
+
+.metric-card[aria-pressed='true'] {
+  background: var(--color-control-hover);
+}
+
+.metric-card-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.metric-card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.metric-card-period {
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.metric-card-verdict {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.metric-card-verdict--good {
+  color: var(--color-status-good);
+}
+
+.metric-card-verdict--bad {
+  color: var(--color-status-bad);
+}
+
+.metric-card-verdict--neutral {
+  color: var(--color-text);
+}
+
+.metric-card-sparkline {
+  display: block;
+  position: relative;
+  height: 48px;
+  margin-top: 0.5rem;
+}
+
+.metric-detail-title {
+  margin: 1.5rem 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.metric-detail-chart {
+  position: relative;
+  height: 400px;
+}
+
+.charts-loading,
+.charts-error {
+  margin: 1rem 0;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.charts-error {
+  color: var(--color-alert);
+}
+
+@media (max-width: 600px) {
+  .charts-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-detail-chart {
+    height: 300px;
+  }
+}

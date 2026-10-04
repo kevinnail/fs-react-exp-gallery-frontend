@@ -193,22 +193,20 @@ export default function Menu({ handleClick, closeMenu }) {
               </NavLink>
               <NavLink
                 className="site-menu-link"
+                to="/admin/charts"
+                title="Business Charts"
+                onClick={handleLinkClick}
+              >
+                Charts
+              </NavLink>
+              <NavLink
+                className="site-menu-link"
                 to="/admin/email"
                 title="Email Customers"
                 onClick={handleLinkClick}
               >
                 Email
               </NavLink>
-              <button
-                className="site-menu-link site-menu-download-button"
-                title="Download Inventory CSV"
-                onClick={() => {
-                  handleDownloadCSV();
-                  closeMenu();
-                }}
-              >
-                Inventory
-              </button>
             </>
           )}
 
