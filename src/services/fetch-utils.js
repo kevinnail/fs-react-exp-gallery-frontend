@@ -655,29 +655,6 @@ export async function searchGalleryPosts(searchTerm) {
   return msg;
 }
 
-export async function downloadInventoryCSV() {
-  // console.log('hi');
-  const data = await fetch(`${BASE_URL}/api/v1/admin/download-inventory-csv`, {
-    credentials: 'include',
-  })
-    .then((response) => {
-      return response.blob();
-    })
-    .then((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'inventory.csv';
-      a.click();
-      window.URL.revokeObjectURL(url);
-    })
-    .catch((error) => {
-      console.error('Error during fetch or download:', error);
-    });
-
-  return data;
-}
-
 export async function bulkPostEdit(action, percentage = 0) {
   // Prepare the data to send to the backend
   const data = {

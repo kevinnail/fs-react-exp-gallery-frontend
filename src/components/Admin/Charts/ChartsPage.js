@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getChartSeries } from '../../../services/fetch-chart-series.js';
 import { classifyTrend } from '../../../services/trendVerdict.js';
-import { formatMoney } from './chartFormat.js';
+import { formatCount, formatMoney, formatPercent } from './chartFormat.js';
 import MetricCard from './MetricCard.js';
 import MetricDetailChart from './MetricDetailChart.js';
 import './ChartsPage.css';
@@ -19,13 +19,30 @@ const RANGE_OPTIONS = [
   { value: 'all', label: 'All time' },
 ];
 
-// Below this average, one sale after a quiet stretch would read as a huge jump.
+// Below these averages, one sale after a quiet stretch would read as a huge jump.
 const REVENUE_MINIMUM_BASELINE = 100;
+const COUNT_MINIMUM_BASELINE = 2;
 
-const buildSections = ({ galleryRevenue, auctionRevenue }) => {
+const buildSections = ({
+  galleryRevenue,
+  auctionRevenue,
+  orderCount,
+  itemsSold,
+  signups,
+  firstTimeBuyers,
+  returningBuyerOrders,
+  conversionRate,
+}) => {
   const galleryPart = { label: 'Gallery', values: galleryRevenue, colorToken: '--color-accent' };
   const auctionPart = { label: 'Auction', values: auctionRevenue, colorToken: '--color-info' };
   const totalRevenue = galleryRevenue.map((value, index) => value + auctionRevenue[index]);
+  // Derived here rather than sent by the server so it can never disagree with
+  // revenue and order count. A period with no orders has no average.
+  const averageOrderValue = totalRevenue.map((revenue, index) =>
+    orderCount[index] === 0 ? null : revenue / orderCount[index]
+  );
+
+  const singleSeries = (label, values) => [{ label, values, colorToken: '--color-accent' }];
 
   const revenueMetrics = [
     {
@@ -52,7 +69,44 @@ const buildSections = ({ galleryRevenue, auctionRevenue }) => {
     trendOptions: { minimumBaseline: REVENUE_MINIMUM_BASELINE },
   }));
 
-  return [{ heading: 'Revenue', metrics: revenueMetrics }];
+  const countMetric = (key, name, values) => ({
+    key,
+    name,
+    values,
+    parts: singleSeries(name, values),
+    formatValue: formatCount,
+    wholeNumbers: true,
+    trendOptions: { minimumBaseline: COUNT_MINIMUM_BASELINE },
+  });
+
+  const ordersAndCustomersMetrics = [
+    countMetric('orderCount', 'Orders', orderCount),
+    countMetric('itemsSold', 'Items sold', itemsSold),
+    {
+      key: 'averageOrderValue',
+      name: 'Average order',
+      values: averageOrderValue,
+      parts: singleSeries('Average order', averageOrderValue),
+      formatValue: formatMoney,
+      trendOptions: {},
+    },
+    countMetric('signups', 'Signups', signups),
+    countMetric('firstTimeBuyers', 'First-time buyers', firstTimeBuyers),
+    countMetric('returningBuyerOrders', 'Returning-buyer orders', returningBuyerOrders),
+    {
+      key: 'conversionRate',
+      name: 'Conversion rate',
+      values: conversionRate,
+      parts: singleSeries('Conversion rate', conversionRate),
+      formatValue: formatPercent,
+      trendOptions: {},
+    },
+  ];
+
+  return [
+    { heading: 'Revenue', metrics: revenueMetrics },
+    { heading: 'Orders and customers', metrics: ordersAndCustomersMetrics },
+  ];
 };
 
 const ChartsPage = () => {

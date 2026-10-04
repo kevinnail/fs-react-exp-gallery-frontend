@@ -50,7 +50,10 @@ const MetricDetailChart = ({ metric, buckets, granularity, currentBucketIsPartia
       y: {
         stacked: true,
         beginAtZero: true,
-        ticks: { callback: (value) => metric.formatValue(value) },
+        ticks: {
+          precision: metric.wholeNumbers ? 0 : undefined,
+          callback: (value) => metric.formatValue(value),
+        },
       },
     },
     plugins: {
