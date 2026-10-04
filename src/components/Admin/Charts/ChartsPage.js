@@ -1,7 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getChartSeries } from '../../../services/fetch-chart-series.js';
 import { classifyTrend } from '../../../services/trendVerdict.js';
-import { formatCount, formatDays, formatMoney, formatPercent } from './chartFormat.js';
+import {
+  formatCount,
+  formatDays,
+  formatMoney,
+  formatMultiple,
+  formatOneDecimal,
+  formatPercent,
+} from './chartFormat.js';
 import MetricCard from './MetricCard.js';
 import MetricDetailChart from './MetricDetailChart.js';
 import './ChartsPage.css';
@@ -35,6 +42,12 @@ const buildSections = ({
   piecesPosted,
   piecesSold,
   medianDaysToSell,
+  auctionsClosed,
+  auctionSellThrough,
+  buyNowShare,
+  finalOverStart,
+  bidsPerAuction,
+  uniqueBidders,
 }) => {
   const galleryPart = { label: 'Gallery', values: galleryRevenue, colorToken: '--color-accent' };
   const auctionPart = { label: 'Auction', values: auctionRevenue, colorToken: '--color-info' };
@@ -119,10 +132,29 @@ const buildSections = ({
     },
   ];
 
+  const ratioMetric = (key, name, values, formatValue) => ({
+    key,
+    name,
+    values,
+    parts: singleSeries(name, values),
+    formatValue,
+    trendOptions: {},
+  });
+
+  const auctionMetrics = [
+    countMetric('auctionsClosed', 'Auctions closed', auctionsClosed),
+    ratioMetric('auctionSellThrough', 'Sell-through', auctionSellThrough, formatPercent),
+    ratioMetric('buyNowShare', 'Buy-now share', buyNowShare, formatPercent),
+    ratioMetric('finalOverStart', 'Final bid over start price', finalOverStart, formatMultiple),
+    ratioMetric('bidsPerAuction', 'Bids per auction', bidsPerAuction, formatOneDecimal),
+    countMetric('uniqueBidders', 'Unique bidders', uniqueBidders),
+  ];
+
   return [
     { heading: 'Revenue', metrics: revenueMetrics },
     { heading: 'Orders and customers', metrics: ordersAndCustomersMetrics },
     { heading: 'Gallery', metrics: galleryMetrics },
+    { heading: 'Auctions', metrics: auctionMetrics },
   ];
 };
 
