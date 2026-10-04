@@ -17,6 +17,11 @@ export const classifyTrend = (
 
   const latest = completeValues.at(-1);
   const baselineValues = completeValues.slice(-(BASELINE_PERIOD_COUNT + 1), -1);
+
+  if (latest === null || baselineValues.includes(null)) {
+    return { verdict: NOT_ENOUGH_DATA };
+  }
+
   const baseline =
     baselineValues.reduce((total, value) => total + value, 0) / BASELINE_PERIOD_COUNT;
 
