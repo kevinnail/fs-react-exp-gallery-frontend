@@ -48,6 +48,11 @@ const buildSections = ({
   finalOverStart,
   bidsPerAuction,
   uniqueBidders,
+  outstandingGallery,
+  outstandingAuction,
+  reachableByEmail,
+  piecesForSale,
+  valueForSale,
 }) => {
   const galleryPart = { label: 'Gallery', values: galleryRevenue, colorToken: '--color-accent' };
   const auctionPart = { label: 'Auction', values: auctionRevenue, colorToken: '--color-info' };
@@ -150,11 +155,42 @@ const buildSections = ({
     countMetric('uniqueBidders', 'Unique bidders', uniqueBidders),
   ];
 
+  // Snapshot series are null for periods with no snapshot, so the total stays
+  // null there instead of adding up to 0.
+  const outstandingBalance = outstandingGallery.map((galleryAmount, index) =>
+    galleryAmount === null ? null : galleryAmount + outstandingAuction[index]
+  );
+
+  const balanceMetrics = [
+    {
+      key: 'outstandingBalance',
+      name: 'Outstanding balance',
+      values: outstandingBalance,
+      parts: [
+        { label: 'Gallery', values: outstandingGallery, colorToken: '--color-accent' },
+        { label: 'Auction', values: outstandingAuction, colorToken: '--color-info' },
+      ],
+      formatValue: formatMoney,
+      trendOptions: { higherIsBetter: false },
+    },
+    countMetric('reachableByEmail', 'Reachable by email', reachableByEmail),
+    countMetric('piecesForSale', 'Pieces for sale', piecesForSale),
+    {
+      key: 'valueForSale',
+      name: 'Value for sale',
+      values: valueForSale,
+      parts: singleSeries('Value for sale', valueForSale),
+      formatValue: formatMoney,
+      trendOptions: { minimumBaseline: REVENUE_MINIMUM_BASELINE },
+    },
+  ];
+
   return [
     { heading: 'Revenue', metrics: revenueMetrics },
     { heading: 'Orders and customers', metrics: ordersAndCustomersMetrics },
     { heading: 'Gallery', metrics: galleryMetrics },
     { heading: 'Auctions', metrics: auctionMetrics },
+    { heading: 'Balances and inventory', metrics: balanceMetrics },
   ];
 };
 
