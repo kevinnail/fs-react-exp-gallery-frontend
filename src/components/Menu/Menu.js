@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.js';
-import { downloadInventoryCSV } from '../../services/fetch-utils.js';
 import { useUnreadMessages } from '../../hooks/useUnreadMessages.js';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -50,10 +49,6 @@ export default function Menu({ handleClick, closeMenu }) {
   useEffect(() => {
     if (location.pathname === '/account') resetWonAuction();
   }, [location.pathname, resetWonAuction]);
-
-  const handleDownloadCSV = () => {
-    downloadInventoryCSV();
-  };
 
   const handleSignOut = async () => {
     await handleClick();
