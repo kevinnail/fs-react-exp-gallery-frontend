@@ -9,6 +9,7 @@ import {
   formatOneDecimal,
   formatPercent,
 } from './chartFormat.js';
+import ChartChat from './ChartChat.js';
 import MetricCard from './MetricCard.js';
 import MetricDetailChart from './MetricDetailChart.js';
 import './ChartsPage.css';
@@ -364,6 +365,7 @@ const ChartsPage = () => {
         </div>
 
         {renderContent()}
+        {chartSeries ? <ChartChat granularity={granularity} range={range} /> : null}
       </div>
     </div>
   );
