@@ -365,7 +365,14 @@ const ChartsPage = () => {
         </div>
 
         {renderContent()}
-        {chartSeries ? <ChartChat granularity={granularity} range={range} /> : null}
+        {chartSeries ? (
+          <ChartChat
+            granularity={granularity}
+            range={range}
+            setGranularity={setGranularity}
+            setRange={setRange}
+          />
+        ) : null}
       </div>
     </div>
   );
