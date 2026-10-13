@@ -48,6 +48,19 @@ export const publishBlogPost = async (id) => {
   return readJson(resp, 'Could not publish the post');
 };
 
+export const uploadBlogImages = async (postId, files) => {
+  const formData = new FormData();
+  for (const file of files) {
+    formData.append('imageFiles', file);
+  }
+  const resp = await fetchWithAuth(`/api/v1/admin/blog/${postId}/images`, {
+    method: 'POST',
+    headers: { Accept: 'application/json' },
+    body: formData,
+  });
+  return readJson(resp, 'Could not upload the image');
+};
+
 export const getBlogPosts = async () => {
   const resp = await fetch(`${BASE_URL}/api/v1/blog`, {
     headers: { Accept: 'application/json' },
