@@ -78,6 +78,16 @@ const Blog = () => {
         <ul className="blog-post-list">
           {visiblePosts.map((post) => (
             <li className="blog-card" key={post.id}>
+              {post.coverImageUrl && (
+                <Link to={`/blog/${post.slug}`}>
+                  <img
+                    className="blog-card-cover"
+                    src={post.coverImageUrl}
+                    alt={post.title}
+                    loading="lazy"
+                  />
+                </Link>
+              )}
               <h2 className="blog-card-title">
                 <Link className="blog-card-link" to={`/blog/${post.slug}`}>
                   {post.title}
