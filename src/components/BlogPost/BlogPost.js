@@ -41,7 +41,7 @@ const BlogPost = () => {
     <main className="blog-post-page">
       <article className="blog-post-article">
         <h1 className="blog-post-title">{post.title}</h1>
-        <BlogPostBody blocks={post.blocks} />
+        <BlogPostBody title={post.title} blocks={post.blocks} />
         <p className="blog-post-details">
           Posted {formatBlogDate(post.publishedAt)} in{' '}
           <Link
