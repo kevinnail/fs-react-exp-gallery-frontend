@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../Loading/Loading.js';
@@ -12,6 +12,7 @@ const BlogAdmin = () => {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [creating, setCreating] = useState(false);
+  const navigate = useNavigate();
 
   const existingCategories = [...new Set(posts.map((post) => post.category))].sort();
 
@@ -47,17 +48,13 @@ const BlogAdmin = () => {
     setCreating(true);
     try {
       const post = await createBlogPost({ title, category });
-      // A new draft is the newest draft, which is where the server's ordering puts it.
-      setPosts((currentPosts) => [post, ...currentPosts]);
-      setTitle('');
-      setCategory('');
+      navigate(`/admin/blog/${post.id}`);
     } catch (error) {
       toast.error(error.message, {
         theme: 'colored',
         toastId: 'blog-admin-create-error',
         autoClose: true,
       });
-    } finally {
       setCreating(false);
     }
   };
