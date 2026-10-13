@@ -1,5 +1,7 @@
 import { fetchWithAuth } from './fetchWithAuth';
 
+const BASE_URL = process.env.REACT_APP_HOME_URL;
+
 const readJson = async (resp, fallbackMessage) => {
   if (resp.ok) return resp.json();
   const errorBody = await resp.json().catch(() => ({}));
@@ -36,4 +38,29 @@ export const updateBlogPost = async (id, { title, category, blocks }) => {
     body: JSON.stringify({ title, category, blocks }),
   });
   return readJson(resp, 'Could not save the post');
+};
+
+export const publishBlogPost = async (id) => {
+  const resp = await fetchWithAuth(`/api/v1/admin/blog/${id}/publish`, {
+    method: 'PATCH',
+    headers: { Accept: 'application/json' },
+  });
+  return readJson(resp, 'Could not publish the post');
+};
+
+export const getBlogPosts = async () => {
+  const resp = await fetch(`${BASE_URL}/api/v1/blog`, {
+    headers: { Accept: 'application/json' },
+    credentials: 'include',
+  });
+  return readJson(resp, 'Could not load the blog');
+};
+
+export const getBlogPost = async (slug) => {
+  const resp = await fetch(`${BASE_URL}/api/v1/blog/${encodeURIComponent(slug)}`, {
+    headers: { Accept: 'application/json' },
+    credentials: 'include',
+  });
+  if (resp.status === 404) return null;
+  return readJson(resp, 'Could not load the post');
 };
