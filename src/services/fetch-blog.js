@@ -48,6 +48,14 @@ export const publishBlogPost = async (id) => {
   return readJson(resp, 'Could not publish the post');
 };
 
+export const deleteBlogPost = async (id) => {
+  const resp = await fetchWithAuth(`/api/v1/admin/blog/${id}`, {
+    method: 'DELETE',
+    headers: { Accept: 'application/json' },
+  });
+  return readJson(resp, 'Could not delete the post');
+};
+
 export const uploadBlogImages = async (postId, files) => {
   const formData = new FormData();
   for (const file of files) {
