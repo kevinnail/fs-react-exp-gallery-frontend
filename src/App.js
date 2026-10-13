@@ -36,6 +36,7 @@ import { useMessaging } from './hooks/useWebSocket.js';
 import { getMyMessages } from './services/fetch-messages.js';
 import AdminSales from './components/Admin/AdminSales/AdminSales.js';
 import ChartsPage from './components/Admin/Charts/ChartsPage.js';
+import BlogAdmin from './components/BlogAdmin/BlogAdmin.js';
 // import DisplayGallery from './components/DisplayGallery/DisplayGallery.js';
 
 const mainTheme = createTheme({
@@ -294,6 +295,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ChartsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/blog"
+              element={
+                <ProtectedRoute>
+                  <BlogAdmin />
                 </ProtectedRoute>
               }
             />

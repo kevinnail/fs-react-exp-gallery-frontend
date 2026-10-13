@@ -196,6 +196,14 @@ export default function Menu({ handleClick, closeMenu }) {
               </NavLink>
               <NavLink
                 className="site-menu-link"
+                to="/admin/blog"
+                title="Blog Admin"
+                onClick={handleLinkClick}
+              >
+                Blog Admin
+              </NavLink>
+              <NavLink
+                className="site-menu-link"
                 to="/admin/email"
                 title="Email Customers"
                 onClick={handleLinkClick}
