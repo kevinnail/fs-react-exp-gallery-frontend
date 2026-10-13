@@ -97,6 +97,9 @@ export default function Menu({ handleClick, closeMenu }) {
             )}
           </NavLink>
         </div>
+        <NavLink className="site-menu-link" to="/blog" onClick={handleLinkClick}>
+          Blog
+        </NavLink>
       </>
       {!user && (
         <>

@@ -1,0 +1,72 @@
+/* Rendered post body: the elements react-markdown produces, in a reading-width
+   column. Used by the public post page and the editor preview. */
+
+.blog-post-body {
+  max-width: 70ch;
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--color-text);
+}
+
+.blog-post-body-text p {
+  margin: 0 0 1.25rem;
+  font-size: 1.125rem;
+}
+
+.blog-post-body-text h1,
+.blog-post-body-text h2,
+.blog-post-body-text h3 {
+  margin: 2rem 0 1rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.blog-post-body-text h1 {
+  font-size: 2.25rem;
+}
+
+.blog-post-body-text h2 {
+  font-size: 1.75rem;
+}
+
+.blog-post-body-text h3 {
+  font-size: 1.5rem;
+}
+
+.blog-post-body-text a {
+  font-size: 1.125rem;
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.blog-post-body-text ul,
+.blog-post-body-text ol {
+  margin: 0 0 1.25rem;
+  padding-left: 1.5rem;
+  font-size: 1.125rem;
+}
+
+.blog-post-body-text blockquote {
+  margin: 0 0 1.25rem 1.5rem;
+  font-size: 1.125rem;
+  font-style: italic;
+}
+
+.blog-post-body-text code {
+  font-family: ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace;
+  font-size: 1rem;
+  background: var(--color-surface);
+}
+
+/* Long lines in a code block scroll inside the block instead of widening the page. */
+.blog-post-body-text pre {
+  margin: 0 0 1.25rem;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
