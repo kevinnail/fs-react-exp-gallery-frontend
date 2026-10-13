@@ -21,3 +21,19 @@ export const createBlogPost = async ({ title, category }) => {
   });
   return readJson(resp, 'Could not create the draft');
 };
+
+export const getAdminBlogPost = async (id) => {
+  const resp = await fetchWithAuth(`/api/v1/admin/blog/${id}`, {
+    headers: { Accept: 'application/json' },
+  });
+  return readJson(resp, 'Could not load the post');
+};
+
+export const updateBlogPost = async (id, { title, category, blocks }) => {
+  const resp = await fetchWithAuth(`/api/v1/admin/blog/${id}`, {
+    method: 'PUT',
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, category, blocks }),
+  });
+  return readJson(resp, 'Could not save the post');
+};
