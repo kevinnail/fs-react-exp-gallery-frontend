@@ -88,4 +88,77 @@ describe('blogEditorStore', () => {
     const { title, category } = useBlogEditorStore.getState();
     expect({ title, category }).toEqual({ title: 'Ridge Hike, Day Two', category: 'Backpacking' });
   });
+
+  describe('image blocks', () => {
+    const uploadedImages = [
+      { id: '11', imageUrl: 'https://cdn.example.com/ridge.jpg' },
+      { id: '12', imageUrl: 'https://cdn.example.com/camp.jpg' },
+      { id: '13', imageUrl: 'https://cdn.example.com/summit.jpg' },
+    ];
+
+    const addImagesBlockWithUploads = () => {
+      useBlogEditorStore.getState().loadPost(savedPost);
+      useBlogEditorStore.getState().addImagesBlock();
+      const imagesBlock = useBlogEditorStore.getState().blocks[3];
+      useBlogEditorStore.getState().addImages(imagesBlock.id, uploadedImages);
+      return imagesBlock.id;
+    };
+
+    const imagesOf = (blockId) =>
+      useBlogEditorStore.getState().blocks.find((block) => block.id === blockId).images;
+
+    it('adds an empty images block at the end', () => {
+      useBlogEditorStore.getState().loadPost(savedPost);
+      useBlogEditorStore.getState().addImagesBlock();
+
+      const { blocks } = useBlogEditorStore.getState();
+      expect(blocks).toHaveLength(4);
+      expect(blocks[3]).toEqual({ id: expect.any(String), type: 'images', images: [] });
+    });
+
+    it('appends uploaded images with an empty caption, and later uploads after them', () => {
+      const blockId = addImagesBlockWithUploads();
+      useBlogEditorStore
+        .getState()
+        .addImages(blockId, [{ id: '14', imageUrl: 'https://cdn.example.com/lake.jpg' }]);
+
+      expect(imagesOf(blockId)).toEqual([
+        { imageId: '11', imageUrl: 'https://cdn.example.com/ridge.jpg', caption: '' },
+        { imageId: '12', imageUrl: 'https://cdn.example.com/camp.jpg', caption: '' },
+        { imageId: '13', imageUrl: 'https://cdn.example.com/summit.jpg', caption: '' },
+        { imageId: '14', imageUrl: 'https://cdn.example.com/lake.jpg', caption: '' },
+      ]);
+    });
+
+    it('removes only the named image', () => {
+      const blockId = addImagesBlockWithUploads();
+      useBlogEditorStore.getState().removeImage(blockId, '12');
+
+      expect(imagesOf(blockId).map((image) => image.imageId)).toEqual(['11', '13']);
+    });
+
+    it('moves an image left and right, and does nothing past either end', () => {
+      const blockId = addImagesBlockWithUploads();
+      useBlogEditorStore.getState().moveImage(blockId, '13', -1);
+      expect(imagesOf(blockId).map((image) => image.imageId)).toEqual(['11', '13', '12']);
+
+      useBlogEditorStore.getState().moveImage(blockId, '11', -1);
+      useBlogEditorStore.getState().moveImage(blockId, '12', 1);
+      expect(imagesOf(blockId).map((image) => image.imageId)).toEqual(['11', '13', '12']);
+    });
+
+    it('updates the caption of only the named image', () => {
+      const blockId = addImagesBlockWithUploads();
+      useBlogEditorStore.getState().updateCaption(blockId, '12', 'Camp at dusk');
+
+      expect(imagesOf(blockId).map((image) => image.caption)).toEqual(['', 'Camp at dusk', '']);
+    });
+
+    it('leaves text blocks untouched while editing images', () => {
+      const blockId = addImagesBlockWithUploads();
+      useBlogEditorStore.getState().removeImage(blockId, '11');
+
+      expect(useBlogEditorStore.getState().blocks.slice(0, 3)).toEqual(savedPost.blocks);
+    });
+  });
 });

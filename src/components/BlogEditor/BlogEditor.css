@@ -61,3 +61,32 @@
     padding-right: var(--page-gutter);
   }
 }
+
+.blog-editor-images-block {
+  display: grid;
+  gap: 1rem;
+}
+
+.blog-editor-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.blog-editor-image {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.blog-editor-image-thumbnail {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--color-surface);
+}
+
+.blog-editor-image .blog-editor-block-controls {
+  margin-top: 0;
+}
