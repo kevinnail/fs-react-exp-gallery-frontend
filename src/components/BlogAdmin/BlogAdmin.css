@@ -1,0 +1,49 @@
+/* Blog admin: create a draft, list every post.
+ *
+ * The create form's fields and button come from styles/forms.css and the
+ * Draft/Published chips from styles/status-chips.css. This file is only
+ * the post table.
+ */
+
+.blog-admin-posts {
+  padding: 2.5rem var(--page-gutter-tight) 0;
+}
+
+.blog-admin-table {
+  width: 100%;
+  max-width: 900px;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.blog-admin-table th,
+.blog-admin-table td {
+  text-align: left;
+  border: 1px solid var(--color-border);
+}
+
+.blog-admin-table thead th {
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--color-surface);
+}
+
+.blog-admin-title-link {
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.blog-admin-empty {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+@media (min-width: 900px) {
+  .blog-admin-posts {
+    padding-left: var(--page-gutter);
+    padding-right: var(--page-gutter);
+  }
+}
