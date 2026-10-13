@@ -38,6 +38,8 @@ import AdminSales from './components/Admin/AdminSales/AdminSales.js';
 import ChartsPage from './components/Admin/Charts/ChartsPage.js';
 import BlogAdmin from './components/BlogAdmin/BlogAdmin.js';
 import BlogEditor from './components/BlogEditor/BlogEditor.js';
+import Blog from './components/Blog/Blog.js';
+import BlogPost from './components/BlogPost/BlogPost.js';
 // import DisplayGallery from './components/DisplayGallery/DisplayGallery.js';
 
 const mainTheme = createTheme({
@@ -231,6 +233,8 @@ function App() {
             <Route path="/auctions" element={<AuctionList />} />
             <Route path="/auctions/:id" element={<AuctionDetail />} />
             <Route path="/auctions/archive" element={<AuctionArchive />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/request" element={<RequestPage />} />
             <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="/:id" element={<MainPostDetail />} />
