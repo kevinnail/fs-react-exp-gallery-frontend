@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../Loading/Loading.js';
 import BlogPostBody from '../BlogPostBody/BlogPostBody.js';
 import {
+  deleteBlogPost,
   getAdminBlogPost,
   getAdminBlogPosts,
   publishBlogPost,
@@ -204,6 +205,28 @@ const BlogEditor = () => {
     }
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm('Delete this post and its photos? This cannot be undone.')) return;
+
+    setSaving(true);
+    try {
+      await deleteBlogPost(id);
+      toast.success('Post deleted', {
+        theme: 'colored',
+        toastId: 'blog-editor-deleted',
+        autoClose: true,
+      });
+      navigate('/admin/blog');
+    } catch (error) {
+      toast.error(error.message, {
+        theme: 'colored',
+        toastId: 'blog-editor-delete-error',
+        autoClose: true,
+      });
+      setSaving(false);
+    }
+  };
+
   const handlePublish = async () => {
     if (!hasRequiredFields()) return;
     if (!window.confirm('Publish this post? It goes live on the blog and stays published.')) {
@@ -387,6 +410,14 @@ const BlogEditor = () => {
               Publish
             </button>
           )}
+          <button
+            type="button"
+            className="blog-editor-button blog-editor-button--remove"
+            onClick={handleDelete}
+            disabled={saving || uploading}
+          >
+            Delete post
+          </button>
         </div>
       </form>
     </div>
