@@ -37,6 +37,7 @@ import { getMyMessages } from './services/fetch-messages.js';
 import AdminSales from './components/Admin/AdminSales/AdminSales.js';
 import ChartsPage from './components/Admin/Charts/ChartsPage.js';
 import BlogAdmin from './components/BlogAdmin/BlogAdmin.js';
+import BlogEditor from './components/BlogEditor/BlogEditor.js';
 // import DisplayGallery from './components/DisplayGallery/DisplayGallery.js';
 
 const mainTheme = createTheme({
@@ -303,6 +304,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <BlogAdmin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/blog/:id"
+              element={
+                <ProtectedRoute>
+                  <BlogEditor />
                 </ProtectedRoute>
               }
             />
