@@ -173,46 +173,6 @@ export default function Menu({ handleClick, closeMenu }) {
                   )}
                 </NavLink>
               </div>
-              <NavLink
-                className="site-menu-link"
-                to="/admin/discounts"
-                title="Post a new sale"
-                onClick={handleLinkClick}
-              >
-                Promotions!
-              </NavLink>
-              <NavLink
-                className="site-menu-link"
-                to="/admin/users"
-                title="Users Dashboard"
-                onClick={handleLinkClick}
-              >
-                Users
-              </NavLink>
-              <NavLink
-                className="site-menu-link"
-                to="/admin/charts"
-                title="Business Charts"
-                onClick={handleLinkClick}
-              >
-                Charts
-              </NavLink>
-              <NavLink
-                className="site-menu-link"
-                to="/admin/blog"
-                title="Blog Admin"
-                onClick={handleLinkClick}
-              >
-                Blog Admin
-              </NavLink>
-              <NavLink
-                className="site-menu-link"
-                to="/admin/email"
-                title="Email Customers"
-                onClick={handleLinkClick}
-              >
-                Email
-              </NavLink>
             </>
           )}
 
