@@ -15,6 +15,10 @@ import AuctionRulesModal from './AuctionRulesModal.js';
 import { CATEGORIES } from '../PostForm/PostForm.js';
 
 export default function AuctionCard({ auction }) {
+  const { user, isAdmin } = useUserStore();
+  const { profile, address } = useProfileStore();
+  const id = Number(auction.id);
+
   const isUserRestricted = () => {
     const restrictedUsers = (process.env.REACT_APP_RESTRICTED_USER_ID || '')
       .split(',')
@@ -23,10 +27,6 @@ export default function AuctionCard({ auction }) {
   };
   const lastBidUpdate = useAuctionEventsStore((s) => s.lastBidUpdate);
   const lastBuyNowId = useAuctionEventsStore((s) => s.lastBuyNowId);
-
-  const id = Number(auction.id);
-  const { user, isAdmin } = useUserStore();
-  const { profile, address } = useProfileStore();
 
   const [selectedImage, setSelectedImage] = useState(auction.imageUrls[0]);
   const [bids, setBids] = useState([]);
