@@ -24,6 +24,8 @@ const BlogAdmin = () => {
         toast.error(error.message, {
           theme: 'colored',
           toastId: 'blog-admin-load-error',
+          draggable: true,
+          draggablePercent: 60,
           autoClose: true,
         });
       } finally {
@@ -40,6 +42,8 @@ const BlogAdmin = () => {
       toast.error('Title and category are required', {
         theme: 'colored',
         toastId: 'blog-admin-validation',
+        draggable: true,
+        draggablePercent: 60,
         autoClose: true,
       });
       return;
@@ -53,6 +57,8 @@ const BlogAdmin = () => {
       toast.error(error.message, {
         theme: 'colored',
         toastId: 'blog-admin-create-error',
+        draggable: true,
+        draggablePercent: 60,
         autoClose: true,
       });
       setCreating(false);
