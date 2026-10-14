@@ -2,10 +2,18 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../Loading/Loading.js';
 import BlogPostBody from '../BlogPostBody/BlogPostBody.js';
 import {
+  deleteBlogPost,
   getAdminBlogPost,
   getAdminBlogPosts,
   publishBlogPost,
@@ -122,6 +130,8 @@ const BlogEditor = () => {
   const [slug, setSlug] = useState('');
   const [publishedAt, setPublishedAt] = useState(null);
   const [view, setView] = useState('edit');
+  const [confirmation, setConfirmation] = useState(null);
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
   const {
     title,
     category,
@@ -164,11 +174,32 @@ const BlogEditor = () => {
     return () => reset();
   }, [id, loadPost, reset, navigate]);
 
+  const askToConfirm = (details) => {
+    setConfirmation(details);
+    setConfirmationOpen(true);
+  };
+
+  const handleConfirm = () => {
+    setConfirmationOpen(false);
+    confirmation.onConfirm();
+  };
+
   const handleRemove = (block) => {
-    const hasContent = block.type === 'images' ? block.images.length > 0 : block.body.trim();
-    const description = block.type === 'images' ? 'photo group' : 'text block';
-    if (hasContent && !window.confirm(`Remove this ${description}?`)) return;
-    removeBlock(block.id);
+    const isImages = block.type === 'images';
+    const hasContent = isImages ? block.images.length > 0 : block.body.trim();
+    if (!hasContent) {
+      removeBlock(block.id);
+      return;
+    }
+    askToConfirm({
+      title: isImages ? 'Remove this photo group?' : 'Remove this text block?',
+      message: isImages
+        ? 'Its photos come out of the post, and are deleted when you save.'
+        : 'Its text comes out of the post when you save.',
+      confirmLabel: 'Remove',
+      danger: true,
+      onConfirm: () => removeBlock(block.id),
+    });
   };
 
   const hasRequiredFields = () => {
@@ -204,12 +235,36 @@ const BlogEditor = () => {
     }
   };
 
-  const handlePublish = async () => {
-    if (!hasRequiredFields()) return;
-    if (!window.confirm('Publish this post? It goes live on the blog and stays published.')) {
-      return;
+  const deletePost = async () => {
+    setSaving(true);
+    try {
+      await deleteBlogPost(id);
+      toast.success('Post deleted', {
+        theme: 'colored',
+        toastId: 'blog-editor-deleted',
+        autoClose: true,
+      });
+      navigate('/admin/blog');
+    } catch (error) {
+      toast.error(error.message, {
+        theme: 'colored',
+        toastId: 'blog-editor-delete-error',
+        autoClose: true,
+      });
+      setSaving(false);
     }
+  };
 
+  const handleDelete = () =>
+    askToConfirm({
+      title: 'Delete this post?',
+      message: 'The post and all its photos are deleted. This cannot be undone.',
+      confirmLabel: 'Delete post',
+      danger: true,
+      onConfirm: deletePost,
+    });
+
+  const publishPost = async () => {
     setSaving(true);
     try {
       loadPost(await updateBlogPost(id, { title, category, blocks }));
@@ -229,6 +284,17 @@ const BlogEditor = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handlePublish = () => {
+    if (!hasRequiredFields()) return;
+    askToConfirm({
+      title: 'Publish this post?',
+      message: 'It goes live on the blog and stays published.',
+      confirmLabel: 'Publish',
+      danger: false,
+      onConfirm: publishPost,
+    });
   };
 
   if (loading) return <Loading />;
@@ -387,8 +453,63 @@ const BlogEditor = () => {
               Publish
             </button>
           )}
+          <button
+            type="button"
+            className="blog-editor-button blog-editor-button--remove"
+            onClick={handleDelete}
+            disabled={saving || uploading}
+          >
+            Delete post
+          </button>
         </div>
       </form>
+
+      <Dialog
+        open={confirmationOpen}
+        onClose={() => setConfirmationOpen(false)}
+        aria-labelledby="blog-editor-dialog-title"
+        aria-describedby="blog-editor-dialog-description"
+        PaperProps={{
+          sx: {
+            backgroundColor: 'var(--color-surface)',
+            backgroundImage: 'none',
+            border: '1px solid var(--color-border)',
+            borderRadius: 0,
+            fontFamily: 'var(--font-body)',
+          },
+        }}
+      >
+        <DialogTitle id="blog-editor-dialog-title" sx={{ fontFamily: 'var(--font-display)' }}>
+          {confirmation?.title}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            id="blog-editor-dialog-description"
+            sx={{ fontFamily: 'var(--font-body)' }}
+          >
+            {confirmation?.message}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <button
+            type="button"
+            className="blog-editor-dialog-button"
+            onClick={() => setConfirmationOpen(false)}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className={`blog-editor-dialog-button blog-editor-dialog-button--confirm${
+              confirmation?.danger ? ' blog-editor-dialog-button--danger' : ''
+            }`}
+            onClick={handleConfirm}
+            autoFocus
+          >
+            {confirmation?.confirmLabel}
+          </button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

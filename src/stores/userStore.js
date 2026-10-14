@@ -8,7 +8,7 @@ import websocketService from '../services/websocket.js';
 export const useUserStore = create((set) => ({
   user: null,
   error: '',
-  loading: false,
+  loading: true,
   isAdmin: false,
   unreadMessageCount: 0,
   setUser: (user) => {
@@ -37,13 +37,15 @@ export const useUserStore = create((set) => ({
 
   fetchUser: async () => {
     try {
-      const data = await getUser();
-      if (data) {
-        // Handle different possible data structures
-        const user = data.user?.user || data.user || data;
-        const isAdmin = data.isAdmin || false;
-        set({ user, loading: false, isAdmin });
+      const signedInUser = await getUser();
+      if (!signedInUser) {
+        set({ loading: false });
+        return;
       }
+      // Handle different possible data structures
+      const user = signedInUser.user?.user || signedInUser.user || signedInUser;
+      const isAdmin = signedInUser.isAdmin || false;
+      set({ user, loading: false, isAdmin });
     } catch (e) {
       set({ error: e.message, loading: false });
       toast.error(`Error getting user: ${e.message}`, {

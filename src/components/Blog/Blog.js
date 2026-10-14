@@ -77,7 +77,10 @@ const Blog = () => {
       ) : (
         <ul className="blog-post-list">
           {visiblePosts.map((post) => (
-            <li className="blog-card" key={post.id}>
+            <li
+              className={`blog-card${post.coverImageUrl ? ' blog-card--with-cover' : ''}`}
+              key={post.id}
+            >
               {post.coverImageUrl && (
                 <Link to={`/blog/${post.slug}`}>
                   <img
@@ -88,15 +91,17 @@ const Blog = () => {
                   />
                 </Link>
               )}
-              <h2 className="blog-card-title">
-                <Link className="blog-card-link" to={`/blog/${post.slug}`}>
-                  {post.title}
-                </Link>
-              </h2>
-              {post.excerpt && <p className="blog-card-excerpt">{post.excerpt}</p>}
-              <p className="blog-card-details">
-                {formatBlogDate(post.publishedAt)} in {post.category}
-              </p>
+              <div>
+                <h2 className="blog-card-title">
+                  <Link className="blog-card-link" to={`/blog/${post.slug}`}>
+                    {post.title}
+                  </Link>
+                </h2>
+                {post.excerpt && <p className="blog-card-excerpt">{post.excerpt}</p>}
+                <p className="blog-card-details">
+                  {formatBlogDate(post.publishedAt)} in {post.category}
+                </p>
+              </div>
             </li>
           ))}
         </ul>

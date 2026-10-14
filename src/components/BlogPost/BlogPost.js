@@ -40,6 +40,9 @@ const BlogPost = () => {
   return (
     <main className="blog-post-page">
       <article className="blog-post-article">
+        <Link className="blog-post-back-link" to="/blog">
+          Back to the blog
+        </Link>
         <h1 className="blog-post-title">{post.title}</h1>
         <BlogPostBody title={post.title} blocks={post.blocks} />
         <p className="blog-post-details">

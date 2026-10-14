@@ -16,9 +16,9 @@ import { useMediaQuery } from '@mui/material';
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignIn, setIsSignIn] = useState(true);
   const { user, setUser, error, loading, setLoading, setIsAdmin, isAdmin } = useUserStore();
   const { type } = useParams();
+  const isSignIn = type !== 'sign-up';
   const [isFormRetracted, setIsFormRetracted] = useState(false);
   const navigate = useNavigate();
   const [isAgreementOpen, setAgreementOpen] = useState(false);
@@ -500,7 +500,6 @@ export default function Auth() {
                     isActive ? 'auth-mode-link auth-mode-link--selected' : 'auth-mode-link'
                   }
                   to="/auth/sign-in"
-                  onClick={() => setIsSignIn(true)}
                 >
                   Sign-in
                 </NavLink>
@@ -509,7 +508,6 @@ export default function Auth() {
                     isActive ? 'auth-mode-link auth-mode-link--selected' : 'auth-mode-link'
                   }
                   to="/auth/sign-up"
-                  onClick={() => setIsSignIn(false)}
                 >
                   Sign-up
                 </NavLink>

@@ -36,3 +36,11 @@
   color: var(--color-text);
   text-decoration: underline;
 }
+
+.blog-post-back-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: var(--color-text);
+  text-decoration: underline;
+}
