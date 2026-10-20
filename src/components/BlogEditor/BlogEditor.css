@@ -24,13 +24,26 @@
   gap: 0.75rem;
 }
 
+/* Stays at the bottom edge of the screen while a long post scrolls. */
+.blog-editor-save-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  background: var(--color-page-background);
+  border-top: 1px solid var(--color-border);
+}
+
 .blog-editor-button {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   font-family: var(--font-body);
   font-size: 1rem;
+  line-height: 1;
   color: var(--color-text);
   background: var(--color-control);
   border: 1px solid var(--color-border);
@@ -87,15 +100,24 @@
   background: var(--color-surface);
 }
 
+.blog-editor-cover-thumbnail {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--color-surface);
+}
+
 .blog-editor-image .blog-editor-block-controls {
   margin-top: 0;
 }
 
 .blog-editor-dialog-button {
-  min-height: 42px;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   font-family: var(--font-body);
   font-size: 1rem;
+  line-height: 1;
   font-weight: 500;
   color: var(--color-text);
   background: transparent;
