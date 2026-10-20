@@ -37,9 +37,15 @@
   text-decoration: underline;
 }
 
-.blog-post-back-link {
-  display: inline-block;
+.blog-post-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
   margin-top: 1.5rem;
+}
+
+.blog-post-nav-link {
   font-size: 1rem;
   color: var(--color-text);
   text-decoration: underline;
