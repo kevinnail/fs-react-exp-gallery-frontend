@@ -5,6 +5,8 @@ const savedPost = {
   slug: 'ridge-hike',
   title: 'Ridge Hike',
   category: 'Hiking',
+  summary: 'Two days up the ridge.',
+  coverImageUrl: 'https://cdn.example.com/cover.jpg',
   blocks: [
     { id: 'block-a', type: 'text', body: 'Trailhead at dawn.' },
     { id: 'block-b', type: 'text', body: 'The ridge above camp.' },
@@ -19,21 +21,43 @@ describe('blogEditorStore', () => {
     useBlogEditorStore.getState().reset();
   });
 
-  it('loads a saved post title, category and blocks', () => {
+  it('loads a saved post title, category, summary, cover and blocks', () => {
     useBlogEditorStore.getState().loadPost(savedPost);
 
-    const { title, category, blocks } = useBlogEditorStore.getState();
+    const { title, category, summary, coverImageUrl, blocks } = useBlogEditorStore.getState();
     expect(title).toBe('Ridge Hike');
     expect(category).toBe('Hiking');
+    expect(summary).toBe('Two days up the ridge.');
+    expect(coverImageUrl).toBe('https://cdn.example.com/cover.jpg');
     expect(blocks).toEqual(savedPost.blocks);
+  });
+
+  it('sets the summary and the cover URL, and clears the cover with null', () => {
+    useBlogEditorStore.getState().loadPost(savedPost);
+    useBlogEditorStore.getState().setSummary('Three days to Table Lake.');
+    useBlogEditorStore.getState().setCoverImageUrl('https://cdn.example.com/summit.jpg');
+
+    expect(useBlogEditorStore.getState().summary).toBe('Three days to Table Lake.');
+    expect(useBlogEditorStore.getState().coverImageUrl).toBe('https://cdn.example.com/summit.jpg');
+
+    useBlogEditorStore.getState().setCoverImageUrl(null);
+
+    expect(useBlogEditorStore.getState().coverImageUrl).toBeNull();
+    expect(useBlogEditorStore.getState().blocks).toEqual(savedPost.blocks);
   });
 
   it('reset clears everything a loaded post put in the store', () => {
     useBlogEditorStore.getState().loadPost(savedPost);
     useBlogEditorStore.getState().reset();
 
-    const { title, category, blocks } = useBlogEditorStore.getState();
-    expect({ title, category, blocks }).toEqual({ title: '', category: '', blocks: [] });
+    const { title, category, summary, coverImageUrl, blocks } = useBlogEditorStore.getState();
+    expect({ title, category, summary, coverImageUrl, blocks }).toEqual({
+      title: '',
+      category: '',
+      summary: '',
+      coverImageUrl: null,
+      blocks: [],
+    });
   });
 
   it('adds an empty text block at the end with a fresh unique id', () => {
