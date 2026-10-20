@@ -26,7 +26,7 @@ const BlogAdmin = () => {
           toastId: 'blog-admin-load-error',
           draggable: true,
           draggablePercent: 60,
-          autoClose: true,
+          autoClose: 3500,
         });
       } finally {
         setLoading(false);
@@ -44,7 +44,7 @@ const BlogAdmin = () => {
         toastId: 'blog-admin-validation',
         draggable: true,
         draggablePercent: 60,
-        autoClose: true,
+        autoClose: 3500,
       });
       return;
     }
@@ -59,7 +59,7 @@ const BlogAdmin = () => {
         toastId: 'blog-admin-create-error',
         draggable: true,
         draggablePercent: 60,
-        autoClose: true,
+        autoClose: 3500,
       });
       setCreating(false);
     }
