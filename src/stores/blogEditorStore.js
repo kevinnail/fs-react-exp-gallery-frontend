@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-const emptyPost = { title: '', category: '', blocks: [] };
+const emptyPost = { title: '', category: '', summary: '', coverImageUrl: null, blocks: [] };
 
 const moveItem = (items, fromIndex, direction) => {
   const toIndex = fromIndex + direction;
@@ -19,7 +19,14 @@ const updateImages = (blocks, blockId, changeImages) =>
 export const useBlogEditorStore = create((set) => ({
   ...emptyPost,
 
-  loadPost: (post) => set({ title: post.title, category: post.category, blocks: post.blocks }),
+  loadPost: (post) =>
+    set({
+      title: post.title,
+      category: post.category,
+      summary: post.summary,
+      coverImageUrl: post.coverImageUrl,
+      blocks: post.blocks,
+    }),
 
   // Called when the editor unmounts so one post's blocks never leak into the next.
   reset: () => set(emptyPost),
@@ -27,6 +34,10 @@ export const useBlogEditorStore = create((set) => ({
   setTitle: (title) => set({ title }),
 
   setCategory: (category) => set({ category }),
+
+  setSummary: (summary) => set({ summary }),
+
+  setCoverImageUrl: (coverImageUrl) => set({ coverImageUrl }),
 
   addTextBlock: () =>
     set((state) => ({
