@@ -31,11 +31,11 @@ export const getAdminBlogPost = async (id) => {
   return readJson(resp, 'Could not load the post');
 };
 
-export const updateBlogPost = async (id, { title, category, blocks }) => {
+export const updateBlogPost = async (id, { title, category, summary, blocks }) => {
   const resp = await fetchWithAuth(`/api/v1/admin/blog/${id}`, {
     method: 'PUT',
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, category, blocks }),
+    body: JSON.stringify({ title, category, summary, blocks }),
   });
   return readJson(resp, 'Could not save the post');
 };
@@ -67,6 +67,25 @@ export const uploadBlogImages = async (postId, files) => {
     body: formData,
   });
   return readJson(resp, 'Could not upload the image');
+};
+
+export const setBlogCover = async (postId, file) => {
+  const formData = new FormData();
+  formData.append('imageFile', file);
+  const resp = await fetchWithAuth(`/api/v1/admin/blog/${postId}/cover`, {
+    method: 'PUT',
+    headers: { Accept: 'application/json' },
+    body: formData,
+  });
+  return readJson(resp, 'Could not upload the cover picture');
+};
+
+export const removeBlogCover = async (postId) => {
+  const resp = await fetchWithAuth(`/api/v1/admin/blog/${postId}/cover`, {
+    method: 'DELETE',
+    headers: { Accept: 'application/json' },
+  });
+  return readJson(resp, 'Could not remove the cover picture');
 };
 
 export const getBlogPosts = async () => {
