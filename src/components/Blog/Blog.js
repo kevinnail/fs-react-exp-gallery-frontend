@@ -22,7 +22,9 @@ const Blog = () => {
         toast.error(error.message, {
           theme: 'colored',
           toastId: 'blog-load-error',
-          autoClose: true,
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: 3500,
         });
       } finally {
         setLoading(false);
@@ -77,27 +79,22 @@ const Blog = () => {
       ) : (
         <ul className="blog-post-list">
           {visiblePosts.map((post) => (
-            <li
-              className={`blog-card${post.coverImageUrl ? ' blog-card--with-cover' : ''}`}
-              key={post.id}
-            >
-              {post.coverImageUrl && (
-                <Link to={`/blog/${post.slug}`}>
-                  <img
-                    className="blog-card-cover"
-                    src={post.coverImageUrl}
-                    alt={post.title}
-                    loading="lazy"
-                  />
-                </Link>
-              )}
+            <li className="blog-card" key={post.id}>
+              <Link to={`/blog/${post.slug}`}>
+                <img
+                  className="blog-card-cover"
+                  src={post.coverImageUrl}
+                  alt={post.title}
+                  loading="lazy"
+                />
+              </Link>
               <div>
                 <h2 className="blog-card-title">
                   <Link className="blog-card-link" to={`/blog/${post.slug}`}>
                     {post.title}
                   </Link>
                 </h2>
-                {post.excerpt && <p className="blog-card-excerpt">{post.excerpt}</p>}
+                <p className="blog-card-summary">{post.summary}</p>
                 <p className="blog-card-details">
                   {formatBlogDate(post.publishedAt)} in {post.category}
                 </p>
