@@ -17,12 +17,109 @@ import {
   getAdminBlogPost,
   getAdminBlogPosts,
   publishBlogPost,
+  removeBlogCover,
+  setBlogCover,
   updateBlogPost,
   uploadBlogImages,
 } from '../../services/fetch-blog.js';
 import { compressImageToJpeg } from '../../services/image-compress.js';
 import { useBlogEditorStore } from '../../stores/blogEditorStore.js';
 import './BlogEditor.css';
+
+const acceptedImageTypes = {
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png'],
+  'image/webp': ['.webp'],
+};
+
+const CoverEditor = ({ postId, disabled, published, setUploadingCount }) => {
+  const { coverImageUrl, setCoverImageUrl } = useBlogEditorStore();
+
+  const handleDrop = async ([file]) => {
+    setUploadingCount((count) => count + 1);
+    try {
+      const compressed = await compressImageToJpeg(file, { maxWidth: 2000, quality: 0.82 });
+      const uploaded = await setBlogCover(postId, compressed);
+      setCoverImageUrl(uploaded.coverImageUrl);
+    } catch (error) {
+      toast.error(`${file.name}: ${error.message}`, {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3500,
+      });
+    } finally {
+      setUploadingCount((count) => count - 1);
+    }
+  };
+
+  const handleRemove = async () => {
+    setUploadingCount((count) => count + 1);
+    try {
+      await removeBlogCover(postId);
+      setCoverImageUrl(null);
+    } catch (error) {
+      toast.error(error.message, {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3500,
+      });
+    } finally {
+      setUploadingCount((count) => count - 1);
+    }
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: handleDrop,
+    onDropRejected: (rejections) =>
+      toast.error(`${rejections[0].file.name}: not a single JPG, PNG or WebP`, {
+        theme: 'colored',
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3500,
+      }),
+    disabled,
+    multiple: false,
+    accept: acceptedImageTypes,
+  });
+
+  return (
+    <div className="blog-editor-images-block">
+      {coverImageUrl && (
+        <>
+          <img
+            className="blog-editor-cover-thumbnail"
+            src={coverImageUrl}
+            alt="Cover for the blog list"
+          />
+          <div className="blog-editor-block-controls">
+            <button
+              type="button"
+              className="blog-editor-button blog-editor-button--remove"
+              onClick={handleRemove}
+              disabled={disabled || published}
+            >
+              Remove cover
+            </button>
+          </div>
+        </>
+      )}
+      <div
+        {...getRootProps({
+          className: `form-image-dropzone${isDragActive ? ' form-image-dropzone--dragging' : ''}`,
+        })}
+      >
+        <input {...getInputProps()} />
+        <span className="form-image-dropzone-instructions">
+          {coverImageUrl
+            ? 'Drop a new cover here to replace it'
+            : 'Drop the cover here, or click to choose'}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 const ImagesBlockEditor = ({ postId, block, disabled, setUploadingCount }) => {
   const { addImages, removeImage, moveImage, updateCaption } = useBlogEditorStore();
@@ -34,7 +131,12 @@ const ImagesBlockEditor = ({ postId, block, disabled, setUploadingCount }) => {
         const compressed = await compressImageToJpeg(file, { maxWidth: 2000, quality: 0.82 });
         addImages(block.id, await uploadBlogImages(postId, [compressed]));
       } catch (error) {
-        toast.error(`${file.name}: ${error.message}`, { theme: 'colored', autoClose: true });
+        toast.error(`${file.name}: ${error.message}`, {
+          theme: 'colored',
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: 3500,
+        });
       } finally {
         setUploadingCount((count) => count - 1);
       }
@@ -46,14 +148,10 @@ const ImagesBlockEditor = ({ postId, block, disabled, setUploadingCount }) => {
     onDropRejected: (rejections) =>
       toast.error(
         `${rejections.map((rejection) => rejection.file.name).join(', ')}: not a JPG, PNG or WebP`,
-        { theme: 'colored', autoClose: true }
+        { theme: 'colored', draggable: true, draggablePercent: 60, autoClose: 3500 }
       ),
     disabled,
-    accept: {
-      'image/jpeg': ['.jpg', '.jpeg'],
-      'image/png': ['.png'],
-      'image/webp': ['.webp'],
-    },
+    accept: acceptedImageTypes,
   });
 
   return (
@@ -135,11 +233,14 @@ const BlogEditor = () => {
   const {
     title,
     category,
+    summary,
+    coverImageUrl,
     blocks,
     loadPost,
     reset,
     setTitle,
     setCategory,
+    setSummary,
     addTextBlock,
     addImagesBlock,
     removeBlock,
@@ -147,8 +248,9 @@ const BlogEditor = () => {
     updateText,
   } = useBlogEditorStore();
 
-  // A save during an upload would delete the photo the server just stored,
-  // because the blocks being saved don't reference it yet.
+  // Save waits for photo and cover changes: a save during a photo upload would delete the
+  // photo the blocks don't reference yet, and a save response landing after a cover change
+  // would put the old cover back in the editor.
   const uploading = uploadingCount > 0;
 
   useEffect(() => {
@@ -164,7 +266,9 @@ const BlogEditor = () => {
         toast.error(error.message, {
           theme: 'colored',
           toastId: 'blog-editor-load-error',
-          autoClose: true,
+          draggable: true,
+          draggablePercent: 60,
+          autoClose: 3500,
         });
         navigate('/admin/blog');
       }
@@ -203,11 +307,13 @@ const BlogEditor = () => {
   };
 
   const hasRequiredFields = () => {
-    if (title.trim() && category.trim()) return true;
-    toast.error('Title and category are required', {
+    if (title.trim() && category.trim() && summary.trim() && coverImageUrl) return true;
+    toast.error('Title, category, summary and cover picture are required', {
       theme: 'colored',
       toastId: 'blog-editor-validation',
-      autoClose: true,
+      draggable: true,
+      draggablePercent: 60,
+      autoClose: 3500,
     });
     return false;
   };
@@ -218,17 +324,21 @@ const BlogEditor = () => {
 
     setSaving(true);
     try {
-      loadPost(await updateBlogPost(id, { title, category, blocks }));
+      loadPost(await updateBlogPost(id, { title, category, summary, blocks }));
       toast.success('Saved', {
         theme: 'colored',
         toastId: 'blog-editor-saved',
-        autoClose: true,
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3500,
       });
     } catch (error) {
       toast.error(error.message, {
         theme: 'colored',
         toastId: 'blog-editor-save-error',
-        autoClose: true,
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3500,
       });
     } finally {
       setSaving(false);
@@ -242,14 +352,18 @@ const BlogEditor = () => {
       toast.success('Post deleted', {
         theme: 'colored',
         toastId: 'blog-editor-deleted',
-        autoClose: true,
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3500,
       });
       navigate('/admin/blog');
     } catch (error) {
       toast.error(error.message, {
         theme: 'colored',
         toastId: 'blog-editor-delete-error',
-        autoClose: true,
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3500,
       });
       setSaving(false);
     }
@@ -267,19 +381,23 @@ const BlogEditor = () => {
   const publishPost = async () => {
     setSaving(true);
     try {
-      loadPost(await updateBlogPost(id, { title, category, blocks }));
+      loadPost(await updateBlogPost(id, { title, category, summary, blocks }));
       const published = await publishBlogPost(id);
       setPublishedAt(published.publishedAt);
       toast.success('Published', {
         theme: 'colored',
         toastId: 'blog-editor-published',
-        autoClose: true,
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3500,
       });
     } catch (error) {
       toast.error(error.message, {
         theme: 'colored',
         toastId: 'blog-editor-publish-error',
-        autoClose: true,
+        draggable: true,
+        draggablePercent: 60,
+        autoClose: 3500,
       });
     } finally {
       setSaving(false);
@@ -338,6 +456,29 @@ const BlogEditor = () => {
               <option key={existingCategory} value={existingCategory} />
             ))}
           </datalist>
+        </div>
+
+        <div className="form-field">
+          <label className="form-field-label" htmlFor="blog-editor-summary">
+            Summary
+          </label>
+          <textarea
+            id="blog-editor-summary"
+            className="form-textarea"
+            value={summary}
+            onChange={(event) => setSummary(event.target.value)}
+            disabled={saving}
+          />
+        </div>
+
+        <div className="form-field">
+          <span className="form-field-label">Cover picture</span>
+          <CoverEditor
+            postId={id}
+            disabled={saving}
+            published={Boolean(publishedAt)}
+            setUploadingCount={setUploadingCount}
+          />
         </div>
 
         <div className="form-segmented-toggle">
@@ -415,29 +556,30 @@ const BlogEditor = () => {
             </div>
           ))}
 
-        <div className="blog-editor-actions">
-          {view === 'edit' && (
-            <>
-              <button
-                type="button"
-                className="blog-editor-button"
-                onClick={addTextBlock}
-                disabled={saving}
-              >
-                Add text
-              </button>
-              <button
-                type="button"
-                className="blog-editor-button"
-                onClick={addImagesBlock}
-                disabled={saving}
-              >
-                Add photos
-              </button>
-            </>
-          )}
+        {view === 'edit' && (
+          <div className="blog-editor-actions">
+            <button
+              type="button"
+              className="blog-editor-button"
+              onClick={addTextBlock}
+              disabled={saving}
+            >
+              Add text
+            </button>
+            <button
+              type="button"
+              className="blog-editor-button"
+              onClick={addImagesBlock}
+              disabled={saving}
+            >
+              Add photos
+            </button>
+          </div>
+        )}
+
+        <div className="blog-editor-save-bar">
           <button className="admin-form-submit-button" type="submit" disabled={saving || uploading}>
-            {uploading ? 'Uploading…' : saving ? 'Saving…' : 'Save'}
+            {uploading ? 'Updating photos…' : saving ? 'Saving…' : 'Save'}
           </button>
           {publishedAt ? (
             <Link className="blog-editor-button" to={`/blog/${slug}`}>
