@@ -1,0 +1,155 @@
+/* Blog post editor: title, category, and the ordered list of text blocks.
+ *
+ * Fields, the textarea and the Save button come from styles/forms.css. This
+ * file is the single-column layout and the block control buttons.
+ */
+
+.blog-editor {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 900px;
+  padding: 0 var(--page-gutter-tight);
+}
+
+.blog-editor-block-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.blog-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Stays at the bottom edge of the screen while a long post scrolls. */
+.blog-editor-save-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  background: var(--color-page-background);
+  border-top: 1px solid var(--color-border);
+}
+
+.blog-editor-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--color-text);
+  background: var(--color-control);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.blog-editor-button:hover:not(:disabled),
+.blog-editor-button:focus-visible {
+  background: var(--color-control-hover);
+}
+
+.blog-editor-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.blog-editor-button--remove:hover:not(:disabled),
+.blog-editor-button--remove:focus-visible {
+  color: var(--color-alert);
+  border-color: var(--color-alert);
+}
+
+@media (min-width: 900px) {
+  .blog-editor {
+    padding-left: var(--page-gutter);
+    padding-right: var(--page-gutter);
+  }
+}
+
+.blog-editor-images-block {
+  display: grid;
+  gap: 1rem;
+}
+
+.blog-editor-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.blog-editor-image {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.blog-editor-image-thumbnail {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--color-surface);
+}
+
+.blog-editor-cover-thumbnail {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--color-surface);
+}
+
+.blog-editor-image .blog-editor-block-controls {
+  margin-top: 0;
+}
+
+.blog-editor-dialog-button {
+  padding: 0.5rem 1rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 500;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+}
+
+.blog-editor-dialog-button:hover {
+  border-color: var(--color-text);
+}
+
+.blog-editor-dialog-button--confirm {
+  color: #000000;
+  background: var(--color-text);
+  border-color: var(--color-text);
+}
+
+.blog-editor-dialog-button--confirm:hover {
+  color: var(--color-text);
+  background: transparent;
+}
+
+.blog-editor-dialog-button--danger {
+  background: var(--color-alert);
+  border-color: var(--color-alert);
+}
+
+.blog-editor-dialog-button--danger:hover {
+  color: var(--color-alert);
+}
+
+.blog-editor-dialog-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
