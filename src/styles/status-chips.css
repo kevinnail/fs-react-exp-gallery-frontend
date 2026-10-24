@@ -1,6 +1,6 @@
 /* Order and auction state, shown as chips. Each chip is one whole state, so a card
    that shows two of them wraps between chips instead of breaking a phrase in half.
-   Shared by the Purchases and Auctions tabs on the account page and the blog admin list. */
+   Shared by the Purchases and Auctions tabs on the account page. */
 
 .status-chips {
   display: flex;
@@ -24,12 +24,10 @@
 }
 
 .status-chip--paid,
-.status-chip--shipped,
-.status-chip--published {
+.status-chip--shipped {
   color: var(--color-status-good);
 }
 
-.status-chip--shipping-soon,
-.status-chip--draft {
+.status-chip--shipping-soon {
   color: var(--color-status-wait);
 }
