@@ -33,9 +33,9 @@ const NotFound = () => {
             <Link className="button-link button-link--secondary" to="/auctions">
               Live auctions
             </Link>
-            <Link className="button-link button-link--secondary" to="/blog">
+            <a className="button-link button-link--secondary" href="https://kevinnail.com/blog">
               Blog
-            </Link>
+            </a>
             <Link className="button-link button-link--secondary" to="/about-me">
               About me
             </Link>
