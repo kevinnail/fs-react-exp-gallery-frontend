@@ -132,10 +132,6 @@ export default function Admin() {
               <AddIcon className="admin-dashboard-chip-icon" />
               <span className="visually-hidden">New </span>auction
             </Link>
-            <Link className="admin-dashboard-chip admin-dashboard-chip--create" to="/admin/blog">
-              <AddIcon className="admin-dashboard-chip-icon" />
-              <span className="visually-hidden">New </span>blog
-            </Link>
           </nav>
         </div>
         <nav className="admin-dashboard-page-links" aria-label="Admin pages">
