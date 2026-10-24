@@ -25,9 +25,3 @@ if (!window.matchMedia) {
 if (!Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = () => {};
 }
-
-// CRA's jsdom predates Web Crypto, and the blog editor names each new block with
-// crypto.randomUUID(). Node's own implementation stands in for the browser's.
-if (!window.crypto?.randomUUID) {
-  Object.defineProperty(window, 'crypto', { value: require('crypto').webcrypto });
-}
