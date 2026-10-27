@@ -77,7 +77,8 @@ const twoPieceOrder = {
   ],
 };
 
-const renderPanel = () => render(<GallerySalesPanel />, { wrapper: MemoryRouter });
+const renderPanel = () =>
+  render(<GallerySalesPanel onUnpaidCountChange={jest.fn()} />, { wrapper: MemoryRouter });
 
 // What AdminInbox pushes through router state when the admin clicks Create Sale
 // on a request message.
@@ -86,13 +87,13 @@ const renderPanelWithPrefill = (prefill) =>
     <MemoryRouter
       initialEntries={[{ pathname: '/admin/sales', state: { fromInbox: true, prefill } }]}
     >
-      <GallerySalesPanel />
+      <GallerySalesPanel onUnpaidCountChange={jest.fn()} />
     </MemoryRouter>
   );
 
 const addPiece = async (user, pieceTitle) => {
   await user.click(screen.getByRole('button', { name: 'Add piece' }));
-  const picker = await screen.findByRole('dialog');
+  const picker = await screen.findByRole('dialog', { name: 'Select a piece' });
   await user.click(within(picker).getByRole('button', { name: new RegExp(pieceTitle) }));
 };
 
@@ -254,5 +255,37 @@ describe('GallerySalesPanel', () => {
       'That piece is already on this sale.',
       expect.any(Object)
     );
+  });
+
+  // Otherwise tapping a sale on a phone throws the page to the bottom instead of showing the sale.
+  it('opens a sale in the bottom panel on a narrow screen without scrolling the page', async () => {
+    const user = userEvent.setup();
+    const scrollIntoView = jest.spyOn(Element.prototype, 'scrollIntoView');
+    getAllSales.mockResolvedValue([twoPieceOrder]);
+
+    renderPanel();
+
+    await user.click(await screen.findByRole('button', { name: /2 pieces/ }));
+
+    const detail = screen.getByRole('dialog', { name: 'Sale detail' });
+    expect(detail).toHaveAttribute('open');
+    expect(within(detail).getByRole('heading', { name: 'Blue Wrap Rig' })).toBeInTheDocument();
+    expect(scrollIntoView).not.toHaveBeenCalled();
+
+    scrollIntoView.mockRestore();
+  });
+
+  // Otherwise the bottom panel could not be dismissed and the sales list would stay covered.
+  it('closes the bottom panel with Done', async () => {
+    const user = userEvent.setup();
+    getAllSales.mockResolvedValue([twoPieceOrder]);
+
+    renderPanel();
+
+    await user.click(await screen.findByRole('button', { name: /2 pieces/ }));
+    const detail = screen.getByRole('dialog', { name: 'Sale detail' });
+    await user.click(within(detail).getByRole('button', { name: 'Done' }));
+
+    expect(detail).not.toHaveAttribute('open');
   });
 });
