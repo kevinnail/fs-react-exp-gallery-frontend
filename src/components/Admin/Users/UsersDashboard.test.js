@@ -180,4 +180,51 @@ describe('UsersDashboard', () => {
     expect(await screen.findByText('Could not load customers (500)')).toBeInTheDocument();
     expect(screen.queryByText('No users found')).not.toBeInTheDocument();
   });
+
+  // Otherwise the admin has to page through every customer to find one person.
+  it('narrows the list to customers whose name or email matches the search', async () => {
+    getCustomerMetrics.mockResolvedValue([buyer, browser]);
+    const user = userEvent.setup();
+    render(<UsersDashboard />);
+
+    await screen.findByText('buyer@example.com');
+    const search = screen.getByRole('searchbox', { name: 'Search customers by name or email' });
+
+    await user.type(search, 'bea');
+    expect(screen.getByText('1 of 2 customers')).toBeInTheDocument();
+    expect(screen.queryByText('browser@example.com')).not.toBeInTheDocument();
+
+    await user.clear(search);
+    await user.type(search, 'BROWSER@');
+    expect(screen.getByText('browser@example.com')).toBeInTheDocument();
+    expect(screen.queryByText('buyer@example.com')).not.toBeInTheDocument();
+  });
+
+  // Otherwise the email form would name the segment "All" while only sending to the searched customers.
+  it('names the search in the email segment it sends', async () => {
+    getCustomerMetrics.mockResolvedValue([buyer, browser]);
+    const user = userEvent.setup();
+    render(<UsersDashboard />);
+
+    await screen.findByText('buyer@example.com');
+    await user.type(screen.getByRole('searchbox'), 'buyer');
+    await user.click(screen.getByRole('button', { name: 'Email this customer' }));
+
+    expect(mockNavigate).toHaveBeenCalledWith('/admin/email', {
+      state: { segment: { label: 'All, matching "buyer"', userIds: [2] } },
+    });
+  });
+
+  // Otherwise a search for someone who is not a customer would look like an empty database.
+  it('shows the empty message when the search matches nobody', async () => {
+    getCustomerMetrics.mockResolvedValue([buyer, browser]);
+    const user = userEvent.setup();
+    render(<UsersDashboard />);
+
+    await screen.findByText('buyer@example.com');
+    await user.type(screen.getByRole('searchbox'), 'nobody-here');
+
+    expect(screen.getByText('No users found')).toBeInTheDocument();
+    expect(screen.getByText('0 of 2 customers')).toBeInTheDocument();
+  });
 });
