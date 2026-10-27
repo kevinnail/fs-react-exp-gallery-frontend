@@ -61,17 +61,22 @@ export const CUSTOMER_FILTERS = [
   },
 ];
 
-export const filterCustomers = (customers, filterKey, joinedBefore = '') => {
+const searchTextOf = (customer) =>
+  [customer.firstName, customer.lastName, customer.email].filter(Boolean).join(' ').toLowerCase();
+
+export const filterCustomers = (customers, filterKey, joinedBefore = '', searchTerm = '') => {
   const filter = CUSTOMER_FILTERS.find((candidate) => candidate.key === filterKey);
   if (!filter) throw new Error(`Unknown customer filter: ${filterKey}`);
 
   const joinedBeforeTime = joinedBefore ? new Date(`${joinedBefore}T00:00:00`).getTime() : null;
+  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
 
   return customers.filter(
     (customer) =>
       filter.matches(customer) &&
       (joinedBeforeTime === null ||
-        (customer.joinedAt !== null && timeOf(customer.joinedAt) < joinedBeforeTime))
+        (customer.joinedAt !== null && timeOf(customer.joinedAt) < joinedBeforeTime)) &&
+      searchTextOf(customer).includes(normalizedSearchTerm)
   );
 };
 
