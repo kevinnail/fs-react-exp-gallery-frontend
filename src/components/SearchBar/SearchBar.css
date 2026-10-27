@@ -186,6 +186,11 @@
   white-space: nowrap;
 }
 
+.search-result-was-price {
+  color: var(--color-alert);
+  text-decoration: line-through;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .search-panel {
     animation: none;
