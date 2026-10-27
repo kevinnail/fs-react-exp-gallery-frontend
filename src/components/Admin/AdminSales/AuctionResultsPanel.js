@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useMediaQuery } from '@mui/system';
 import { getBids } from '../../../services/fetch-bids.js';
 import {
   getAdminAuctions,
@@ -12,6 +13,7 @@ import websocketService from '../../../services/websocket.js';
 import { useAuctionEventsStore } from '../../../stores/auctionEventsStore.js';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../Loading/Loading.js';
+import Sheet from '../../Sheet/Sheet.js';
 import { getAllUsers } from '../../../services/fetch-utils.js';
 import SaleStages from './SaleStages.js';
 import { countCompletedStages, hasRealTracking } from './saleStatus.js';
@@ -47,7 +49,7 @@ const findWinnerAccount = (users, winner) => {
 const buildTrackingUrl = (trackingNumber) =>
   `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(trackingNumber)}`;
 
-const AuctionResultsPanel = () => {
+const AuctionResultsPanel = ({ onUnpaidCountChange }) => {
   const [auctions, setAuctions] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +57,7 @@ const AuctionResultsPanel = () => {
   const [trackingInput, setTrackingInput] = useState('');
 
   const navigate = useNavigate();
-  const auctionPanelRef = useRef(null);
+  const isWideScreen = useMediaQuery('(min-width: 1100px)', { noSsr: true });
 
   const lastBidUpdate = useAuctionEventsStore((state) => state.lastBidUpdate);
 
@@ -195,13 +197,6 @@ const AuctionResultsPanel = () => {
   const currentWinnerEmail =
     currentWinner?.email || currentWinnerAccount?.email || currentWinnerAccount?.user_email || '';
 
-  const revealDetailPanel = () => {
-    if (window.matchMedia('(min-width: 1100px)').matches) return;
-    requestAnimationFrame(() => {
-      auctionPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  };
-
   const handleSelectAuction = (auctionId) => {
     setSelectedAuctionId(auctionId);
 
@@ -209,8 +204,6 @@ const AuctionResultsPanel = () => {
     if (auction) {
       setTrackingInput(hasRealTracking(auction.trackingNumber) ? auction.trackingNumber : '');
     }
-
-    revealDetailPanel();
   };
 
   const copyAddressText = () => {
@@ -339,6 +332,12 @@ const AuctionResultsPanel = () => {
     }
   };
 
+  const awaitingPayment = auctions.filter((auction) => !auction.isPaid).length;
+
+  useEffect(() => {
+    onUnpaidCountChange(awaitingPayment);
+  }, [awaitingPayment, onUnpaidCountChange]);
+
   if (loading) {
     return <Loading />;
   }
@@ -347,7 +346,6 @@ const AuctionResultsPanel = () => {
     .filter((auction) => auction.winner && !auction.isPaid)
     .reduce((sum, auction) => sum + (auction.topBid?.bidAmount || 0), 0);
 
-  const awaitingPayment = auctions.filter((auction) => !auction.isPaid).length;
   const readyToShip = auctions.filter(
     (auction) => auction.isPaid && !hasRealTracking(auction.trackingNumber)
   ).length;
@@ -375,6 +373,152 @@ const AuctionResultsPanel = () => {
         {address.city}, {address.state} {address.postalCode}
       </div>
       <div>{address.countryCode || 'US'}</div>
+    </div>
+  );
+
+  const detailPanel = !currentAuction ? (
+    <div className="admin-sales-detail-panel">
+      <div className="admin-sales-detail-panel-header">
+        <h2 className="admin-sales-detail-panel-title">Auction detail</h2>
+      </div>
+      <p className="admin-sales-placeholder-message">
+        Pick an auction to see the winner, the address, and where it is in the pipeline.
+      </p>
+    </div>
+  ) : (
+    <div className="admin-sales-detail-panel">
+      {isWideScreen && (
+        <div className="admin-sales-detail-panel-header">
+          <h2 className="admin-sales-detail-panel-title">Auction detail</h2>
+          <button
+            type="button"
+            className="admin-sales-button"
+            onClick={() => setSelectedAuctionId(null)}
+          >
+            Close
+          </button>
+        </div>
+      )}
+
+      <div className="admin-sales-detail-panel-content">
+        {currentAuctionClosed ? (
+          <SaleStages completedCount={currentAuctionStages} variant="detail" />
+        ) : (
+          <p className="auction-results-live-label auction-results-live-label--detail">
+            Live bidding
+          </p>
+        )}
+
+        <div className="admin-sales-detail-piece">
+          {currentAuction.imageUrls?.[0] ? (
+            <img
+              src={currentAuction.imageUrls[0]}
+              alt=""
+              className="admin-sales-detail-piece-image"
+            />
+          ) : (
+            <span className="admin-sales-detail-piece-image" aria-hidden="true" />
+          )}
+          <div className="admin-sales-detail-piece-details">
+            <h3 className="admin-sales-detail-piece-title">{currentAuction.title}</h3>
+            <span className="admin-sales-detail-piece-price">
+              {currentAuction.topBid ? formatMoney(currentAuction.topBid.bidAmount) : 'No bids'}
+            </span>
+          </div>
+        </div>
+
+        <div className="admin-sales-detail-actions">
+          <button
+            type="button"
+            className="admin-sales-button admin-sales-button--wide"
+            onClick={() => navigate(`/auctions/${currentAuction.id}`)}
+          >
+            View auction
+          </button>
+        </div>
+
+        {currentAuctionClosed && (
+          <div className="admin-sales-detail-actions">
+            <button
+              type="button"
+              className={`admin-sales-button admin-sales-button--wide${
+                currentAuction.isPaid ? '' : ' admin-sales-button--primary'
+              }`}
+              onClick={handleTogglePaid}
+            >
+              {currentAuction.isPaid ? 'Mark unpaid' : 'Mark paid'}
+            </button>
+          </div>
+        )}
+
+        <dl className="admin-sales-detail-facts">
+          <div className="admin-sales-detail-fact">
+            <dt className="admin-sales-detail-fact-label">
+              {currentAuctionClosed ? 'Winner' : 'High bidder'}
+            </dt>
+            <dd className="admin-sales-detail-fact-value">{currentWinnerName || 'No bids'}</dd>
+          </div>
+
+          <div className="admin-sales-detail-fact">
+            <dt className="admin-sales-detail-fact-label">Email</dt>
+            <dd className="admin-sales-detail-fact-value">
+              {currentWinnerEmail || (
+                <span className="admin-sales-detail-fact-value--missing">No email on file</span>
+              )}
+            </dd>
+          </div>
+
+          <div className="admin-sales-detail-fact">
+            <dt className="admin-sales-detail-fact-label">Ship to</dt>
+            <dd className="admin-sales-detail-fact-value">
+              {currentAddress ? (
+                <div className="admin-sales-detail-address">
+                  {renderAddressLines(currentAddress)}
+                  <button type="button" className="admin-sales-button" onClick={copyAddressText}>
+                    Copy address
+                  </button>
+                </div>
+              ) : (
+                <span className="admin-sales-detail-fact-value--missing">
+                  No shipping address on file
+                </span>
+              )}
+            </dd>
+          </div>
+        </dl>
+
+        {hasRealTracking(currentAuction.trackingNumber) && (
+          <a
+            className="admin-sales-tracking-link"
+            href={buildTrackingUrl(currentAuction.trackingNumber)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img alt="" className="admin-sales-tracking-carrier-logo" src="../../../usps.png" />
+            <span className="admin-sales-tracking-number">{currentAuction.trackingNumber}</span>
+          </a>
+        )}
+
+        <div className="form-field admin-sales-tracking-field">
+          <label className="form-field-label" htmlFor="auction-results-tracking-number">
+            Tracking number
+          </label>
+          <input
+            id="auction-results-tracking-number"
+            type="text"
+            className="form-input"
+            value={trackingInput}
+            onChange={(event) => setTrackingInput(event.target.value)}
+          />
+          <button
+            type="button"
+            className="admin-sales-save-tracking-button"
+            onClick={handleSaveTracking}
+          >
+            Save tracking
+          </button>
+        </div>
+      </div>
     </div>
   );
 
@@ -455,168 +599,18 @@ const AuctionResultsPanel = () => {
           )}
         </main>
 
-        <aside className="admin-sales-detail-column" ref={auctionPanelRef}>
-          {!currentAuction ? (
-            <div className="admin-sales-detail-panel">
-              <div className="admin-sales-detail-panel-header">
-                <h2 className="admin-sales-detail-panel-title">Auction detail</h2>
-              </div>
-              <p className="admin-sales-placeholder-message">
-                Pick an auction to see the winner, the address, and where it is in the pipeline.
-              </p>
-            </div>
-          ) : (
-            <div className="admin-sales-detail-panel">
-              <div className="admin-sales-detail-panel-header">
-                <h2 className="admin-sales-detail-panel-title">Auction detail</h2>
-                <button
-                  type="button"
-                  className="admin-sales-button"
-                  onClick={() => setSelectedAuctionId(null)}
-                >
-                  Close
-                </button>
-              </div>
-
-              <div className="admin-sales-detail-panel-content">
-                {currentAuctionClosed ? (
-                  <SaleStages completedCount={currentAuctionStages} variant="detail" />
-                ) : (
-                  <p className="auction-results-live-label auction-results-live-label--detail">
-                    Live bidding
-                  </p>
-                )}
-
-                <div className="admin-sales-detail-piece">
-                  {currentAuction.imageUrls?.[0] ? (
-                    <img
-                      src={currentAuction.imageUrls[0]}
-                      alt=""
-                      className="admin-sales-detail-piece-image"
-                    />
-                  ) : (
-                    <span className="admin-sales-detail-piece-image" aria-hidden="true" />
-                  )}
-                  <div className="admin-sales-detail-piece-details">
-                    <h3 className="admin-sales-detail-piece-title">{currentAuction.title}</h3>
-                    <span className="admin-sales-detail-piece-price">
-                      {currentAuction.topBid
-                        ? formatMoney(currentAuction.topBid.bidAmount)
-                        : 'No bids'}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="admin-sales-detail-actions">
-                  <button
-                    type="button"
-                    className="admin-sales-button admin-sales-button--wide"
-                    onClick={() => navigate(`/auctions/${currentAuction.id}`)}
-                  >
-                    View auction
-                  </button>
-                </div>
-
-                {currentAuctionClosed && (
-                  <div className="admin-sales-detail-actions">
-                    <button
-                      type="button"
-                      className={`admin-sales-button admin-sales-button--wide${
-                        currentAuction.isPaid ? '' : ' admin-sales-button--primary'
-                      }`}
-                      onClick={handleTogglePaid}
-                    >
-                      {currentAuction.isPaid ? 'Mark unpaid' : 'Mark paid'}
-                    </button>
-                  </div>
-                )}
-
-                <dl className="admin-sales-detail-facts">
-                  <div className="admin-sales-detail-fact">
-                    <dt className="admin-sales-detail-fact-label">
-                      {currentAuctionClosed ? 'Winner' : 'High bidder'}
-                    </dt>
-                    <dd className="admin-sales-detail-fact-value">
-                      {currentWinnerName || 'No bids'}
-                    </dd>
-                  </div>
-
-                  <div className="admin-sales-detail-fact">
-                    <dt className="admin-sales-detail-fact-label">Email</dt>
-                    <dd className="admin-sales-detail-fact-value">
-                      {currentWinnerEmail || (
-                        <span className="admin-sales-detail-fact-value--missing">
-                          No email on file
-                        </span>
-                      )}
-                    </dd>
-                  </div>
-
-                  <div className="admin-sales-detail-fact">
-                    <dt className="admin-sales-detail-fact-label">Ship to</dt>
-                    <dd className="admin-sales-detail-fact-value">
-                      {currentAddress ? (
-                        <div className="admin-sales-detail-address">
-                          {renderAddressLines(currentAddress)}
-                          <button
-                            type="button"
-                            className="admin-sales-button"
-                            onClick={copyAddressText}
-                          >
-                            Copy address
-                          </button>
-                        </div>
-                      ) : (
-                        <span className="admin-sales-detail-fact-value--missing">
-                          No shipping address on file
-                        </span>
-                      )}
-                    </dd>
-                  </div>
-                </dl>
-
-                {hasRealTracking(currentAuction.trackingNumber) && (
-                  <a
-                    className="admin-sales-tracking-link"
-                    href={buildTrackingUrl(currentAuction.trackingNumber)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img
-                      alt=""
-                      className="admin-sales-tracking-carrier-logo"
-                      src="../../../usps.png"
-                    />
-                    <span className="admin-sales-tracking-number">
-                      {currentAuction.trackingNumber}
-                    </span>
-                  </a>
-                )}
-
-                <div className="form-field admin-sales-tracking-field">
-                  <label className="form-field-label" htmlFor="auction-results-tracking-number">
-                    Tracking number
-                  </label>
-                  <input
-                    id="auction-results-tracking-number"
-                    type="text"
-                    className="form-input"
-                    value={trackingInput}
-                    onChange={(event) => setTrackingInput(event.target.value)}
-                  />
-                  <button
-                    type="button"
-                    className="admin-sales-save-tracking-button"
-                    onClick={handleSaveTracking}
-                  >
-                    Save tracking
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </aside>
+        {isWideScreen && <aside className="admin-sales-detail-column">{detailPanel}</aside>}
       </div>
+
+      {!isWideScreen && (
+        <Sheet
+          title="Auction detail"
+          isOpen={Boolean(currentAuction)}
+          onClose={() => setSelectedAuctionId(null)}
+        >
+          {detailPanel}
+        </Sheet>
+      )}
     </>
   );
 };
