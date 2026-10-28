@@ -3,13 +3,26 @@ import './AdminSales.css';
 import GallerySalesPanel from './GallerySalesPanel.js';
 import AuctionResultsPanel from './AuctionResultsPanel.js';
 
-const TABS = [
-  { id: 'gallery', label: 'Gallery' },
-  { id: 'auctions', label: 'Auction' },
-];
-
 const AdminSales = () => {
   const [activeTab, setActiveTab] = useState('gallery');
+  const [galleryUnpaidCount, setGalleryUnpaidCount] = useState(0);
+  const [auctionUnpaidCount, setAuctionUnpaidCount] = useState(0);
+
+  // Both panels stay mounted so each tab's unpaid count is known while the other is showing.
+  const tabs = [
+    {
+      id: 'gallery',
+      label: 'Gallery',
+      unpaidCount: galleryUnpaidCount,
+      panel: <GallerySalesPanel onUnpaidCountChange={setGalleryUnpaidCount} />,
+    },
+    {
+      id: 'auctions',
+      label: 'Auction',
+      unpaidCount: auctionUnpaidCount,
+      panel: <AuctionResultsPanel onUnpaidCountChange={setAuctionUnpaidCount} />,
+    },
+  ];
 
   return (
     <div className="admin-sales">
@@ -19,7 +32,7 @@ const AdminSales = () => {
       </div>
 
       <div className="admin-sales-tabs" role="tablist" aria-label="Sales source">
-        {TABS.map((tab) => (
+        {tabs.map((tab) => (
           <button
             key={tab.id}
             type="button"
@@ -31,22 +44,27 @@ const AdminSales = () => {
             onClick={() => setActiveTab(tab.id)}
           >
             {tab.label}
+            {tab.unpaidCount > 0 && (
+              <span className="admin-sales-tab-unpaid-count">
+                {tab.unpaidCount}
+                <span className="visually-hidden"> unpaid</span>
+              </span>
+            )}
           </button>
         ))}
       </div>
 
-      {TABS.map((tab) =>
-        activeTab === tab.id ? (
-          <div
-            key={tab.id}
-            role="tabpanel"
-            id={`admin-sales-tab-panel-${tab.id}`}
-            aria-labelledby={`admin-sales-tab-${tab.id}`}
-          >
-            {tab.id === 'gallery' ? <GallerySalesPanel /> : <AuctionResultsPanel />}
-          </div>
-        ) : null
-      )}
+      {tabs.map((tab) => (
+        <div
+          key={tab.id}
+          role="tabpanel"
+          id={`admin-sales-tab-panel-${tab.id}`}
+          aria-labelledby={`admin-sales-tab-${tab.id}`}
+          hidden={activeTab !== tab.id}
+        >
+          {tab.panel}
+        </div>
+      ))}
     </div>
   );
 };

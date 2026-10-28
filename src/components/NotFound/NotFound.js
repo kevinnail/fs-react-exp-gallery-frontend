@@ -21,7 +21,7 @@ const NotFound = () => {
       <div className="not-found-layout">
         <div className="not-found-message">
           <p className="not-found-status-code">404</p>
-          <h1 className="not-found-title">This one got away.</h1>
+          <h1 className="not-found-title">This is a hurting scene</h1>
           <p className="not-found-description">
             The page you asked for isn&apos;t here. It may have sold, been taken down, or the link
             may have a typo in it. The work below is still very much around.
@@ -33,6 +33,9 @@ const NotFound = () => {
             <Link className="button-link button-link--secondary" to="/auctions">
               Live auctions
             </Link>
+            <a className="button-link button-link--secondary" href="https://kevinnail.com/blog">
+              Blog
+            </a>
             <Link className="button-link button-link--secondary" to="/about-me">
               About me
             </Link>

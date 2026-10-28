@@ -169,23 +169,23 @@ export default function LiveAuctions() {
       const isFocused = rail.contains(document.activeElement);
       const isPaused = isTouching || isHovered || isFocused || timestamp < resumeAt;
 
+      // Never write scrollLeft while paused: a fast swipe keeps coasting after the
+      // finger lifts, and a write during that coast blanks the rail on phones.
       if (isPaused) {
         position = rail.scrollLeft;
       } else {
         position += PAN_PIXELS_PER_SECOND * elapsedSeconds;
-      }
 
-      if (!isTouching) {
         const setWidth = lotSet.getBoundingClientRect().width;
         if (position >= setWidth) position -= setWidth;
         else if (position <= 0) position += setWidth;
-      }
 
-      const nextScrollLeft = Math.round(position);
-      if (nextScrollLeft !== rail.scrollLeft) {
-        rail.scrollLeft = nextScrollLeft;
+        const nextScrollLeft = Math.round(position);
+        if (nextScrollLeft !== Math.round(rail.scrollLeft)) {
+          rail.scrollLeft = nextScrollLeft;
+        }
+        lastWrittenScrollLeft = rail.scrollLeft;
       }
-      lastWrittenScrollLeft = rail.scrollLeft;
 
       animationFrameId = requestAnimationFrame(step);
     };

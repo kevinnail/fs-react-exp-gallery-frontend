@@ -1,7 +1,9 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useMediaQuery } from '@mui/system';
 import './AdminSales.css';
+import Sheet from '../../Sheet/Sheet.js';
 import {
   getAllSales,
   createSale,
@@ -40,7 +42,7 @@ const getFullName = (user) => {
   return `${profile.firstName || 'Unknown'} ${profile.lastName || ''}`.trim();
 };
 
-const GallerySalesPanel = () => {
+const GallerySalesPanel = ({ onUnpaidCountChange }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [sales, setSales] = useState([]);
@@ -55,9 +57,8 @@ const GallerySalesPanel = () => {
   const [prefillApplied, setPrefillApplied] = useState(false);
 
   const prefillUserResolved = useRef(false);
-  const prefillRevealed = useRef(false);
-  const salesPanelRef = useRef(null);
   const { posts } = usePosts();
+  const isWideScreen = useMediaQuery('(min-width: 1100px)', { noSsr: true });
 
   // Modal state for finding post
   const [showPostModal, setShowPostModal] = useState(false);
@@ -139,13 +140,6 @@ const GallerySalesPanel = () => {
     }
   };
 
-  const revealDetailPanel = () => {
-    if (window.matchMedia('(min-width: 1100px)').matches) return;
-    requestAnimationFrame(() => {
-      salesPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  };
-
   const handleSelectSale = (saleId) => {
     setIsCreatingSale(false);
     setSelectedSale(saleId);
@@ -154,8 +148,11 @@ const GallerySalesPanel = () => {
     if (sale) {
       setTrackingInput(sale.tracking_number || '');
     }
+  };
 
-    revealDetailPanel();
+  const closeDetail = () => {
+    setIsCreatingSale(false);
+    setSelectedSale(null);
   };
 
   // handle saving tracking number
@@ -469,7 +466,6 @@ const GallerySalesPanel = () => {
     setSelectedUser(null);
     setSearchTerm('');
     setDebouncedTerm('');
-    revealDetailPanel();
   };
 
   // the one new refactor line
@@ -509,13 +505,6 @@ const GallerySalesPanel = () => {
   }, [location.state, prefillApplied]);
 
   useEffect(() => {
-    if (!prefillApplied || loading || prefillRevealed.current) return;
-    prefillRevealed.current = true;
-    revealDetailPanel();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prefillApplied, loading]);
-
-  useEffect(() => {
     const prefillUser = location.state?.prefill?.user;
     if (!prefillUser || prefillUserResolved.current || users.length === 0) return;
     if (!prefillUser.id && !prefillUser.email) return;
@@ -548,6 +537,10 @@ const GallerySalesPanel = () => {
     },
     { awaitingPayment: 0, readyToShip: 0, gross: 0, pieces: 0 }
   );
+
+  useEffect(() => {
+    onUnpaidCountChange(stageCounts.awaitingPayment);
+  }, [stageCounts.awaitingPayment, onUnpaidCountChange]);
 
   const statTiles = [
     { label: 'Orders', value: sales.length },
@@ -637,6 +630,370 @@ const GallerySalesPanel = () => {
       <div>{address.countryCode || 'US'}</div>
     </div>
   );
+
+  const renderDetailPanel = () => {
+    if (isCreatingSale) {
+      return (
+        <div className="admin-sales-detail-panel">
+          {isWideScreen && (
+            <div className="admin-sales-detail-panel-header">
+              <h2 className="admin-sales-detail-panel-title">New sale</h2>
+              <button
+                type="button"
+                className="admin-sales-button"
+                onClick={() => setIsCreatingSale(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+
+          <div className="admin-sales-detail-panel-content">
+            <div className="form-field admin-sales-customer-search">
+              <label className="form-field-label" htmlFor="gallery-sales-customer-search">
+                Find customer
+              </label>
+              <input
+                id="gallery-sales-customer-search"
+                type="text"
+                className="form-input"
+                placeholder="Name or email"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setShowUserResults(true);
+                }}
+                onFocus={() => setShowUserResults(true)}
+              />
+              {showUserResults && debouncedTerm && (
+                <div className="admin-sales-customer-results">
+                  {filteredUsers.length === 0 ? (
+                    <p className="admin-sales-customer-results-empty-message">
+                      No customers match that.
+                    </p>
+                  ) : (
+                    filteredUsers.map((user) => (
+                      <button
+                        key={user.id}
+                        type="button"
+                        className="admin-sales-customer-result"
+                        onClick={() => handleSelectUser(user)}
+                      >
+                        {renderUserIdentity(user)}
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+
+            {selectedUser && (
+              <div className="admin-sales-selected-customer">
+                <div className="admin-sales-customer-details">
+                  {renderUserIdentity(selectedUser)}
+                </div>
+
+                {selectedUser.address ? (
+                  <div className="admin-sales-detail-address">
+                    {renderAddressLines(selectedUser.address)}
+                    <button
+                      type="button"
+                      className="admin-sales-button"
+                      onClick={handleCopyAddress}
+                    >
+                      Copy address
+                    </button>
+                  </div>
+                ) : (
+                  <p className="admin-sales-detail-fact-value admin-sales-detail-fact-value--missing">
+                    No shipping address on file
+                  </p>
+                )}
+              </div>
+            )}
+
+            <div className="form-field">
+              <label className="form-field-label" htmlFor="gallery-sales-buyer-email">
+                Buyer email
+              </label>
+              <input
+                id="gallery-sales-buyer-email"
+                type="text"
+                className="form-input"
+                value={newBuyerEmail}
+                onChange={(e) => setNewBuyerEmail(e.target.value)}
+              />
+              <button type="button" className="admin-sales-button" onClick={handleSearchByEmail}>
+                Find user by email
+              </button>
+            </div>
+
+            <div className="form-field">
+              <span className="form-field-label">Pieces</span>
+
+              {newItems.length === 0 ? (
+                <p className="admin-sales-detail-fact-value admin-sales-detail-fact-value--missing">
+                  No pieces on this sale yet.
+                </p>
+              ) : (
+                <ul className="admin-sales-new-sale-items">
+                  {newItems.map((item) => (
+                    <li key={item.postId} className="admin-sales-new-sale-item">
+                      <span className="admin-sales-new-sale-item-thumbnail">
+                        <img src={item.imageUrl} alt="" />
+                      </span>
+
+                      <span className="admin-sales-new-sale-item-details">
+                        <span className="admin-sales-new-sale-item-title">{item.title}</span>
+                        <span className="admin-sales-new-sale-item-id">ID {item.postId}</span>
+                      </span>
+
+                      <span className="form-money-input-wrapper admin-sales-new-sale-item-price-field">
+                        <input
+                          type="number"
+                          className="form-input"
+                          aria-label={`Price for ${item.title}`}
+                          value={item.price}
+                          onChange={(event) =>
+                            handleItemPriceChange(item.postId, event.target.value)
+                          }
+                        />
+                      </span>
+
+                      <button
+                        type="button"
+                        className="admin-sales-new-sale-item-remove-button"
+                        aria-label={`Remove ${item.title}`}
+                        onClick={() => handleRemoveItem(item.postId)}
+                      >
+                        ✕
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <button
+                type="button"
+                className="admin-sales-button"
+                onClick={() => setShowPostModal(true)}
+              >
+                Add piece
+              </button>
+            </div>
+
+            <div className="form-field">
+              <label className="form-field-label" htmlFor="gallery-sales-shipping">
+                Shipping
+              </label>
+              <span className="form-money-input-wrapper">
+                <input
+                  id="gallery-sales-shipping"
+                  type="number"
+                  className="form-input"
+                  value={newShipping}
+                  onChange={(event) => {
+                    setShippingEdited(true);
+                    setNewShipping(event.target.value);
+                  }}
+                />
+              </span>
+            </div>
+
+            <div className="form-field">
+              <label className="form-field-label" htmlFor="gallery-sales-new-sale-tracking-number">
+                Tracking number
+              </label>
+              <input
+                id="gallery-sales-new-sale-tracking-number"
+                type="text"
+                className="form-input"
+                value={newTracking}
+                onChange={(e) => setNewTracking(e.target.value)}
+              />
+            </div>
+
+            {renderOrderTotals(newItemsSubtotal, newShippingAmount)}
+
+            <div className="admin-sales-detail-actions">
+              <button
+                type="button"
+                className="admin-sales-button admin-sales-button--primary admin-sales-button--wide"
+                onClick={handleCreateSale}
+              >
+                Save sale
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (!currentSale) {
+      return (
+        <div className="admin-sales-detail-panel">
+          <div className="admin-sales-detail-panel-header">
+            <h2 className="admin-sales-detail-panel-title">Sale detail</h2>
+          </div>
+          <p className="admin-sales-placeholder-message">
+            Pick a sale to see the buyer, the address, and where it is in the pipeline.
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="admin-sales-detail-panel">
+        {isWideScreen && (
+          <div className="admin-sales-detail-panel-header">
+            <h2 className="admin-sales-detail-panel-title">Sale detail</h2>
+            <button
+              type="button"
+              className="admin-sales-button"
+              onClick={() => setSelectedSale(null)}
+            >
+              Close
+            </button>
+          </div>
+        )}
+
+        <div className="admin-sales-detail-panel-content">
+          <SaleStages completedCount={currentSaleStages} variant="detail" />
+
+          <ul className="admin-sales-detail-pieces">
+            {getOrderItems(currentSale).map((item) => (
+              <li key={item.id} className="admin-sales-detail-piece">
+                <img src={item.post_image_url} alt="" className="admin-sales-detail-piece-image" />
+                <div className="admin-sales-detail-piece-details">
+                  <h3 className="admin-sales-detail-piece-title">{item.post_title}</h3>
+                  <span className="admin-sales-detail-piece-price">{formatMoney(item.price)}</span>
+                  <div className="admin-sales-detail-actions">
+                    <button
+                      type="button"
+                      className="admin-sales-button"
+                      onClick={() => navigate(`/${item.post_id}`)}
+                    >
+                      View post
+                    </button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          {renderOrderTotals(
+            getOrderItemsSubtotal(currentSale),
+            Number(currentSale.shipping_cost) || 0
+          )}
+
+          <div className="admin-sales-detail-actions">
+            <button
+              type="button"
+              className={`admin-sales-button admin-sales-button--wide${
+                currentSale.is_paid ? '' : ' admin-sales-button--primary'
+              }`}
+              onClick={handleTogglePaid}
+            >
+              {currentSale.is_paid ? 'Mark unpaid' : 'Mark paid'}
+            </button>
+          </div>
+
+          <dl className="admin-sales-detail-facts">
+            <div className="admin-sales-detail-fact">
+              <dt className="admin-sales-detail-fact-label">Buyer</dt>
+              <dd className="admin-sales-detail-fact-value">
+                {currentSale.buyer_first_name} {currentSale.buyer_last_name?.slice(0, 1)}.
+              </dd>
+            </div>
+
+            <div className="admin-sales-detail-fact">
+              <dt className="admin-sales-detail-fact-label">Email</dt>
+              <dd className="admin-sales-detail-fact-value">{currentSale.buyer_email}</dd>
+            </div>
+
+            <div className="admin-sales-detail-fact">
+              <dt className="admin-sales-detail-fact-label">Ship to</dt>
+              <dd className="admin-sales-detail-fact-value">
+                {currentSaleAddress ? (
+                  <div className="admin-sales-detail-address">
+                    {renderAddressLines(currentSaleAddress)}
+                    <button
+                      type="button"
+                      className="admin-sales-button"
+                      onClick={handleCopyCurrentSaleAddress}
+                    >
+                      Copy address
+                    </button>
+                  </div>
+                ) : (
+                  <span className="admin-sales-detail-fact-value--missing">
+                    No shipping address on file
+                  </span>
+                )}
+              </dd>
+            </div>
+          </dl>
+
+          {hasRealTracking(currentSale.tracking_number) && (
+            <a
+              className="admin-sales-tracking-link"
+              href={buildTrackingUrl(currentSale.tracking_number)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img alt="" className="admin-sales-tracking-carrier-logo" src="../../../usps.png" />
+              <span className="admin-sales-tracking-number">{currentSale.tracking_number}</span>
+            </a>
+          )}
+
+          <div className="form-field admin-sales-tracking-field">
+            <label className="form-field-label" htmlFor="gallery-sales-tracking-number">
+              Tracking number
+            </label>
+            <input
+              id="gallery-sales-tracking-number"
+              type="text"
+              className="form-input"
+              value={trackingInput}
+              onChange={(e) => setTrackingInput(e.target.value)}
+            />
+            <button
+              type="button"
+              className="admin-sales-save-tracking-button"
+              onClick={handleSaveTracking}
+            >
+              Save tracking
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const pieceOptions =
+    posts && posts.length > 0 ? (
+      <div className="admin-sales-piece-finder">
+        {posts.map((post) => (
+          <button
+            key={post.id}
+            type="button"
+            className="admin-sales-piece-option"
+            onClick={() => handleSelectPost(post)}
+          >
+            <img src={post.image_url || post.imageUrl} alt="" />
+            <span className="admin-sales-piece-option-details">
+              <span className="admin-sales-piece-option-title">{post.title}</span>
+              <span className="admin-sales-piece-option-secondary-text">ID {post.id}</span>
+              <span className="admin-sales-piece-option-secondary-text">
+                {formatMoney(getPostPrice(post))}
+              </span>
+            </span>
+          </button>
+        ))}
+      </div>
+    ) : (
+      <p className="admin-sales-placeholder-message">No pieces to choose from.</p>
+    );
 
   return (
     <>
@@ -730,368 +1087,20 @@ const GallerySalesPanel = () => {
           })()}
         </main>
 
-        <aside className="admin-sales-detail-column" ref={salesPanelRef}>
-          {(() => {
-            if (isCreatingSale) {
-              return (
-                <div className="admin-sales-detail-panel">
-                  <div className="admin-sales-detail-panel-header">
-                    <h2 className="admin-sales-detail-panel-title">New sale</h2>
-                    <button
-                      type="button"
-                      className="admin-sales-button"
-                      onClick={() => setIsCreatingSale(false)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-
-                  <div className="admin-sales-detail-panel-content">
-                    <div className="form-field admin-sales-customer-search">
-                      <label className="form-field-label" htmlFor="gallery-sales-customer-search">
-                        Find customer
-                      </label>
-                      <input
-                        id="gallery-sales-customer-search"
-                        type="text"
-                        className="form-input"
-                        placeholder="Name or email"
-                        value={searchTerm}
-                        onChange={(e) => {
-                          setSearchTerm(e.target.value);
-                          setShowUserResults(true);
-                        }}
-                        onFocus={() => setShowUserResults(true)}
-                      />
-                      {showUserResults && debouncedTerm && (
-                        <div className="admin-sales-customer-results">
-                          {filteredUsers.length === 0 ? (
-                            <p className="admin-sales-customer-results-empty-message">
-                              No customers match that.
-                            </p>
-                          ) : (
-                            filteredUsers.map((user) => (
-                              <button
-                                key={user.id}
-                                type="button"
-                                className="admin-sales-customer-result"
-                                onClick={() => handleSelectUser(user)}
-                              >
-                                {renderUserIdentity(user)}
-                              </button>
-                            ))
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    {selectedUser && (
-                      <div className="admin-sales-selected-customer">
-                        <div className="admin-sales-customer-details">
-                          {renderUserIdentity(selectedUser)}
-                        </div>
-
-                        {selectedUser.address ? (
-                          <div className="admin-sales-detail-address">
-                            {renderAddressLines(selectedUser.address)}
-                            <button
-                              type="button"
-                              className="admin-sales-button"
-                              onClick={handleCopyAddress}
-                            >
-                              Copy address
-                            </button>
-                          </div>
-                        ) : (
-                          <p className="admin-sales-detail-fact-value admin-sales-detail-fact-value--missing">
-                            No shipping address on file
-                          </p>
-                        )}
-                      </div>
-                    )}
-
-                    <div className="form-field">
-                      <label className="form-field-label" htmlFor="gallery-sales-buyer-email">
-                        Buyer email
-                      </label>
-                      <input
-                        id="gallery-sales-buyer-email"
-                        type="text"
-                        className="form-input"
-                        value={newBuyerEmail}
-                        onChange={(e) => setNewBuyerEmail(e.target.value)}
-                      />
-                      <button
-                        type="button"
-                        className="admin-sales-button"
-                        onClick={handleSearchByEmail}
-                      >
-                        Find user by email
-                      </button>
-                    </div>
-
-                    <div className="form-field">
-                      <span className="form-field-label">Pieces</span>
-
-                      {newItems.length === 0 ? (
-                        <p className="admin-sales-detail-fact-value admin-sales-detail-fact-value--missing">
-                          No pieces on this sale yet.
-                        </p>
-                      ) : (
-                        <ul className="admin-sales-new-sale-items">
-                          {newItems.map((item) => (
-                            <li key={item.postId} className="admin-sales-new-sale-item">
-                              <span className="admin-sales-new-sale-item-thumbnail">
-                                <img src={item.imageUrl} alt="" />
-                              </span>
-
-                              <span className="admin-sales-new-sale-item-details">
-                                <span className="admin-sales-new-sale-item-title">
-                                  {item.title}
-                                </span>
-                                <span className="admin-sales-new-sale-item-id">
-                                  ID {item.postId}
-                                </span>
-                              </span>
-
-                              <span className="form-money-input-wrapper admin-sales-new-sale-item-price-field">
-                                <input
-                                  type="number"
-                                  className="form-input"
-                                  aria-label={`Price for ${item.title}`}
-                                  value={item.price}
-                                  onChange={(event) =>
-                                    handleItemPriceChange(item.postId, event.target.value)
-                                  }
-                                />
-                              </span>
-
-                              <button
-                                type="button"
-                                className="admin-sales-new-sale-item-remove-button"
-                                aria-label={`Remove ${item.title}`}
-                                onClick={() => handleRemoveItem(item.postId)}
-                              >
-                                ✕
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-
-                      <button
-                        type="button"
-                        className="admin-sales-button"
-                        onClick={() => setShowPostModal(true)}
-                      >
-                        Add piece
-                      </button>
-                    </div>
-
-                    <div className="form-field">
-                      <label className="form-field-label" htmlFor="gallery-sales-shipping">
-                        Shipping
-                      </label>
-                      <span className="form-money-input-wrapper">
-                        <input
-                          id="gallery-sales-shipping"
-                          type="number"
-                          className="form-input"
-                          value={newShipping}
-                          onChange={(event) => {
-                            setShippingEdited(true);
-                            setNewShipping(event.target.value);
-                          }}
-                        />
-                      </span>
-                    </div>
-
-                    <div className="form-field">
-                      <label
-                        className="form-field-label"
-                        htmlFor="gallery-sales-new-sale-tracking-number"
-                      >
-                        Tracking number
-                      </label>
-                      <input
-                        id="gallery-sales-new-sale-tracking-number"
-                        type="text"
-                        className="form-input"
-                        value={newTracking}
-                        onChange={(e) => setNewTracking(e.target.value)}
-                      />
-                    </div>
-
-                    {renderOrderTotals(newItemsSubtotal, newShippingAmount)}
-
-                    <div className="admin-sales-detail-actions">
-                      <button
-                        type="button"
-                        className="admin-sales-button admin-sales-button--primary admin-sales-button--wide"
-                        onClick={handleCreateSale}
-                      >
-                        Save sale
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-
-            if (!currentSale) {
-              return (
-                <div className="admin-sales-detail-panel">
-                  <div className="admin-sales-detail-panel-header">
-                    <h2 className="admin-sales-detail-panel-title">Sale detail</h2>
-                  </div>
-                  <p className="admin-sales-placeholder-message">
-                    Pick a sale to see the buyer, the address, and where it is in the pipeline.
-                  </p>
-                </div>
-              );
-            }
-
-            return (
-              <div className="admin-sales-detail-panel">
-                <div className="admin-sales-detail-panel-header">
-                  <h2 className="admin-sales-detail-panel-title">Sale detail</h2>
-                  <button
-                    type="button"
-                    className="admin-sales-button"
-                    onClick={() => setSelectedSale(null)}
-                  >
-                    Close
-                  </button>
-                </div>
-
-                <div className="admin-sales-detail-panel-content">
-                  <SaleStages completedCount={currentSaleStages} variant="detail" />
-
-                  <ul className="admin-sales-detail-pieces">
-                    {getOrderItems(currentSale).map((item) => (
-                      <li key={item.id} className="admin-sales-detail-piece">
-                        <img
-                          src={item.post_image_url}
-                          alt=""
-                          className="admin-sales-detail-piece-image"
-                        />
-                        <div className="admin-sales-detail-piece-details">
-                          <h3 className="admin-sales-detail-piece-title">{item.post_title}</h3>
-                          <span className="admin-sales-detail-piece-price">
-                            {formatMoney(item.price)}
-                          </span>
-                          <div className="admin-sales-detail-actions">
-                            <button
-                              type="button"
-                              className="admin-sales-button"
-                              onClick={() => navigate(`/${item.post_id}`)}
-                            >
-                              View post
-                            </button>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {renderOrderTotals(
-                    getOrderItemsSubtotal(currentSale),
-                    Number(currentSale.shipping_cost) || 0
-                  )}
-
-                  <div className="admin-sales-detail-actions">
-                    <button
-                      type="button"
-                      className={`admin-sales-button admin-sales-button--wide${
-                        currentSale.is_paid ? '' : ' admin-sales-button--primary'
-                      }`}
-                      onClick={handleTogglePaid}
-                    >
-                      {currentSale.is_paid ? 'Mark unpaid' : 'Mark paid'}
-                    </button>
-                  </div>
-
-                  <dl className="admin-sales-detail-facts">
-                    <div className="admin-sales-detail-fact">
-                      <dt className="admin-sales-detail-fact-label">Buyer</dt>
-                      <dd className="admin-sales-detail-fact-value">
-                        {currentSale.buyer_first_name} {currentSale.buyer_last_name?.slice(0, 1)}.
-                      </dd>
-                    </div>
-
-                    <div className="admin-sales-detail-fact">
-                      <dt className="admin-sales-detail-fact-label">Email</dt>
-                      <dd className="admin-sales-detail-fact-value">{currentSale.buyer_email}</dd>
-                    </div>
-
-                    <div className="admin-sales-detail-fact">
-                      <dt className="admin-sales-detail-fact-label">Ship to</dt>
-                      <dd className="admin-sales-detail-fact-value">
-                        {currentSaleAddress ? (
-                          <div className="admin-sales-detail-address">
-                            {renderAddressLines(currentSaleAddress)}
-                            <button
-                              type="button"
-                              className="admin-sales-button"
-                              onClick={handleCopyCurrentSaleAddress}
-                            >
-                              Copy address
-                            </button>
-                          </div>
-                        ) : (
-                          <span className="admin-sales-detail-fact-value--missing">
-                            No shipping address on file
-                          </span>
-                        )}
-                      </dd>
-                    </div>
-                  </dl>
-
-                  {hasRealTracking(currentSale.tracking_number) && (
-                    <a
-                      className="admin-sales-tracking-link"
-                      href={buildTrackingUrl(currentSale.tracking_number)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img
-                        alt=""
-                        className="admin-sales-tracking-carrier-logo"
-                        src="../../../usps.png"
-                      />
-                      <span className="admin-sales-tracking-number">
-                        {currentSale.tracking_number}
-                      </span>
-                    </a>
-                  )}
-
-                  <div className="form-field admin-sales-tracking-field">
-                    <label className="form-field-label" htmlFor="gallery-sales-tracking-number">
-                      Tracking number
-                    </label>
-                    <input
-                      id="gallery-sales-tracking-number"
-                      type="text"
-                      className="form-input"
-                      value={trackingInput}
-                      onChange={(e) => setTrackingInput(e.target.value)}
-                    />
-                    <button
-                      type="button"
-                      className="admin-sales-save-tracking-button"
-                      onClick={handleSaveTracking}
-                    >
-                      Save tracking
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-        </aside>
+        {isWideScreen && <aside className="admin-sales-detail-column">{renderDetailPanel()}</aside>}
       </div>
 
-      {showPostModal && (
+      {!isWideScreen && (
+        <Sheet
+          title={isCreatingSale ? 'New sale' : 'Sale detail'}
+          isOpen={isCreatingSale || Boolean(currentSale)}
+          onClose={closeDetail}
+        >
+          {renderDetailPanel()}
+        </Sheet>
+      )}
+
+      {isWideScreen && showPostModal && (
         <div className="admin-sales-modal-overlay">
           <div
             className="admin-sales-modal admin-sales-modal--wide"
@@ -1110,31 +1119,20 @@ const GallerySalesPanel = () => {
               </button>
             </div>
 
-            {posts && posts.length > 0 ? (
-              <div className="admin-sales-piece-finder">
-                {posts.map((post) => (
-                  <button
-                    key={post.id}
-                    type="button"
-                    className="admin-sales-piece-option"
-                    onClick={() => handleSelectPost(post)}
-                  >
-                    <img src={post.image_url || post.imageUrl} alt="" />
-                    <span className="admin-sales-piece-option-details">
-                      <span className="admin-sales-piece-option-title">{post.title}</span>
-                      <span className="admin-sales-piece-option-secondary-text">ID {post.id}</span>
-                      <span className="admin-sales-piece-option-secondary-text">
-                        {formatMoney(getPostPrice(post))}
-                      </span>
-                    </span>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <p className="admin-sales-placeholder-message">No pieces to choose from.</p>
-            )}
+            {pieceOptions}
           </div>
         </div>
+      )}
+
+      {/* The sale detail is a top-layer <dialog> here, so a plain overlay would sit behind it. */}
+      {!isWideScreen && (
+        <Sheet
+          title="Select a piece"
+          isOpen={showPostModal}
+          onClose={() => setShowPostModal(false)}
+        >
+          {pieceOptions}
+        </Sheet>
       )}
     </>
   );

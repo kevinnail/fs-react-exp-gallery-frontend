@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { searchGalleryPosts } from '../../services/fetch-utils.js';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue.js';
+import { useSignedUpAt } from '../../hooks/useSignedUpAt.js';
+import { getPiecePrice } from '../../services/userSpecial.js';
 import './SearchBar.css';
 
 const MINIMUM_TERM_LENGTH = 2;
@@ -17,6 +19,7 @@ const SearchBar = () => {
   const [isSearching, setIsSearching] = useState(false);
 
   const debouncedTerm = useDebouncedValue(searchTerm.trim(), 300);
+  const signedUpAt = useSignedUpAt();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -151,27 +154,40 @@ const SearchBar = () => {
                 </p>
               ) : null}
 
-              {results.map((post) => (
-                <button
-                  key={post.id}
-                  type="button"
-                  className="search-result"
-                  onClick={() => navigate(`/${post.id}`)}
-                >
-                  <span className="search-result-thumbnail">
-                    {post.image_url ? (
-                      <img src={posterFrameFor(post.image_url)} alt="" loading="lazy" />
-                    ) : null}
-                  </span>
-                  <span className="search-result-text">
-                    <span className="search-result-title">{post.title}</span>
-                    <span className="search-result-price-and-category">
-                      {post.sold ? 'Sold' : `$${post.price}`}
-                      {post.category ? ` · ${post.category}` : ''}
+              {results.map((post) => {
+                const { listedPrice, salePrice } = getPiecePrice(post, { signedUpAt });
+
+                return (
+                  <button
+                    key={post.id}
+                    type="button"
+                    className="search-result"
+                    onClick={() => navigate(`/${post.id}`)}
+                  >
+                    <span className="search-result-thumbnail">
+                      {post.image_url ? (
+                        <img src={posterFrameFor(post.image_url)} alt="" loading="lazy" />
+                      ) : null}
                     </span>
-                  </span>
-                </button>
-              ))}
+                    <span className="search-result-text">
+                      <span className="search-result-title">{post.title}</span>
+                      <span className="search-result-price-and-category">
+                        {post.sold ? (
+                          'Sold'
+                        ) : salePrice !== null ? (
+                          <>
+                            <span className="search-result-was-price">${listedPrice}</span>
+                            {` $${Math.floor(salePrice)}`}
+                          </>
+                        ) : (
+                          `$${post.price}`
+                        )}
+                        {post.category ? ` · ${post.category}` : ''}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           ) : null}
         </div>

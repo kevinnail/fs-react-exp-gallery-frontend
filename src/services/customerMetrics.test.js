@@ -123,6 +123,42 @@ describe('filterCustomers', () => {
       'Unknown customer filter: bigSpenders'
     );
   });
+
+  describe('with a search term', () => {
+    const dana = customerWith({
+      id: 7,
+      firstName: 'Dana',
+      lastName: 'Reed',
+      email: 'dreed@example.com',
+      orderCount: 1,
+    });
+    const sam = customerWith({ id: 8, firstName: 'Sam', lastName: 'Lee', email: 'sam@glass.test' });
+    const noProfile = customerWith({ id: 9, firstName: null, lastName: null, email: 'x@reed.org' });
+    const searchable = [dana, sam, noProfile];
+
+    // Otherwise the admin could not look a customer up by the name they know them by.
+    it('matches first name, last name, and full name regardless of case', () => {
+      expect(idsOf(filterCustomers(searchable, 'all', '', 'dana'))).toEqual([7]);
+      expect(idsOf(filterCustomers(searchable, 'all', '', 'LEE'))).toEqual([8]);
+      expect(idsOf(filterCustomers(searchable, 'all', '', ' dana reed '))).toEqual([7]);
+    });
+
+    // Otherwise a customer with no profile name could never be found at all.
+    it('matches on email, including a customer with no name on file', () => {
+      expect(idsOf(filterCustomers(searchable, 'all', '', 'glass.test'))).toEqual([8]);
+      expect(idsOf(filterCustomers(searchable, 'all', '', 'reed'))).toEqual([7, 9]);
+    });
+
+    // Otherwise typing a name would silently undo the filter button the admin picked.
+    it('combines with a filter, leaving out matches the filter excludes', () => {
+      expect(idsOf(filterCustomers(searchable, 'buyers', '', 'reed'))).toEqual([7]);
+    });
+
+    // Otherwise a search for someone who is not a customer would show the whole list.
+    it('returns nobody when nothing matches', () => {
+      expect(filterCustomers(searchable, 'all', '', 'nobody-here')).toEqual([]);
+    });
+  });
 });
 
 describe('summarizeCustomers', () => {

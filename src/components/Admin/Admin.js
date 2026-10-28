@@ -118,9 +118,8 @@ export default function Admin() {
   return (
     <div className="admin-dashboard">
       <div className="admin-dashboard-header">
-        <p className="admin-dashboard-heading-label">Admin</p>
+        <p className="admin-dashboard-heading-label">Admin Dashboard</p>
         <div className="admin-dashboard-title-row">
-          <h1 className="admin-dashboard-title">Dashboard</h1>
           <nav className="admin-dashboard-create-links" aria-label="Create">
             <Link className="admin-dashboard-chip admin-dashboard-chip--create" to="/admin/new">
               <AddIcon className="admin-dashboard-chip-icon" />
@@ -135,6 +134,26 @@ export default function Admin() {
             </Link>
           </nav>
         </div>
+        <nav className="admin-dashboard-page-links" aria-label="Admin pages">
+          <Link
+            className="admin-dashboard-chip admin-dashboard-chip--page-link"
+            to="/admin/discounts"
+          >
+            Promo
+          </Link>
+          <Link className="admin-dashboard-chip admin-dashboard-chip--page-link" to="/admin/sales">
+            Sales
+          </Link>
+          <Link className="admin-dashboard-chip admin-dashboard-chip--page-link" to="/admin/users">
+            Users
+          </Link>
+          <Link className="admin-dashboard-chip admin-dashboard-chip--page-link" to="/admin/charts">
+            Charts
+          </Link>
+          <Link className="admin-dashboard-chip admin-dashboard-chip--page-link" to="/admin/email">
+            Email
+          </Link>
+        </nav>
       </div>
 
       <div className="admin-dashboard-stats">
