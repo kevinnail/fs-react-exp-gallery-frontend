@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { getAdminAuctions } from '../services/fetch-auctions.js';
+import { hasRealTracking } from '../components/Admin/AdminSales/saleStatus.js';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-//  Active auctions for the admin dashboard.
+//  Active auctions for the admin dashboard, plus how many closed ones are waiting to ship.
 
 export function useActiveAuctions() {
   const [auctions, setAuctions] = useState([]);
+  const [auctionsToShipCount, setAuctionsToShipCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -15,6 +17,11 @@ export function useActiveAuctions() {
       try {
         const allAuctions = await getAdminAuctions();
         setAuctions(allAuctions.filter((auction) => auction.isActive));
+        setAuctionsToShipCount(
+          allAuctions.filter(
+            (auction) => auction.isPaid && !hasRealTracking(auction.trackingNumber)
+          ).length
+        );
       } catch (fetchError) {
         setAuctions([]);
         setError(fetchError.message);
@@ -31,5 +38,5 @@ export function useActiveAuctions() {
     })();
   }, []);
 
-  return { auctions, loading, error };
+  return { auctions, auctionsToShipCount, loading, error };
 }
