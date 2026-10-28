@@ -35,6 +35,7 @@ import { useProfileStore } from './stores/profileStore.js';
 import { useMessaging } from './hooks/useWebSocket.js';
 import { getMyMessages } from './services/fetch-messages.js';
 import AdminSales from './components/Admin/AdminSales/AdminSales.js';
+import SoldPieces from './components/Admin/SoldPieces/SoldPieces.js';
 import ChartsPage from './components/Admin/Charts/ChartsPage.js';
 // import DisplayGallery from './components/DisplayGallery/DisplayGallery.js';
 
@@ -286,6 +287,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminSales />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/sold"
+              element={
+                <ProtectedRoute>
+                  <SoldPieces />
                 </ProtectedRoute>
               }
             />

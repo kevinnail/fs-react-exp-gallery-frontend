@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './AdminSales.css';
 import GallerySalesPanel from './GallerySalesPanel.js';
 import AuctionResultsPanel from './AuctionResultsPanel.js';
 
 const AdminSales = () => {
-  const [activeTab, setActiveTab] = useState('gallery');
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(location.state?.tab ?? 'gallery');
   const [galleryUnpaidCount, setGalleryUnpaidCount] = useState(0);
   const [auctionUnpaidCount, setAuctionUnpaidCount] = useState(0);
 

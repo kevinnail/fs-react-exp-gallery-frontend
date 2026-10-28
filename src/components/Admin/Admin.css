@@ -86,6 +86,28 @@
    colour through as hairlines, so the tiles read as a single table of
    figures rather than four separate cards. */
 
+.admin-dashboard-to-ship {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 0 var(--page-gutter-tight) 0.85rem;
+  padding: 0.6rem 0.9rem;
+  background: rgba(242, 201, 76, 0.12);
+  border: 1px solid rgba(242, 201, 76, 0.45);
+}
+
+.admin-dashboard-to-ship-link {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-status-wait);
+}
+
+.admin-dashboard-to-ship-error {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-status-bad);
+}
+
 .admin-dashboard-stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -416,6 +438,11 @@
 
   .admin-dashboard-stats {
     grid-template-columns: repeat(4, 1fr);
+    margin-left: var(--page-gutter);
+    margin-right: var(--page-gutter);
+  }
+
+  .admin-dashboard-to-ship {
     margin-left: var(--page-gutter);
     margin-right: var(--page-gutter);
   }

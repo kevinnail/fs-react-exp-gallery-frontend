@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import { usePosts } from '../../hooks/usePosts.js';
 import { useActiveAuctions } from '../../hooks/useActiveAuctions.js';
+import { getAllSales } from '../../services/fetch-sales.js';
+import { hasRealTracking } from './AdminSales/saleStatus.js';
 import PostCard from '../PostCard/PostCard.js';
 import './Admin.css';
 import Loading from '../Loading/Loading.js';
@@ -38,7 +40,14 @@ const buildPageWindow = (currentPage, totalPages) => {
 
 export default function Admin() {
   const { posts, loading, setPosts } = usePosts();
-  const { auctions, loading: auctionsLoading, error: auctionsError } = useActiveAuctions();
+  const {
+    auctions,
+    auctionsToShipCount,
+    loading: auctionsLoading,
+    error: auctionsError,
+  } = useActiveAuctions();
+  const [galleryOrdersToShipCount, setGalleryOrdersToShipCount] = useState(0);
+  const [galleryOrdersError, setGalleryOrdersError] = useState('');
   const [railStartsOpen] = useState(() => window.matchMedia('(min-width: 1200px)').matches);
   const [selectedCategory, setSelectedCategory] = useState(null);
   // Admin filter state for post visibility
@@ -52,6 +61,20 @@ export default function Admin() {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  useEffect(() => {
+    const loadGalleryOrders = async () => {
+      try {
+        const orders = await getAllSales();
+        setGalleryOrdersToShipCount(
+          orders.filter((order) => order.is_paid && !hasRealTracking(order.tracking_number)).length
+        );
+      } catch (loadError) {
+        setGalleryOrdersError(loadError.message);
+      }
+    };
+    loadGalleryOrders();
+  }, []);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
@@ -109,6 +132,11 @@ export default function Admin() {
     },
   ];
 
+  const toShipLinks = [
+    { tab: 'gallery', count: galleryOrdersToShipCount, noun: 'gallery order' },
+    { tab: 'auctions', count: auctionsToShipCount, noun: 'auction' },
+  ].filter((link) => link.count > 0);
+
   const visibilityFilters = [
     { label: 'Regular', isOn: showRegular, toggle: () => setShowRegular((isOn) => !isOn) },
     { label: 'Hidden', isOn: showHidden, toggle: () => setShowHidden((isOn) => !isOn) },
@@ -144,6 +172,9 @@ export default function Admin() {
           <Link className="admin-dashboard-chip admin-dashboard-chip--page-link" to="/admin/sales">
             Sales
           </Link>
+          <Link className="admin-dashboard-chip admin-dashboard-chip--page-link" to="/admin/sold">
+            Sold
+          </Link>
           <Link className="admin-dashboard-chip admin-dashboard-chip--page-link" to="/admin/users">
             Users
           </Link>
@@ -155,6 +186,27 @@ export default function Admin() {
           </Link>
         </nav>
       </div>
+
+      {(toShipLinks.length > 0 || galleryOrdersError) && (
+        <div className="admin-dashboard-to-ship" role="status">
+          {toShipLinks.map((link) => (
+            <Link
+              key={link.tab}
+              className="admin-dashboard-to-ship-link"
+              to="/admin/sales"
+              state={{ tab: link.tab }}
+            >
+              {link.count} {link.noun}
+              {link.count === 1 ? '' : 's'} to ship
+            </Link>
+          ))}
+          {galleryOrdersError && (
+            <p className="admin-dashboard-to-ship-error">
+              Could not check gallery orders to ship: {galleryOrdersError}
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="admin-dashboard-stats">
         {statTiles.map((tile) => {

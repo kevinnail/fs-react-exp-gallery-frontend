@@ -75,8 +75,12 @@ const winningBid = {
   user: { userId: 3, email: 'bidder@example.com', firstName: 'Sam', lastName: 'Lee' },
 };
 
-const renderSalesPage = async () => {
-  render(<AdminSales />, { wrapper: MemoryRouter });
+const renderSalesPage = async (initialEntry = '/admin/sales') => {
+  render(
+    <MemoryRouter initialEntries={[initialEntry]}>
+      <AdminSales />
+    </MemoryRouter>
+  );
   // Both panels have finished loading once each list heading is on the page.
   await screen.findByText('Gallery sales');
   await screen.findByText('Auction results');
@@ -116,5 +120,16 @@ describe('AdminSales', () => {
 
     expect(tabCount('Gallery')).toBeNull();
     expect(tabCount('Auction')).toBeNull();
+  });
+
+  // Otherwise the dashboard's "auction to ship" link lands on the gallery tab.
+  it('opens the Auction tab when navigated to with that tab in state', async () => {
+    getAllSales.mockResolvedValue([]);
+    getAdminAuctions.mockResolvedValue([endedAuction(1, true)]);
+
+    await renderSalesPage({ pathname: '/admin/sales', state: { tab: 'auctions' } });
+
+    expect(screen.getByRole('tab', { name: /Auction/ })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: /Gallery/ })).toHaveAttribute('aria-selected', 'false');
   });
 });
