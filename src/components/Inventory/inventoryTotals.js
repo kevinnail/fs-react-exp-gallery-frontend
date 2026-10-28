@@ -30,10 +30,12 @@ export const CATEGORY_NAMES = [
 export const calculateInventoryTotals = (posts) => {
   const forSaleCountByCategory = {};
   const forSaleValueByCategory = {};
+  const forSaleFullValueByCategory = {};
 
   for (const categoryName of CATEGORY_NAMES) {
     forSaleCountByCategory[categoryName] = 0;
     forSaleValueByCategory[categoryName] = 0;
+    forSaleFullValueByCategory[categoryName] = 0;
   }
 
   let hiddenCount = 0;
@@ -53,6 +55,7 @@ export const calculateInventoryTotals = (posts) => {
 
     forSaleCountByCategory[post.category] += 1;
     forSaleValueByCategory[post.category] += sellingPrice;
+    forSaleFullValueByCategory[post.category] += regularPrice;
   }
 
   const forSaleCount = CATEGORY_NAMES.reduce(
@@ -65,11 +68,18 @@ export const calculateInventoryTotals = (posts) => {
     0
   );
 
+  const forSaleFullValue = CATEGORY_NAMES.reduce(
+    (runningTotal, categoryName) => runningTotal + forSaleFullValueByCategory[categoryName],
+    0
+  );
+
   return {
     forSaleCountByCategory,
     forSaleValueByCategory,
+    forSaleFullValueByCategory,
     forSaleCount,
     forSaleValue,
+    forSaleFullValue,
     hiddenCount,
   };
 };
