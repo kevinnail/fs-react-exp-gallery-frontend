@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getChartSeries } from '../../../services/fetch-chart-series.js';
 import { classifyTrend } from '../../../services/trendVerdict.js';
 import {
@@ -9,9 +10,16 @@ import {
   formatOneDecimal,
   formatPercent,
 } from './chartFormat.js';
+import ChartChat from './ChartChat.js';
+import ChartChatSummary from './ChartChatSummary.js';
 import MetricCard from './MetricCard.js';
 import MetricDetailChart from './MetricDetailChart.js';
 import './ChartsPage.css';
+
+const PAGE_TABS = [
+  { value: 'charts', label: 'Charts' },
+  { value: 'chat', label: 'Chat' },
+];
 
 const GRANULARITY_OPTIONS = [
   { value: 'day', label: 'Day' },
@@ -29,6 +37,15 @@ const RANGE_OPTIONS = [
 // Below these averages, one sale after a quiet stretch would read as a huge jump.
 const REVENUE_MINIMUM_BASELINE = 100;
 const COUNT_MINIMUM_BASELINE = 2;
+
+// Left and right arrows move between tabs, per the WAI-ARIA tabs pattern.
+// Returns the index to move to, or null for any other key.
+const arrowKeyTabIndex = (event, index, tabCount) => {
+  const steps = { ArrowRight: 1, ArrowLeft: -1 };
+  if (!(event.key in steps)) return null;
+  event.preventDefault();
+  return (index + steps[event.key] + tabCount) % tabCount;
+};
 
 const buildSections = ({
   galleryRevenue,
@@ -195,6 +212,9 @@ const buildSections = ({
 };
 
 const ChartsPage = () => {
+  // The open tab lives in the URL so a refresh, or a saved chat link, comes back to it.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activePageTab = searchParams.get('tab') === 'chat' ? 'chat' : 'charts';
   const [granularity, setGranularity] = useState('week');
   const [range, setRange] = useState('6m');
   const [chartSeries, setChartSeries] = useState(null);
@@ -203,6 +223,7 @@ const ChartsPage = () => {
   const [selectedSectionHeading, setSelectedSectionHeading] = useState('Revenue');
   const [selectedMetricKey, setSelectedMetricKey] = useState('totalRevenue');
   const tabRefs = useRef([]);
+  const pageTabRefs = useRef([]);
 
   useEffect(() => {
     // A slower earlier request must not overwrite the one for the current controls.
@@ -251,14 +272,33 @@ const ChartsPage = () => {
     setSelectedMetricKey(section.metrics[0].key);
   };
 
-  // Left and right arrows move between tabs, per the WAI-ARIA tabs pattern.
   const handleTabKeyDown = (event, index) => {
-    const steps = { ArrowRight: 1, ArrowLeft: -1 };
-    if (!(event.key in steps)) return;
-    event.preventDefault();
-    const nextIndex = (index + steps[event.key] + sections.length) % sections.length;
+    const nextIndex = arrowKeyTabIndex(event, index, sections.length);
+    if (nextIndex === null) return;
     selectSection(sections[nextIndex]);
     tabRefs.current[nextIndex].focus();
+  };
+
+  const selectPageTab = (pageTab) => {
+    setSearchParams(
+      (params) => {
+        const nextParams = new URLSearchParams(params);
+        if (pageTab === 'chat') {
+          nextParams.set('tab', 'chat');
+        } else {
+          nextParams.delete('tab');
+        }
+        return nextParams;
+      },
+      { replace: true }
+    );
+  };
+
+  const handlePageTabKeyDown = (event, index) => {
+    const nextIndex = arrowKeyTabIndex(event, index, PAGE_TABS.length);
+    if (nextIndex === null) return;
+    selectPageTab(PAGE_TABS[nextIndex].value);
+    pageTabRefs.current[nextIndex].focus();
   };
 
   const lastCompleteBucket =
@@ -332,6 +372,28 @@ const ChartsPage = () => {
       <div className="charts-panel">
         <h1 className="charts-title">Charts</h1>
 
+        <div className="charts-page-tabs" role="tablist" aria-label="Charts or chat">
+          {PAGE_TABS.map((pageTab, index) => (
+            <button
+              key={pageTab.value}
+              ref={(element) => {
+                pageTabRefs.current[index] = element;
+              }}
+              id={`charts-page-tab-${pageTab.value}`}
+              type="button"
+              role="tab"
+              className="charts-page-tab"
+              aria-selected={pageTab.value === activePageTab}
+              aria-controls="charts-page-panel"
+              tabIndex={pageTab.value === activePageTab ? 0 : -1}
+              onClick={() => selectPageTab(pageTab.value)}
+              onKeyDown={(event) => handlePageTabKeyDown(event, index)}
+            >
+              {pageTab.label}
+            </button>
+          ))}
+        </div>
+
         <div className="charts-controls">
           <div className="charts-control-group" role="group" aria-label="Granularity">
             {GRANULARITY_OPTIONS.map((option) => (
@@ -363,7 +425,25 @@ const ChartsPage = () => {
           </div>
         </div>
 
-        {renderContent()}
+        <div
+          id="charts-page-panel"
+          role="tabpanel"
+          aria-labelledby={`charts-page-tab-${activePageTab}`}
+        >
+          {activePageTab === 'charts' ? (
+            renderContent()
+          ) : (
+            <>
+              <ChartChat
+                granularity={granularity}
+                range={range}
+                setGranularity={setGranularity}
+                setRange={setRange}
+              />
+              <ChartChatSummary granularity={granularity} range={range} />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
