@@ -39,7 +39,10 @@ const Inventory = ({ totals, onCategorySelect, selectedCategory }) => (
             For sale
           </th>
           <th scope="col" className="inventory-numeric-cell">
-            Value
+            Full price
+          </th>
+          <th scope="col" className="inventory-numeric-cell">
+            With discount
           </th>
         </tr>
       </thead>
@@ -76,6 +79,9 @@ const Inventory = ({ totals, onCategorySelect, selectedCategory }) => (
               </th>
               <td className="inventory-numeric-cell inventory-for-sale-count">{count}</td>
               <td className="inventory-numeric-cell">
+                {formatMoney(totals.forSaleFullValueByCategory[categoryName])}
+              </td>
+              <td className="inventory-numeric-cell">
                 {formatMoney(totals.forSaleValueByCategory[categoryName])}
               </td>
             </tr>
@@ -87,7 +93,20 @@ const Inventory = ({ totals, onCategorySelect, selectedCategory }) => (
           <th scope="row">For sale</th>
           <td className="inventory-numeric-cell">{totals.forSaleCount}</td>
           <td className="inventory-numeric-cell">
+            <span className="inventory-total-value">{formatMoney(totals.forSaleFullValue)}</span>
+          </td>
+          <td className="inventory-numeric-cell">
             <span className="inventory-total-value">{formatMoney(totals.forSaleValue)}</span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row" colSpan={3}>
+            Promo reduction
+          </th>
+          <td className="inventory-numeric-cell">
+            <span className="inventory-total-value">
+              {formatMoney(totals.forSaleFullValue - totals.forSaleValue)}
+            </span>
           </td>
         </tr>
       </tfoot>
