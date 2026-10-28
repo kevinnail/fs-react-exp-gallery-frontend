@@ -37,6 +37,7 @@ const UsersDashboard = () => {
   const [sortDirection, setSortDirection] = useState('desc');
   const [activeFilter, setActiveFilter] = useState('all');
   const [joinedBefore, setJoinedBefore] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,8 +65,12 @@ const UsersDashboard = () => {
 
   const visibleCustomers = useMemo(
     () =>
-      sortCustomers(filterCustomers(customers, activeFilter, joinedBefore), sortKey, sortDirection),
-    [customers, activeFilter, joinedBefore, sortKey, sortDirection]
+      sortCustomers(
+        filterCustomers(customers, activeFilter, joinedBefore, searchTerm),
+        sortKey,
+        sortDirection
+      ),
+    [customers, activeFilter, joinedBefore, searchTerm, sortKey, sortDirection]
   );
 
   const emailableCustomers = useMemo(
@@ -97,12 +102,23 @@ const UsersDashboard = () => {
     setPage(1);
   };
 
+  const changeSearchTerm = (event) => {
+    setSearchTerm(event.target.value);
+    setPage(1);
+  };
+
   const emailVisibleCustomers = () => {
     const filterLabel = CUSTOMER_FILTERS.find((filter) => filter.key === activeFilter).label;
     navigate('/admin/email', {
       state: {
         segment: {
-          label: joinedBefore ? `${filterLabel}, joined before ${joinedBefore}` : filterLabel,
+          label: [
+            filterLabel,
+            joinedBefore && `joined before ${joinedBefore}`,
+            searchTerm.trim() && `matching "${searchTerm.trim()}"`,
+          ]
+            .filter(Boolean)
+            .join(', '),
           userIds: emailableCustomers.map((customer) => Number(customer.id)),
         },
       },
@@ -157,6 +173,15 @@ const UsersDashboard = () => {
         <h1 className="users-title">Registered Users</h1>
 
         <CustomerSummary summary={summary} />
+
+        <input
+          type="search"
+          className="customer-search-input"
+          placeholder="Search by name or email"
+          aria-label="Search customers by name or email"
+          value={searchTerm}
+          onChange={changeSearchTerm}
+        />
 
         <div className="customer-filters">
           {CUSTOMER_FILTERS.map((filter) => (

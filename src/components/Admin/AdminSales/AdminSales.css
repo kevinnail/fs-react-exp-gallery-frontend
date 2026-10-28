@@ -74,6 +74,18 @@
   background: var(--color-text);
 }
 
+.admin-sales-tab-unpaid-count {
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.45rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  color: #ffffff;
+  background: var(--color-status-bad);
+  border-radius: 999px;
+}
+
 /* ---------- stat strip ---------- */
 
 .admin-sales-stats {

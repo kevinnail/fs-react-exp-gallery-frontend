@@ -141,6 +141,9 @@ export default function Admin() {
           >
             Promo
           </Link>
+          <Link className="admin-dashboard-chip admin-dashboard-chip--page-link" to="/admin/sales">
+            Sales
+          </Link>
           <Link className="admin-dashboard-chip admin-dashboard-chip--page-link" to="/admin/users">
             Users
           </Link>
