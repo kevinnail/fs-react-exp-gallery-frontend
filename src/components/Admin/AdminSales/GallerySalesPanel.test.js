@@ -78,7 +78,7 @@ const twoPieceOrder = {
 };
 
 const renderPanel = () =>
-  render(<GallerySalesPanel onUnpaidCountChange={jest.fn()} />, { wrapper: MemoryRouter });
+  render(<GallerySalesPanel onCountsChange={jest.fn()} />, { wrapper: MemoryRouter });
 
 // What AdminInbox pushes through router state when the admin clicks Create Sale
 // on a request message.
@@ -87,7 +87,7 @@ const renderPanelWithPrefill = (prefill) =>
     <MemoryRouter
       initialEntries={[{ pathname: '/admin/sales', state: { fromInbox: true, prefill } }]}
     >
-      <GallerySalesPanel onUnpaidCountChange={jest.fn()} />
+      <GallerySalesPanel onCountsChange={jest.fn()} />
     </MemoryRouter>
   );
 

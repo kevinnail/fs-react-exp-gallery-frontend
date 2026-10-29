@@ -7,22 +7,22 @@ import AuctionResultsPanel from './AuctionResultsPanel.js';
 const AdminSales = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(location.state?.tab ?? 'gallery');
-  const [galleryUnpaidCount, setGalleryUnpaidCount] = useState(0);
-  const [auctionUnpaidCount, setAuctionUnpaidCount] = useState(0);
+  const [galleryCounts, setGalleryCounts] = useState({ unpaid: 0, toShip: 0 });
+  const [auctionCounts, setAuctionCounts] = useState({ unpaid: 0, toShip: 0 });
 
-  // Both panels stay mounted so each tab's unpaid count is known while the other is showing.
+  // Both panels stay mounted so each tab's counts are known while the other is showing.
   const tabs = [
     {
       id: 'gallery',
       label: 'Gallery',
-      unpaidCount: galleryUnpaidCount,
-      panel: <GallerySalesPanel onUnpaidCountChange={setGalleryUnpaidCount} />,
+      counts: galleryCounts,
+      panel: <GallerySalesPanel onCountsChange={setGalleryCounts} />,
     },
     {
       id: 'auctions',
       label: 'Auction',
-      unpaidCount: auctionUnpaidCount,
-      panel: <AuctionResultsPanel onUnpaidCountChange={setAuctionUnpaidCount} />,
+      counts: auctionCounts,
+      panel: <AuctionResultsPanel onCountsChange={setAuctionCounts} />,
     },
   ];
 
@@ -46,10 +46,16 @@ const AdminSales = () => {
             onClick={() => setActiveTab(tab.id)}
           >
             {tab.label}
-            {tab.unpaidCount > 0 && (
+            {tab.counts.unpaid > 0 && (
               <span className="admin-sales-tab-unpaid-count">
-                {tab.unpaidCount}
+                {tab.counts.unpaid}
                 <span className="visually-hidden"> unpaid</span>
+              </span>
+            )}
+            {tab.counts.toShip > 0 && (
+              <span className="admin-sales-tab-to-ship-count">
+                {tab.counts.toShip}
+                <span className="visually-hidden"> to ship</span>
               </span>
             )}
           </button>

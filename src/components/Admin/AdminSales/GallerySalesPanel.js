@@ -42,7 +42,7 @@ const getFullName = (user) => {
   return `${profile.firstName || 'Unknown'} ${profile.lastName || ''}`.trim();
 };
 
-const GallerySalesPanel = ({ onUnpaidCountChange }) => {
+const GallerySalesPanel = ({ onCountsChange }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [sales, setSales] = useState([]);
@@ -539,8 +539,8 @@ const GallerySalesPanel = ({ onUnpaidCountChange }) => {
   );
 
   useEffect(() => {
-    onUnpaidCountChange(stageCounts.awaitingPayment);
-  }, [stageCounts.awaitingPayment, onUnpaidCountChange]);
+    onCountsChange({ unpaid: stageCounts.awaitingPayment, toShip: stageCounts.readyToShip });
+  }, [stageCounts.awaitingPayment, stageCounts.readyToShip, onCountsChange]);
 
   const statTiles = [
     { label: 'Orders', value: sales.length },

@@ -49,7 +49,7 @@ const findWinnerAccount = (users, winner) => {
 const buildTrackingUrl = (trackingNumber) =>
   `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(trackingNumber)}`;
 
-const AuctionResultsPanel = ({ onUnpaidCountChange }) => {
+const AuctionResultsPanel = ({ onCountsChange }) => {
   const [auctions, setAuctions] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -334,9 +334,13 @@ const AuctionResultsPanel = ({ onUnpaidCountChange }) => {
 
   const awaitingPayment = auctions.filter((auction) => !auction.isPaid).length;
 
+  const readyToShip = auctions.filter(
+    (auction) => auction.isPaid && !hasRealTracking(auction.trackingNumber)
+  ).length;
+
   useEffect(() => {
-    onUnpaidCountChange(awaitingPayment);
-  }, [awaitingPayment, onUnpaidCountChange]);
+    onCountsChange({ unpaid: awaitingPayment, toShip: readyToShip });
+  }, [awaitingPayment, readyToShip, onCountsChange]);
 
   if (loading) {
     return <Loading />;
@@ -345,10 +349,6 @@ const AuctionResultsPanel = ({ onUnpaidCountChange }) => {
   const totalOwed = auctions
     .filter((auction) => auction.winner && !auction.isPaid)
     .reduce((sum, auction) => sum + (auction.topBid?.bidAmount || 0), 0);
-
-  const readyToShip = auctions.filter(
-    (auction) => auction.isPaid && !hasRealTracking(auction.trackingNumber)
-  ).length;
 
   const statTiles = [
     { label: 'Results', value: auctions.length },
