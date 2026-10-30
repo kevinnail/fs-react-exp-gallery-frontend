@@ -65,7 +65,6 @@ export default function AuctionForm() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    maxFiles: 10,
     accept: {
       'image/jpeg': ['.jpg', '.jpeg'],
       'image/png': ['.png'],
@@ -290,7 +289,7 @@ export default function AuctionForm() {
                 ? 'Tap to choose images'
                 : `${files.length} file${files.length > 1 ? 's' : ''} added`}
             </span>
-            <span className="form-image-dropzone-file-types">JPG or PNG — up to 10</span>
+            <span className="form-image-dropzone-file-types">JPG or PNG</span>
           </div>
 
           {totalImageCount > 0 && (

@@ -91,7 +91,6 @@ export default function PostForm({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    maxFiles: 20,
     accept: {
       'image/jpeg': ['.jpg', '.jpeg'],
       'image/png': ['.png'],
@@ -411,7 +410,7 @@ export default function PostForm({
                 ? 'Tap to choose images'
                 : `${files.length} file${files.length > 1 ? 's' : ''} selected`}
             </span>
-            <span className="form-image-dropzone-file-types">JPG or PNG — up to 10</span>
+            <span className="form-image-dropzone-file-types">JPG or PNG</span>
           </div>
 
           {totalImageCount > 0 && (
