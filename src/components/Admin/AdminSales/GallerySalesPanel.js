@@ -529,13 +529,14 @@ const GallerySalesPanel = ({ onCountsChange }) => {
         isPaid: order.is_paid,
         trackingNumber: order.tracking_number,
       });
-      if (completed === 1) totals.awaitingPayment += 1;
+      if (completed === 1) {
+        totals.awaitingPayment += 1;
+        totals.owed += getOrderTotal(order);
+      }
       if (completed === 2) totals.readyToShip += 1;
-      totals.gross += getOrderTotal(order);
-      totals.pieces += getOrderItems(order).length;
       return totals;
     },
-    { awaitingPayment: 0, readyToShip: 0, gross: 0, pieces: 0 }
+    { awaitingPayment: 0, readyToShip: 0, owed: 0 }
   );
 
   useEffect(() => {
@@ -543,8 +544,6 @@ const GallerySalesPanel = ({ onCountsChange }) => {
   }, [stageCounts.awaitingPayment, stageCounts.readyToShip, onCountsChange]);
 
   const statTiles = [
-    { label: 'Orders', value: sales.length },
-    { label: 'Pieces', value: stageCounts.pieces },
     {
       label: 'Unpaid',
       value: stageCounts.awaitingPayment,
@@ -555,7 +554,7 @@ const GallerySalesPanel = ({ onCountsChange }) => {
       value: stageCounts.readyToShip,
       tone: stageCounts.readyToShip > 0 ? 'wait' : null,
     },
-    { label: 'Gross', value: formatMoney(stageCounts.gross) },
+    { label: 'Owed', value: formatMoney(stageCounts.owed), isOwed: true },
   ];
 
   const newItemsSubtotal = newItems.reduce(
@@ -1004,7 +1003,11 @@ const GallerySalesPanel = ({ onCountsChange }) => {
             className={`admin-sales-stat${tile.tone ? ` admin-sales-stat--${tile.tone}` : ''}`}
           >
             <span className="admin-sales-stat-label">{tile.label}</span>
-            <span className="admin-sales-stat-value">{tile.value}</span>
+            <span
+              className={`admin-sales-stat-value${tile.isOwed ? ' admin-sales-stat-value--owed' : ''}`}
+            >
+              {tile.value}
+            </span>
           </div>
         ))}
       </div>

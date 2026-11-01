@@ -351,7 +351,6 @@ const AuctionResultsPanel = ({ onCountsChange }) => {
     .reduce((sum, auction) => sum + (auction.topBid?.bidAmount || 0), 0);
 
   const statTiles = [
-    { label: 'Results', value: auctions.length },
     { label: 'Unpaid', value: awaitingPayment, tone: awaitingPayment > 0 ? 'bad' : null },
     { label: 'To ship', value: readyToShip, tone: readyToShip > 0 ? 'wait' : null },
     { label: 'Owed', value: formatMoney(totalOwed), isOwed: true },

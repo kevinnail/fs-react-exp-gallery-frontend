@@ -102,7 +102,7 @@
 
 .admin-sales-stats {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   margin-bottom: 1.75rem;
   padding: 0 var(--page-gutter-tight);
@@ -1070,10 +1070,6 @@
   .admin-sales-tabs {
     margin-left: var(--page-gutter);
     margin-right: var(--page-gutter);
-  }
-
-  .admin-sales-stats {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 
   .admin-sales-row {
