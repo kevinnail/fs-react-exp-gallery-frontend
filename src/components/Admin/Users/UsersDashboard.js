@@ -10,6 +10,7 @@ import {
 } from '../../../services/customerMetrics.js';
 import CustomerRow, { CUSTOMER_COLUMN_COUNT } from './CustomerRow.js';
 import CustomerSummary from './CustomerSummary.js';
+import UserGrowthChart from './UserGrowthChart.js';
 import './UsersDashboard.css';
 
 const PAGE_SIZE = 25;
@@ -173,6 +174,8 @@ const UsersDashboard = () => {
         <h1 className="users-title">Registered Users</h1>
 
         <CustomerSummary summary={summary} />
+
+        <UserGrowthChart customers={customers} />
 
         <input
           type="search"
