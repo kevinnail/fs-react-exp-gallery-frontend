@@ -39,6 +39,7 @@
 .admin-inbox-layout {
   display: grid;
   grid-template-columns: 1fr 2fr;
+  grid-template-rows: minmax(0, 1fr);
   gap: 2rem;
   height: 600px;
 }
@@ -326,6 +327,7 @@
   font-size: 1rem;
   resize: vertical;
   min-height: 60px;
+  max-height: 200px;
 }
 
 .admin-inbox-reply-input::placeholder {
@@ -448,6 +450,7 @@
 @media (max-width: 1024px) {
   .admin-inbox-layout {
     grid-template-columns: 1fr;
+    grid-template-rows: none;
     height: auto;
   }
 }
@@ -458,7 +461,7 @@
   inset: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.96);
+  background: #000;
   z-index: 9999;
   display: flex;
   flex-direction: column;

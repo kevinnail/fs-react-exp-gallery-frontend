@@ -320,6 +320,19 @@ export default function AdminInbox() {
     };
   }, [isConnected, selectedConversation, joinConversation, leaveConversation]);
 
+  // Keep the page behind the full-screen thread from scrolling with it
+  useEffect(() => {
+    if (!showMobileModal) return;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+    };
+  }, [showMobileModal]);
+
   // load conversation on mount
   useEffect(() => {
     loadConversations();

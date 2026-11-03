@@ -23,7 +23,7 @@ import { createTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import { toast, ToastContainer } from 'react-toastify';
-import websocketService, { attachAdminListener } from './services/websocket.js';
+import websocketService from './services/websocket.js';
 import NotFound from './components/NotFound/NotFound.js';
 import Unsubscribe from './components/Unsubscribe/Unsubscribe.js';
 import UserDashboard from './components/Admin/Users/UsersDashboard.js';
@@ -79,10 +79,6 @@ function App() {
   const { isConnected, joinConversation } = useMessaging();
   const location = useLocation();
   const navigate = useNavigate();
-
-  if (user && user.isAdmin) {
-    attachAdminListener();
-  }
 
   useEffect(() => {
     if (!user) {

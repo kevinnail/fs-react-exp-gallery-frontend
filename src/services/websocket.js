@@ -228,22 +228,6 @@ class WebSocketService {
   }
 }
 
-let adminListenerAttached = false;
-
-export function attachAdminListener() {
-  if (adminListenerAttached) return;
-  adminListenerAttached = true;
-
-  const { setUnreadMessageCount } = useUserStore.getState();
-
-  websocketService.on('new_customer_message', (data) => {
-    const msg = data?.message || data;
-    if (msg && !msg.isFromAdmin) {
-      setUnreadMessageCount((prev) => prev + 1);
-    }
-  });
-}
-
 // Create and export a singleton instance
 const websocketService = new WebSocketService();
 export default websocketService;
